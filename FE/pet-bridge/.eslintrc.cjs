@@ -24,7 +24,7 @@ module.exports = {
       jsx: true,
     },
   },
-  plugins: ["react", "react-hooks", "jsx-a11y"],
+  plugins: ["react", "react-hooks", "jsx-a11y", "jest"],
   rules: {
     "react/react-in-jsx-scope": "off",
     // import에 대한 규칙 설정
@@ -32,6 +32,7 @@ module.exports = {
     "import/named": "error",
     "import/default": "error",
     "import/namespace": "error",
+    "prettier/prettier": ["error", {endOfLine: "auto"}],
   },
   settings: {
     react: {version: "detect"},
@@ -43,5 +44,4 @@ module.exports = {
       },
     },
   },
-  plugins: ["jest"], // Jest 플러그인 추가
 }
