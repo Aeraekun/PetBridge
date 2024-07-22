@@ -1,9 +1,15 @@
+import NavAction from "./NavAction"
+import NavInput from "./NavInput"
 import NavItemList from "./NavItemList"
 
-export default function Navbar() {
+function Navbar() {
   return (
-    <nav className="h-48 border-b">
+    <nav className="flex h-20 items-center justify-between border-b px-10">
       <NavItemList />
+      <NavInput />
+      <NavAction />
     </nav>
   )
 }
+
+export default Navbar

@@ -1,12 +1,13 @@
-import "./App.css"
-import Navbar from "./components/navbar/Navbar"
+import {Route, Routes} from "react-router-dom"
+import Layout from "./pages/Layout"
+import Login from "./pages/Login"
 
 function App() {
   return (
-    <div>
-      <Navbar />
-      <h1 className="text-center text-3xl font-bold underline">Pet Bridge</h1>
-    </div>
+    <Routes>
+      <Route path="/" element={<Layout />}></Route>
+      <Route path="/login" element={<Login />}></Route>
+    </Routes>
   )
 }
 
