@@ -1,6 +1,6 @@
-import NavAction from "./NavAction"
-import NavInput from "./NavInput"
-import NavItemList from "./NavItemList"
+import NavAction from "components/header/NavAction"
+import NavInput from "components/header/NavInput"
+import NavItemList from "components/header/NavItemList"
 
 function Navbar() {
   return (
