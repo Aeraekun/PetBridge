@@ -28,7 +28,7 @@ function NavItemList() {
       <NavLogo />
       <NavItem category={"보호 동물"} href={"/shelter"} />
       <NavItem category={"실종 동물"} href={"/lost-and-found"} />
-      <NavItem category={"쇼츠"} href={"/shorts"} />
+      <NavItem category={"쇼츠"} href={"/short"} />
       <NavItem category={"커뮤니티"} href={"/communities"} />
     </ul>
   )
