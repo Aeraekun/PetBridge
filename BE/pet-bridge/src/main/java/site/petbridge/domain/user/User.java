@@ -25,6 +25,7 @@ public class User {
     private Date birth;
     private String phone;
     private String image;
+    @Builder.Default
     private boolean disabled = false;
 
     @Enumerated(EnumType.STRING)
