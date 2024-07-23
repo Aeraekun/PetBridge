@@ -24,6 +24,12 @@ function SignUp() {
     // 유효성 검사 실패 에러 메시지 저장을 위한 state
     const [errors, setErrors] = useState({})
 
+    const [isValidEmail, setIsValidEmail] = useState(false)
+    const [isValidEmailButton, setIsValidEmailButton] = useState(false)
+
+    const [isValidPhone, setIsValidPhone] = useState(false)
+    const [isValidPhoneButton, setIsValidPhoneButton] = useState(false)
+
     // 이메일 유효성 검사
     function validateEmail() {
       if (!signUpFormData.email) {
@@ -31,7 +37,7 @@ function SignUp() {
       } else if (!/\S+@\S+\.\S+/.test(signUpFormData.email)) {
         errors.email = "*이메일: 사용할 수 없는 이메일입니다."
       } else {
-        errors.email = ""
+        setIsValidEmail(true)
       }
 
       setErrors({
@@ -67,7 +73,7 @@ function SignUp() {
       } else if (!/^\d{3}-\d{4}-\d{4}$/.test(signUpFormData.phone)) {
         errors.phone = "*휴대전화번호: 010-1234-5678 양식으로 작성해주세요."
       } else {
-        errors.phone = ""
+        setIsValidPhone(true)
       }
 
       setErrors({
@@ -181,151 +187,159 @@ function SignUp() {
     }
 
     return (
-      <form className="flex w-full flex-col p-5" onSubmit={handleSignUpSubmit}>
-        {/* 이메일 입력 창 */}
-        <div className="grid w-full grid-cols-12 items-center gap-x-2.5">
-          <input
-            value={signUpFormData.email}
-            onChange={changeHandler}
-            type="email"
-            className="col-span-9  my-1 rounded-md border p-2.5"
-            placeholder="이메일 주소"
-            id="email"
-            maxLength={255}
-            autoComplete="username"
-            onBlur={validateEmail}
-          />
-          <button
-            disabled={true}
-            type="button"
-            className="col-span-3 h-12 rounded-md bg-yellow px-3.5 py-2.5"
-            onClick={() => console.log("인증코드 전송 버튼 클릭")}
-          >
-            인증코드 전송
-          </button>
-        </div>
-        {errors.email ? (
-          <span className="col-span-12 text-alert">{errors.email}</span>
-        ) : (
-          <div className="grid w-full grid-cols-12 items-center gap-2.5">
+      <form
+        className="mt-5 flex w-full flex-col p-5"
+        onSubmit={handleSignUpSubmit}
+      >
+        <div className=" flex w-full flex-col ">
+          {/* 이메일 입력 창 */}
+          <div className="grid w-full grid-cols-12 items-center gap-x-2.5">
             <input
-              value={confirmNumbers.emailConfirm}
-              onChange={changeConfirmHandler}
+              value={signUpFormData.email}
+              onChange={changeHandler}
               type="email"
               className="col-span-9  my-1 rounded-md border p-2.5"
-              placeholder="인증 번호"
-              id="emailConfirm"
+              placeholder="이메일 주소"
+              id="email"
               maxLength={255}
               autoComplete="username"
+              onBlur={validateEmail}
             />
             <button
+              disabled={!isValidEmail}
               type="button"
               className="col-span-3 h-12 rounded-md bg-yellow px-3.5 py-2.5"
+              onClick={() => setIsValidEmailButton(true)}
             >
-              인증하기
+              인증코드 전송
             </button>
           </div>
-        )}
-        {/* 비밀번호 입력 창 */}
-        <input
-          value={signUpFormData.password}
-          onChange={changeHandler}
-          type="password"
-          className=" my-1 w-full rounded-md border p-2.5"
-          placeholder="비밀번호"
-          id="password"
-          minLength={8}
-          maxLength={16}
-          autoComplete="new-password"
-          onBlur={validatePassword}
-        />
-        {/* 비밀번호 확인 입력 창 */}
-        <input
-          value={confirmNumbers.passwordConfirm}
-          onChange={changeConfirmHandler}
-          type="password"
-          className=" my-1 w-full rounded-md border p-2.5"
-          placeholder="비밀번호 확인"
-          id="passwordConfirm"
-          minLength={8}
-          maxLength={16}
-          autoComplete="new-password"
-        />
-        {errors.password && (
-          <span className="col-span-12 text-alert">{errors.password}</span>
-        )}
-        {/* 닉네임 입력 창 */}
-        <input
-          value={signUpFormData.nickname}
-          onChange={changeHandler}
-          type="text"
-          className=" my-1 w-full rounded-md border p-2.5"
-          placeholder="닉네임"
-          id="nickname"
-          maxLength={20}
-        />
-        {errors.nickname && (
-          <span className="col-span-12 text-alert">{errors.nickname}</span>
-        )}
-        {/* 전화번호 입력 창 */}
-        <div className="grid w-full grid-cols-12 items-center gap-x-2.5">
+          {!isValidEmail && (
+            <span className="col-span-12 text-alert">{errors.email}</span>
+          )}
+          {isValidEmailButton && (
+            <div className="grid w-full grid-cols-12 items-center gap-2.5">
+              <input
+                value={confirmNumbers.emailConfirm}
+                onChange={changeConfirmHandler}
+                type="email"
+                className="col-span-9  my-1 rounded-md border p-2.5"
+                placeholder="인증 번호"
+                id="emailConfirm"
+                maxLength={255}
+                autoComplete="username"
+              />
+              <button
+                type="button"
+                className="col-span-3 h-12 rounded-md bg-yellow px-3.5 py-2.5"
+              >
+                인증하기
+              </button>
+            </div>
+          )}
+          {/* 비밀번호 입력 창 */}
           <input
-            value={signUpFormData.phone}
-            onInput={onInputPhone}
+            value={signUpFormData.password}
+            onChange={changeHandler}
+            type="password"
+            className=" my-1 w-full rounded-md border p-2.5"
+            placeholder="비밀번호"
+            id="password"
+            minLength={8}
+            maxLength={16}
+            autoComplete="new-password"
+            onBlur={validatePassword}
+          />
+          {/* 비밀번호 확인 입력 창 */}
+          <input
+            value={confirmNumbers.passwordConfirm}
+            onChange={changeConfirmHandler}
+            type="password"
+            className=" my-1 w-full rounded-md border p-2.5"
+            placeholder="비밀번호 확인"
+            id="passwordConfirm"
+            minLength={8}
+            maxLength={16}
+            autoComplete="new-password"
+          />
+          {errors.password && (
+            <span className="col-span-12 text-alert">{errors.password}</span>
+          )}
+          {/* 닉네임 입력 창 */}
+          <input
+            value={signUpFormData.nickname}
             onChange={changeHandler}
             type="text"
-            className="col-span-9  my-1 rounded-md border p-2.5"
-            placeholder="휴대전화번호"
-            id="phone"
-            maxLength="13"
-            onBlur={validatePhone}
+            className=" my-1 w-full rounded-md border p-2.5"
+            placeholder="닉네임"
+            id="nickname"
+            maxLength={20}
           />
-          <button
-            disabled={true}
-            type="button"
-            className="col-span-3 h-12 rounded-md bg-yellow px-3.5 py-2.5"
-            onClick={() => console.log("인증코드 전송 버튼 클릭")}
-          >
-            인증코드 전송
-          </button>
-        </div>
-        {errors.phone ? (
-          <span className="col-span-12 text-alert">{errors.phone}</span>
-        ) : (
-          <div className="grid w-full grid-cols-12 items-center gap-2.5">
+          {errors.nickname && (
+            <span className="col-span-12 text-alert">{errors.nickname}</span>
+          )}
+          {/* 전화번호 입력 창 */}
+          <div className="grid w-full grid-cols-12 items-center gap-x-2.5">
             <input
-              value={confirmNumbers.emailConfirm}
-              onChange={changeConfirmHandler}
-              type="email"
+              value={signUpFormData.phone}
+              onInput={onInputPhone}
+              onChange={changeHandler}
+              type="text"
               className="col-span-9  my-1 rounded-md border p-2.5"
-              placeholder="인증 번호"
-              id="emailConfirm"
-              maxLength={255}
-              autoComplete="username"
+              placeholder="휴대전화번호"
+              id="phone"
+              maxLength="13"
+              onBlur={validatePhone}
             />
             <button
+              disabled={!isValidPhone}
               type="button"
               className="col-span-3 h-12 rounded-md bg-yellow px-3.5 py-2.5"
+              onClick={() => setIsValidPhoneButton(true)}
             >
-              인증하기
+              인증코드 전송
             </button>
           </div>
-        )}
-        {/* 생년월일 창 */}
-        <input
-          value={signUpFormData.birth}
-          onChange={changeHandler}
-          type="text"
-          className=" my-1 w-full rounded-md border p-2.5"
-          placeholder="생년월일 8자리"
-          id="birth"
-          minLength="8"
-          maxLength="8"
-          onBlur={validateBirth}
-        />
-        {errors.birth && (
-          <span className="col-span-12 text-alert">{errors.birth}</span>
-        )}
+          {isValidPhone && (
+            <span className="col-span-12 text-alert">{errors.phone}</span>
+          )}
+          {isValidPhoneButton && (
+            <div className="grid w-full grid-cols-12 items-center gap-2.5">
+              <input
+                value={confirmNumbers.phoneConfirm}
+                onChange={changeConfirmHandler}
+                type="text"
+                className="col-span-9  my-1 rounded-md border p-2.5"
+                placeholder="인증 번호"
+                id="phoneConfirm"
+                maxLength={255}
+                autoComplete="username"
+              />
+              <button
+                type="button"
+                className="col-span-3 h-12 rounded-md bg-yellow px-3.5 py-2.5"
+              >
+                인증하기
+              </button>
+            </div>
+          )}
+          {/* 생년월일 창 */}
+          <input
+            value={signUpFormData.birth}
+            onChange={changeHandler}
+            type="text"
+            className=" my-1 w-full rounded-md border p-2.5"
+            placeholder="생년월일 8자리"
+            id="birth"
+            minLength="8"
+            maxLength="8"
+            onBlur={validateBirth}
+          />
+          {errors.birth && (
+            <span className="col-span-12 text-alert">{errors.birth}</span>
+          )}
+        </div>
+
         {/* 회원가입 버튼 */}
         <div className="grid w-full grid-cols-2 gap-10">
           <button
