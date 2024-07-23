@@ -11,6 +11,15 @@ module.exports = {
         stroke: "#d9d9d9",
         yellow: "#fef3c7",
       },
+      fontFamily: {
+        sans: ["Pretendard"],
+      },
+      fontWeight: {
+        light: 300,
+        normal: 400,
+        medium: 500,
+        bold: 700,
+      },
     },
   },
   plugins: [],
