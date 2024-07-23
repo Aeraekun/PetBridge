@@ -24,17 +24,27 @@ function SignUp() {
     // 유효성 검사 실패 에러 메시지 저장을 위한 state
     const [errors, setErrors] = useState({})
 
+    // 이메일 유효성 검사
     const [isValidEmail, setIsValidEmail] = useState(false)
     const [isValidEmailButton, setIsValidEmailButton] = useState(false)
 
+    // 전화번호 유효성 검사
     const [isValidPhone, setIsValidPhone] = useState(false)
     const [isValidPhoneButton, setIsValidPhoneButton] = useState(false)
+
+    // 유효성 검사 정규표현식
+    const emailPattern = /\S+@\S+\.\S+/
+    const passwordPattern =
+      /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/
+    const birthTypePattern = /^\d{8}$/
+    const birthPattern =
+      /^(19[0-9]{2}|20[0-9]{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/
 
     // 이메일 유효성 검사
     function validateEmail() {
       if (!signUpFormData.email) {
         errors.email = "*이메일: 필수 정보입니다."
-      } else if (!/\S+@\S+\.\S+/.test(signUpFormData.email)) {
+      } else if (!emailPattern.test(signUpFormData.email)) {
         errors.email = "*이메일: 사용할 수 없는 이메일입니다."
       } else {
         setIsValidEmail(true)
@@ -47,14 +57,11 @@ function SignUp() {
     }
 
     // 비밀번호 유효성 검사
+    // 8 ~ 16자, 영문 대소문자, 숫자, 특수문자 필수
     function validatePassword() {
       if (!signUpFormData.password) {
         errors.password = "*비밀번호: 필수 정보입니다."
-      } else if (
-        !/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/.test(
-          signUpFormData.password
-        )
-      ) {
+      } else if (!passwordPattern.test(signUpFormData.password)) {
         errors.password =
           "*비밀번호: 8~16자의 영문 대/소문자, 숫자, 특수문자를 사용해 주세요."
       } else {
@@ -67,10 +74,13 @@ function SignUp() {
       })
     }
 
+    const phonePattern = /^\d{3}-\d{4}-\d{4}$/
+
+    // 전화번호 유효성 검사
     function validatePhone() {
       if (!signUpFormData.phone) {
         errors.phone = "*휴대전화번호: 필수 정보입니다."
-      } else if (!/^\d{3}-\d{4}-\d{4}$/.test(signUpFormData.phone)) {
+      } else if (!phonePattern.test(signUpFormData.phone)) {
         errors.phone = "*휴대전화번호: 010-1234-5678 양식으로 작성해주세요."
       } else {
         setIsValidPhone(true)
@@ -82,11 +92,16 @@ function SignUp() {
       })
     }
 
+    // 생일 유효성 검사
+    // 8자리 숫자인지 확인
     function validateBirth() {
       if (!signUpFormData.birth) {
         errors.birth = "*생년월일: 필수 정보입니다."
-      } else if (!/^\d{8}$/.test(signUpFormData.birth)) {
+      } else if (!birthTypePattern.test(signUpFormData.birth)) {
         errors.birth = "*생년월일: 20240723 양식으로 작성해주세요."
+      } else if (!birthPattern.test(signUpFormData.birth)) {
+        errors.birth =
+          "*생년월일: 19000101 - 20991231 이내의 생일을 입력해주세요."
       } else {
         errors.birth = ""
       }
@@ -105,29 +120,30 @@ function SignUp() {
       }
       if (!signUpFormData.email) {
         errors.email = "*이메일: 필수 정보입니다."
-      } else if (!/\S+@\S+\.\S+/.test(signUpFormData.email)) {
+      } else if (!emailPattern.test(signUpFormData.email)) {
         errors.email = "*이메일: 사용할 수 없는 이메일입니다."
       }
       if (!signUpFormData.password) {
         errors.password = "*비밀번호: 필수 정보입니다."
-      } else if (
-        !/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/.test(
-          signUpFormData.password
-        )
-      ) {
+      } else if (!passwordPattern.test(signUpFormData.password)) {
         errors.password =
           "*비밀번호: 8~16자의 영문 대/소문자, 숫자, 특수문자를 사용해 주세요."
       }
       if (!signUpFormData.phone) {
         errors.phone = "*휴대전화번호: 필수 정보입니다."
-      } else if (!/^\d{3,4}-\d{4}-\d{4}$/.test(signUpFormData)) {
+      } else if (!phonePattern.test(signUpFormData)) {
         errors.phone = "*휴대전화번호: 010-1234-5678 양식으로 작성해주세요."
       }
 
       if (!signUpFormData.birth) {
         errors.birth = "*생년월일: 필수 정보입니다."
-      } else if (!/d{8}/.test(signUpFormData.birth)) {
+      } else if (!birthTypePattern.test(signUpFormData.birth)) {
         errors.birth = "*생년월일: 20240723 양식으로 작성해주세요."
+      } else if (!birthPattern.test(signUpFormData.birth)) {
+        errors.birth =
+          "*생년월일: 19000101 - 20991231 이내의 생일을 입력해주세요."
+      } else {
+        errors.birth = ""
       }
 
       return errors
@@ -329,7 +345,7 @@ function SignUp() {
             onChange={changeHandler}
             type="text"
             className=" my-1 w-full rounded-md border p-2.5"
-            placeholder="생년월일 8자리"
+            placeholder="생년월일 8자리 (YYYYMMDD)"
             id="birth"
             minLength="8"
             maxLength="8"
