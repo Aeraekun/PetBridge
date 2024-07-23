@@ -1,6 +1,6 @@
 import {Link} from "react-router-dom"
 import Button from "components/common/Button"
-import Login from "components/auth/Login"
+import Login from "components/users/Login"
 
 const LoginPage = () => {
   return (

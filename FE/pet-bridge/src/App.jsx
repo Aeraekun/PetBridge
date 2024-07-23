@@ -1,7 +1,7 @@
 import {Route, Routes} from "react-router-dom"
 import Layout from "./layout/Layout"
 import LoginPage from "./pages/LoginPage"
-import SignUp from "pages/SignUpPage"
+import SignUpPage from "pages/SignUpPage"
 import CommunityPage from "pages/CommunityPage"
 
 function App() {
@@ -11,7 +11,7 @@ function App() {
         <Route path="/communities" element={<CommunityPage />}></Route>
       </Route>
       <Route path="/login" element={<LoginPage />}></Route>
-      <Route path="/signup" element={<SignUp />}></Route>
+      <Route path="/signup" element={<SignUpPage />}></Route>
     </Routes>
   )
 }
