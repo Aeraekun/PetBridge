@@ -3,6 +3,7 @@ import Layout from "./layout/Layout"
 import LoginPage from "./pages/LoginPage"
 import SignUp from "pages/SignUpPage"
 import CommunityPage from "pages/CommunityPage"
+import ShortsPage from "pages/ShortsPage"
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       </Route>
       <Route path="/login" element={<LoginPage />}></Route>
       <Route path="/signup" element={<SignUp />}></Route>
+      <Route path="/shorts" element={<ShortsPage />}></Route>
     </Routes>
   )
 }
