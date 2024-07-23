@@ -1,16 +1,33 @@
 import Button from "components/common/Button"
 import {Link} from "react-router-dom"
+import {useState} from "react"
+import {loginUser} from "api/usersApi"
 
 function LoginForm() {
+  const [loginForm, setLoginForm] = useState({
+    userEmail: "",
+    userPassword: "",
+  })
+
+  // Submit 양식
   function handleLoginSubmit(e) {
     e.preventDefault()
     console.log("로그인 버튼 클릭")
+    console.log(loginForm)
+    loginUser(loginForm)
   }
 
   return (
     <form className="space-y-2.5" onSubmit={handleLoginSubmit}>
       {/* 이메일 입력창 */}
       <input
+        value={loginForm.userEmail}
+        onChange={(e) => {
+          setLoginForm({
+            ...loginForm,
+            userEmail: e.target.value,
+          })
+        }}
         type="email"
         className="w-full rounded-md border p-2.5"
         placeholder="Email"
@@ -20,6 +37,13 @@ function LoginForm() {
 
       {/* 비밀번호 입력창 */}
       <input
+        value={loginForm.userPassword}
+        onChange={(e) => {
+          setLoginForm({
+            ...loginForm,
+            userPassword: e.target.value,
+          })
+        }}
         type="password"
         className="w-full rounded-md border p-2.5"
         placeholder="password"
