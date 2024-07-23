@@ -1,24 +1,37 @@
 // import {useEffect, useState} from "react"
 import ReactPlayer from "react-player"
+import HeartIcon from "../components/shorts/HeartIcon"
+import SirenIcon from "../components/shorts/SirenIcon"
+import CommentIcon from "../components/shorts/CommentIcon"
+import Share from "../assets/image/Share.png"
+import Follow from "../assets/image/Follow.png"
 
 const ShortsPage = () => {
   return (
     <>
-      <main className="h-svh flex flex-col items-center ">
-        <div className="my-8  h-5/6 outline w-10/12">
-          <div className="outline h-full">
-            <div className="relative h-[500px] w-[360px]">
-              <ReactPlayer
-                url="/shorts/video.mp4" // 여기에 로컬 MP4 파일 경로 입력
-                controls={true}
-                playing={true}
-                width="100%"
-                height="100%"
-              />
-              <div className="absolute bottom-20 left-0 p-4 bg-black bg-opacity-50 text-white">
-                여기에 텍스트 추가
-              </div>
+      <main className="h-screen flex flex-col items-center mt-[80px]">
+        <div className=" items-end flex space-x-4 my-8 ">
+          <div className=" overflow-hidden rounded-lg relative h-[700px] max-w-[500px] object-contain ">
+            <ReactPlayer
+              url="/shorts/video.mp4" // 여기에 로컬 MP4 파일 경로 입력
+              controls={true}
+              playing={true}
+              width="100%"
+              height="100%"
+            />
+            <div className="absolute bottom-20 left-0 p-4 bg-black bg-opacity-50 text-white">
+              제목제목
+              <br />
+              내용내용
             </div>
+          </div>
+          <div className="flex flex-col space-y-2">
+            <HeartIcon className="w-12" />
+            <SirenIcon className="w-12" />
+            <CommentIcon className="w-12" />
+
+            <img src={Follow} className="w-8" alt="Follow Icon" />
+            <img src={Share} className="w-8" alt="Share Icon" />
           </div>
         </div>
       </main>
