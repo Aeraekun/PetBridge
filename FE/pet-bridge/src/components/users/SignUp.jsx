@@ -20,8 +20,9 @@ function SignUp() {
       signUpUser(signUpForm)
     }
 
-    function onInputPhone(target) {
-      console.log(target)
+    // 전화번호 입력시 정규표현식으로 ###-####-#### 형식으로 변환
+    function onInputPhone(e) {
+      const target = e.target
       if (target.value) {
         target.value = target.value
           .replace(/[^0-9]/g, "")
@@ -33,7 +34,7 @@ function SignUp() {
     }
 
     return (
-      <form action="" onSubmit={handleSignUpSubmit}>
+      <form className="" onSubmit={handleSignUpSubmit}>
         {/* 이메일 입력 창 */}
         <input
           value={signUpForm.email}
@@ -83,13 +84,13 @@ function SignUp() {
         {/* 전화번호 입력 창 */}
         <input
           value={signUpForm.phone}
+          onInput={onInputPhone}
           onChange={(e) => {
             setSignUpForm({
               ...signUpForm,
               phone: e.target.value,
             })
           }}
-          onInput={onInputPhone}
           type="phone"
           className="w-full rounded-md border p-2.5"
           placeholder="phone"
@@ -112,8 +113,17 @@ function SignUp() {
           maxLength="13"
         />
         {/* 회원가입 버튼 */}
-        <button className="h-12 rounded-md bg-yellow px-3.5 py-2.5">
+        <button
+          type="submit"
+          className="h-12 rounded-md bg-yellow px-3.5 py-2.5"
+        >
           회원가입
+        </button>
+        <button
+          type="button"
+          className="h-12 rounded-md bg-yellow px-3.5 py-2.5"
+        >
+          가입 취소
         </button>
       </form>
     )
