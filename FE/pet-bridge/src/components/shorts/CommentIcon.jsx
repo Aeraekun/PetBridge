@@ -7,7 +7,7 @@ const CommentIcon = () => {
   const navigate = useNavigate()
 
   function goCommentPage() {
-    navigate("/shorts/comments", {replace: true})
+    navigate("/shorts/comments")
   }
 
   return (
