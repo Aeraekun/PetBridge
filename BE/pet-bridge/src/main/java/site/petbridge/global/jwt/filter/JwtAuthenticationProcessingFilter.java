@@ -123,11 +123,21 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     public void checkAccessTokenAndAuthentication(HttpServletRequest request, HttpServletResponse response,
                                                   FilterChain filterChain) throws ServletException, IOException {
         log.info("checkAccessTokenAndAuthentication() 호출");
-        jwtService.extractAccessToken(request)
+
+        boolean tokenValid = jwtService.extractAccessToken(request)
                 .filter(jwtService::isTokenValid)
-                .ifPresent(accessToken -> jwtService.extractEmail(accessToken)
-                .ifPresent(email -> userRepository.findByEmail(email)
-                .ifPresent(this::saveAuthentication)));
+                .map(accessToken -> {
+                    jwtService.extractEmail(accessToken)
+                            .ifPresent(email -> userRepository.findByEmail(email)
+                                    .ifPresent(this::saveAuthentication));
+                    return true;
+                })
+                .orElse(false);
+
+        if (!tokenValid) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Access Token is expired or invalid");
+            return;
+        }
 
         filterChain.doFilter(request, response);
     }
