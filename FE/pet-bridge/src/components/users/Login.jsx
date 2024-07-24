@@ -1,31 +1,38 @@
 import Button from "components/common/Button"
 import {Link} from "react-router-dom"
 import {useState} from "react"
+import {useDispatch, useSelector} from "react-redux"
+import {selectLoading, selectError} from "features/user/userSlice"
 import {loginUser} from "api/usersApi"
 
 function LoginForm() {
   const [loginForm, setLoginForm] = useState({
-    userEmail: "",
-    userPassword: "",
+    email: "",
+    password: "",
   })
+
+  const dispatch = useDispatch()
+  const loading = useSelector(selectLoading)
+  const error = useSelector(selectError)
 
   // Submit 양식
   function handleLoginSubmit(e) {
     e.preventDefault()
-    console.log("로그인 버튼 클릭")
-    console.log(loginForm)
-    loginUser(loginForm)
+
+    const loginData = loginForm
+    // 로그인 Api 호출
+    dispatch(loginUser(loginData))
   }
 
   return (
     <form className="space-y-2.5" onSubmit={handleLoginSubmit}>
       {/* 이메일 입력창 */}
       <input
-        value={loginForm.userEmail}
+        value={loginForm.email}
         onChange={(e) => {
           setLoginForm({
             ...loginForm,
-            userEmail: e.target.value,
+            email: e.target.value,
           })
         }}
         type="email"
@@ -37,11 +44,11 @@ function LoginForm() {
 
       {/* 비밀번호 입력창 */}
       <input
-        value={loginForm.userPassword}
+        value={loginForm.password}
         onChange={(e) => {
           setLoginForm({
             ...loginForm,
-            userPassword: e.target.value,
+            password: e.target.value,
           })
         }}
         type="password"
@@ -52,9 +59,15 @@ function LoginForm() {
       />
 
       {/* 로그인 버튼 */}
-      <button className="h-12 w-full rounded-md bg-yellow px-3.5 py-2.5">
-        로그인
+      <button
+        className="h-12 w-full rounded-md bg-yellow px-3.5 py-2.5"
+        disabled={loading}
+      >
+        {loading ? "로그인 중..." : "로그인"}
       </button>
+
+      {/* 에러 메시지 */}
+      {error && <p className="text-alert">{error}</p>}
     </form>
   )
 }
