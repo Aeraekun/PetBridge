@@ -5,6 +5,7 @@ import HeartIcon from "./HeartIcon"
 import SirenIcon from "./SirenIcon"
 import CommentIcon from "./CommentIcon"
 import Follow from "../../assets/image/Follow.png"
+import React, {useState} from "react"
 
 const Comment = ({data}) => {
   console.log(data)
@@ -59,6 +60,28 @@ const Shorts = () => {
 }
 
 const CommentInput = () => {
+  const [inputComment, setInputComment] = useState("")
+  const sendMsg = () => {
+    console.log({inputComment})
+
+    // const data = [
+    //   {
+    //     id: 2,
+    //     user_id: 102,
+    //     post_id: 202,
+    //     animal_id: 302,
+    //     title: "우리 강아지와 함께한 즐거운 시간",
+    //     thumbnail: "img2.jpg",
+    //     content: {inputComment},
+    //     regist_time: "2024-07-24T09:15:00Z",
+    //     nickname: "반려견행복",
+    //     image: "img2.jpg",
+    //   },
+    // ]
+
+    setInputComment("")
+  }
+
   return (
     <div className="flex flex-col justify-between h-16 space-x-2.5 ">
       <div className="flex items-center space-x-2.5">
@@ -66,8 +89,10 @@ const CommentInput = () => {
           type="text"
           className="w-full outline h-10 text-sm"
           placeholder="좋아요와 댓글을 남기려면 로그인하세요"
+          value={inputComment}
+          onChange={(e) => setInputComment(e.target.value)}
         />
-        <button className="w-12 outline h-10" onClick={Comment}>
+        <button className="w-12 outline h-10" onClick={sendMsg}>
           댓글 쓰기
         </button>
       </div>
