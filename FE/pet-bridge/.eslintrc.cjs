@@ -29,6 +29,7 @@ module.exports = {
     "react/react-in-jsx-scope": "off",
     // import에 대한 규칙 설정
     "import/no-unresolved": "error",
+    "react/prop-types": "off",
     "import/named": "error",
     "import/default": "error",
     "import/namespace": "error",
