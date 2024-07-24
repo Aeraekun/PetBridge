@@ -1,9 +1,11 @@
 import {useState} from "react"
-import {signUpUser} from "api/usersApi"
+import {loginUser, signUpUser} from "api/usersApi"
 import {Link} from "react-router-dom"
+import {useDispatch} from "react-redux"
 
 function SignUp() {
   function SignUpForm() {
+    const dispatch = useDispatch()
     // 회원가입 폼 제출을 위한 인자 저장 state
     const [signUpFormData, setSignUpFormData] = useState({
       name: "default",
@@ -134,16 +136,26 @@ function SignUp() {
     // Submit 양식
     // signUpUser Axios 요청을 보냄
     // 인자 : name(삭제 예정), email, password, nickname, birth, phone
-    function handleSignUpSubmit(e) {
+    const handleSignUpSubmit = async (e) => {
       e.preventDefault()
 
       const validationErrors = validateTotalForm()
 
       if (Object.values(validationErrors).every((value) => value === "")) {
         console.log("SignUpFormData: ", signUpFormData)
-        signUpUser(signUpFormData)
+        try {
+          await signUpUser(signUpFormData)
+          const {email, password} = signUpFormData
+          const loginData = {
+            email: email,
+            password: password,
+          }
+          dispatch(loginUser(loginData))
+        } catch {
+          return
+        }
       } else {
-        console.log("Errors: ", validationErrors)
+        console.log("Validation Errors: ", validationErrors)
       }
     }
 
