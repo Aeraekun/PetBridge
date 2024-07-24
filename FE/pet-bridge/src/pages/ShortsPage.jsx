@@ -19,7 +19,7 @@ const ShortsPage = () => {
               width="100%"
               height="100%"
             />
-            <div className="absolute bottom-20 left-0 bg-black bg-opacity-50 p-4 text-white">
+            <div className="absolute bottom-20 left-0 bg-black/50 p-4 text-white">
               제목제목
               <br />
               내용내용
