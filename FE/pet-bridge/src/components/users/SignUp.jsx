@@ -39,6 +39,7 @@ function SignUp() {
     const birthTypePattern = /^\d{8}$/
     const birthPattern =
       /^(19[0-9]{2}|20[0-9]{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/
+    const phonePattern = /^\d{3}\d{4}\d{4}$/
 
     // 에러 메세지 변경
     function setOneError(error, message) {
@@ -55,6 +56,7 @@ function SignUp() {
       } else if (!emailPattern.test(signUpFormData.email)) {
         errors.email = "*이메일: 사용할 수 없는 이메일입니다."
       } else {
+        errors.email = ""
         setIsValidEmail(true)
       }
 
@@ -76,15 +78,14 @@ function SignUp() {
       setOneError("password", errors.password)
     }
 
-    const phonePattern = /^\d{3}-\d{4}-\d{4}$/
-
     // 전화번호 유효성 검사
     function validatePhone() {
       if (!signUpFormData.phone) {
         errors.phone = "*휴대전화번호: 필수 정보입니다."
       } else if (!phonePattern.test(signUpFormData.phone)) {
-        errors.phone = "*휴대전화번호: 010-1234-5678 양식으로 작성해주세요."
+        errors.phone = "*휴대전화번호: 01012345678 양식으로 작성해주세요."
       } else {
+        errors.phone = ""
         setIsValidPhone(true)
       }
 
@@ -136,11 +137,13 @@ function SignUp() {
     function handleSignUpSubmit(e) {
       e.preventDefault()
 
-      if (Object.keys(validateTotalForm()).length === 0) {
+      const validationErrors = validateTotalForm()
+
+      if (Object.values(validationErrors).every((value) => value === "")) {
         console.log("SignUpFormData: ", signUpFormData)
         signUpUser(signUpFormData)
       } else {
-        console.log(errors)
+        console.log("Errors: ", validationErrors)
       }
     }
 
@@ -175,12 +178,13 @@ function SignUp() {
           .replace(/[^0-9]/g, "")
           .replace(
             /(^02.{0}|^01.{1}|[0-9]{3,4})([0-9]{4})([0-9]{4})/g,
-            "$1-$2-$3"
+            "$1$2$3"
           )
       }
     }
 
     return (
+      // form 태그
       <form
         className="mt-5 flex w-full flex-col p-5"
         onSubmit={handleSignUpSubmit}
@@ -335,8 +339,8 @@ function SignUp() {
           )}
         </div>
 
-        {/* 회원가입 버튼 */}
         <div className="grid w-full grid-cols-2 gap-10">
+          {/* 회원가입 버튼 */}
           <button
             type="submit"
             className="h-12 rounded-md bg-yellow px-3.5 py-2.5"
