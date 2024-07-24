@@ -2,7 +2,7 @@ package site.petbridge.domain.user.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import site.petbridge.domain.user.Role;
 import site.petbridge.domain.user.User;
@@ -15,7 +15,7 @@ import site.petbridge.domain.user.repository.UserRepository;
 public class UserService {
 
     private final UserRepository userRepository;
-//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public void signUp(UserSignUpDto userSignUpDto) throws Exception{
 
@@ -36,7 +36,7 @@ public class UserService {
                 .role(Role.USER)
                 .build();
 
-//        user.passwordEncode(passwordEncoder);
+        user.passwordEncode(passwordEncoder);
         userRepository.save(user);
     }
 }
