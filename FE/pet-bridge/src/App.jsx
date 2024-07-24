@@ -6,6 +6,7 @@ import SignUpPage from "pages/SignUpPage"
 import CommunityPage from "pages/CommunityPage"
 import ShortsPage from "pages/ShortsPage"
 import ShortComments from "components/shorts/ShortComments"
+import LostAndFoundPage from "pages/LostAndFoundPage"
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/communities" element={<CommunityPage />}></Route>
       </Route>
       <Route path="/login" element={<LoginPage />}></Route>
+      <Route path="/lost-and-found" element={<LostAndFoundPage />}></Route>
       <Route path="/signup" element={<SignUpPage />}></Route>
       <Route path="/short" element={<ShortsPage />}></Route>
       <Route path="/shorts" element={<ShortsLayout />}>
