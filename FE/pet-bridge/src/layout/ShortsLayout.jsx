@@ -14,7 +14,7 @@ const ShortsLayout = () => {
               controls={true}
               playing={true}
               width="100%"
-              height="700px"
+              height="100%"
             />
           </div>
           <div className="max-h-[700px] min-w-[500px] flex-1 rounded-r-lg">
