@@ -1,19 +1,25 @@
 import React from "react"
-import {useNavigate} from "react-router-dom"
+
+import {useLocation, useNavigate} from "react-router-dom"
 
 import Comment from "../../assets/image/Comment.png"
 
 const CommentIcon = () => {
+  const location = useLocation()
   const navigate = useNavigate()
 
-  function goCommentPage() {
-    navigate("/shorts/comments")
+  const handleClick = () => {
+    if (location.pathname === "/short") {
+      navigate("/shorts/comments")
+    } else {
+      navigate("/short")
+    }
   }
 
   return (
     <>
-      <button onClick={goCommentPage}>
-        <img src={Comment} alt="Siren Icon" />
+      <button onClick={handleClick}>
+        <img src={Comment} alt="Comment Icon" />
       </button>
     </>
   )
