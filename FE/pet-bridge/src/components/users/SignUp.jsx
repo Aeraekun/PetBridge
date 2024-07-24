@@ -40,6 +40,14 @@ function SignUp() {
     const birthPattern =
       /^(19[0-9]{2}|20[0-9]{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/
 
+    // 에러 메세지 변경
+    function setOneError(error, message) {
+      setErrors({
+        ...errors,
+        error: message,
+      })
+    }
+
     // 이메일 유효성 검사
     function validateEmail() {
       if (!signUpFormData.email) {
@@ -50,10 +58,7 @@ function SignUp() {
         setIsValidEmail(true)
       }
 
-      setErrors({
-        ...errors,
-        email: errors.email,
-      })
+      setOneError("email", errors.email)
     }
 
     // 비밀번호 유효성 검사
@@ -68,10 +73,7 @@ function SignUp() {
         errors.password = ""
       }
 
-      setErrors({
-        ...errors,
-        password: errors.password,
-      })
+      setOneError("password", errors.password)
     }
 
     const phonePattern = /^\d{3}-\d{4}-\d{4}$/
@@ -86,10 +88,7 @@ function SignUp() {
         setIsValidPhone(true)
       }
 
-      setErrors({
-        ...errors,
-        phone: errors.phone,
-      })
+      setOneError("phone", errors.phone)
     }
 
     // 생일 유효성 검사
@@ -106,45 +105,27 @@ function SignUp() {
         errors.birth = ""
       }
 
-      setErrors({
-        ...errors,
-        birth: errors.birth,
-      })
+      setOneError("birth", errors.birth)
+    }
+
+    // 닉네임 유효성 검사
+    function validateNickname() {
+      if (!signUpFormData.nickname) {
+        errors.nickname = "*닉네임: 필수 정보입니다."
+      } else {
+        errors.nickname = ""
+      }
+
+      setOneError("nickname", errors.nickname)
     }
 
     // 회원가입 제출시 유효성 검사
     function validateTotalForm() {
-      const errors = {}
-      if (!signUpFormData.nickname) {
-        errors.nickname = "*닉네임: 필수 정보입니다."
-      }
-      if (!signUpFormData.email) {
-        errors.email = "*이메일: 필수 정보입니다."
-      } else if (!emailPattern.test(signUpFormData.email)) {
-        errors.email = "*이메일: 사용할 수 없는 이메일입니다."
-      }
-      if (!signUpFormData.password) {
-        errors.password = "*비밀번호: 필수 정보입니다."
-      } else if (!passwordPattern.test(signUpFormData.password)) {
-        errors.password =
-          "*비밀번호: 8~16자의 영문 대/소문자, 숫자, 특수문자를 사용해 주세요."
-      }
-      if (!signUpFormData.phone) {
-        errors.phone = "*휴대전화번호: 필수 정보입니다."
-      } else if (!phonePattern.test(signUpFormData)) {
-        errors.phone = "*휴대전화번호: 010-1234-5678 양식으로 작성해주세요."
-      }
-
-      if (!signUpFormData.birth) {
-        errors.birth = "*생년월일: 필수 정보입니다."
-      } else if (!birthTypePattern.test(signUpFormData.birth)) {
-        errors.birth = "*생년월일: 20240723 양식으로 작성해주세요."
-      } else if (!birthPattern.test(signUpFormData.birth)) {
-        errors.birth =
-          "*생년월일: 19000101 - 20991231 이내의 생일을 입력해주세요."
-      } else {
-        errors.birth = ""
-      }
+      validateNickname()
+      validateEmail()
+      validatePassword()
+      validatePhone()
+      validateBirth()
 
       return errors
     }
@@ -155,14 +136,11 @@ function SignUp() {
     function handleSignUpSubmit(e) {
       e.preventDefault()
 
-      const validationErrors = validateTotalForm()
-
-      if (Object.keys(validationErrors).length === 0) {
+      if (Object.keys(validateTotalForm()).length === 0) {
         console.log("SignUpFormData: ", signUpFormData)
         signUpUser(signUpFormData)
       } else {
-        console.log(validationErrors)
-        setErrors(validationErrors)
+        console.log(errors)
       }
     }
 
@@ -290,6 +268,7 @@ function SignUp() {
             placeholder="닉네임"
             id="nickname"
             maxLength={20}
+            onBlur={validateNickname}
           />
           {errors.nickname && (
             <span className="col-span-12 text-alert">{errors.nickname}</span>
@@ -316,7 +295,7 @@ function SignUp() {
               인증코드 전송
             </button>
           </div>
-          {isValidPhone && (
+          {!isValidPhone && (
             <span className="col-span-12 text-alert">{errors.phone}</span>
           )}
           {isValidPhoneButton && (
