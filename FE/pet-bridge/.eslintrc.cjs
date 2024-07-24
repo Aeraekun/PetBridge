@@ -10,6 +10,7 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:prettier/recommended",
+    "plugin:react-redux/recommended",
     "plugin:react-hooks/recommended",
     "plugin:tailwindcss/recommended",
     "plugin:import/errors",
@@ -24,11 +25,12 @@ module.exports = {
       jsx: true,
     },
   },
-  plugins: ["react", "react-hooks", "jsx-a11y", "jest"],
+  plugins: ["react", "react-hooks", "jsx-a11y", "jest", "react-redux"],
   rules: {
     "react/react-in-jsx-scope": "off",
     // import에 대한 규칙 설정
     "import/no-unresolved": "error",
+    "react/prop-types": "off",
     "import/named": "error",
     "import/default": "error",
     "import/namespace": "error",
