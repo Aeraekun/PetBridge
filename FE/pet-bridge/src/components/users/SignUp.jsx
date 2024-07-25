@@ -202,7 +202,7 @@ function SignUp() {
     return (
       // form 태그
       <form
-        className="mt-5 flex w-full flex-col p-5"
+        className="my-10 flex size-full flex-col justify-between p-5"
         onSubmit={handleSignUpSubmit}
       >
         <div className=" flex w-full flex-col ">
@@ -222,7 +222,7 @@ function SignUp() {
             <button
               disabled={!isValidEmail}
               type="button"
-              className="col-span-3 h-12 rounded-md bg-yellow px-3.5 py-2.5"
+              className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
               onClick={() => setIsValidEmailButton(true)}
             >
               인증코드 전송
@@ -245,7 +245,7 @@ function SignUp() {
               />
               <button
                 type="button"
-                className="col-span-3 h-12 rounded-md bg-yellow px-3.5 py-2.5"
+                className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
               >
                 인증하기
               </button>
@@ -309,7 +309,7 @@ function SignUp() {
             <button
               disabled={!isValidPhone}
               type="button"
-              className="col-span-3 h-12 rounded-md bg-yellow px-3.5 py-2.5"
+              className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
               onClick={() => setIsValidPhoneButton(true)}
             >
               인증코드 전송
@@ -332,7 +332,7 @@ function SignUp() {
               />
               <button
                 type="button"
-                className="col-span-3 h-12 rounded-md bg-yellow px-3.5 py-2.5"
+                className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
               >
                 인증하기
               </button>
@@ -359,7 +359,7 @@ function SignUp() {
           {/* 회원가입 버튼 */}
           <button
             type="submit"
-            className="h-12 rounded-md bg-yellow px-3.5 py-2.5"
+            className="h-12 rounded-md bg-mild px-3.5 py-2.5"
           >
             회원가입
           </button>
@@ -367,7 +367,7 @@ function SignUp() {
           <Link
             to="/"
             type="button"
-            className="rounded-md bg-yellow px-3.5 py-2.5 text-center"
+            className="rounded-md bg-mild px-3.5 py-2.5 text-center"
           >
             가입 취소
           </Link>
