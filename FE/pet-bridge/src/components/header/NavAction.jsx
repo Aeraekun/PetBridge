@@ -1,11 +1,16 @@
 import {jwtTest} from "api/usersApi"
 import Button from "components/common/Button"
-import {logOut, selectIsAuthenticated} from "features/user/usersSlice"
+import {
+  logOut,
+  selectIsAuthenticated,
+  selectUserId,
+} from "features/user/usersSlice"
 import {useSelector, useDispatch} from "react-redux"
 import {Link} from "react-router-dom"
 
 function NavAction() {
   const isAuthenticated = useSelector(selectIsAuthenticated)
+  const userId = useSelector(selectUserId)
   const dispatch = useDispatch()
   const deleteRefreshTokenFromLocalStorage = () => {
     console.log(
@@ -35,16 +40,18 @@ function NavAction() {
             <button onClick={handleLogOut}>로그아웃</button>
           </li>
           <li className="mx-2.5 flex h-full cursor-pointer items-center text-xl">
-            <Button text="마이 페이지" />
+            <Link to={`users/${userId}`}>
+              <Button text="마이 페이지" />
+            </Link>
           </li>
         </>
       ) : (
         <>
           <li className="mx-2.5 flex h-full cursor-pointer items-center text-xl">
-            <Link to="/login">로그인</Link>
+            <Link to="/users/login">로그인</Link>
           </li>
           <li className="mx-2.5 flex h-full cursor-pointer items-center text-xl">
-            <Link to="/sign-up">회원가입</Link>
+            <Link to="/users/sign-up">회원가입</Link>
           </li>
         </>
       )}
