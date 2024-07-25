@@ -1,11 +1,13 @@
 import {useState} from "react"
 import {loginUser, signUpUser} from "api/usersApi"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import {useDispatch} from "react-redux"
 
 function SignUp() {
   function SignUpForm() {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+
     // 회원가입 폼 제출을 위한 인자 저장 state
     const [signUpFormData, setSignUpFormData] = useState({
       name: "default",
@@ -145,12 +147,14 @@ function SignUp() {
         console.log("SignUpFormData: ", signUpFormData)
         try {
           await signUpUser(signUpFormData)
+
           const {email, password} = signUpFormData
           const loginData = {
             email: email,
             password: password,
           }
           dispatch(loginUser(loginData))
+          navigate("/")
         } catch {
           return
         }

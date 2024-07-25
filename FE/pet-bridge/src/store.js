@@ -1,5 +1,5 @@
 import {configureStore} from "@reduxjs/toolkit"
-import userReducer from "features/user/userSlice"
+import userReducer from "features/user/usersSlice"
 import {setAuthToken, setJSONWebToken} from "api/axiosInstance"
 
 // Redux ToolKit의 configureStore 동작

@@ -1,8 +1,12 @@
 import Button from "components/common/Button"
-import {Link} from "react-router-dom"
-import {useState} from "react"
+import {Link, useNavigate} from "react-router-dom"
+import {useState, useEffect} from "react"
 import {useDispatch, useSelector} from "react-redux"
-import {selectLoading, selectError} from "features/user/userSlice"
+import {
+  selectLoading,
+  selectError,
+  selectIsAuthenticated,
+} from "features/user/usersSlice"
 import {loginUser} from "api/usersApi"
 
 function LoginForm() {
@@ -12,11 +16,19 @@ function LoginForm() {
   })
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const isAuthenticated = useSelector(selectIsAuthenticated)
   const loading = useSelector(selectLoading)
   const error = useSelector(selectError)
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/")
+    }
+  }, [isAuthenticated, navigate])
+
   // Submit 양식
-  function handleLoginSubmit(e) {
+  const handleLoginSubmit = (e) => {
     e.preventDefault()
 
     const loginData = loginForm
@@ -86,7 +98,7 @@ function Login() {
           <Link to="/">
             <Button text="PW 찾기" />
           </Link>
-          <Link to="/signup">
+          <Link to="/sign-up">
             <Button text="회원가입" />
           </Link>
         </div>

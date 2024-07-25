@@ -25,7 +25,7 @@ function App() {
       </Route>
       <Route path="/login" element={<LoginPage />}></Route>
       <Route path="/lost-and-found" element={<LostAndFoundPage />}></Route>
-      <Route path="/signup" element={<SignUpPage />}></Route>
+      <Route path="/sign-up" element={<SignUpPage />}></Route>
       <Route path="/short" element={<ShortsPage />}></Route>
       <Route path="/shorts" element={<ShortsLayout />}>
         <Route path="/shorts/comments" element={<ShortComments />}></Route>
