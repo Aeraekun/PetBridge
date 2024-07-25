@@ -1,5 +1,9 @@
 import axiosInstance from "./axiosInstance"
 import {createAsyncThunk} from "@reduxjs/toolkit"
+
+const saveRefreshTokenToLocalStorage = (refreshToken) => {
+  localStorage.setItem("refreshToken", refreshToken)
+}
 // 로그인
 // 비동기 로그인 Thunk Action 생성
 export const loginUser = createAsyncThunk(
@@ -12,6 +16,11 @@ export const loginUser = createAsyncThunk(
       const res = await axiosInstance.post("/users/login", loginData)
       // 결과 응답의 data, headers만 활용할것
       const {data, headers} = res
+      // refresh 토큰을 localStorage에 저장
+      const refreshToken = headers["authorization-refresh"]
+
+      saveRefreshTokenToLocalStorage(refreshToken)
+
       // thunk의 action으로 반환 (action은 단일 object을 payload로 반환받는다.)
       return {
         name: data.name,
@@ -42,3 +51,18 @@ export const signUpUser = async (signUpData) => {
     return
   }
 }
+
+// 유저 정보 get
+export const getUserInfo = createAsyncThunk(
+  "user/getUserInfo",
+  async (_, {rejectWithValue}) => {
+    const refreshToken = localStorage.getItem("refreshToken")
+
+    if (refreshToken) {
+      const res = await getUserInfo(refreshToken)
+      return res.data
+    } else {
+      return rejectWithValue("로컬 스토리지에 저장된 리프레시 토큰이 없습니다.")
+    }
+  }
+)

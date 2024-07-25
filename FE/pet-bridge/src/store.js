@@ -1,6 +1,6 @@
 import {configureStore} from "@reduxjs/toolkit"
 import userReducer from "features/user/userSlice"
-import {setAuthToken, setRefreshToken} from "api/axiosInstance"
+import {setAuthToken, setJSONWebToken} from "api/axiosInstance"
 
 // Redux ToolKit의 configureStore 동작
 // reducer: {} 안에 입력하는 모든 reducer를 root reducer에 포함시킴
@@ -15,6 +15,6 @@ const store = configureStore({
 })
 
 setAuthToken(store.getState) // 스토어의 getState 함수를 전달
-setRefreshToken()
+setJSONWebToken(store) // 스토어의 dispatch 함수를 전달
 
 export default store

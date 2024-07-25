@@ -30,6 +30,13 @@ export const userSlice = createSlice({
       state.refreshToken = ""
       state.isAuthenticated = true
     },
+    setAccessToken: (state, action) => {
+      state.accessToken = action.payload
+      state.isAuthenticated = !!action.payload
+    },
+    setRefreshToken: (state, action) => {
+      state.refreshToken = action.payload
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -39,9 +46,6 @@ export const userSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.name = action.payload.name
-        state.accessToken = action.payload.headers.authorization
-        state.refreshToken = action.payload.headers["authorization-refresh"]
-        state.isAuthenticated = true
         state.loading = false
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -52,7 +56,7 @@ export const userSlice = createSlice({
 })
 
 // 선택자 함수 정의
-export const selectisAuthenticated = (state) => state.user.isAuthenticated
+export const selectIsAuthenticated = (state) => state.user.isAuthenticated
 export const selectAccessToken = (state) => state.user.accessToken
 export const selectRefreshToken = (state) => state.user.refreshToken
 export const selectLoading = (state) => state.user.loading

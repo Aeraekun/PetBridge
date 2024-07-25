@@ -7,8 +7,17 @@ import CommunityPage from "pages/CommunityPage"
 import ShortsPage from "pages/ShortsPage"
 import ShortComments from "components/shorts/ShortComments"
 import LostAndFoundPage from "pages/LostAndFoundPage"
+import {useDispatch} from "react-redux"
+import {useEffect} from "react"
+import {getUserInfo} from "api/usersApi"
 
 function App() {
+  const dispath = useDispatch()
+
+  useEffect(() => {
+    dispath(getUserInfo)
+  })
+
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
