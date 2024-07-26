@@ -1,12 +1,15 @@
 import {useState} from "react"
-import {signUpUser} from "api/usersApi"
-import {Link} from "react-router-dom"
+import {loginUser, signUpUser} from "api/users-api"
+import {Link, useNavigate} from "react-router-dom"
+import {useDispatch} from "react-redux"
 
-function SignUp() {
-  function SignUpForm() {
+const SignUp = () => {
+  const SignUpForm = () => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
     // 회원가입 폼 제출을 위한 인자 저장 state
     const [signUpFormData, setSignUpFormData] = useState({
-      name: "default",
       email: "",
       password: "",
       nickname: "",
@@ -42,7 +45,7 @@ function SignUp() {
     const phonePattern = /^\d{3}\d{4}\d{4}$/
 
     // 에러 메세지 변경
-    function setOneError(error, message) {
+    const setOneError = (error, message) => {
       setErrors({
         ...errors,
         error: message,
@@ -50,7 +53,7 @@ function SignUp() {
     }
 
     // 이메일 유효성 검사
-    function validateEmail() {
+    const validateEmail = () => {
       if (!signUpFormData.email) {
         errors.email = "*이메일: 필수 정보입니다."
       } else if (!emailPattern.test(signUpFormData.email)) {
@@ -65,7 +68,7 @@ function SignUp() {
 
     // 비밀번호 유효성 검사
     // 8 ~ 16자, 영문 대소문자, 숫자, 특수문자 필수
-    function validatePassword() {
+    const validatePassword = () => {
       if (!signUpFormData.password) {
         errors.password = "*비밀번호: 필수 정보입니다."
       } else if (!passwordPattern.test(signUpFormData.password)) {
@@ -79,7 +82,7 @@ function SignUp() {
     }
 
     // 전화번호 유효성 검사
-    function validatePhone() {
+    const validatePhone = () => {
       if (!signUpFormData.phone) {
         errors.phone = "*휴대전화번호: 필수 정보입니다."
       } else if (!phonePattern.test(signUpFormData.phone)) {
@@ -94,7 +97,7 @@ function SignUp() {
 
     // 생일 유효성 검사
     // 8자리 숫자인지 확인
-    function validateBirth() {
+    const validateBirth = () => {
       if (!signUpFormData.birth) {
         errors.birth = "*생년월일: 필수 정보입니다."
       } else if (!birthTypePattern.test(signUpFormData.birth)) {
@@ -110,7 +113,7 @@ function SignUp() {
     }
 
     // 닉네임 유효성 검사
-    function validateNickname() {
+    const validateNickname = () => {
       if (!signUpFormData.nickname) {
         errors.nickname = "*닉네임: 필수 정보입니다."
       } else {
@@ -121,7 +124,7 @@ function SignUp() {
     }
 
     // 회원가입 제출시 유효성 검사
-    function validateTotalForm() {
+    const validateTotalForm = () => {
       validateNickname()
       validateEmail()
       validatePassword()
@@ -134,22 +137,34 @@ function SignUp() {
     // Submit 양식
     // signUpUser Axios 요청을 보냄
     // 인자 : name(삭제 예정), email, password, nickname, birth, phone
-    function handleSignUpSubmit(e) {
+    const handleSignUpSubmit = async (e) => {
       e.preventDefault()
 
       const validationErrors = validateTotalForm()
 
       if (Object.values(validationErrors).every((value) => value === "")) {
         console.log("SignUpFormData: ", signUpFormData)
-        signUpUser(signUpFormData)
+        try {
+          await signUpUser(signUpFormData)
+
+          const {email, password} = signUpFormData
+          const loginData = {
+            email: email,
+            password: password,
+          }
+          dispatch(loginUser(loginData))
+          navigate("/")
+        } catch {
+          return
+        }
       } else {
-        console.log("Errors: ", validationErrors)
+        console.log("Validation Errors: ", validationErrors)
       }
     }
 
     // 입력시 처리 함수
     // input 태그의 id와 Form의 속성 이름을 반드시 맞춰야함
-    function changeHandler(e) {
+    const changeHandler = (e) => {
       const target = e.target
       const id = target.id
 
@@ -160,7 +175,7 @@ function SignUp() {
     }
 
     // 비밀번호 확인 입력 처리 함수
-    function changeConfirmHandler(e) {
+    const changeConfirmHandler = (e) => {
       const target = e.target
       const id = target.id
 
@@ -171,7 +186,7 @@ function SignUp() {
     }
 
     // 전화번호 입력시 정규표현식으로 ###-####-#### 형식으로 변환
-    function onInputPhone(e) {
+    const onInputPhone = (e) => {
       const target = e.target
       if (target.value) {
         target.value = target.value
@@ -186,7 +201,7 @@ function SignUp() {
     return (
       // form 태그
       <form
-        className="mt-5 flex w-full flex-col p-5"
+        className="my-10 flex size-full flex-col justify-between p-5"
         onSubmit={handleSignUpSubmit}
       >
         <div className=" flex w-full flex-col ">
@@ -206,7 +221,7 @@ function SignUp() {
             <button
               disabled={!isValidEmail}
               type="button"
-              className="col-span-3 h-12 rounded-md bg-yellow px-3.5 py-2.5"
+              className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
               onClick={() => setIsValidEmailButton(true)}
             >
               인증코드 전송
@@ -229,7 +244,7 @@ function SignUp() {
               />
               <button
                 type="button"
-                className="col-span-3 h-12 rounded-md bg-yellow px-3.5 py-2.5"
+                className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
               >
                 인증하기
               </button>
@@ -293,7 +308,7 @@ function SignUp() {
             <button
               disabled={!isValidPhone}
               type="button"
-              className="col-span-3 h-12 rounded-md bg-yellow px-3.5 py-2.5"
+              className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
               onClick={() => setIsValidPhoneButton(true)}
             >
               인증코드 전송
@@ -316,7 +331,7 @@ function SignUp() {
               />
               <button
                 type="button"
-                className="col-span-3 h-12 rounded-md bg-yellow px-3.5 py-2.5"
+                className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
               >
                 인증하기
               </button>
@@ -343,7 +358,7 @@ function SignUp() {
           {/* 회원가입 버튼 */}
           <button
             type="submit"
-            className="h-12 rounded-md bg-yellow px-3.5 py-2.5"
+            className="h-12 rounded-md bg-mild px-3.5 py-2.5"
           >
             회원가입
           </button>
@@ -351,7 +366,7 @@ function SignUp() {
           <Link
             to="/"
             type="button"
-            className="rounded-md bg-yellow px-3.5 py-2.5 text-center"
+            className="rounded-md bg-mild px-3.5 py-2.5 text-center"
           >
             가입 취소
           </Link>

@@ -9,15 +9,34 @@ import ShortsComment from "components/shorts/ShortsComment"
 import LostAndFoundPage from "pages/LostAndFoundPage"
 import ShortsTagDetail from "components/shorts/ShortsTagDetail"
 
+import {useDispatch} from "react-redux"
+import {useEffect} from "react"
+import MyPage from "pages/MyPage"
+import UsersLayout from "layout/UsersLayout"
+import {setAuthenticated} from "features/user/users-slice"
+
+setAuthenticated
+
 function App() {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (sessionStorage.getItem("accessToken")) {
+      dispatch(setAuthenticated(true))
+    }
+  })
+
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route path="/communities" element={<CommunityPage />}></Route>
       </Route>
-      <Route path="/login" element={<LoginPage />}></Route>
+      <Route path="/users/" element={<UsersLayout />}>
+        <Route path="/users/login" element={<LoginPage />}></Route>
+        <Route path="/users/sign-up" element={<SignUpPage />}></Route>
+        <Route path="/users/:user-id" element={<MyPage />}></Route>
+      </Route>
       <Route path="/lost-and-found" element={<LostAndFoundPage />}></Route>
-      <Route path="/signup" element={<SignUpPage />}></Route>
       <Route path="/short" element={<ShortsPage />}></Route>
       <Route path="/shorts" element={<ShortsLayout />}>
         <Route path="/shorts/comments" element={<ShortsComment />}></Route>
