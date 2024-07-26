@@ -6,10 +6,10 @@ import {
   selectLoading,
   selectError,
   selectIsAuthenticated,
-} from "features/user/usersSlice"
-import {loginUser} from "api/usersApi"
+} from "features/user/users-slice"
+import {loginUser} from "api/users-api"
 
-function LoginForm() {
+const LoginForm = () => {
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: "",
@@ -84,7 +84,7 @@ function LoginForm() {
   )
 }
 
-function Login() {
+const Login = () => {
   return (
     <div className="flex size-[600px] flex-col place-content-center items-center rounded-lg border">
       <div className="flex h-[385px] w-[400px] flex-col space-y-2.5">

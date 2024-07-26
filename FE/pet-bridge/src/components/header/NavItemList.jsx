@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom"
 import PropTypes from "prop-types"
 
-function NavLogo() {
+const NavLogo = () => {
   return (
     <li className="flex h-12 cursor-pointer items-center px-2.5 text-xl">
       <Link to="/">로고</Link>
@@ -9,7 +9,7 @@ function NavLogo() {
   )
 }
 
-function NavItem({category, href}) {
+const NavItem = ({category, href}) => {
   return (
     <li className="flex h-12 cursor-pointer items-center px-2.5 text-xl">
       <Link to={href}>{category}</Link>
@@ -22,7 +22,7 @@ NavItem.propTypes = {
   href: PropTypes.string.isRequired,
 }
 
-function NavItemList() {
+const NavItemList = () => {
   return (
     <ul className="flex h-12 items-center">
       <NavLogo />

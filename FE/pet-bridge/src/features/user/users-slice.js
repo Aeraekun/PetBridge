@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit"
-import {loginUser} from "api/usersApi"
+import {loginUser} from "api/users-api"
 
 // usersSlice의 상태 초기화
 const initialState = {

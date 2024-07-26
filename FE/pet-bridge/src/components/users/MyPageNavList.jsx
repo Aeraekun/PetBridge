@@ -1,4 +1,4 @@
-function MyPageNavList() {
+const MyPageNavList = () => {
   const navItems = [
     "내가 쓴 글",
     "내 펫픽",
@@ -10,7 +10,7 @@ function MyPageNavList() {
 
   const navItemList = navItems.map((navItem) => (
     <li
-      className="flex h-[35px] items-center justify-center rounded-xl bg-white"
+      className="flex h-[35px] items-center justify-center rounded-xl bg-mild"
       key={navItem}
     >
       {navItem}

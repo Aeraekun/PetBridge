@@ -1,14 +1,14 @@
-import {jwtTest} from "api/usersApi"
+import {jwtTest} from "api/users-api"
 import Button from "components/common/Button"
 import {
   logOut,
   selectIsAuthenticated,
   selectUserId,
-} from "features/user/usersSlice"
+} from "features/user/users-slice"
 import {useSelector, useDispatch} from "react-redux"
 import {Link} from "react-router-dom"
 
-function NavAction() {
+const NavAction = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated)
   const userId = useSelector(selectUserId)
   const dispatch = useDispatch()
