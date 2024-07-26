@@ -1,6 +1,6 @@
 import PropTypes from "prop-types"
 
-function Input({type = "text", placeholder = "검색어를 입력하세요", id}) {
+const Input = ({type = "text", placeholder = "검색어를 입력하세요", id}) => {
   return (
     <input
       className="w-full rounded-md border p-2.5"

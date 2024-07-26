@@ -1,4 +1,4 @@
-import axiosInstance from "./axiosInstance"
+import axiosInstance from "./axios-instance"
 import {createAsyncThunk} from "@reduxjs/toolkit"
 
 const saveRefreshTokenToLocalStorage = (refreshToken) => {
