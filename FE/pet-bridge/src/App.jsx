@@ -9,15 +9,19 @@ import ShortComments from "components/shorts/ShortComments"
 import LostAndFoundPage from "pages/LostAndFoundPage"
 import {useDispatch} from "react-redux"
 import {useEffect} from "react"
-import {getUserInfo} from "api/users-api"
 import MyPage from "pages/MyPage"
 import UsersLayout from "layout/UsersLayout"
+import {setAuthenticated} from "features/user/users-slice"
+
+setAuthenticated
 
 function App() {
-  const dispath = useDispatch()
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    dispath(getUserInfo)
+    if (sessionStorage.getItem("accessToken")) {
+      dispatch(setAuthenticated(true))
+    }
   })
 
   return (
