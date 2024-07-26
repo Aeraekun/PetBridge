@@ -5,6 +5,16 @@ import SirenIcon from "../components/shorts/SirenIcon"
 import CommentIcon from "../components/shorts/CommentIcon"
 import Share from "../assets/image/Share.png"
 import Follow from "../assets/image/Follow.png"
+import dummyData from "components/shorts/dummydata"
+
+const ShortsInfo = ({data}) => {
+  return (
+    <div className=" flex  w-full flex-col space-y-1 p-3 text-base ">
+      <div> {data.title}</div>
+      <div className="text-sm"> {data.content}</div>
+    </div>
+  )
+}
 
 const ShortsPage = () => {
   return (
@@ -19,10 +29,8 @@ const ShortsPage = () => {
               width="100%"
               height="100%"
             />
-            <div className="absolute bottom-20 left-0 bg-black bg-opacity-50 p-4 text-white">
-              제목제목
-              <br />
-              내용내용
+            <div className="absolute bottom-20 left-0 bg-black/50 text-white">
+              <ShortsInfo data={dummyData[4]} />
             </div>
           </div>
           <div className="flex flex-col space-y-2">
