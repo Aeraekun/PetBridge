@@ -17,7 +17,7 @@ const ShortsLayout = () => {
               height="100%"
             />
           </div>
-          <div className="max-h-[700px] min-w-[500px] flex-1 rounded-r-lg">
+          <div className="max-h-[700px] w-full min-w-[500px] flex-1 rounded-r-lg">
             <Outlet></Outlet>
           </div>
         </div>

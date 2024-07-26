@@ -1,10 +1,11 @@
 // import {useEffect, useState} from "react"
 import ReactPlayer from "react-player"
-import HeartIcon from "../components/shorts/HeartIcon"
-import SirenIcon from "../components/shorts/SirenIcon"
-import CommentIcon from "../components/shorts/CommentIcon"
-import Share from "../assets/image/Share.png"
-import Follow from "../assets/image/Follow.png"
+import HeartIcon from "../components/common/HeartIcon"
+import SirenIcon from "../components/common/SirenIcon"
+import CommentIcon from "../components/common/CommentIcon"
+import ShareIcon from "../components/common/ShareIcon"
+import FollowIcon from "../components/common/FollowIcon"
+import TagIcon from "../components/common/TagIcon"
 import dummyData from "components/shorts/dummydata"
 
 const ShortsInfo = ({data}) => {
@@ -31,15 +32,17 @@ const ShortsPage = () => {
             />
             <div className="absolute bottom-20 left-0 bg-black/50 text-white">
               <ShortsInfo data={dummyData[4]} />
+              <div className="absolute right-0 top-0 bg-white/50 text-white">
+                <TagIcon data={dummyData[4]} />
+              </div>
             </div>
           </div>
           <div className="flex flex-col space-y-2">
             <HeartIcon className="w-12" />
             <SirenIcon className="w-12" />
             <CommentIcon className="w-12" />
-
-            <img src={Follow} className="w-8" alt="Follow Icon" />
-            <img src={Share} className="w-8" alt="Share Icon" />
+            <FollowIcon isFollowing={true} />
+            <ShareIcon />
           </div>
         </div>
       </main>
