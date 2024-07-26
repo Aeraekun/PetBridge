@@ -12,17 +12,16 @@ const NavAction = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated)
   const userId = useSelector(selectUserId)
   const dispatch = useDispatch()
-  const deleteRefreshTokenFromLocalStorage = () => {
-    console.log(
-      "NavAction.jsx => deleteRefreshTokenFromLocalStorage => 리프레시 토큰 삭제"
-    )
+  const deleteJWT = () => {
+    console.log("NavAction.jsx => deleteJWT => 리프레시 토큰 삭제")
     localStorage.removeItem("refreshToken")
+    sessionStorage.removeItem("accessToken")
   }
 
   const handleLogOut = () => {
     console.log("NavAction.jsx => handleLogOut 함수 호출")
     dispatch(logOut())
-    deleteRefreshTokenFromLocalStorage()
+    deleteJWT()
   }
 
   const handleJwtTest = () => {
