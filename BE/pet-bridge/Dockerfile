@@ -1,16 +1,27 @@
-# open jdk 21 버전의 환경을 구성
+# 빌드 단계
+FROM gradle:8.8-jdk17 AS build
+
+# 작업 디렉토리 설정
+WORKDIR /app
+
+# Gradle 빌드 파일과 소스 파일을 복사
+COPY build.gradle settings.gradle ./
+COPY src ./src
+
+# 종속성을 다운로드하고 빌드를 실행
+RUN gradle clean build --no-daemon
+
+# 배포 단계
 FROM openjdk:17
 
-# tzdata 패키지 설치 및 타임존 설정
+# 타임존 설정
 RUN ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime && echo Asia/Seoul > /etc/timezone
 
-# build가 되는 시점에 JAR_FILE이라는 변수 명에 build/libs/*.jar 선언
-# build/libs - gradle로 빌드했을 때 jar 파일이 생성되는 경로
-ARG JAR_FILE=build/libs/ourClass-0.0.1-SNAPSHOT.jar
+# 작업 디렉토리 설정
+WORKDIR /app
 
-# JAR_FILE을 agaproject.jar로 복사
-COPY ${JAR_FILE} ourClass.jar
+# 빌드된 JAR 파일을 복사
+COPY --from=build /app/build/libs/petbridge-0.0.1-SNAPSHOT.jar app.jar
 
-# 운영 및 개발에서 사용되는 환경 설정을 분리
-# -Duser.timezone=Asia/Seoul JVM 옵션을 사용하여 애플리케이션 수준에서도 타임존을 설정
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=dev", "-Duser.timezone=Asia/Seoul", "/ourClass.jar"]
+# 애플리케이션 실행
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=dev", "-Duser.timezone=Asia/Seoul", "app.jar"]

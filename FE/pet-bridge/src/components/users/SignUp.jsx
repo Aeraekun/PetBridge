@@ -10,7 +10,6 @@ const SignUp = () => {
 
     // 회원가입 폼 제출을 위한 인자 저장 state
     const [signUpFormData, setSignUpFormData] = useState({
-      name: "default",
       email: "",
       password: "",
       nickname: "",
