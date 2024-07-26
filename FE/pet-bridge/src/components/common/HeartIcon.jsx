@@ -1,6 +1,4 @@
 import React, {useState} from "react"
-import Like from "../../assets/image/Like.png"
-import Unlike from "../../assets/image/UnLike.png"
 
 const HeartIcon = () => {
   const [isFilled, setIsFilled] = useState(false)
@@ -12,7 +10,10 @@ const HeartIcon = () => {
   return (
     <>
       <button onClick={handleClick}>
-        <img src={isFilled ? Like : Unlike} alt="Heart Icon" />
+        <img
+          src={isFilled ? "/icons/icon-like.svg" : "/icons/icon-unlike.svg"}
+          alt="Heart Icon"
+        />
       </button>
     </>
   )

@@ -5,8 +5,9 @@ import LoginPage from "./pages/LoginPage"
 import SignUpPage from "pages/SignUpPage"
 import CommunityPage from "pages/CommunityPage"
 import ShortsPage from "pages/ShortsPage"
-import ShortComments from "components/shorts/ShortComments"
+import ShortsComment from "components/shorts/ShortsComment"
 import LostAndFoundPage from "pages/LostAndFoundPage"
+import ShortsTagDetail from "components/shorts/ShortsTagDetail"
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
       <Route path="/signup" element={<SignUpPage />}></Route>
       <Route path="/short" element={<ShortsPage />}></Route>
       <Route path="/shorts" element={<ShortsLayout />}>
-        <Route path="/shorts/comments" element={<ShortComments />}></Route>
+        <Route path="/shorts/comments" element={<ShortsComment />}></Route>
+        <Route path="/shorts/tag" element={<ShortsTagDetail />}></Route>
       </Route>
     </Routes>
   )

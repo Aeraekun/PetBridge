@@ -1,8 +1,6 @@
 import React from "react"
 import {useNavigate} from "react-router-dom"
 
-import Select from "assets/image/Select.png"
-
 const SelectIcon = () => {
   const navigate = useNavigate()
 
@@ -13,7 +11,7 @@ const SelectIcon = () => {
   return (
     <>
       <button onClick={goCommentPage} className=" ">
-        <img src={Select} alt="Siren Icon" />
+        <img src="/icons/icon-option.svg" alt="more option" />
       </button>
     </>
   )

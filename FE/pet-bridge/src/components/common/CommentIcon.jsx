@@ -2,24 +2,22 @@ import React from "react"
 
 import {useLocation, useNavigate} from "react-router-dom"
 
-import Comment from "../../assets/image/Comment.png"
-
 const CommentIcon = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
   const handleClick = () => {
-    if (location.pathname === "/short") {
-      navigate("/shorts/comments")
-    } else {
+    if (location.pathname !== "/short") {
       navigate("/short")
+    } else {
+      navigate("/shorts/comments")
     }
   }
 
   return (
     <>
       <button onClick={handleClick}>
-        <img src={Comment} alt="Comment Icon" />
+        <img src="/icons/icon-comment.svg" alt="Comment Icon" />
       </button>
     </>
   )

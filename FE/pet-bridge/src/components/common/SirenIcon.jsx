@@ -1,5 +1,4 @@
 import React, {useState} from "react"
-import Siren from "../../assets/image/Siren.png"
 import SirenModal from "./SirenModal"
 
 const SirenIcon = () => {
@@ -16,7 +15,7 @@ const SirenIcon = () => {
   return (
     <>
       <button onClick={openModal}>
-        <img src={Siren} alt="Siren Icon" />
+        <img src="/icons/icon-siren.svg" alt="Siren Icon" />
       </button>
       <SirenModal isOpen={modalOpen} onClose={closeModal} />
     </>
