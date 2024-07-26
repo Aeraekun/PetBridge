@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -16,6 +17,10 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import site.petbridge.domain.user.repository.UserRepository;
 import site.petbridge.global.jwt.filter.JwtAuthenticationProcessingFilter;
 import site.petbridge.global.jwt.service.JwtService;
@@ -23,6 +28,12 @@ import site.petbridge.global.login.filter.CustomJsonUsernamePasswordAuthenticati
 import site.petbridge.global.login.handler.LoginFailureHandler;
 import site.petbridge.global.login.handler.LoginSuccessHandler;
 import site.petbridge.global.login.service.LoginService;
+import site.petbridge.global.oauth2.handler.OAuth2LoginFailureHandler;
+import site.petbridge.global.oauth2.handler.OAuth2LoginSuccessHandler;
+import site.petbridge.global.oauth2.service.CustomOAuth2UserService;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * 인증은 CustomJsonUsernamePasswordAuthenticationFilter에서 authenticate()로 인증된 사용자로 처리
@@ -37,6 +48,9 @@ public class SecurityConfig {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -44,17 +58,26 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable) // FormLogin 사용 X
                 .httpBasic(AbstractHttpConfigurer::disable) // httpBasic 사용 X
                 .csrf(AbstractHttpConfigurer::disable) // csrf 보안 사용 X
-                .headers(headers -> headers.disable())
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**").permitAll()
-                        .requestMatchers("/api/users/sign-up").permitAll() // 회원가입 접근 가능
+                        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                        .requestMatchers("/users/sign-up", "/users/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/", "/oauth2/authorization/*",
+                                "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/users/sign-up", "/*").permitAll()
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-                        })
+//                .exceptionHandling(exceptionHandling -> exceptionHandling
+//                        .authenticationEntryPoint((request, response, authException) -> {
+//                            System.out.println("왜 접속 안됨");
+//                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+//                        })
+//                )
+                //== 소셜 로그인 설정 ==//
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(customOAuth2UserService))
+                        .successHandler(oAuth2LoginSuccessHandler)
+                        .failureHandler(oAuth2LoginFailureHandler)
                 );
 
         // 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작
