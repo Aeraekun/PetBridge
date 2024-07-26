@@ -13,6 +13,7 @@ export const loginUser = createAsyncThunk(
       const res = await axiosInstance.post("/users/login", loginData)
       // 결과 응답의 data, headers만 활용할것
       const {data} = res
+      console.log(res)
 
       // thunk의 action으로 반환 (action은 단일 object을 payload로 반환받는다.)
       return {
@@ -20,6 +21,7 @@ export const loginUser = createAsyncThunk(
       }
       // try문 안에서 난 오류를 검사하고, 에러 발생시 에러 응답의 data를 반환
     } catch (e) {
+      console.log(e)
       return rejectWithValue(e.res.data) // 실패 시 에러 반환
     }
   }
@@ -59,5 +61,5 @@ export const getUserInfo = createAsyncThunk(
 export const jwtTest = () => {
   const res = axiosInstance.get("/users/jwt-test")
 
-  console.log(res)
+  console.log("users-api.js > res", res)
 }

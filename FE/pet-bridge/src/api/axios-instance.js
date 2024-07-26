@@ -9,23 +9,27 @@ const axiosInstance = axios.create({
   headers: {"Content-Type": "application/json"},
 })
 
+// 액세스 토큰을 세션에서 가져옴
+const getAccessTokenFromSession = () => {
+  const accessToken = sessionStorage.getItem("accessToken")
+  return accessToken
+}
+
+// 액세스 토큰을 세션에 저장
 const setAccessTokenAtSession = (accessToken) => {
   sessionStorage.setItem("accessToken", accessToken)
   return accessToken
 }
 
-const getAccessTokenFromSession = () => {
-  const accessToken = sessionStorage.getItem(accessToken)
-  return accessToken
-}
-
-const setRefreshTokenAtLocalStorage = (refreshToken) => {
-  sessionStorage.setItem("refreshToken", refreshToken)
+// 리프레시 토큰을 로컬 스토리지에서 가져옴
+const getRefreshTokenFromLocalStorage = () => {
+  const refreshToken = localStorage.getItem("refreshToken")
   return refreshToken
 }
 
-const getRefreshTokenFromLocalStorage = () => {
-  const refreshToken = localStorage.getItem(refreshToken)
+// 리프레시 토큰을 로컬 스토리지에 저장
+const setRefreshTokenAtLocalStorage = (refreshToken) => {
+  localStorage.setItem("refreshToken", refreshToken)
   return refreshToken
 }
 
@@ -51,52 +55,80 @@ const checkAccessTokenExpiration = (accessToken) => {
 
 // 요청 인터셉터 추가
 // 모든 요청에 accessToken 유무를 확인해서, 토큰이 있으면 헤더에 넣어서 요청을 보냄
-export const setAuthToken = () => {
-  axiosInstance.interceptors.request.use(
-    (config) => {
-      // 액세스 토큰을 상태에서 가져옴
-      let isAccessTokenValid = false
-      const accessToken = getAccessTokenFromSession()
-      const refreshToken = getRefreshTokenFromLocalStorage()
+axiosInstance.interceptors.request.use(
+  (config) => {
+    // 요청 인터셉터 동작 확인
+    console.log("요청 인터셉터 동작")
+    // 액세스 토큰을 상태에서 가져옴
+    let isAccessTokenValid = false
 
-      // 액세스 토큰이 있으면, 유효성 확인
-      if (accessToken) {
-        isAccessTokenValid = checkAccessTokenExpiration(accessToken)
-      }
+    const accessToken = getAccessTokenFromSession()
+    const refreshToken = getRefreshTokenFromLocalStorage()
 
-      // 액세스 토큰은 만료됐고 리프레시 토큰은 있는 경우
-      if (!isAccessTokenValid && refreshToken) {
-        config.headers["Authorization-refresh"] = `Bearer ${refreshToken}`
-      }
+    // 액세스, 리프레시 토큰 확인
+    console.log(
+      "요청 인터셉터 > 스토리지에서 확인한 액세스, 리프레시 토큰 : ",
+      accessToken,
+      refreshToken
+    )
 
-      // 액세스 토큰이 있는 경우
-      if (isAccessTokenValid) {
-        config.headers.Authorization = `Bearer ${accessToken}`
-      }
-
-      return config
-    },
-    (error) => {
-      return Promise.reject(error)
+    // 액세스 토큰이 있으면, 유효성 확인
+    if (accessToken) {
+      isAccessTokenValid = checkAccessTokenExpiration(accessToken)
     }
-  )
-}
+
+    // 액세스 토큰이 유효한 경우 - 헤더에 액세스 토큰 추가
+    if (isAccessTokenValid) {
+      config.headers.Authorization = `Bearer ${accessToken}`
+      config.headers["Authorization-refresh"] = ""
+    } else {
+      config.headers.Authorization = ""
+    }
+
+    // 액세스 토큰은 만료됐고 리프레시 토큰은 있는 경우 - 헤더에 리프레시 토큰 추가
+    if (!isAccessTokenValid && refreshToken) {
+      config.headers["Authorization-refresh"] = `Bearer 0${refreshToken}`
+    }
+
+    console.log("요청 인터셉터 > config:", config)
+    console.log(
+      "요청 인터셉터 > config.headers.Authorization:",
+      config.headers.Authorization
+    )
+    console.log(
+      "요청 인터셉터 > config.headers.Authorization-refresh:",
+      config.headers["Authorization-refresh"]
+    )
+
+    return config
+  },
+  (error) => {
+    console.log("axios-instance.js > 요청 인터셉터", error)
+    return Promise.reject(error)
+  }
+)
 
 // 응답 인터셉터 추가
 // 모든 axiosInstance 응답에 대해 headers를 확인해서 액세스 토큰을 상태에, 리프레시 토큰을 로컬스토리지에 저장함
-export const setJSONWebToken = () => {
-  axiosInstance.interceptors.response.use((res) => {
+axiosInstance.interceptors.response.use(
+  (res) => {
+    console.log("axios-instances.js > 응답 인터셉터 res: ", res)
+
     // 응답의 headers를 언패킹
     const {headers} = res
-
-    console.log(headers)
 
     // headers에서 액세스 토큰과 리프레시 토큰을 따르 빼서 정리
     const accessToken = headers.authorization
     const refreshToken = headers["authorization-refresh"]
 
-    console.log(accessToken)
-    console.log(refreshToken)
+    console.log(
+      "axios-instance.js > 응답 인터셉터에서 받은 액세스 토큰 :",
+      accessToken
+    )
+    console.log(
+      "axios-instance.js > 응답 인터셉터에서 받은 리프레시 토큰 :",
+      refreshToken
+    )
 
     // 액세스 토큰이 존재하는 경우 dispatch를 사용해서 액세스 토큰을 sessionStorage에 저장
     if (accessToken) {
@@ -107,7 +139,10 @@ export const setJSONWebToken = () => {
       setRefreshTokenAtLocalStorage(refreshToken)
     }
     return res
-  })
-}
+  },
+  (e) => {
+    return Promise.reject(e)
+  }
+)
 
 export default axiosInstance
