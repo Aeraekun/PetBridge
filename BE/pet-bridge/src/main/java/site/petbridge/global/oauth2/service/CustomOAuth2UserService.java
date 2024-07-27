@@ -10,15 +10,14 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import site.petbridge.domain.user.SocialType;
-import site.petbridge.domain.user.User;
+import site.petbridge.domain.user.domain.enums.SocialType;
+import site.petbridge.domain.user.domain.User;
 import site.petbridge.domain.user.repository.UserRepository;
 import site.petbridge.global.oauth2.CustomOAuth2User;
 import site.petbridge.global.oauth2.OAuthAttributes;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.UUID;
 
 @Slf4j
 @Service
