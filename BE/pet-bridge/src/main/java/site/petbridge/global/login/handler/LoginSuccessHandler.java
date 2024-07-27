@@ -34,7 +34,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         // JwtService의 createRefreshToken으로 RefreshToken을 발급
         String refreshToken = jwtService.createRefreshToken();
 
-        // 응답 헤더에 AccessToken, RefreshToken 실어서 응답 보냄.
+        // 로그인 성공 시 응답 헤더에 AccessToken, RefreshToken 실어서 응답 보냄.
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
 
         userRepository.findByEmail(email)

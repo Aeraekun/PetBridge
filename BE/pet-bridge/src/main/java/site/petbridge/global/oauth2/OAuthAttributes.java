@@ -2,9 +2,9 @@ package site.petbridge.global.oauth2;
 
 import lombok.Builder;
 import lombok.Getter;
-import site.petbridge.domain.user.Role;
-import site.petbridge.domain.user.SocialType;
-import site.petbridge.domain.user.User;
+import site.petbridge.domain.user.domain.enums.Role;
+import site.petbridge.domain.user.domain.enums.SocialType;
+import site.petbridge.domain.user.domain.User;
 import site.petbridge.global.oauth2.userinfo.KakaoOAuth2UserInfo;
 import site.petbridge.global.oauth2.userinfo.NaverOAuth2UserInfo;
 import site.petbridge.global.oauth2.userinfo.OAuth2UserInfo;

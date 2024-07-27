@@ -1,4 +1,4 @@
-package site.petbridge.domain.user;
+package site.petbridge.domain.user.domain.enums;
 
 public enum SocialType {
     KAKAO, NAVER, GOOGLE

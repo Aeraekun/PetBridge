@@ -1,10 +1,10 @@
-package site.petbridge.domain.user;
+package site.petbridge.domain.user.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.Date;
+import site.petbridge.domain.user.domain.enums.Role;
+import site.petbridge.domain.user.domain.enums.SocialType;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
