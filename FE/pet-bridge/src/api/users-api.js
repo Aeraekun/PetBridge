@@ -55,8 +55,8 @@ export const patchDisableUser = (userId) => {
 }
 
 // JWT 테스트 요청
-export const jwtTest = () => {
-  const res = axiosInstance.get("/users/jwt-test")
+export const jwtTest = async () => {
+  const res = await axiosInstance.get("/users/jwt-test")
 
   console.log("users-api.js > res", res)
 }
