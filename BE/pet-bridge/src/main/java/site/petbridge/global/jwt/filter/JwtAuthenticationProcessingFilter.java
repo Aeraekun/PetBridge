@@ -13,13 +13,12 @@ import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
-import site.petbridge.domain.user.User;
+import site.petbridge.domain.user.domain.User;
 import site.petbridge.domain.user.repository.UserRepository;
 import site.petbridge.global.jwt.service.JwtService;
 import site.petbridge.global.jwt.util.PasswordUtil;
 
 import java.io.IOException;
-import java.util.Optional;
 
 /**
  * Jwt 인증 필터
@@ -60,7 +59,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         System.out.println("jwt filter 들어옴");
         System.out.println("accessToken은 "+jwtService.extractAccessToken(request));
         if (request.getRequestURI().equals(NO_CHECK_URL)) {
-            // "/api/users/login" 요청에 대해선, 다음 filter 호출해서 return으로 넘어가게 함
+            // "/api/users/login" 요청에 대해선, 다음 filter 호출해서 return으로 넘어가게 함 (jwt 토큰이 아예 없는 요청이므로)
             filterChain.doFilter(request, response);
             return;
         }
@@ -157,9 +156,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                                                 .ifPresent(email -> userRepository.findByEmail(email)
                                                                 .ifPresent(this::saveAuthentication)));
 
-
-        System.out.println("filterChain 전까지 옴");
-
         filterChain.doFilter(request, response);
     }
 
@@ -182,7 +178,9 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
      */
     public void saveAuthentication(User myUser) {
         String password = myUser.getPassword();
-        // 소셜 로그인 유저(password == null)의 비밀번호 임의로 만들어서, 소셜 로그인 유저도 인증되도록 설정
+        // UserDetails의 User 객체(우리 user랑 다른거임)를 Builder로 생성 후 해당 객체를 인증 처리하여,
+        // 해당 유저 객체를 SecurityContextHolder에 담아 인증 처리를 진행합니다.
+        //(소셜 로그인의 경우 password가 null인데, 인증 처리 시 password가 null이면 안 되므로, 랜덤 패스워드를 임의로 부여해줍니다.)
         if (password == null) {
             password = PasswordUtil.generateRandomPassword();
         }
