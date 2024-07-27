@@ -14,6 +14,7 @@ import {useEffect} from "react"
 import MyPage from "pages/MyPage"
 import UsersLayout from "layout/UsersLayout"
 import {setAuthenticated} from "features/user/users-slice"
+import MyPageDisableContainer from "components/users/MyPageDisableContainer"
 
 setAuthenticated
 
@@ -32,9 +33,11 @@ function App() {
         <Route path="/communities" element={<CommunityPage />}></Route>
       </Route>
       <Route path="/users/" element={<UsersLayout />}>
-        <Route path="/users/login" element={<LoginPage />}></Route>
-        <Route path="/users/sign-up" element={<SignUpPage />}></Route>
-        <Route path="/users/:user-id" element={<MyPage />}></Route>
+        <Route path="login" element={<LoginPage />}></Route>
+        <Route path="sign-up" element={<SignUpPage />}></Route>
+        <Route path=":user-id" element={<MyPage />}>
+          <Route path="disable" element={<MyPageDisableContainer />}></Route>
+        </Route>
       </Route>
       <Route path="/lost-and-found" element={<LostAndFoundPage />}></Route>
       <Route path="/short" element={<ShortsPage />}></Route>
