@@ -42,20 +42,7 @@ export const signUpUser = async (signUpData) => {
   }
 }
 
-// 유저 정보 get
-export const getUserInfo = createAsyncThunk(
-  "user/getUserInfo",
-  async (_, {rejectWithValue}) => {
-    const refreshToken = localStorage.getItem("refreshToken")
-
-    if (refreshToken) {
-      const res = await getUserInfo(refreshToken)
-      return res.data
-    } else {
-      return rejectWithValue("로컬 스토리지에 저장된 리프레시 토큰이 없습니다.")
-    }
-  }
-)
+//
 
 // JWT 테스트 요청
 export const jwtTest = () => {

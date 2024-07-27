@@ -39,7 +39,7 @@ const NavAction = () => {
             <button onClick={handleLogOut}>로그아웃</button>
           </li>
           <li className="mx-2.5 flex h-full cursor-pointer items-center text-xl">
-            <Link to={`users/${userId}`}>
+            <Link to={`/users/${userId}`}>
               <Button text="마이 페이지" />
             </Link>
           </li>
