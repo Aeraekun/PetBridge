@@ -42,7 +42,17 @@ export const signUpUser = async (signUpData) => {
   }
 }
 
-//
+// 회원 조회
+export const getUserInfo = (userId) => {
+  axiosInstance.get(`/users/${userId}`)
+}
+
+// 회원 탈퇴
+export const patchDisableUser = (userId) => {
+  const res = axiosInstance.patch(`/users/${userId}/delete`)
+
+  return res
+}
 
 // JWT 테스트 요청
 export const jwtTest = () => {

@@ -19,30 +19,38 @@ const MyPageNavList = () => {
       id: itemId++,
       text: "내가 쓴 글",
       imgSrc: iconMyArticles,
+      url: "my-articles",
     },
-    {id: itemId++, text: "내 펫핏", imgSrc: iconMyShorts},
+    {id: itemId++, text: "내 펫픽", imgSrc: iconMyShorts, url: "my-petpics"},
     {
       id: itemId++,
       text: "내 입양기록(계약서)",
       imgSrc: iconMyContracts,
+      url: "my-contracts",
     },
     {
       id: itemId++,
       text: "내 관심등록 동물",
       imgSrc: iconMyFavorites,
+      url: "my-favorites",
     },
     {
       id: itemId++,
       text: "내가 좋아요한 펫픽",
       imgSrc: iconMyLikes,
+      url: "my-likes",
     },
-    {id: itemId++, text: "나의 동물", imgSrc: iconMyPets},
+    {id: itemId++, text: "나의 동물", imgSrc: iconMyPets, url: "my-pets"},
   ]
 
   return (
     <nav className="flex h-[260px] w-[250px] flex-col justify-between ">
       {navItems.map((item) => (
-        <NavLink key={item.id} className="">
+        <NavLink
+          key={item.id}
+          to={item.url}
+          className={({isActive}) => [isActive ? "text-mild" : ""]}
+        >
           <MyPageNavComponent text={item.text} imgSrc={item.imgSrc} />
         </NavLink>
       ))}
@@ -77,8 +85,11 @@ const MyPageNavContainer = () => {
       {/* 카테고리 리스트 */}
       <MyPageNavList />
       {/* 회원 버튼 */}
-      <NavLink to="disable">
-        <span className="text-stroke">[회원 탈퇴하기]</span>
+      <NavLink
+        to="disable"
+        className={({isActive}) => [isActive ? "text-red-400" : "text-stroke"]}
+      >
+        [회원 탈퇴하기]
       </NavLink>
     </div>
   )
