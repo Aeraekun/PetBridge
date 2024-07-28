@@ -1,6 +1,6 @@
 import {useSelector} from "react-redux"
 import {selectUserName} from "features/user/users-slice"
-import {NavLink} from "react-router-dom"
+import {Link, NavLink} from "react-router-dom"
 import MyPageNavComponent from "./MyPageNavComponent"
 
 import DefaulUser150 from "assets/images/icon-default-user-150.svg"
@@ -75,9 +75,12 @@ const MyPageNavContainer = () => {
       <span className="bg-white text-2xl">{userName}</span>
       {/* 3. 수정하기, 로그아웃 */}
       <div className="flex space-x-5">
-        <div className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild">
+        <Link
+          to="/users/update"
+          className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild"
+        >
           수정하기
-        </div>
+        </Link>
         <div className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild">
           로그아웃
         </div>

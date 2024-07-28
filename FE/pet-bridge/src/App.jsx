@@ -13,8 +13,7 @@ import MyPage from "pages/MyPage"
 import UsersLayout from "layout/UsersLayout"
 import {setAuthenticated} from "features/user/users-slice"
 import MyPageDisableContainer from "components/users/MyPageDisableContainer"
-
-setAuthenticated
+import UpdateProfilePage from "pages/UpdateProfilePage"
 
 function App() {
   const dispatch = useDispatch()
@@ -33,6 +32,7 @@ function App() {
       <Route path="/users/" element={<UsersLayout />}>
         <Route path="login" element={<LoginPage />}></Route>
         <Route path="sign-up" element={<SignUpPage />}></Route>
+        <Route path="update" element={<UpdateProfilePage />}></Route>
         <Route path=":user-id" element={<MyPage />}>
           <Route path="disable" element={<MyPageDisableContainer />}></Route>
         </Route>
