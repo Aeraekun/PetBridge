@@ -12,6 +12,7 @@ import {useEffect} from "react"
 import {getUserInfo} from "api/users-api"
 import MyPage from "pages/MyPage"
 import UsersLayout from "layout/UsersLayout"
+import ArticleBoardList from "components/board/ArticleBoardList"
 
 function App() {
   const dispath = useDispatch()
@@ -23,7 +24,9 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route path="/communities" element={<CommunityPage />}></Route>
+        <Route path="/communities" element={<CommunityPage />}>
+          <Route path=":bcode" element={<ArticleBoardList />} />
+        </Route>
       </Route>
       <Route path="/users/" element={<UsersLayout />}>
         <Route path="/users/login" element={<LoginPage />}></Route>
@@ -33,7 +36,7 @@ function App() {
       <Route path="/lost-and-found" element={<LostAndFoundPage />}></Route>
       <Route path="/short" element={<ShortsPage />}></Route>
       <Route path="/shorts" element={<ShortsLayout />}>
-        <Route path="/shorts/comments" element={<ShortComments />}></Route>
+        <Route path="comments" element={<ShortComments />}></Route>
       </Route>
     </Routes>
   )
