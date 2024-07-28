@@ -30,32 +30,40 @@ const categories = [
 //   )
 // }
 
-const CommunityPage = () => {
-  // const [selectedCategory, setSelectedCategory] = useState(categories[0].id)
-
+const BoardNavbar = () => {
   const navigate = useNavigate()
   const handleNavigation = (bcode) => {
     let path = bcode === 0 ? `/communities` : `/communities/${bcode}`
     navigate(path)
   }
+  return (
+    <ul className="flex h-12 items-center ">
+      {categories.map((category) => (
+        <li key={category.id} className="flex h-12 items-center px-2.5 text-xl">
+          <button
+            onClick={() => handleNavigation(category.id)}
+            className="flex h-12 items-center px-2.5 text-xl"
+          >
+            <div className="cursor-pointer"> </div>
+            {category.title}
+          </button>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+const BoardPage = () => {
+  // const [selectedCategory, setSelectedCategory] = useState(categories[0].id)
 
   return (
-    <div className="flex flex-col">
-      <ul className="flex h-12 items-center">
-        {categories.map((category) => (
-          <li key={category.id}>
-            <button
-              onClick={() => handleNavigation(category.id)}
-              className="flex h-12 cursor-pointer items-center px-2.5 text-xl"
-            >
-              {category.title}
-            </button>
-          </li>
-        ))}
-      </ul>
-      <Outlet className="w-[1000px]" />
+    <div className="flex flex-col w-[1000px] my-10 space-y-3">
+      <BoardNavbar />
+      <hr className="" />
+
+      <Outlet className="" />
     </div>
   )
 }
 
-export default CommunityPage
+export default BoardPage
