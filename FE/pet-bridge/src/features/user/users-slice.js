@@ -5,7 +5,6 @@ import {loginUser} from "api/users-api"
 const initialState = {
   userName: "user",
   userId: "1",
-  accessToken: "",
   isAuthenticated: false,
   loading: false,
   error: null,
@@ -16,12 +15,10 @@ export const usersSlice = createSlice({
   initialState,
   reducers: {
     logOut: (state) => {
-      state.accessToken = ""
       state.isAuthenticated = false
     },
-    setAccessToken: (state, action) => {
-      state.accessToken = action.payload
-      state.isAuthenticated = !!action.payload
+    setAuthenticated(state, action) {
+      state.isAuthenticated = action.payload
     },
   },
   extraReducers: (builder) => {
@@ -32,6 +29,7 @@ export const usersSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state) => {
         state.loading = false
+        state.isAuthenticated = true
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false
@@ -44,8 +42,7 @@ export const usersSlice = createSlice({
 export const selectUserName = (state) => state.user.userName
 export const selectUserId = (state) => state.user.userId
 export const selectIsAuthenticated = (state) => state.user.isAuthenticated
-export const selectAccessToken = (state) => state.user.accessToken
 export const selectLoading = (state) => state.user.loading
 export const selectError = (state) => state.user.error
-export const {logIn, logOut} = usersSlice.actions
+export const {logOut, setAuthenticated} = usersSlice.actions
 export default usersSlice.reducer

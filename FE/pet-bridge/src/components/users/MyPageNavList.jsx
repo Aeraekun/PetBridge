@@ -10,7 +10,7 @@ const MyPageNavList = () => {
 
   const navItemList = navItems.map((navItem) => (
     <li
-      className="flex h-[35px] items-center justify-center rounded-xl bg-mild"
+      className="flex h-[35px] items-center justify-center rounded-xl border border-stroke"
       key={navItem}
     >
       {navItem}

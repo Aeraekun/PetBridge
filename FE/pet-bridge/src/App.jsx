@@ -5,20 +5,27 @@ import LoginPage from "./pages/LoginPage"
 import SignUpPage from "pages/SignUpPage"
 import CommunityPage from "pages/CommunityPage"
 import ShortsPage from "pages/ShortsPage"
-import ShortComments from "components/shorts/ShortComments"
+import ShortsComment from "components/shorts/ShortsComment"
 import LostAndFoundPage from "pages/LostAndFoundPage"
+import ShortsTagDetail from "components/shorts/ShortsTagDetail"
+
 import {useDispatch} from "react-redux"
 import {useEffect} from "react"
-import {getUserInfo} from "api/users-api"
 import MyPage from "pages/MyPage"
 import UsersLayout from "layout/UsersLayout"
+import {setAuthenticated} from "features/user/users-slice"
+import MyPageDisableContainer from "components/users/MyPageDisableContainer"
+
+setAuthenticated
 import ArticleBoardList from "components/board/ArticleBoardList"
 
 function App() {
-  const dispath = useDispatch()
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    dispath(getUserInfo)
+    if (sessionStorage.getItem("accessToken")) {
+      dispatch(setAuthenticated(true))
+    }
   })
 
   return (
@@ -29,14 +36,16 @@ function App() {
         </Route>
       </Route>
       <Route path="/users/" element={<UsersLayout />}>
-        <Route path="/users/login" element={<LoginPage />}></Route>
-        <Route path="/users/sign-up" element={<SignUpPage />}></Route>
-        <Route path="/users/:user-id" element={<MyPage />}></Route>
+        <Route path="login" element={<LoginPage />}></Route>
+        <Route path="sign-up" element={<SignUpPage />}></Route>
+        <Route path=":user-id" element={<MyPage />}>
+          <Route path="disable" element={<MyPageDisableContainer />}></Route>
+        </Route>
       </Route>
       <Route path="/lost-and-found" element={<LostAndFoundPage />}></Route>
       <Route path="/short" element={<ShortsPage />}></Route>
       <Route path="/shorts" element={<ShortsLayout />}>
-        <Route path="comments" element={<ShortComments />}></Route>
+        <Route path="/shorts/comments" element={<ShortComments />}></Route>
       </Route>
     </Routes>
   )

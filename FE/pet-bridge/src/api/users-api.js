@@ -1,10 +1,6 @@
 import axiosInstance from "./axios-instance"
 import {createAsyncThunk} from "@reduxjs/toolkit"
 
-const saveRefreshTokenToLocalStorage = (refreshToken) => {
-  localStorage.setItem("refreshToken", refreshToken)
-}
-
 // 로그인
 // 비동기 로그인 Thunk Action 생성
 export const loginUser = createAsyncThunk(
@@ -16,22 +12,16 @@ export const loginUser = createAsyncThunk(
     try {
       const res = await axiosInstance.post("/users/login", loginData)
       // 결과 응답의 data, headers만 활용할것
-      const {data, headers} = res
-      // refresh 토큰을 localStorage에 저장
-      const refreshToken = headers["authorization-refresh"]
-
-      saveRefreshTokenToLocalStorage(refreshToken)
+      const {data} = res
+      console.log(res)
 
       // thunk의 action으로 반환 (action은 단일 object을 payload로 반환받는다.)
       return {
         name: data.name,
-        headers: {
-          authorization: headers.authorization,
-          "authorization-refresh": headers["authorization-refresh"],
-        },
       }
       // try문 안에서 난 오류를 검사하고, 에러 발생시 에러 응답의 data를 반환
     } catch (e) {
+      console.log(e)
       return rejectWithValue(e.res.data) // 실패 시 에러 반환
     }
   }
@@ -52,24 +42,11 @@ export const signUpUser = async (signUpData) => {
   }
 }
 
-// 유저 정보 get
-export const getUserInfo = createAsyncThunk(
-  "user/getUserInfo",
-  async (_, {rejectWithValue}) => {
-    const refreshToken = localStorage.getItem("refreshToken")
-
-    if (refreshToken) {
-      const res = await getUserInfo(refreshToken)
-      return res.data
-    } else {
-      return rejectWithValue("로컬 스토리지에 저장된 리프레시 토큰이 없습니다.")
-    }
-  }
-)
+//
 
 // JWT 테스트 요청
 export const jwtTest = () => {
   const res = axiosInstance.get("/users/jwt-test")
 
-  console.log(res)
+  console.log("users-api.js > res", res)
 }
