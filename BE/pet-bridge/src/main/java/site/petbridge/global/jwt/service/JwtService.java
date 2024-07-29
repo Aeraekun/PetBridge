@@ -22,7 +22,7 @@ import java.util.Optional;
 @Transactional
 public class JwtService {
 
-    @Value("${jwt.secretKey")
+    @Value("${jwt.secretKey}")
     private String secretKey;
 
     @Value("${jwt.access.expiration}")
