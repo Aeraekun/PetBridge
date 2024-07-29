@@ -10,6 +10,10 @@ const articledata = [
     content: "사랑스러운 강아지가 새로운 가족을 찾고 있습니다.",
     count: 5,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Buddy",
+    process_state: "입양중",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007876.jpeg",
   },
   {
     id: 2,
@@ -20,6 +24,10 @@ const articledata = [
     content: "애정 가득한 고양이가 당신의 가족이 되기를 바랍니다.",
     count: 8,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Whiskers",
+    process_state: "입양가능",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007877.jpeg",
   },
   {
     id: 3,
@@ -30,6 +38,10 @@ const articledata = [
     content: "활기찬 강아지가 사랑스러운 가족을 찾고 있습니다.",
     count: 2,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Max",
+    process_state: "입양가능",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007878.jpeg",
   },
   {
     id: 4,
@@ -40,6 +52,10 @@ const articledata = [
     content: "상냥한 토끼가 새로운 가족을 찾고 있습니다.",
     count: 3,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Fluffy",
+    process_state: "보호중",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007879.jpeg",
   },
   {
     id: 5,
@@ -50,6 +66,10 @@ const articledata = [
     content: "수다쟁이 앵무새가 사랑 가득한 가족을 찾고 있습니다.",
     count: 4,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Polly",
+    process_state: "입양완료",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007880.jpeg",
   },
   {
     id: 6,
@@ -60,6 +80,10 @@ const articledata = [
     content: "이 활기찬 햄스터는 사랑과 에너지가 가득합니다.",
     count: 6,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Nibbles",
+    process_state: "입양중",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007881.jpeg",
   },
   {
     id: 7,
@@ -70,6 +94,10 @@ const articledata = [
     content: "차분한 거북이가 새로운 연못을 찾고 있습니다.",
     count: 1,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Shelly",
+    process_state: "입양가능",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007882.jpeg",
   },
   {
     id: 8,
@@ -80,6 +108,10 @@ const articledata = [
     content: "상냥한 기니피그가 당신의 가족이 되기를 희망합니다.",
     count: 5,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Pip",
+    process_state: "보호중",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007883.jpeg",
   },
   {
     id: 9,
@@ -90,6 +122,10 @@ const articledata = [
     content: "이 금붕어들은 어느 집에서나 차분한 분위기를 만들어줍니다.",
     count: 7,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Goldie",
+    process_state: "입양완료",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007884.jpeg",
   },
   {
     id: 10,
@@ -100,6 +136,10 @@ const articledata = [
     content: "친근한 친칠라가 새로운 가족을 기다리고 있습니다.",
     count: 9,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Chilla",
+    process_state: "입양중",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007885.jpeg",
   },
 
   // 카테고리 2: 입양후기
@@ -112,6 +152,10 @@ const articledata = [
     content: "우리 강아지가 우리 집에서 행복하게 정착했습니다.",
     count: 3,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Buddy",
+    process_state: "입양완료",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007886.jpeg",
   },
   {
     id: 12,
@@ -122,6 +166,10 @@ const articledata = [
     content: "우리 고양이는 이제 사랑 가득한 가족의 일원이 되었습니다.",
     count: 5,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Whiskers",
+    process_state: "입양완료",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007887.jpeg",
   },
   {
     id: 13,
@@ -132,6 +180,10 @@ const articledata = [
     content: "우리 강아지는 이제 가족의 중요한 일원이 되었습니다.",
     count: 2,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Max",
+    process_state: "입양완료",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007888.jpeg",
   },
   {
     id: 14,
@@ -142,6 +194,10 @@ const articledata = [
     content: "우리 토끼가 우리 집에 행복을 가져다 주었습니다.",
     count: 4,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Fluffy",
+    process_state: "입양완료",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007889.jpeg",
   },
   {
     id: 15,
@@ -149,59 +205,83 @@ const articledata = [
     authorImage: "https://via.placeholder.com/30",
     category: 2,
     title: "앵무새 입양: 화려한 성공",
-    content: "우리 앵무새는 이제 우리 집의 활력소가 되었습니다.",
+    content: "우리 앵무새는 이제 가족의 중요한 일원이 되었습니다.",
     count: 6,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Polly",
+    process_state: "입양완료",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007890.jpeg",
   },
   {
     id: 16,
-    nickname: "Patricia",
+    nickname: "Paul",
     authorImage: "https://via.placeholder.com/30",
     category: 2,
-    title: "햄스터가 새로운 친구를 찾았습니다",
-    content: "우리 햄스터는 새로운 집에 잘 적응했습니다.",
-    count: 1,
+    title: "사랑스러운 햄스터의 영원한 집",
+    content: "우리 햄스터는 이제 사랑스러운 가족의 일원이 되었습니다.",
+    count: 7,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Nibbles",
+    process_state: "입양완료",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007891.jpeg",
   },
   {
     id: 17,
     nickname: "Quincy",
     authorImage: "https://via.placeholder.com/30",
     category: 2,
-    title: "거북이의 새로운 모험",
-    content: "우리 거북이는 새로운 연못을 즐기고 있습니다.",
-    count: 3,
+    title: "거북이의 새로운 연못 이야기",
+    content: "우리 거북이는 이제 새로운 연못에서 행복합니다.",
+    count: 5,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Shelly",
+    process_state: "입양완료",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007892.jpeg",
   },
   {
     id: 18,
     nickname: "Rachel",
     authorImage: "https://via.placeholder.com/30",
     category: 2,
-    title: "기니피그의 새로운 가족 경험",
-    content: "우리 기니피그는 새로운 환경에 잘 적응했습니다.",
-    count: 4,
+    title: "기니피그의 새로운 가족 이야기",
+    content: "우리 기니피그는 이제 가족의 소중한 일원이 되었습니다.",
+    count: 9,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Pip",
+    process_state: "입양완료",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007893.jpeg",
   },
   {
     id: 19,
-    nickname: "Sam",
+    nickname: "Steve",
     authorImage: "https://via.placeholder.com/30",
     category: 2,
-    title: "금붕어가 새로운 친구를 찾았습니다",
-    content: "우리 금붕어는 새로운 수족관에서 잘 지내고 있습니다.",
-    count: 7,
+    title: "금붕어의 새로운 수족관",
+    content: "우리 금붕어는 이제 새로운 수족관에서 행복하게 지내고 있습니다.",
+    count: 6,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Goldie",
+    process_state: "입양완료",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007894.jpeg",
   },
   {
     id: 20,
     nickname: "Tina",
     authorImage: "https://via.placeholder.com/30",
     category: 2,
-    title: "친칠라의 행복한 결말",
-    content: "우리 친칠라는 새로운 가족을 사랑하고 있습니다.",
+    title: "친칠라 입양 성공기",
+    content: "우리 친칠라는 이제 가족의 사랑을 받고 있습니다.",
     count: 8,
     thumbnail: "https://via.placeholder.com/300",
+    name: "Chilla",
+    process_state: "입양완료",
+    filename:
+      "http://www.animal.go.kr/files/shelter/2024/07/202407161007895.jpeg",
   },
 
   // 카테고리 3: 자유게시판

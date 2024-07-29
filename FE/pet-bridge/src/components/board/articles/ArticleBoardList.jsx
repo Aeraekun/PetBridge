@@ -1,7 +1,7 @@
 import data from "./articledata"
 import ArticleItem from "./ArticleItem"
-
-import {useParams} from "react-router-dom"
+import Button from "components/common/Button"
+import {useNavigate, useParams} from "react-router-dom"
 
 const categories = [
   {id: 0, title: "홈"},
@@ -17,9 +17,9 @@ const Search = () => {
       <input
         type="text"
         placeholder="검색어를 입력하세요."
-        className="border-2 border-stroke p-2 w-72 rounded-xl h-12"
+        className="border-stroke h-12 w-72 rounded-xl border-2 p-2"
       />
-      <button className="flex w-16 bg-green-600 justify-center items-center rounded-xl h-10 text-white ">
+      <button className="flex h-10 w-16 items-center justify-center rounded-xl bg-green-600 text-white ">
         조회
       </button>
     </div>
@@ -28,16 +28,26 @@ const Search = () => {
 
 const ArticleBoardList = () => {
   const {bcode} = useParams()
+  const navigate = useNavigate()
+  const goDetail = (article) => {
+    const id = article.id
+
+    let path = `/communities/details/${id}`
+    navigate(path)
+  }
   const matchingCategory = categories.find(
     (category) => category.id === Number(bcode)
   )
-
+  const goWrite = () => {
+    let path = `/communities/write`
+    navigate(path)
+  }
   return (
     <>
       <Search />
       {matchingCategory ? <h2>{matchingCategory.title}</h2> : <p>홈</p>}
-
-      <ul className="flex flex-wrap justify-between w-full">
+      <Button text={"글쓰기"} onClick={goWrite} />
+      <ul className="flex w-full flex-wrap justify-between">
         {data
           //bcode가 없는경우 (홈) 일때는 모두 보여줌
           // category와 bcode가 일치하는것만 필터링
@@ -47,9 +57,10 @@ const ArticleBoardList = () => {
             }
             return article.category === Number(bcode)
           })
-          .map((data, index) => (
-            <li key={index}>
-              <ArticleItem data={data} />
+          .map((article) => (
+            <li key={article.id}>
+              <ArticleItem data={article} />
+              <ap onClick={() => goDetail(article)}>자세히</ap>
             </li>
           ))}
       </ul>
