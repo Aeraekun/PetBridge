@@ -7,6 +7,7 @@ import CommunityPage from "pages/CommunityPage"
 import ShortsPage from "pages/ShortsPage"
 import ShortComments from "components/shorts/ShortComments"
 import LostAndFoundPage from "pages/LostAndFoundPage"
+import Report from "./components/map/Report"
 
 function App() {
   return (
@@ -20,7 +21,9 @@ function App() {
       <Route path="/shorts" element={<ShortsLayout />}>
         <Route path="/shorts/comments" element={<ShortComments />}></Route>
       </Route>
-      <Route path="/lost-and-found" element={<LostAndFoundPage />}></Route>
+      <Route path="/lost-and-found" element={<LostAndFoundPage />}>
+        <Route path="/lost-and-found/report" element={<Report />}></Route>
+      </Route>
     </Routes>
   )
 }
