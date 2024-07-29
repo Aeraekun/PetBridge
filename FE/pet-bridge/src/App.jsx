@@ -24,6 +24,16 @@ function App() {
   const dispatch = useDispatch()
 
   useEffect(() => {
+    // const fetchRedirectHeader = async () => {
+    //   const response = await fetch("/")
+    //   if (response.redirected) {
+    //     const redirectedUrl = response.url
+    //     console.log(redirectedUrl)
+    //   }
+    // }
+
+    // fetchRedirectHeader()
+
     if (sessionStorage.getItem("accessToken")) {
       dispatch(setAuthenticated(true))
     }

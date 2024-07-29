@@ -92,14 +92,13 @@ const Login = () => {
   // 소셜 로그인 클릭시 호출 함수
   const handleSocialLogin = (e) => {
     // 클릭한 대상(버튼)의 id 추출 (kakao, naver, google)ㄴ
-    const target = e.target
+    const target = e.currentTarget
     const socialId = target.id
 
     const socialUrl = SOCIAL_BASE_URL + socialId
 
     console.log(socialUrl)
-
-    window.location.href = SOCIAL_BASE_URL + socialId
+    window.location.href = socialUrl
   }
 
   return (
