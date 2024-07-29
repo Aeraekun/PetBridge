@@ -11,6 +11,7 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -53,6 +54,13 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
+        return web -> web.ignoring()
+                // error endpoint를 열어줘야 함, favicon.ico 추가!
+                .requestMatchers("/error", "/favicon.ico");
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .formLogin(AbstractHttpConfigurer::disable) // FormLogin 사용 X
@@ -61,16 +69,23 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                        .requestMatchers("/users/sign-up", "/users/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/", "/oauth2/authorization/*",
-                                "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users/sign-up", "/*").permitAll()
+
+                        // 기본 파일
+                        .requestMatchers(HttpMethod.GET, "/","/css/**", "/images/**", "/js/**", "/favicon.ico").permitAll()
+
+                        // 회원
+                        .requestMatchers(HttpMethod.GET, "/users/sign-up", "users/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/users/sign-up").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/oauth2/authorization/*").permitAll()
+                        .requestMatchers("/users/oauth/success").permitAll()
+
                         // 게시글
                         .requestMatchers(HttpMethod.GET, "/api/boards").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/boards/{id}").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/boards").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/api/boards/{id}").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/api/boards/{id}/disable", "/*").permitAll()
+
                         // 댓글
                         .requestMatchers(HttpMethod.GET, "/api/board-comments/{boardId}", "/*").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/board-comments").permitAll()
