@@ -23,6 +23,12 @@ import {
 import MyPageDisableContainer from "components/users/MyPageDisableContainer"
 import UpdateProfilePage from "pages/UpdateProfilePage"
 import PrivateRoute from "routes/PrivateRoute"
+import MyPageArtilcesContainer from "components/users/MyPageArticlesContainer"
+import MyPageContractsContainer from "components/users/MyPageContractsContainer"
+import MyPageFavoritesContainer from "components/users/MyPageFavoritesContainer"
+import MyPageLikesContainer from "components/users/MyPageLikesContainer"
+import MyPagePetPicsContainer from "components/users/MyPagePetPicsContainer"
+import MyPagePetsContainer from "components/users/MyPagePetsContainer"
 
 function App() {
   const dispatch = useDispatch()
@@ -60,6 +66,18 @@ function App() {
           }
         >
           <Route path="disable" element={<MyPageDisableContainer />}></Route>
+          <Route path="articles" element={<MyPageArtilcesContainer />}></Route>
+          <Route path="petpics" element={<MyPagePetPicsContainer />}></Route>
+          <Route path="pets" element={<MyPagePetsContainer />}></Route>
+          <Route
+            path="contracts"
+            element={<MyPageContractsContainer />}
+          ></Route>
+          <Route
+            path="favorites"
+            element={<MyPageFavoritesContainer />}
+          ></Route>
+          <Route path="likes" element={<MyPageLikesContainer />}></Route>
         </Route>
       </Route>
       <Route path="/lost-and-found" element={<LostAndFoundPage />}></Route>
