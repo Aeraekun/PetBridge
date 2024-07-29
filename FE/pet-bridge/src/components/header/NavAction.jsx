@@ -1,4 +1,4 @@
-import {jwtTest} from "api/users-api"
+// import {jwtTest} from "api/users-api"
 import Button from "components/common/Button"
 import {
   logOut,
@@ -6,16 +6,20 @@ import {
   selectUserId,
 } from "features/user/users-slice"
 import {useSelector, useDispatch} from "react-redux"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 
 const NavAction = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated)
   const userId = useSelector(selectUserId)
   const dispatch = useDispatch()
+
+  const navigate = useNavigate()
+
   const deleteJWT = () => {
     console.log("NavAction.jsx => deleteJWT => 리프레시 토큰 삭제")
     localStorage.removeItem("refreshToken")
     sessionStorage.removeItem("accessToken")
+    navigate("/")
   }
 
   const handleLogOut = () => {
@@ -25,7 +29,7 @@ const NavAction = () => {
   }
 
   const handleJwtTest = () => {
-    jwtTest()
+    console.log(document.cookie)
   }
 
   return (

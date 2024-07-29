@@ -1,6 +1,6 @@
-import {useSelector} from "react-redux"
-import {selectUserName} from "features/user/users-slice"
-import {Link, NavLink} from "react-router-dom"
+import {useDispatch, useSelector} from "react-redux"
+import {logOut, selectUserName} from "features/user/users-slice"
+import {Link, NavLink, useNavigate} from "react-router-dom"
 import MyPageNavComponent from "./MyPageNavComponent"
 
 import DefaulUser150 from "assets/images/icon-default-user-150.svg"
@@ -61,6 +61,22 @@ const MyPageNavList = () => {
 const MyPageNavContainer = () => {
   // 유저 이름 초기화
   const userName = useSelector(selectUserName)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  // 로그아웃
+  const deleteJWT = () => {
+    console.log("NavAction.jsx => deleteJWT => 리프레시 토큰 삭제")
+    localStorage.removeItem("refreshToken")
+    sessionStorage.removeItem("accessToken")
+    navigate("/")
+  }
+
+  const handleLogOut = () => {
+    console.log("NavAction.jsx => handleLogOut 함수 호출")
+    const logOutMessage = dispatch(logOut())
+    console.log(logOutMessage)
+    deleteJWT()
+  }
 
   return (
     // 마이페이지 전체 틀
@@ -81,9 +97,12 @@ const MyPageNavContainer = () => {
         >
           수정하기
         </Link>
-        <div className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild">
+        <button
+          className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild"
+          onClick={handleLogOut}
+        >
           로그아웃
-        </div>
+        </button>
       </div>
       {/* 카테고리 리스트 */}
       <MyPageNavList />
