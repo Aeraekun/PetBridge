@@ -3,20 +3,19 @@ package site.petbridge.domain.board.repository;
 import static site.petbridge.domain.board.domain.QBoard.*;
 import static site.petbridge.domain.boardcomment.domain.QBoardComment.*;
 import static site.petbridge.domain.user.domain.QUser.*;
-import static site.petbridge.global.config.QueryDslConfig.*;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import site.petbridge.domain.board.dto.response.BoardResponseDto;
 import site.petbridge.domain.board.dto.response.QBoardResponseDto;
-
-import java.util.List;
 
 
 @Repository

@@ -1,6 +1,5 @@
 package site.petbridge.domain.board.service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 

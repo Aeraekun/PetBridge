@@ -2,7 +2,6 @@ package site.petbridge.domain.board.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,60 +19,60 @@ import site.petbridge.util.FileUtil;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class BoardServiceImpl implements BoardService{
+public class BoardServiceImpl implements BoardService {
 
-    private final BoardRepository boardRepository;
-    private final FileUtil fileUtil;
+	private final BoardRepository boardRepository;
+	private final FileUtil fileUtil;
 
-    @Override
-    public void registBoard(BoardAddRequestDto boardAddRequestDto, MultipartFile file) throws Exception {
+	@Override
+	public void registBoard(BoardAddRequestDto boardAddRequestDto, MultipartFile file) throws Exception {
 
-        String thumbnail = null;
+		String thumbnail = null;
 
-        if (file != null) {
+		if (file != null) {
 			System.out.println("파일등록할게");
-            // String today = new SimpleDateFormat("yyMMdd").format(new Date());
-            String savedFileName = fileUtil.saveFile(file, "board");
-            if (savedFileName != null){
-                thumbnail = savedFileName;
+			// String today = new SimpleDateFormat("yyMMdd").format(new Date());
+			String savedFileName = fileUtil.saveFile(file, "board");
+			if (savedFileName != null) {
+				thumbnail = savedFileName;
 				System.out.println("저장파일명: " + thumbnail);
-            }
-        }
+			}
+		}
 		System.out.println("이제 db에 저장할게");
-        Board transferToBoard = Board.builder()
-            .userId(boardAddRequestDto.getUserId())
-            .animalId(boardAddRequestDto.getAnimalId())
-            .type(BoardType.valueOf(boardAddRequestDto.getType()))
+		Board transferToBoard = Board.builder()
+			.userId(boardAddRequestDto.getUserId())
+			.animalId(boardAddRequestDto.getAnimalId())
+			.type(BoardType.valueOf(boardAddRequestDto.getType()))
 			.thumbnail(thumbnail)
-            .title(boardAddRequestDto.getTitle())
-            .content(boardAddRequestDto.getContent())
-            .lat(boardAddRequestDto.getLat())
-            .lon(boardAddRequestDto.getLon())
+			.title(boardAddRequestDto.getTitle())
+			.content(boardAddRequestDto.getContent())
+			.lat(boardAddRequestDto.getLat())
+			.lon(boardAddRequestDto.getLon())
 
-            .build();
+			.build();
 
-        boardRepository.save(transferToBoard);
+		boardRepository.save(transferToBoard);
 		System.out.println("DB저장완료");
-    }
+	}
 
 	@Override
 	public int editBoard(int id, BoardEditRequestDto boardEditRequestDto, MultipartFile file) throws Exception {
 		String thumbnail = boardEditRequestDto.getThumbnail();
 
-		if(boardEditRequestDto.getThumbnailRemoved() && thumbnail != null) {
+		if (boardEditRequestDto.getThumbnailRemoved() && thumbnail != null) {
 			fileUtil.removeFile("board", boardEditRequestDto.getThumbnail());
 			thumbnail = null;
 		}
 
 		if (file != null) {
 			String savedFileName = fileUtil.saveFile(file, "board");
-			if (savedFileName != null){
+			if (savedFileName != null) {
 				thumbnail = savedFileName;
 			}
 		}
 		Board board = boardRepository.findById(id).orElse(null);
 
-		if(board != null) {
+		if (board != null) {
 			board.setAnimalId(boardEditRequestDto.getAnimalId());
 			board.setThumbnail(thumbnail);
 			board.setTitle(boardEditRequestDto.getTitle());
@@ -88,9 +87,9 @@ public class BoardServiceImpl implements BoardService{
 	}
 
 	@Override
-    public Optional<List<BoardResponseDto>> getListBoard() {
+	public Optional<List<BoardResponseDto>> getListBoard() {
 		return Optional.ofNullable(boardRepository.findAllBoardResponseDtos());
-    }
+	}
 
 	@Override
 	public Optional<BoardResponseDto> getDetailBoard(int id) {
@@ -100,7 +99,7 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public int removeBoard(int boardId) {
 		Board board = boardRepository.findById(boardId).orElse(null);
-		if(board != null) {
+		if (board != null) {
 			board.setDisabled(true);
 			boardRepository.save(board);
 			return 1;
