@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import markerImg from "../../assets/images/Marker.png" // 마커 이미지 import
+import markerImg from "../../assets/images/marker.png" // 마커 이미지 import
 
 const {kakao} = window
 
