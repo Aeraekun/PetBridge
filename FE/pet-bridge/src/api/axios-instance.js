@@ -158,7 +158,8 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(originalRequest)
       }
     }
-    return Promise.reject(error)
+    console.log("인터셉터 에러", error)
+    return error
   }
 )
 
