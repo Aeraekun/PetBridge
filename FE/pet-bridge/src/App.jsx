@@ -13,6 +13,7 @@ import ShortsPage from "pages/ShortsPage"
 import ShortsComment from "components/shorts/ShortsComment"
 import LostAndFoundPage from "pages/LostAndFoundPage"
 import ShortsTagDetail from "components/shorts/ShortsTagDetail"
+import Report from "./components/map/Report"
 
 import {useDispatch} from "react-redux"
 import {useEffect} from "react"
@@ -53,7 +54,9 @@ function App() {
           <Route path="disable" element={<MyPageDisableContainer />}></Route>
         </Route>
       </Route>
-      <Route path="/lost-and-found" element={<LostAndFoundPage />}></Route>
+      <Route path="/lost-and-found" element={<LostAndFoundPage />}>
+        <Route path="/lost-and-found/report" element={<Report />}></Route>
+      </Route>
       <Route path="/short" element={<ShortsPage />}></Route>
       <Route path="/shorts" element={<ShortsLayout />}>
         <Route path="/shorts/comments" element={<ShortsComment />}></Route>
