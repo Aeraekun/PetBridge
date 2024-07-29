@@ -1,13 +1,16 @@
-import MyPageNav from "components/users/MyPageNav"
+import MyPageNavContainer from "components/users/MyPageNavContainer"
+import {Outlet} from "react-router-dom"
 
-function MyPage() {
+const MyPage = () => {
   return (
-    <section className="flex h-[600px] w-[1000px] grid-cols-10 place-content-center items-center">
-      <MyPageNav />
-      <div className="h-full grow rounded-r-lg border bg-yellow">
-        마이페이지
-      </div>
-    </section>
+    <div>
+      <section className="flex h-[600px] w-[1000px] grid-cols-10 place-content-center items-center rounded-lg border">
+        <MyPageNavContainer />
+        <div className="h-full grow border-l">
+          <Outlet />
+        </div>
+      </section>
+    </div>
   )
 }
 

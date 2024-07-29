@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 import site.petbridge.global.jwt.service.JwtService;
 import site.petbridge.global.oauth2.CustomOAuth2User;
 
@@ -19,6 +20,7 @@ import java.io.IOException;
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtService jwtService;
+    private static final String URI = "/users/oauth/success";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -26,7 +28,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         log.info("OAuth2 Login 성공!!");
         try {
             CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-            
+
             // User의 Role이 GUEST일 경우, 처음 요청한 회원이므로 회원가입 페이지로 리다이렉트
 //            if (oAuth2User.getRole() == Role.GUEST) {
 //                String accessToken = jwtService.createAccessToken(oAuth2User.getEmail());
@@ -57,6 +59,14 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         jwtService.updateRefreshToken(oAuth2User.getEmail(), refreshToken);
 //        response.sendRedirect("http://localhost:3000"); // 프론트의 인덱스로 이동
+
+        // 토큰 전달을 위한 redirect
+        String redirectUrl = UriComponentsBuilder.fromUriString(URI)
+                .queryParam("access-token", accessToken)
+                .queryParam("refresh-token", refreshToken)
+                .build().toUriString();
+
+        response.sendRedirect(redirectUrl);
     }
 
 }
