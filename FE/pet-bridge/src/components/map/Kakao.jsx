@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react"
-import markerImg from "../../assets/images/Marker.png" // 마커 이미지 import
+import markerImg from "../../assets/images/marker.png" // 마커 이미지 import
 
 const {kakao} = window
 
