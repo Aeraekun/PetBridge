@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from "react-redux"
 import {logOut, selectUserName} from "features/user/users-slice"
-import {Link, NavLink} from "react-router-dom"
+import {Link, NavLink, useNavigate} from "react-router-dom"
 import MyPageNavComponent from "./MyPageNavComponent"
 
 import DefaulUser150 from "assets/images/icon-default-user-150.svg"
@@ -62,12 +62,13 @@ const MyPageNavContainer = () => {
   // 유저 이름 초기화
   const userName = useSelector(selectUserName)
   const dispatch = useDispatch()
-
+  const navigate = useNavigate()
   // 로그아웃
   const deleteJWT = () => {
     console.log("NavAction.jsx => deleteJWT => 리프레시 토큰 삭제")
     localStorage.removeItem("refreshToken")
     sessionStorage.removeItem("accessToken")
+    navigate("/")
   }
 
   const handleLogOut = () => {

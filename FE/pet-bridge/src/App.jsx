@@ -12,28 +12,23 @@ import ShortsComment from "components/shorts/ShortsComment"
 import LostAndFoundPage from "pages/LostAndFoundPage"
 import ShortsTagDetail from "components/shorts/ShortsTagDetail"
 
-import {useDispatch} from "react-redux"
+import {useDispatch, useSelector} from "react-redux"
 import {useEffect} from "react"
 import MyPage from "pages/MyPage"
 import UsersLayout from "layout/UsersLayout"
-import {setAuthenticated} from "features/user/users-slice"
+import {
+  selectIsAuthenticated,
+  setAuthenticated,
+} from "features/user/users-slice"
 import MyPageDisableContainer from "components/users/MyPageDisableContainer"
 import UpdateProfilePage from "pages/UpdateProfilePage"
+import PrivateRoute from "routes/PrivateRoute"
 
 function App() {
   const dispatch = useDispatch()
+  const isAuthenticated = useSelector(selectIsAuthenticated)
 
   useEffect(() => {
-    // const fetchRedirectHeader = async () => {
-    //   const response = await fetch("/")
-    //   if (response.redirected) {
-    //     const redirectedUrl = response.url
-    //     console.log(redirectedUrl)
-    //   }
-    // }
-
-    // fetchRedirectHeader()
-
     if (sessionStorage.getItem("accessToken")) {
       dispatch(setAuthenticated(true))
     }
@@ -55,7 +50,15 @@ function App() {
         <Route path="login" element={<LoginPage />}></Route>
         <Route path="sign-up" element={<SignUpPage />}></Route>
         <Route path="update" element={<UpdateProfilePage />}></Route>
-        <Route path=":user-id" element={<MyPage />}>
+        <Route
+          path=":user-id"
+          element={
+            <PrivateRoute
+              component={<MyPage />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
+        >
           <Route path="disable" element={<MyPageDisableContainer />}></Route>
         </Route>
       </Route>
