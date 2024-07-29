@@ -90,16 +90,6 @@ axiosInstance.interceptors.request.use(
       config.headers["Authorization-refresh"] = `Bearer 0${refreshToken}`
     }
 
-    console.log("요청 인터셉터 > config:", config)
-    console.log(
-      "요청 인터셉터 > config.headers.Authorization:",
-      config.headers.Authorization
-    )
-    console.log(
-      "요청 인터셉터 > config.headers.Authorization-refresh:",
-      config.headers["Authorization-refresh"]
-    )
-
     return config
   },
   (error) => {
@@ -140,8 +130,36 @@ axiosInstance.interceptors.response.use(
     }
     return res
   },
-  (e) => {
-    return Promise.reject(e)
+  // 모든 에러에 대한 응답
+  async (error) => {
+    // 기존 응답 저장
+    const originalRequest = error.config
+
+    // 기존에 액세스 토큰을 안담아서 보냈다면 에러 반환
+    if (!originalRequest.headers.Authorization) {
+      return error
+    }
+
+    // 403 응답 에러에 대해, 재요청이 아닌 경우 (액세스 토큰 만료 응답을 받은 경우)
+    if (error.response.status === 403 && !originalRequest._retry) {
+      // 재요청으로 처리하고
+      originalRequest._retry = true
+
+      // 리프레시 토큰과 userId를 헤더에 담음
+      const refreshToken = getRefreshTokenFromLocalStorage()
+      const userId = localStorage.getItem("userId")
+
+      // 리프레시 토큰과 유저 아이디가 있으면
+      if (refreshToken && userId) {
+        originalRequest.headers["Authorization-refresh"] =
+          `Bearer ${refreshToken}`
+        originalRequest.headers["user-id"] = userId
+
+        return axiosInstance(originalRequest)
+      }
+    }
+    console.log("인터셉터 에러", error)
+    return error
   }
 )
 

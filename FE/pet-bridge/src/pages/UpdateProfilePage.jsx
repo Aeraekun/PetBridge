@@ -1,11 +1,9 @@
-import SignUp from "components/users/SignUp"
-
-const SignUpPage = () => {
+const MyPageUpdateContainer = () => {
   return (
     <div className="flex h-[700px] w-[600px] flex-col items-center rounded-lg border bg-rose-50">
-      <SignUp />
+      ㅇㅇ
     </div>
   )
 }
 
-export default SignUpPage
+export default MyPageUpdateContainer

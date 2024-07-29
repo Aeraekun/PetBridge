@@ -1,6 +1,6 @@
 import {useSelector} from "react-redux"
 import {selectUserName} from "features/user/users-slice"
-import {NavLink} from "react-router-dom"
+import {Link, NavLink} from "react-router-dom"
 import MyPageNavComponent from "./MyPageNavComponent"
 
 import DefaulUser150 from "assets/images/icon-default-user-150.svg"
@@ -19,30 +19,38 @@ const MyPageNavList = () => {
       id: itemId++,
       text: "내가 쓴 글",
       imgSrc: iconMyArticles,
+      url: "my-articles",
     },
-    {id: itemId++, text: "내 펫핏", imgSrc: iconMyShorts},
+    {id: itemId++, text: "내 펫픽", imgSrc: iconMyShorts, url: "my-petpics"},
     {
       id: itemId++,
       text: "내 입양기록(계약서)",
       imgSrc: iconMyContracts,
+      url: "my-contracts",
     },
     {
       id: itemId++,
       text: "내 관심등록 동물",
       imgSrc: iconMyFavorites,
+      url: "my-favorites",
     },
     {
       id: itemId++,
       text: "내가 좋아요한 펫픽",
       imgSrc: iconMyLikes,
+      url: "my-likes",
     },
-    {id: itemId++, text: "나의 동물", imgSrc: iconMyPets},
+    {id: itemId++, text: "나의 동물", imgSrc: iconMyPets, url: "my-pets"},
   ]
 
   return (
     <nav className="flex h-[260px] w-[250px] flex-col justify-between ">
       {navItems.map((item) => (
-        <NavLink key={item.id} className="">
+        <NavLink
+          key={item.id}
+          to={item.url}
+          className={({isActive}) => [isActive ? "text-mild" : ""]}
+        >
           <MyPageNavComponent text={item.text} imgSrc={item.imgSrc} />
         </NavLink>
       ))}
@@ -67,9 +75,12 @@ const MyPageNavContainer = () => {
       <span className="bg-white text-2xl">{userName}</span>
       {/* 3. 수정하기, 로그아웃 */}
       <div className="flex space-x-5">
-        <div className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild">
+        <Link
+          to="/users/update"
+          className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild"
+        >
           수정하기
-        </div>
+        </Link>
         <div className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild">
           로그아웃
         </div>
@@ -77,8 +88,11 @@ const MyPageNavContainer = () => {
       {/* 카테고리 리스트 */}
       <MyPageNavList />
       {/* 회원 버튼 */}
-      <NavLink to="disable">
-        <span className="text-stroke">[회원 탈퇴하기]</span>
+      <NavLink
+        to="disable"
+        className={({isActive}) => [isActive ? "text-red-400" : "text-stroke"]}
+      >
+        [회원 탈퇴하기]
       </NavLink>
     </div>
   )
