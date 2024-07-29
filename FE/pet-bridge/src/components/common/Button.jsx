@@ -1,8 +1,11 @@
 import PropTypes from "prop-types"
 
-function Button({text}) {
+const Button = ({text, onClick}) => {
   return (
-    <button className="h-12 rounded-md border border-stroke bg-mild px-3.5 py-2.5">
+    <button
+      className="border-stroke bg-mild h-12 rounded-md border px-3.5 py-2.5"
+      onClick={onClick}
+    >
       {text}
     </button>
   )

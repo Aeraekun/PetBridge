@@ -1,31 +1,51 @@
 import Button from "components/common/Button"
-import {Link} from "react-router-dom"
-import {useState} from "react"
-import {loginUser} from "api/usersApi"
+import {Link, useNavigate} from "react-router-dom"
+import {useState, useEffect} from "react"
+import {useDispatch, useSelector} from "react-redux"
+import {
+  selectLoading,
+  selectError,
+  selectIsAuthenticated,
+  loginUserThunk,
+} from "features/user/users-slice"
 
-function LoginForm() {
+const LoginForm = () => {
   const [loginForm, setLoginForm] = useState({
-    userEmail: "",
-    userPassword: "",
+    email: "",
+    password: "",
   })
 
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const isAuthenticated = useSelector(selectIsAuthenticated)
+  const loading = useSelector(selectLoading)
+  const error = useSelector(selectError)
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/")
+    }
+  }, [isAuthenticated, navigate])
+
   // Submit 양식
-  function handleLoginSubmit(e) {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault()
-    console.log("로그인 버튼 클릭")
-    console.log(loginForm)
-    loginUser(loginForm)
+
+    const loginData = loginForm
+    // 로그인 Api 호출
+    const loginResult = await dispatch(loginUserThunk(loginData))
+    console.log(loginResult)
   }
 
   return (
     <form className="space-y-2.5" onSubmit={handleLoginSubmit}>
       {/* 이메일 입력창 */}
       <input
-        value={loginForm.userEmail}
+        value={loginForm.email}
         onChange={(e) => {
           setLoginForm({
             ...loginForm,
-            userEmail: e.target.value,
+            email: e.target.value,
           })
         }}
         type="email"
@@ -37,11 +57,11 @@ function LoginForm() {
 
       {/* 비밀번호 입력창 */}
       <input
-        value={loginForm.userPassword}
+        value={loginForm.password}
         onChange={(e) => {
           setLoginForm({
             ...loginForm,
-            userPassword: e.target.value,
+            password: e.target.value,
           })
         }}
         type="password"
@@ -52,14 +72,36 @@ function LoginForm() {
       />
 
       {/* 로그인 버튼 */}
-      <button className="h-12 w-full rounded-md bg-yellow px-3.5 py-2.5">
-        로그인
+      <button
+        className="h-12 w-full rounded-md bg-yellow px-3.5 py-2.5"
+        disabled={loading}
+      >
+        {loading ? "로그인 중..." : "로그인"}
       </button>
+
+      {/* 에러 메시지 */}
+      {error && <p className="text-alert">{error}</p>}
     </form>
   )
 }
 
-function Login() {
+const Login = () => {
+  // 소셜 로그인 URL
+  const SOCIAL_BASE_URL = "http://localhost:8080/oauth2/authorization/"
+
+  // 소셜 로그인 클릭시 호출 함수
+  const handleSocialLogin = (e) => {
+    // 클릭한 대상(버튼)의 id 추출 (kakao, naver, google)ㄴ
+    const target = e.target
+    const socialId = target.id
+
+    const socialUrl = SOCIAL_BASE_URL + socialId
+
+    console.log(socialUrl)
+
+    window.location.href = SOCIAL_BASE_URL + socialId
+  }
+
   return (
     <div className="flex size-[600px] flex-col place-content-center items-center rounded-lg border">
       <div className="flex h-[385px] w-[400px] flex-col space-y-2.5">
@@ -73,7 +115,7 @@ function Login() {
           <Link to="/">
             <Button text="PW 찾기" />
           </Link>
-          <Link to="/signup">
+          <Link to="/sign-up">
             <Button text="회원가입" />
           </Link>
         </div>
@@ -87,8 +129,20 @@ function Login() {
 
         {/* 소셜 로그인 */}
         <div className="flex w-full flex-row justify-between">
-          <div className="size-12 rounded-full bg-[#fee500]"></div>
-          <div className="size-12 rounded-full bg-[#03C75A]"></div>
+          <button
+            className="size-12 rounded-full bg-[#fee500]"
+            onClick={handleSocialLogin}
+            id="kakao"
+          >
+            카카오
+          </button>
+          <button
+            className="size-12 rounded-full bg-[#03C75A]"
+            onClick={handleSocialLogin}
+            id="naver"
+          >
+            네이버
+          </button>
           <div className="size-12 rounded-full bg-[#4285F4]"></div>
         </div>
       </div>

@@ -14,6 +14,7 @@ function Kakao() {
           <p>2살 추정</p>
           <p>공원</p>
           <p>목줄을 차고 있었어요.</p>
+          <a href="https://example.com/dog1" target="_blank" class="text-mild underline">자세히 보기</a>
           <button id="close-button-1" style="
             position: absolute; 
             top: 5px; 
@@ -37,6 +38,7 @@ function Kakao() {
           <p>3살 추정</p>
           <p>공원</p>
           <p>목줄을 차고 있었어요.</p>
+          <a href="https://example.com/dog2" target="_blank" class="text-mild underline">자세히 보기</a>
           <button id="close-button-2" style="
             position: absolute; 
             top: 5px; 
@@ -60,6 +62,7 @@ function Kakao() {
           <p>1살 추정</p>
           <p>가게 앞</p>
           <p>귀여워요</p>
+          <a href="https://example.com/dog3" target="_blank" class="text-mild underline">자세히 보기</a>
           <button id="close-button-3" style="
             position: absolute; 
             top: 5px; 

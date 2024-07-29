@@ -1,10 +1,21 @@
 // import {useEffect, useState} from "react"
 import ReactPlayer from "react-player"
-import HeartIcon from "../components/shorts/HeartIcon"
-import SirenIcon from "../components/shorts/SirenIcon"
-import CommentIcon from "../components/shorts/CommentIcon"
-import Share from "../assets/image/Share.png"
-import Follow from "../assets/image/Follow.png"
+import HeartIcon from "../components/common/HeartIcon"
+import SirenIcon from "../components/common/SirenIcon"
+import CommentIcon from "../components/common/CommentIcon"
+import ShareIcon from "../components/common/ShareIcon"
+import FollowIcon from "../components/common/FollowIcon"
+import TagIcon from "../components/common/TagIcon"
+import dummyData from "components/shorts/dummydata"
+
+const ShortsInfo = ({data}) => {
+  return (
+    <div className=" flex  w-full flex-col space-y-1 p-3 text-base ">
+      <div> {data.title}</div>
+      <div className="text-sm"> {data.content}</div>
+    </div>
+  )
+}
 
 const ShortsPage = () => {
   return (
@@ -13,25 +24,25 @@ const ShortsPage = () => {
         <div className=" my-8 flex items-end space-x-4 ">
           <div className=" relative h-[700px] max-w-[500px] overflow-hidden rounded-lg object-contain ">
             <ReactPlayer
-              url="/shorts/video.mp4" // 여기에 로컬 MP4 파일 경로 입력
+              url="/shorts/cat.mp4" // 여기에 로컬 MP4 파일 경로 입력
               controls={true}
               playing={true}
               width="100%"
               height="100%"
             />
-            <div className="absolute bottom-20 left-0 bg-black bg-opacity-50 p-4 text-white">
-              제목제목
-              <br />
-              내용내용
+            <div className="absolute bottom-20 left-0 bg-black/50 text-white">
+              <ShortsInfo data={dummyData[4]} />
+              <div className="absolute right-0 top-0 bg-white/50 text-white">
+                <TagIcon data={dummyData[4]} />
+              </div>
             </div>
           </div>
           <div className="flex flex-col space-y-2">
             <HeartIcon className="w-12" />
             <SirenIcon className="w-12" />
             <CommentIcon className="w-12" />
-
-            <img src={Follow} className="w-8" alt="Follow Icon" />
-            <img src={Share} className="w-8" alt="Share Icon" />
+            <FollowIcon isFollowing={true} />
+            <ShareIcon />
           </div>
         </div>
       </main>

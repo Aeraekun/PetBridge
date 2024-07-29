@@ -1,4 +1,4 @@
-function NavInput() {
+const NavInput = () => {
   return (
     <input
       className="w-60 rounded-md border p-2.5"
