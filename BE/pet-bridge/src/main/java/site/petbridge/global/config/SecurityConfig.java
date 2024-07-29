@@ -65,6 +65,17 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/", "/oauth2/authorization/*",
                                 "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users/sign-up", "/*").permitAll()
+                        // 게시글
+                        .requestMatchers(HttpMethod.GET, "/api/boards").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/boards/{id}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/boards").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/api/boards/{id}").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/api/boards/{id}/disable", "/*").permitAll()
+                        // 댓글
+                        .requestMatchers(HttpMethod.GET, "/api/board-comments/{boardId}", "/*").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/board-comments").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/api/board-comments/{id}", "/*").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/api/board-comments/{id}/disable", "/*").permitAll()
                         .anyRequest().authenticated()
                 )
 //                .exceptionHandling(exceptionHandling -> exceptionHandling
