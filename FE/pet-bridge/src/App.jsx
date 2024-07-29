@@ -13,6 +13,7 @@ import ShortsPage from "pages/ShortsPage"
 import ShortsComment from "components/shorts/ShortsComment"
 import LostAndFoundPage from "pages/LostAndFoundPage"
 import ShortsTagDetail from "components/shorts/ShortsTagDetail"
+import ShortsWrite from "components/shorts/ShortsWrite"
 import Report from "./components/map/Report"
 
 import {useDispatch, useSelector} from "react-redux"
@@ -90,9 +91,10 @@ function App() {
       </Route>
       <Route path="/short" element={<ShortsPage />}></Route>
       <Route path="/shorts" element={<ShortsLayout />}>
-        <Route path="/shorts/comments" element={<ShortsComment />}></Route>
-        <Route path="/shorts/tag" element={<ShortsTagDetail />}></Route>
+        <Route path="comments" element={<ShortsComment />}></Route>
+        <Route path="tag" element={<ShortsTagDetail />}></Route>
       </Route>
+      <Route path="/shorts/write" element={<ShortsWrite />}></Route>
     </Routes>
   )
 }

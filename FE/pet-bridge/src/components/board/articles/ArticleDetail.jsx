@@ -2,6 +2,7 @@ import SirenIcon from "components/common/SirenIcon"
 import Button from "components/common/Button"
 import data from "./articledata"
 import {useNavigate, useParams} from "react-router-dom"
+import DOMPurify from "dompurify"
 
 const Profile = ({nickname}) => {
   return (
@@ -36,6 +37,8 @@ const ArticleDetail = () => {
   const {id} = useParams()
   const navigate = useNavigate()
   const article = data.find((article) => article.id === Number(id))
+
+  const sanitizedContent = DOMPurify.sanitize(article.content)
   const goBack = () => {
     navigate(-1)
   }
@@ -44,7 +47,9 @@ const ArticleDetail = () => {
   }
   return (
     <>
-      <button onClick={goBack}>돌아가기 </button>
+      <button onClick={goBack} className="flex justify-start">
+        돌아가기{" "}
+      </button>
       <div className="text-center text-4xl font-bold">{article.title}</div>
       <hr />
       <Profile nickname={article.nickname} />
@@ -54,7 +59,10 @@ const ArticleDetail = () => {
         <TaggedAnimalProfile data={article} />
       </div>
       <hr />
-      <div className="min-h-72 w-11/12">{article.content} </div>
+      <div
+        className="min-h-72 w-11/12"
+        dangerouslySetInnerHTML={{__html: sanitizedContent}}
+      ></div>
 
       <div className="flex justify-end">
         <SirenIcon />

@@ -1,10 +1,5 @@
 import React, {useState} from "react"
 import ReactPlayer from "react-player"
-import HeartIcon from "components/shorts/HeartIcon"
-import SirenIcon from "components/shorts/SirenIcon"
-import CommentIcon from "components/shorts/CommentIcon"
-import Share from "assets/image/Share.png"
-import Follow from "assets/image/Follow.png"
 
 const ShortWrite = () => {
   const [videoUrl, setVideoUrl] = useState(null) // 동영상 URL 상태
@@ -34,28 +29,15 @@ const ShortWrite = () => {
               <p className="text-gray-500">동영상을 업로드 해주세요.</p>
             </div>
           )}
-          <div className="absolute bottom-20 left-0 bg-black bg-opacity-50 p-4 text-white">
-            제목제목
-            <br />
-            내용내용
-          </div>
         </div>
-        <div className="flex flex-col space-y-2">
-          <HeartIcon className="w-12" />
-          <SirenIcon className="w-12" />
-          <CommentIcon className="w-12" />
-
-          <img src={Follow} className="w-8" alt="Follow Icon" />
-          <img src={Share} className="w-8" alt="Share Icon" />
+        <div className="mt-4">
+          <input
+            type="file"
+            accept="video/*"
+            onChange={handleFileChange}
+            className="cursor-pointer border border-gray-300 px-4 py-2"
+          />
         </div>
-      </div>
-      <div className="mt-4">
-        <input
-          type="file"
-          accept="video/*"
-          onChange={handleFileChange}
-          className="cursor-pointer border border-gray-300 px-4 py-2"
-        />
       </div>
     </main>
   )
