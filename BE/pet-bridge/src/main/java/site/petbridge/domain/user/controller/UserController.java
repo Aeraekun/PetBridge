@@ -38,45 +38,34 @@ public class UserController {
         return ResponseEntity.status((HttpStatus.CREATED)).build();
     }
 
-    /**
-     * // 사용자 정보 호출 API
-     *
-     * @return
-     * @GetMapping("/info") public ApiResponse<UserResponseDto> getUserInformation(HttpServletRequest httpServletRequest) throws Exception {
-     * log.info("[user info call]");
-     * String accessToken = jwtService.extractAccessToken(httpServletRequest).orElse(null);
-     * try {
-     * Long userId = jwtService.extractUserId(accessToken).orElse(null);
-     * log.info("[user info] userId : {}", userId);
-     * UserResponseDto userResponseDto = userService.searchUserByUserId(userId).transferToUserResponseDto();
-     * return new ApiResponse<>(200, true, userResponseDto, "사용자 정보 불러오기 성공");
-     * } catch (Exception e) {
-     * log.error("Error fetching user information", e);
-     * throw NotExistUserException.EXCEPTION;
-     * }
-     * }
-     */
-
     @GetMapping("/api/users/info")
-    public Optional<UserResponseDto> getDetailMyUser(HttpServletRequest httpServletRequest) throws Exception {
-        return userServiceImpl.getDetailMyUser(httpServletRequest);
+    public ResponseEntity<UserResponseDto> getDetailMyUser(HttpServletRequest httpServletRequest) throws Exception {
+        return userServiceImpl.getDetailMyUser(httpServletRequest)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
     }
 
-//    @PostMapping("/api/users/login")
-//    public ResponseEntity<Void> loginUser(@RequestBody UserLoginRequestDto userLoginRequestDto) {
-//        Optional<User> user = userServiceImpl.loginUser(userLoginRequestDto.email(), userLoginRequestDto.password());
-//
-//        return user.map(ResponseEntity::ok).orElseGet()
-//    }
+    /**
+     * // 사용자 정보 수정 API
+     *     @PutMapping
+     *     public ApiResponse<UserResponseDto> modifyUserInformation(@RequestBody UserModifyRequestDto userModifyRequestDto, HttpServletRequest httpServletRequest){
+     *         log.info("[user info modify]");
+     *         String accessToken = jwtService.extractAccessToken(httpServletRequest).orElse(null);
+     *         try {
+     *             Long userId = jwtService.extractUserId(accessToken).orElse(null);
+     *             log.info("[user info] userId : {}", userId);
+     *             UserResponseDto userResponseDto = userService.updateUser(userId, userModifyRequestDto);
+     *             return new ApiResponse<>(200, true, userResponseDto, "사용자 정보 수정 성공");
+     *         } catch (Exception e) {
+     *             log.error("Error fetching user information", e);
+     *             throw NotExistUserException.EXCEPTION;
+     *         }
+     *     }
+     */
+    @PatchMapping("/api/users/modify")
 
-//    @PatchMapping()
-//    public ResponseEntity<Void> modifyAttractionBoard(@RequestBody AttractionBoardAddRequestDto attractionBoardAddRequestDto){
-//        log.info("[modifyAttractionBoard] attractionBoardAddRequestDto : {}",attractionBoardAddRequestDto);
-//        if ( attractionBoardService.modifyAttractionBoard(attractionBoardAddRequestDto) == 0 ){
-//            return ResponseEntity.badRequest().build();
-//        }
-//        return ResponseEntity.ok().build();
-//    }
+
+
 
     @GetMapping("/api/users/jwt-test")
     public String jwtTest() { return "jwtTest 요청 성공"; }
