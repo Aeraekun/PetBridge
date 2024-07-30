@@ -6,26 +6,17 @@ import {
   selectId,
 } from "features/user/users-slice"
 import {useSelector, useDispatch} from "react-redux"
-import {Link, useNavigate} from "react-router-dom"
+import {Link} from "react-router-dom"
+import {logOutUser} from "utils/user-utils"
 
 const NavAction = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated)
   const id = useSelector(selectId)
   const dispatch = useDispatch()
 
-  const navigate = useNavigate()
-
-  const deleteJWT = () => {
-    console.log("NavAction.jsx => deleteJWT => 리프레시 토큰 삭제")
-    localStorage.removeItem("refreshToken")
-    sessionStorage.removeItem("accessToken")
-    navigate("/")
-  }
-
   const handleLogOut = () => {
-    console.log("NavAction.jsx => handleLogOut 함수 호출")
+    logOutUser()
     dispatch(logOut())
-    deleteJWT()
   }
 
   const handleJwtTest = () => {

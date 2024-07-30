@@ -36,8 +36,8 @@ export const patchUserInfo = async (userInfo) => {
 }
 
 // 회원 탈퇴
-export const patchDisableUser = (id) => {
-  const res = axiosInstance.patch(`/users/${id}/delete`)
+export const patchDeleteUser = () => {
+  const res = axiosInstance.patch(`/users/delete`)
 
   return res
 }

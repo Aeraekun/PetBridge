@@ -38,6 +38,7 @@ const SocialUpdateContainer = () => {
     })
   }
 
+  // 폼 제출 핸들러
   const onSubmitHandler = async (event) => {
     event.preventDefault()
 

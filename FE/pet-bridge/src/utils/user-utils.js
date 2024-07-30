@@ -34,6 +34,7 @@ export const setUserInfosAtSession = (userInfos) => {
 
 // 유저 정보를 세선 스토리지에서 받아와서 상태에 저장하기 위해 넘겨줌
 export const getUserInfosFromSession = () => {
+  // 유저 정보 key값
   const userInfoKeys = [
     "nickname",
     "id",
@@ -42,11 +43,12 @@ export const getUserInfosFromSession = () => {
     "phone",
     "isAuthenticated",
   ]
+  // 유저 정보를 저장할 빈 객체 초기화
   const userInfos = {}
 
+  // 키값을 순회하면서 세션에서 값을 찾고 객체에 추가
   userInfoKeys.forEach((key) => {
     const item = sessionStorage.getItem(key)
-    console.log(item, key)
     if (item) {
       userInfos[key] = item
     }
@@ -55,4 +57,16 @@ export const getUserInfosFromSession = () => {
   console.log(userInfos)
 
   return userInfos
+}
+
+// 로그아웃
+export const logOutUser = () => {
+  deleteJWT()
+  sessionStorage.clear()
+}
+
+export const deleteJWT = () => {
+  console.log("NavAction.jsx => deleteJWT => 리프레시 토큰 삭제")
+  localStorage.removeItem("refreshToken")
+  sessionStorage.removeItem("accessToken")
 }

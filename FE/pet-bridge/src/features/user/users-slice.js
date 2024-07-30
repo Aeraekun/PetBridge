@@ -1,12 +1,11 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
 import {getUserInfo, postLoginUser} from "api/users-api"
 import {setUserInfosAtSession} from "utils/user-utils"
-getUserInfo
 
 // usersSlice의 상태 초기화
 const initialState = {
   nickname: "",
-  id: "1",
+  id: "",
   email: "",
   birth: "",
   phone: "",
@@ -63,6 +62,12 @@ export const usersSlice = createSlice({
   initialState,
   reducers: {
     logOut: (state) => {
+      state.id = ""
+      state.nickname = ""
+      state.email = ""
+      state.birth = ""
+      state.phone = ""
+      state.img = ""
       state.isAuthenticated = false
     },
     setAuthenticated(state, action) {
@@ -107,6 +112,9 @@ export const usersSlice = createSlice({
 // 선택자 함수 정의
 export const selectNickname = (state) => state.user.nickname
 export const selectId = (state) => state.user.id
+export const selectBirth = (state) => state.user.birth
+export const selectPhone = (state) => state.user.phone
+export const selectImage = (state) => state.user.img
 export const selectIsAuthenticated = (state) => state.user.isAuthenticated
 export const selectLoading = (state) => state.user.loading
 export const selectError = (state) => state.user.error

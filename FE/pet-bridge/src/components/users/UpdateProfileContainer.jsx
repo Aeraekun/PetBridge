@@ -1,30 +1,53 @@
+import {patchUserInfo} from "api/users-api"
 import DefaultUser150 from "assets/icons/icon-default-user-150.svg"
+import {
+  selectBirth,
+  selectId,
+  selectImage,
+  selectNickname,
+  selectPhone,
+} from "features/user/users-slice"
 import {useState} from "react"
-import {Link} from "react-router-dom"
+import {useSelector} from "react-redux"
+import {Link, useNavigate} from "react-router-dom"
+import {
+  validateBirth,
+  validateNickname,
+  validatePassword,
+  validatePhone,
+} from "utils/user-validations"
 const UpdateProfileContainer = () => {
-  // 회원가입 폼 제출을 위한 인자 저장 state
+  const navigate = useNavigate()
+
+  const userId = useSelector(selectId)
+  const nickname = useSelector(selectNickname)
+  const birth = useSelector(selectBirth)
+  const phone = useSelector(selectPhone)
+  const image = useSelector(selectImage)
+
+  // 유저 정보 수정 폼 제출을 위한 인자 저장 state
   const [updateFormData, setUpdateFormData] = useState({
-    email: "",
     password: "",
-    nickname: "",
-    birth: "",
-    phone: "",
+    passwordConfirm: "",
+    nickname: [nickname],
+    birth: [birth],
+    phone: [phone],
+    image: [image],
   })
 
   // 유효성 검사 실패 에러 메시지 저장을 위한 state
   const [errors, setErrors] = useState({})
 
-  // 에러 메세지 변경
-  const setOneError = (error, message) => {
-    setErrors({
-      ...errors,
-      error: message,
-    })
+  // 에러메세지 수정
+  const setError = (new_error, new_error_message) => {
+    if (new_error) {
+      setErrors({...errors, [new_error]: new_error_message})
+    }
   }
 
   // 입력값이 변경되면 행동할 Handler 정의
-  const changeHandler = (e) => {
-    const target = e.target
+  const changeHandler = (event) => {
+    const target = event.target
     const id = target.id
 
     // 입력 값과 FormData를 연동시킴
@@ -46,99 +69,103 @@ const UpdateProfileContainer = () => {
     })
   }
 
+  // 폼 제출 핸들러
+  const onSubmitHandler = async (event) => {
+    event.preventDefault()
+
+    let newErrors = {}
+
+    let nicknameError = validateNickname(updateFormData)
+    if (nicknameError.new_error) {
+      newErrors.nickname = nicknameError.new_error_message
+    }
+
+    let birthError = validateBirth(updateFormData)
+    if (birthError.new_error) {
+      newErrors.birth = birthError.new_error_message
+    }
+
+    let phoneError = validatePhone(updateFormData)
+    if (phoneError.new_error) {
+      newErrors.phone = phoneError.new_error_message
+    }
+    setErrors(newErrors)
+    // 에러가 없다면
+    if (Object.values(newErrors).every((value) => value === "")) {
+      // patch 비동기 요청
+      try {
+        const res = await patchUserInfo(updateFormData)
+        navigate(`/users/${userId}`)
+        console.log(res)
+        return
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    return console.log(newErrors)
+  }
+
   // 비밀번호 확인 문자 저장을 위한 state
   const [confirmNumbers, setConfirmNumbers] = useState({
     passwordConfirm: "",
-    emailConfirm: "",
-    phoneConfirm: "",
   })
 
-  // 유효성 검사 패턴
-  const passwordPattern = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/
-  const birthTypePattern = /^\d{8}$/
-  const birthPattern =
-    /^(19[0-9]{2}|20[0-9]{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/
+  // 칸 입력 완료 후 Focus 해제(onBlur)시 해당 입력에 대한Validation 동작
+  const onBlurHandler = (event) => {
+    let new_error = ""
+    let new_error_message = ""
 
-  // 비밀번호 유효성 검사
-  // 8 ~ 16자, 영문 대소문자, 숫자, 특수문자 필수
-
-  const validatePassword = () => {
-    if (!updateFormData.password) {
-      errors.password = "*비밀번호: 필수 정보입니다."
-    } else if (!passwordPattern.test(updateFormData.password)) {
-      errors.password =
-        "*비밀번호: 8~16자의 영문 대/소문자, 숫자, 특수문자를 사용해 주세요."
-    } else {
-      errors.password = ""
+    // 이벤트가 발생한 대상
+    const target = event.target
+    // 아이디 추출 (입력값)
+    const inputType = target.id
+    // id 값으로 입력 양식 확인 후 양식 검사
+    if (inputType === "nickname") {
+      ;({new_error, new_error_message} = validateNickname(updateFormData))
+      setError(new_error, new_error_message)
+    } else if (inputType === "birth") {
+      ;({new_error, new_error_message} = validateBirth(updateFormData))
+      setError(new_error, new_error_message)
+    } else if (inputType === "phone") {
+      ;({new_error, new_error_message} = validatePhone(updateFormData))
+      setError(new_error, new_error_message)
+    } else if (inputType === "password") {
+      ;({new_error, new_error_message} = validatePassword(updateFormData))
+      setError(new_error, new_error_message)
     }
-
-    setOneError("password", errors.password)
   }
 
-  // 닉네임 유효성 검사
-  const validateNickname = () => {
-    if (!updateFormData.nickname) {
-      errors.nickname = "*닉네임: 필수 정보입니다."
-    } else {
-      errors.nickname = ""
+  // 전화번호 입력시 정규표현식으로 숫자만 받도록 변환
+  const onInputPhone = (e) => {
+    const target = e.target
+    if (target.value) {
+      target.value = target.value
+        .replace(/[^0-9]/g, "")
+        .replace(/(^02.{0}|^01.{1}|[0-9]{3,4})([0-9]{4})([0-9]{4})/g, "$1$2$3")
     }
-
-    setOneError("nickname", errors.nickname)
   }
-
-  // 생일 유효성 검사
-  // 8자리 숫자인지 확인
-  const validateBirth = () => {
-    if (!updateFormData.birth) {
-      errors.birth = "*생년월일: 필수 정보입니다."
-    } else if (!birthTypePattern.test(updateFormData.birth)) {
-      errors.birth = "*생년월일: 20240723 양식으로 작성해주세요."
-    } else if (!birthPattern.test(updateFormData.birth)) {
-      errors.birth =
-        "*생년월일: 19000101 - 20991231 이내의 생일을 입력해주세요."
-    } else {
-      errors.birth = ""
-    }
-
-    setOneError("birth", errors.birth)
-  }
-
-  // const handleUpdateSubmit = async (e) => {
-  //   e.preventDefault()
-
-  //   const validationErrors = validateTotalForm()
-
-  //   if (Object.values(validationErrors).every((value) => value === "")) {
-  //     console.log("updateFormData: ", updateFormData)
-  //     try {
-  //       await updateUser(updateFormData)
-
-  //       const {email, password} = updateFormData
-  //       const loginData = {
-  //         email: email,
-  //         password: password,
-  //       }
-  //       dispatch(postLoginUser(loginData))
-  //       navigate("/")
-  //     } catch {
-  //       return
-  //     }
-  //   } else {
-  //     console.log("Validation Errors: ", validationErrors)
-  //   }
-  // }
 
   return (
     <form
       className="flex size-full flex-col items-center space-y-1.5"
-      // onSubmit={handleUpdateSubmit}
+      onSubmit={onSubmitHandler}
     >
       <span className="text-2xl font-bold">닉네임(아이디)</span>
-      <img
-        src={DefaultUser150}
-        alt="유저이미지"
-        className="size-[100px] rounded-full"
-      />
+      {image ? (
+        <img
+          src={image}
+          alt="유저이미지"
+          className="size-[100px] rounded-full"
+        />
+      ) : (
+        <img
+          src={DefaultUser150}
+          alt="유저이미지"
+          className="size-[200px] rounded-full"
+        />
+      )}
+
       {/* 비밀번호 입력 */}
       <div className="w-full">
         {/* 비밀번호 입력 창 */}
@@ -152,7 +179,7 @@ const UpdateProfileContainer = () => {
           minLength={8}
           maxLength={16}
           autoComplete="new-password"
-          onBlur={validatePassword}
+          onBlur={onBlurHandler}
         />
         {/* 비밀번호 확인 입력 창 */}
         <input
@@ -181,13 +208,29 @@ const UpdateProfileContainer = () => {
           placeholder="닉네임"
           id="nickname"
           maxLength={20}
-          onBlur={validateNickname}
+          onBlur={onBlurHandler}
         />
         {errors.nickname && (
           <span className="col-span-12 text-alert">{errors.nickname}</span>
         )}
       </div>
-
+      {/* 전화번호 입력 창 */}
+      <div className="w-full">
+        <input
+          value={updateFormData.phone}
+          onInput={onInputPhone}
+          onChange={changeHandler}
+          type="text"
+          className="my-1 w-full rounded-md border p-2.5"
+          placeholder="휴대전화번호"
+          id="phone"
+          maxLength="11"
+          onBlur={onBlurHandler}
+        />
+        {errors.phone && (
+          <span className="col-span-12 text-alert">{errors.phone}</span>
+        )}
+      </div>
       {/* 생년월일 창 */}
       <div className="w-full">
         <input
@@ -199,7 +242,7 @@ const UpdateProfileContainer = () => {
           id="birth"
           minLength="8"
           maxLength="8"
-          onBlur={validateBirth}
+          onBlur={onBlurHandler}
         />
         {errors.birth && (
           <span className="col-span-12 text-alert">{errors.birth}</span>
