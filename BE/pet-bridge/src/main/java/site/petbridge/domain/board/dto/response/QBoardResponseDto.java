@@ -23,6 +23,8 @@ public class QBoardResponseDto extends ConstructorExpression<BoardResponseDto> {
 		BooleanPath disabled,
 		StringPath userNickname,
 		StringPath userImage,
+		StringPath animalName,
+		StringPath animalTHumbnail,
 		NumberExpression<Integer> commentCount
 	) {
 		super(BoardResponseDto.class,
@@ -39,6 +41,8 @@ public class QBoardResponseDto extends ConstructorExpression<BoardResponseDto> {
 			disabled,
 			userNickname,
 			userImage,
+			animalName,
+			animalTHumbnail,
 			commentCount
 		);
 	}
