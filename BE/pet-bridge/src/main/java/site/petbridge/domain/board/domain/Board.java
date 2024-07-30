@@ -2,7 +2,6 @@ package site.petbridge.domain.board.domain;
 
 import java.sql.Timestamp;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,39 +27,32 @@ import site.petbridge.domain.board.domain.enums.BoardType;
 @AllArgsConstructor
 public class Board {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private int id;
 
-    @Column(name = "user_id")
-    private int userId;
+	@Column(name = "user_id")
+	private int userId;
 
-    @Column(name = "animal_id")
-    private int animalId;
+	@Column(name = "animal_id")
+	private int animalId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type")
-    private BoardType type; // PROMOTION, REVIEW, FREE, NOTICE
+	@Enumerated(EnumType.STRING)
+	@Column(name = "type")
+	private BoardType type; // PROMOTION, REVIEW, FREE, NOTICE
 
-    private String thumbnail;
-    private String title;
-    private String content;
+	private String thumbnail;
+	private String title;
+	private String content;
 
-    @Column(name = "regist_time", insertable = false, updatable = false)
-    private Timestamp registTime;
+	@Column(name = "regist_time", insertable = false, updatable = false)
+	private Timestamp registTime;
 
-    private String lat;
-    private String lon;
+	private String lat;
+	private String lon;
 
-    @Builder.Default
-    private boolean disabled = false;
+	@Builder.Default
+	private boolean disabled = false;
 
-
-    @Builder
-    public Board(String title, String content, String thumbnail) {
-        this.title = title;
-        this.content = content;
-        this.thumbnail = thumbnail;
-    }
 }

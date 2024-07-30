@@ -183,7 +183,7 @@ const SignUp = () => {
     })
   }
 
-  // 전화번호 입력시 정규표현식으로 ###-####-#### 형식으로 변환
+  // 전화번호 입력시 정규표현식으로 숫자만 받도록 변환
   const onInputPhone = (e) => {
     const target = e.target
     if (target.value) {
@@ -297,7 +297,7 @@ const SignUp = () => {
             className="col-span-9  my-1 rounded-md border p-2.5"
             placeholder="휴대전화번호"
             id="phone"
-            maxLength="13"
+            maxLength="11"
             onBlur={validatePhone}
           />
           <button

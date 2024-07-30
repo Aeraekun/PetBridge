@@ -1,15 +1,14 @@
-import {useSelector} from "react-redux"
-import {selectUserName} from "features/user/users-slice"
-import {Link, NavLink} from "react-router-dom"
+import {useDispatch, useSelector} from "react-redux"
+import {logOut, selectUserName} from "features/user/users-slice"
+import {Link, NavLink, useNavigate} from "react-router-dom"
 import MyPageNavComponent from "./MyPageNavComponent"
-
-import DefaulUser150 from "assets/images/icon-default-user-150.svg"
-import iconMyArticles from "assets/images/icon-my-articles.svg"
-import iconMyShorts from "assets/images/icon-my-shorts.svg"
-import iconMyContracts from "assets/images/icon-my-contracts.svg"
-import iconMyFavorites from "assets/images/icon-my-favorites.svg"
-import iconMyLikes from "assets/images/icon-my-likes.svg"
-import iconMyPets from "assets/images/icon-my-pets.svg"
+import DefaulUser150 from "assets/icons/icon-default-user-150.svg"
+import iconMyArticles from "assets/icons/icon-my-articles.svg"
+import iconMyShorts from "assets/icons/icon-my-shorts.svg"
+import iconMyContracts from "assets/icons/icon-my-contracts.svg"
+import iconMyFavorites from "assets/icons/icon-my-favorites.svg"
+import iconMyLikes from "assets/icons/icon-my-likes.svg"
+import iconMyPets from "assets/icons/icon-my-pets.svg"
 
 const MyPageNavList = () => {
   let itemId = 0
@@ -19,28 +18,28 @@ const MyPageNavList = () => {
       id: itemId++,
       text: "내가 쓴 글",
       imgSrc: iconMyArticles,
-      url: "my-articles",
+      url: "articles",
     },
-    {id: itemId++, text: "내 펫픽", imgSrc: iconMyShorts, url: "my-petpics"},
+    {id: itemId++, text: "내 펫픽", imgSrc: iconMyShorts, url: "petpics"},
     {
       id: itemId++,
       text: "내 입양기록(계약서)",
       imgSrc: iconMyContracts,
-      url: "my-contracts",
+      url: "contracts",
     },
     {
       id: itemId++,
       text: "내 관심등록 동물",
       imgSrc: iconMyFavorites,
-      url: "my-favorites",
+      url: "favorites",
     },
     {
       id: itemId++,
       text: "내가 좋아요한 펫픽",
       imgSrc: iconMyLikes,
-      url: "my-likes",
+      url: "likes",
     },
-    {id: itemId++, text: "나의 동물", imgSrc: iconMyPets, url: "my-pets"},
+    {id: itemId++, text: "나의 동물", imgSrc: iconMyPets, url: "pets"},
   ]
 
   return (
@@ -49,7 +48,7 @@ const MyPageNavList = () => {
         <NavLink
           key={item.id}
           to={item.url}
-          className={({isActive}) => [isActive ? "text-mild" : ""]}
+          className={({isActive}) => [isActive ? "bg-yellow" : ""]}
         >
           <MyPageNavComponent text={item.text} imgSrc={item.imgSrc} />
         </NavLink>
@@ -61,6 +60,22 @@ const MyPageNavList = () => {
 const MyPageNavContainer = () => {
   // 유저 이름 초기화
   const userName = useSelector(selectUserName)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  // 로그아웃
+  const deleteJWT = () => {
+    console.log("NavAction.jsx => deleteJWT => 리프레시 토큰 삭제")
+    localStorage.removeItem("refreshToken")
+    sessionStorage.removeItem("accessToken")
+    navigate("/")
+  }
+
+  const handleLogOut = () => {
+    console.log("NavAction.jsx => handleLogOut 함수 호출")
+    const logOutMessage = dispatch(logOut())
+    console.log(logOutMessage)
+    deleteJWT()
+  }
 
   return (
     // 마이페이지 전체 틀
@@ -81,9 +96,12 @@ const MyPageNavContainer = () => {
         >
           수정하기
         </Link>
-        <div className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild">
+        <button
+          className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild"
+          onClick={handleLogOut}
+        >
           로그아웃
-        </div>
+        </button>
       </div>
       {/* 카테고리 리스트 */}
       <MyPageNavList />

@@ -25,7 +25,7 @@ public class BoardCommentController {
     private final BoardCommentService boardCommentService;
 
     @GetMapping("/{boardId}")
-    public ResponseEntity<List<BoardCommentResponseDto>> getListBoardComment(@PathVariable("boardId") int boardId) throws Exception {
+    public ResponseEntity<List<BoardCommentResponseDto>> getListBoardComment(@PathVariable("boardId") int boardId) {
         return boardCommentService.getListBoardComment(boardId)
             .map(ResponseEntity::ok)
             .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
@@ -33,7 +33,7 @@ public class BoardCommentController {
 
     @PostMapping
     public ResponseEntity<Void> registBoardComment (
-    @RequestBody BoardCommentRequestDto boardCommentRequestDto) throws Exception{
+    @RequestBody BoardCommentRequestDto boardCommentRequestDto) {
         boardCommentService.registBoardComment(boardCommentRequestDto);
         return ResponseEntity.status((HttpStatus.CREATED)).build();
     }
@@ -41,7 +41,7 @@ public class BoardCommentController {
     @PatchMapping("/{id}")
     public ResponseEntity<Void> editBoardComment (
         @PathVariable("id") int id,
-        @RequestBody BoardCommentRequestDto boardCommentRequestDto) throws Exception{
+        @RequestBody BoardCommentRequestDto boardCommentRequestDto) {
 
         if(boardCommentService.editBoardComment(id, boardCommentRequestDto) == 0){
             ResponseEntity.status((HttpStatus.BAD_REQUEST)).build();
@@ -50,13 +50,10 @@ public class BoardCommentController {
     }
 
     @PatchMapping("/{id}/disable")
-    public ResponseEntity<Void> removeBoardComment(@PathVariable("id") int id) throws Exception {
+    public ResponseEntity<Void> removeBoardComment(@PathVariable("id") int id)  {
         boardCommentService.removeBoardComment(id);
         return ResponseEntity.noContent().build();
     }
-
-
-
 
 }
 

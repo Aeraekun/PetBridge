@@ -1,8 +1,10 @@
 import dummydata from "./dummydata"
 import ShareIcon from "../common/ShareIcon"
+import Button from "../common/Button"
 import TagAnimal from "./TaggedAnimalItem"
 import TagArticle from "./TaggedArticleItem"
 import ProfileImage from "assets/image/profile.JPG"
+import {useNavigate} from "react-router-dom"
 
 import TagIcon from "../common/TagIcon"
 import CommentIcon from "../common/CommentIcon"
@@ -25,6 +27,11 @@ const Profile = (data) => {
 }
 
 const ShortsTagDetail = () => {
+  const navigate = useNavigate()
+  const goWrite = () => {
+    let path = `/shorts/write`
+    navigate(path)
+  }
   return (
     <div className="relative flex flex-col justify-between">
       <div className=" flex h-full flex-col justify-start bg-gray-50 ">
@@ -32,6 +39,7 @@ const ShortsTagDetail = () => {
           <Profile data={dummydata[3]} />
           <hr className="my-1 border-gray-300" />
         </div>
+        <Button onClick={goWrite}>새 쇼츠 </Button>
 
         <TagAnimal data={dummydata[3]} />
         <TagArticle data={dummydata[3]} />
