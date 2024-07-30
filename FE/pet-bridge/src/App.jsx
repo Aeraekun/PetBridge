@@ -13,17 +13,30 @@ import ShortsPage from "pages/ShortsPage"
 import ShortsComment from "components/shorts/ShortsComment"
 import LostAndFoundPage from "pages/LostAndFoundPage"
 import ShortsTagDetail from "components/shorts/ShortsTagDetail"
+import ShortsWrite from "components/shorts/ShortsWrite"
+import Report from "./components/map/Report"
 
-import {useDispatch} from "react-redux"
+import {useDispatch, useSelector} from "react-redux"
 import {useEffect} from "react"
 import MyPage from "pages/MyPage"
 import UsersLayout from "layout/UsersLayout"
-import {setAuthenticated} from "features/user/users-slice"
+import {
+  selectIsAuthenticated,
+  setAuthenticated,
+} from "features/user/users-slice"
 import MyPageDisableContainer from "components/users/MyPageDisableContainer"
 import UpdateProfilePage from "pages/UpdateProfilePage"
+import PrivateRoute from "routes/PrivateRoute"
+import MyPageArtilcesContainer from "components/users/MyPageArticlesContainer"
+import MyPageContractsContainer from "components/users/MyPageContractsContainer"
+import MyPageFavoritesContainer from "components/users/MyPageFavoritesContainer"
+import MyPageLikesContainer from "components/users/MyPageLikesContainer"
+import MyPagePetPicsContainer from "components/users/MyPagePetPicsContainer"
+import MyPagePetsContainer from "components/users/MyPagePetsContainer"
 
 function App() {
   const dispatch = useDispatch()
+  const isAuthenticated = useSelector(selectIsAuthenticated)
 
   useEffect(() => {
     if (sessionStorage.getItem("accessToken")) {
@@ -49,16 +62,39 @@ function App() {
         <Route path="login" element={<LoginPage />}></Route>
         <Route path="sign-up" element={<SignUpPage />}></Route>
         <Route path="update" element={<UpdateProfilePage />}></Route>
-        <Route path=":user-id" element={<MyPage />}>
+        <Route
+          path=":user-id"
+          element={
+            <PrivateRoute
+              component={<MyPage />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
+        >
           <Route path="disable" element={<MyPageDisableContainer />}></Route>
+          <Route path="articles" element={<MyPageArtilcesContainer />}></Route>
+          <Route path="petpics" element={<MyPagePetPicsContainer />}></Route>
+          <Route path="pets" element={<MyPagePetsContainer />}></Route>
+          <Route
+            path="contracts"
+            element={<MyPageContractsContainer />}
+          ></Route>
+          <Route
+            path="favorites"
+            element={<MyPageFavoritesContainer />}
+          ></Route>
+          <Route path="likes" element={<MyPageLikesContainer />}></Route>
         </Route>
       </Route>
-      <Route path="/lost-and-found" element={<LostAndFoundPage />}></Route>
+      <Route path="/lost-and-found" element={<LostAndFoundPage />}>
+        <Route path="/lost-and-found/report" element={<Report />}></Route>
+      </Route>
       <Route path="/short" element={<ShortsPage />}></Route>
       <Route path="/shorts" element={<ShortsLayout />}>
-        <Route path="/shorts/comments" element={<ShortsComment />}></Route>
-        <Route path="/shorts/tag" element={<ShortsTagDetail />}></Route>
+        <Route path="comments" element={<ShortsComment />}></Route>
+        <Route path="tag" element={<ShortsTagDetail />}></Route>
       </Route>
+      <Route path="/shorts/write" element={<ShortsWrite />}></Route>
     </Routes>
   )
 }

@@ -14,19 +14,23 @@ const Editor = ({value, onChange}) => {
       ["clean"],
     ],
   }
-
+  const editorStyle = {
+    height: "500px", // 원하는 높이로 설정
+    width: "100%", // 원하는 너비로 설정
+  }
   return (
     <div>
       <ReactQuill
         value={value}
         theme="snow"
+        style={editorStyle}
         modules={modules}
         onChange={onChange}
       />
-      <div>
+      {/* <div>
         <h3>Preview</h3>
         <div dangerouslySetInnerHTML={{__html: value}} />
-      </div>
+      </div> */}
     </div>
   )
 }
