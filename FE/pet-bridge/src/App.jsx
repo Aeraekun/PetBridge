@@ -33,11 +33,13 @@ import MyPageFavoritesContainer from "components/users/MyPageFavoritesContainer"
 import MyPageLikesContainer from "components/users/MyPageLikesContainer"
 import MyPagePetPicsContainer from "components/users/MyPagePetPicsContainer"
 import MyPagePetsContainer from "components/users/MyPagePetsContainer"
+import SocialPage from "pages/SocialPage"
+import SocialSuccessContainer from "components/users/SocailSuccessContainer"
+import SocialUpdateContainer from "components/users/SocialUpdateContainer"
 
 function App() {
   const dispatch = useDispatch()
   const isAuthenticated = useSelector(selectIsAuthenticated)
-
   useEffect(() => {
     if (sessionStorage.getItem("accessToken")) {
       dispatch(setAuthenticated(true))
@@ -59,6 +61,10 @@ function App() {
         </Route>
       </Route>
       <Route path="/users/" element={<UsersLayout />}>
+        <Route path="social" element={<SocialPage />}>
+          <Route path="success" element={<SocialSuccessContainer />}></Route>
+          <Route path="update" element={<SocialUpdateContainer />}></Route>
+        </Route>
         <Route path="login" element={<LoginPage />}></Route>
         <Route path="sign-up" element={<SignUpPage />}></Route>
         <Route path="update" element={<UpdateProfilePage />}></Route>
