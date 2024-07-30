@@ -3,8 +3,10 @@ import SirenIcon from "components/common/SirenIcon"
 import Button from "components/common/Button"
 import Editor from "components/common/Editor"
 import {useNavigate} from "react-router-dom"
-import articledata from "./articledata"
 import AnimalTag from "components/common/AnimalTag"
+import {selectId, selectImage, selectNickname} from "features/user/users-slice"
+import {useSelector} from "react-redux"
+import {registArticle} from "api/boards-api"
 
 const Profile = ({nickname}) => {
   return (
@@ -25,9 +27,13 @@ const ArticleBoardWrite = () => {
   const [title, setTitle] = useState(null)
   const [editorContent, setEditorContent] = useState("")
   const [imageSrc, setImageSrc] = useState(null)
-
+  const [imageFile, setImageFile] = useState(null)
   const [selectedAnimalId, setSelectedAnimalId] = useState(null)
   const navigate = useNavigate()
+
+  const currentUserId = useSelector(selectId)
+  const currentUserImage = useSelector(selectImage)
+  const currentUserNickname = useSelector(selectNickname)
 
   // 파일 선택 시 호출되는 함수
   const handleFileChange = (event) => {
@@ -36,6 +42,8 @@ const ArticleBoardWrite = () => {
       // 파일의 URL을 생성하여 상태에 저장
       const url = URL.createObjectURL(file)
       setImageSrc(url)
+      // 파일
+      setImageFile(file)
     }
   }
 
@@ -44,33 +52,43 @@ const ArticleBoardWrite = () => {
     navigate(-1)
   }
 
+  const [type, setType] = useState("FREE")
+
+  const handleTypeChange = (event) => {
+    const selectedType = event.target.value
+    setType(selectedType)
+  }
+
   // 작성하기
-  const writeArticle = () => {
+  const writeArticle = async () => {
     if (editorContent.trim() === "" || !imageSrc) {
       alert("제목과 대표사진을 모두 입력하세요.")
       return
     }
-
-    // 새로운 article 데이터 생성
     const newArticle = {
-      id: articledata.length + 1, // 새 ID는 기존 데이터의 길이 + 1
-      nickname: "new작성자닉네임", // 실제 작성자의 닉네임으로 수정
-      authorImage: "https://via.placeholder.com/30", // 작성자의 프로필 이미지 URL
-      category: 1, // 적절한 카테고리로 수정
-      title: title, // 적절한 제목으로 수정
+      userId: currentUserId,
+      animalId: selectedAnimalId,
+      type: type,
+      title: title,
       content: editorContent,
-      count: 0,
-      thumbnail: imageSrc,
-      name: selectedAnimalId, // 적절한 동물 이름으로 수정
-      process_state: "입양중", // 적절한 상태로 수정
-      filename: imageSrc, // 업로드된 이미지 URL
     }
 
-    // 새 게시물을 기존의 articledata에 추가
-    articledata.push(newArticle)
+    //formData로 file이랑 article 정보 한번에 넘김.
+    const formData = new FormData()
+    formData.append(
+      "boardRegistRequestDto",
+      new Blob([JSON.stringify(newArticle)], {type: "application/json"})
+    )
+    if (imageFile) {
+      formData.append("file", imageFile)
+    }
 
-    // 게시물 상세 페이지로 이동 (ID는 새로운 게시물의 ID)
-    navigate(`/communities/details/${newArticle.id}`)
+    try {
+      await registArticle(formData)
+      navigate(`/communities`)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   const resetImage = () => {
@@ -85,18 +103,37 @@ const ArticleBoardWrite = () => {
         돌아가기
       </button>
       <input
-        className=" rounded-xl border-stroke h-16 border text-center text-4xl font-bold"
+        className=" border-stroke h-16 rounded-xl border text-center text-4xl font-bold"
         placeholder="제목을 입력하세요"
         onChange={(e) => setTitle(e.target.value)}
         value={title}
       />
       <hr />
-      <Profile nickname={"글쓰는사람닉네임"} />
+      <Profile nickname={currentUserNickname} image={currentUserImage} />
       <div className="my-2 flex flex-row">
         <img src="/icons/icon-tag.svg" alt="Tag Icon" />
       </div>
       <hr />
+
+      <label
+        htmlFor="type"
+        className="mb-2 block  text-xl font-medium text-gray-700"
+      >
+        게시판 선택
+      </label>
+      <select
+        id="type"
+        value={type}
+        onChange={handleTypeChange}
+        className=" block w-64 rounded-md border border-gray-300 bg-white px-3 py-4 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+      >
+        <option value="PROMOTION">입양홍보</option>
+        <option value="REVIEW">입양후기</option>
+        <option value="FREE">자유게시판</option>
+        <option value="NOTICE">공지사항</option>
+      </select>
       <AnimalTag onSelectAnimalId={handleAnimalSelect} />
+
       <div> 대표사진</div>
 
       {/* 이미지 미리보기 */}

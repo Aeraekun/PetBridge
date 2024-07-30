@@ -10,6 +10,9 @@ import FollowIcon from "../common/FollowIcon"
 import TagIcon from "../common/TagIcon"
 import React, {useState, useRef, useEffect} from "react"
 
+import {useSelector} from "react-redux"
+import {selectIsAuthenticated} from "features/user/users-slice"
+
 const Comment = ({data}) => {
   const [isFixedSize, setIsFixedSize] = useState(true)
   // console.log(isFixedSize)
@@ -97,6 +100,7 @@ const Shorts = () => {
 }
 
 const CommentInput = () => {
+  const isAuthenticated = useSelector(selectIsAuthenticated)
   const [inputComment, setInputComment] = useState("")
   const sendMsg = () => {
     console.log({inputComment})
@@ -121,18 +125,26 @@ const CommentInput = () => {
 
   return (
     <div className="flex h-16 flex-col justify-between space-x-2.5 ">
-      <div className="flex items-center space-x-2.5">
-        <input
-          type="text"
-          className="outline-stroke mx-2 h-10 w-full rounded-md  text-sm outline outline-1"
-          placeholder="좋아요와 댓글을 남기려면 로그인하세요"
-          value={inputComment}
-          onChange={(e) => setInputComment(e.target.value)}
-        />
-        <button className="h-10   w-12" onClick={sendMsg}>
-          <img src="/icons/icon-send.svg" alt="sendIcon" />
-        </button>
-      </div>
+      {isAuthenticated ? (
+        <div className="flex items-center space-x-2.5">
+          <input
+            type="text"
+            className="outline-stroke mx-2 h-10 w-full rounded-md  text-sm outline outline-1"
+            placeholder="댓글을 남겨보세요"
+            value={inputComment}
+            onChange={(e) => setInputComment(e.target.value)}
+          />
+          <button className="h-10   w-12" onClick={sendMsg}>
+            <img src="/icons/icon-send.svg" alt="sendIcon" />
+          </button>
+        </div>
+      ) : (
+        <div className="flex items-center space-x-2.5">
+          <div className="outline-stroke text-stroke mx-2 h-10 w-full  content-center rounded-md text-sm outline outline-1">
+            좋아요와 댓글을 남기려면 로그인하세요{" "}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -165,7 +177,7 @@ const ShortsComment = () => {
         </ul>
         <div className="flex flex-1 flex-col space-y-2.5">
           <Shorts></Shorts>
-          <CommentInput></CommentInput>
+          <CommentInput />
         </div>
       </div>
     </>
