@@ -127,15 +127,15 @@ axiosInstance.interceptors.response.use(
       // 재요청으로 처리하고
       originalRequest._retry = true
 
-      // 리프레시 토큰과 userId를 헤더에 담음
+      // 리프레시 토큰과 id를 헤더에 담음
       const refreshToken = getRefreshTokenFromLocalStorage()
-      const userId = localStorage.getItem("userId")
+      const id = localStorage.getItem("id")
 
       // 리프레시 토큰과 유저 아이디가 있으면
-      if (refreshToken && userId) {
+      if (refreshToken && id) {
         originalRequest.headers["Authorization-refresh"] =
           `Bearer ${refreshToken}`
-        originalRequest.headers["user-id"] = userId
+        originalRequest.headers["user-id"] = id
 
         return axiosInstance(originalRequest)
       }

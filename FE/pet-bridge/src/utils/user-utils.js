@@ -23,3 +23,36 @@ export const setRefreshTokenAtLocalStorage = (refreshToken) => {
   console.log("user-utils.js > refreshToken set:", refreshToken)
   return refreshToken
 }
+
+// 유저 정보를 세션 스토리지에 저장
+export const setUserInfosAtSession = (userInfos) => {
+  console.log("setUserInfosAtSession", userInfos)
+  Object.keys(userInfos).forEach((key) => {
+    sessionStorage.setItem(key, userInfos[key])
+  })
+}
+
+// 유저 정보를 세선 스토리지에서 받아와서 상태에 저장하기 위해 넘겨줌
+export const getUserInfosFromSession = () => {
+  const userInfoKeys = [
+    "nickname",
+    "id",
+    "email",
+    "birth",
+    "phone",
+    "isAuthenticated",
+  ]
+  const userInfos = {}
+
+  userInfoKeys.forEach((key) => {
+    const item = sessionStorage.getItem(key)
+    console.log(item, key)
+    if (item) {
+      userInfos[key] = item
+    }
+  })
+
+  console.log(userInfos)
+
+  return userInfos
+}

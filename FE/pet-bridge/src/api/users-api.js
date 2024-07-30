@@ -23,14 +23,15 @@ export const postLoginUser = (loginData) => {
 }
 
 // 회원 조회
-export const getUserInfo = (userId) => {
-  const res = axiosInstance.get(`/users/${userId}`)
+export const getUserInfo = async () => {
+  const res = await axiosInstance.get(`/users/info`)
+  console.log("users-api.ks > getUserInfo", res.data)
   return res
 }
 
 // 회원 탈퇴
-export const patchDisableUser = (userId) => {
-  const res = axiosInstance.patch(`/users/${userId}/delete`)
+export const patchDisableUser = (id) => {
+  const res = axiosInstance.patch(`/users/${id}/delete`)
 
   return res
 }

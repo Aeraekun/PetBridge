@@ -32,9 +32,9 @@ const LoginForm = () => {
     e.preventDefault()
 
     const loginData = loginForm
-    // 로그인 Api 호출
+    // loginUserThunk Dispatch
     const loginResult = await dispatch(loginUserThunk(loginData))
-    console.log(loginResult)
+    console.log("Login.jsx > handleLoginSubmit", loginResult)
   }
 
   return (
