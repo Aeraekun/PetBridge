@@ -97,4 +97,9 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public Optional<UserResponseDto> getDetailUserByEmail(String email) throws Exception {
+        return Optional.ofNullable(userRepository.findByEmail(email).orElseThrow().transferToUserResponseDto());
+    }
+
 }

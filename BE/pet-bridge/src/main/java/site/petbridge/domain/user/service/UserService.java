@@ -9,16 +9,10 @@ import java.util.Optional;
 
 public interface UserService {
 
-    /**
-     * Optional<List<BoardResponseDto>> getListBoard();
-     *     Optional<BoardResponseDto> getDetailBoard(int id);
-     *     void registBoard(BoardAddRequestDto boardAddRequestDto, MultipartFile file) throws Exception;
-     *     int editBoard(int id, BoardEditRequestDto boardEditRequestDto, MultipartFile file) throws Exception;
-     *     int removeBoard(int boardId);
-     */
-
     Optional<UserResponseDto> registUser(UserSignUpRequestDto userSignUpRequestDto) throws Exception;
     Optional<UserResponseDto> getDetailMyUser(HttpServletRequest httpServletRequest) throws Exception;
     Optional<UserResponseDto> editUser(HttpServletRequest httpServletRequest, UserModifyRequestDto userModifyRequestDto) throws Exception;
     Optional<UserResponseDto> removeUser(HttpServletRequest httpServletRequest) throws Exception;
+    Optional<UserResponseDto> getDetailUserByEmail(String email) throws Exception;
+
 }
