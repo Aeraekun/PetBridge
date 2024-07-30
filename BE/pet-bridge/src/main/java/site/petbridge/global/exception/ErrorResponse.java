@@ -1,47 +1,21 @@
 package site.petbridge.global.exception;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
+import lombok.Getter;
+import java.time.LocalDateTime;
 
+@Getter
 public class ErrorResponse {
 
+    private final LocalDateTime timestamp = LocalDateTime.now();
     private final int status;
-    private final boolean success = false;
-    private final Map<String, Object> result;
+    private final String error;
+    private final String code;
     private final String message;
 
-    public ErrorResponse(int status, String message) {
-        this.status = status;
-        this.message = message;
-        this.result = Collections.emptyMap(); // 빈 맵으로 초기화
+    public ErrorResponse(ErrorCode errorCode) {
+        this.status = errorCode.getStatus().value(); // 500
+        this.error = errorCode.getStatus().name(); // INTERNAL_SERVER_ERROR
+        this.code = errorCode.name(); // INTERNAL_SERVER_ERROR
+        this.message = errorCode.getMessage(); // 내부 서버 오류입니다.
     }
-
-    public boolean isSuccess() {
-        Objects.requireNonNull(this);
-        return false;
-    }
-
-    public int getStatus() {
-        return this.status;
-    }
-
-    public String getMessage() {
-        return this.message;
-    }
-
-    public Map<String, Object> getResult() {
-        return this.result;
-    }
-
-    @Override
-    public String toString() {
-        return "ErrorResponse{" +
-                "status=" + status +
-                ", success=" + success +
-                ", result=" + result +
-                ", message='" + message + '\'' +
-                '}';
-    }
-
 }
