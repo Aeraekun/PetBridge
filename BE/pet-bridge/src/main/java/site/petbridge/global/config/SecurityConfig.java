@@ -74,7 +74,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/","/css/**", "/images/**", "/js/**", "/favicon.ico").permitAll()
 
                         // 회원
-                        .requestMatchers(HttpMethod.GET, "/users/sign-up", "users/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users/sign-up", "/users/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users/sign-up").permitAll()
                         .requestMatchers(HttpMethod.GET, "/oauth2/authorization/*").permitAll()
                         .requestMatchers("/users/oauth/success").permitAll()
@@ -93,12 +93,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/api/board-comments/{id}/disable", "/*").permitAll()
                         .anyRequest().authenticated()
                 )
-                //== 소셜 로그인 설정 ==//
+                // 소셜 로그인
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(customOAuth2UserService))
                         .successHandler(oAuth2LoginSuccessHandler)
                         .failureHandler(oAuth2LoginFailureHandler)
                 )
+                // 예외 처리
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint((request, response, authException) -> {
                             System.out.println("왜 접속 안됨");
