@@ -1,42 +1,24 @@
 package site.petbridge.domain.user.service;
 
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import site.petbridge.domain.user.domain.enums.Role;
-import site.petbridge.domain.user.domain.User;
-import site.petbridge.domain.user.dto.UserSignUpDto;
-import site.petbridge.domain.user.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import site.petbridge.domain.user.dto.request.UserModifyRequestDto;
+import site.petbridge.domain.user.dto.request.UserSignUpRequestDto;
+import site.petbridge.domain.user.dto.response.UserResponseDto;
 
-@Service
-@Transactional
-@RequiredArgsConstructor
-public class UserService {
+import java.util.Optional;
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+public interface UserService {
 
-    public void signUp(UserSignUpDto userSignUpDto) throws Exception{
+    /**
+     * Optional<List<BoardResponseDto>> getListBoard();
+     *     Optional<BoardResponseDto> getDetailBoard(int id);
+     *     void registBoard(BoardAddRequestDto boardAddRequestDto, MultipartFile file) throws Exception;
+     *     int editBoard(int id, BoardEditRequestDto boardEditRequestDto, MultipartFile file) throws Exception;
+     *     int removeBoard(int boardId);
+     */
 
-        if (userRepository.findByEmail(userSignUpDto.getEmail()).isPresent()) {
-            throw new Exception("이미 존재하는 이메일입니다.");
-        }
-
-        if (userRepository.findByNickname(userSignUpDto.getNickname()).isPresent()) {
-            throw new Exception("이미 존재하는 닉네임입니다.");
-        }
-
-        User user = User.builder()
-                .email(userSignUpDto.getEmail())
-                .password(userSignUpDto.getPassword())
-                .nickname(userSignUpDto.getNickname())
-                .birth(userSignUpDto.getBirth())
-                .phone(userSignUpDto.getPhone())
-                .role(Role.USER)
-                .build();
-
-        user.passwordEncode(passwordEncoder);
-        userRepository.save(user);
-    }
+    Optional<UserResponseDto> registUser(UserSignUpRequestDto userSignUpRequestDto) throws Exception;
+    Optional<UserResponseDto> getDetailMyUser(HttpServletRequest httpServletRequest) throws Exception;
+    Optional<UserResponseDto> editUser(HttpServletRequest httpServletRequest, UserModifyRequestDto userModifyRequestDto) throws Exception;
+    Optional<UserResponseDto> removeUser(HttpServletRequest httpServletRequest) throws Exception;
 }

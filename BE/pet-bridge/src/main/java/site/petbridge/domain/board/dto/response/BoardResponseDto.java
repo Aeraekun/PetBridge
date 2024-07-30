@@ -13,21 +13,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardResponseDto {
 
-    private int id;
-    private int userId;
-    private int animalId;
-    private String type;
-    private String thumbnail;
-    private String title;
-    private String content;
-    private String lat;
-    private String lon;
-    private Timestamp registTime;
-    private boolean disabled;
+	private int id;
+	private int userId;
+	private int animalId;
+	private String type;
+	private String thumbnail;
+	private String title;
+	private String content;
+	private String lat;
+	private String lon;
+	private Timestamp registTime;
+	private boolean disabled;
 
-    private String userNickname;
-    private String userImage;
+	private String userNickname;
+	private String userImage;
 
-    private int commentCount;
+	private int commentCount;
 
 }

@@ -10,7 +10,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import site.petbridge.domain.board.domain.Board;
 import site.petbridge.domain.board.domain.enums.BoardType;
-import site.petbridge.domain.board.dto.request.BoardAddRequestDto;
+import site.petbridge.domain.board.dto.request.BoardRegistRequestDto;
 import site.petbridge.domain.board.dto.request.BoardEditRequestDto;
 import site.petbridge.domain.board.dto.response.BoardResponseDto;
 import site.petbridge.domain.board.repository.BoardRepository;
@@ -25,34 +25,28 @@ public class BoardServiceImpl implements BoardService {
 	private final FileUtil fileUtil;
 
 	@Override
-	public void registBoard(BoardAddRequestDto boardAddRequestDto, MultipartFile file) throws Exception {
+	public void registBoard(BoardRegistRequestDto boardRegistRequestDto, MultipartFile file) throws Exception {
 
 		String thumbnail = null;
 
 		if (file != null) {
-			System.out.println("파일등록할게");
-			// String today = new SimpleDateFormat("yyMMdd").format(new Date());
 			String savedFileName = fileUtil.saveFile(file, "board");
 			if (savedFileName != null) {
 				thumbnail = savedFileName;
-				System.out.println("저장파일명: " + thumbnail);
 			}
 		}
-		System.out.println("이제 db에 저장할게");
-		Board transferToBoard = Board.builder()
-			.userId(boardAddRequestDto.getUserId())
-			.animalId(boardAddRequestDto.getAnimalId())
-			.type(BoardType.valueOf(boardAddRequestDto.getType()))
+		Board board = Board.builder()
+			.userId(boardRegistRequestDto.getUserId())
+			.animalId(boardRegistRequestDto.getAnimalId())
+			.type(BoardType.valueOf(boardRegistRequestDto.getType()))
 			.thumbnail(thumbnail)
-			.title(boardAddRequestDto.getTitle())
-			.content(boardAddRequestDto.getContent())
-			.lat(boardAddRequestDto.getLat())
-			.lon(boardAddRequestDto.getLon())
-
+			.title(boardRegistRequestDto.getTitle())
+			.content(boardRegistRequestDto.getContent())
+			.lat(boardRegistRequestDto.getLat())
+			.lon(boardRegistRequestDto.getLon())
 			.build();
 
-		boardRepository.save(transferToBoard);
-		System.out.println("DB저장완료");
+		boardRepository.save(board);
 	}
 
 	@Override

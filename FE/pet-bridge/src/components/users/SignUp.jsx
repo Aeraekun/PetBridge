@@ -1,7 +1,8 @@
 import {useState} from "react"
-import {postLoginUser, signUpUser} from "api/users-api"
+import {signUpUser} from "api/users-api"
 import {Link, useNavigate} from "react-router-dom"
 import {useDispatch} from "react-redux"
+import {loginUserThunk} from "features/user/users-slice"
 
 const SignUp = () => {
   const dispatch = useDispatch()
@@ -150,7 +151,7 @@ const SignUp = () => {
           email: email,
           password: password,
         }
-        dispatch(postLoginUser(loginData))
+        await dispatch(loginUserThunk(loginData))
         navigate("/")
       } catch {
         return

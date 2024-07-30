@@ -1,5 +1,11 @@
 import axios from "axios"
 import {jwtDecode} from "jwt-decode"
+import {
+  getAccessTokenFromSession,
+  getRefreshTokenFromLocalStorage,
+  setAccessTokenAtSession,
+  setRefreshTokenAtLocalStorage,
+} from "utils/user-utils"
 const BASE_API_URL = "http://localhost:8080/api"
 
 const axiosInstance = axios.create({
@@ -8,30 +14,6 @@ const axiosInstance = axios.create({
   //   RestAPI 표준 준수를 위해 JSON 형식 데이터 교환
   headers: {"Content-Type": "application/json"},
 })
-
-// 액세스 토큰을 세션에서 가져옴
-const getAccessTokenFromSession = () => {
-  const accessToken = sessionStorage.getItem("accessToken")
-  return accessToken
-}
-
-// 액세스 토큰을 세션에 저장
-const setAccessTokenAtSession = (accessToken) => {
-  sessionStorage.setItem("accessToken", accessToken)
-  return accessToken
-}
-
-// 리프레시 토큰을 로컬 스토리지에서 가져옴
-const getRefreshTokenFromLocalStorage = () => {
-  const refreshToken = localStorage.getItem("refreshToken")
-  return refreshToken
-}
-
-// 리프레시 토큰을 로컬 스토리지에 저장
-const setRefreshTokenAtLocalStorage = (refreshToken) => {
-  localStorage.setItem("refreshToken", refreshToken)
-  return refreshToken
-}
 
 // 액세스 토큰 만료 확인
 const checkAccessTokenExpiration = (accessToken) => {
@@ -145,15 +127,15 @@ axiosInstance.interceptors.response.use(
       // 재요청으로 처리하고
       originalRequest._retry = true
 
-      // 리프레시 토큰과 userId를 헤더에 담음
+      // 리프레시 토큰과 id를 헤더에 담음
       const refreshToken = getRefreshTokenFromLocalStorage()
-      const userId = localStorage.getItem("userId")
+      const id = localStorage.getItem("id")
 
       // 리프레시 토큰과 유저 아이디가 있으면
-      if (refreshToken && userId) {
+      if (refreshToken && id) {
         originalRequest.headers["Authorization-refresh"] =
           `Bearer ${refreshToken}`
-        originalRequest.headers["user-id"] = userId
+        originalRequest.headers["user-id"] = id
 
         return axiosInstance(originalRequest)
       }

@@ -21,13 +21,10 @@ import ShortsWrite from "components/shorts/ShortsWrite"
 import Report from "./components/map/Report"
 
 import {useDispatch, useSelector} from "react-redux"
-import {useEffect} from "react"
+import {useEffect, useState} from "react"
 import MyPage from "pages/MyPage"
 import UsersLayout from "layout/UsersLayout"
-import {
-  selectIsAuthenticated,
-  setAuthenticated,
-} from "features/user/users-slice"
+import {selectIsAuthenticated, setUserInfos} from "features/user/users-slice"
 import MyPageDisableContainer from "components/users/MyPageDisableContainer"
 import UpdateProfilePage from "pages/UpdateProfilePage"
 import PrivateRoute from "routes/PrivateRoute"
@@ -37,16 +34,35 @@ import MyPageFavoritesContainer from "components/users/MyPageFavoritesContainer"
 import MyPageLikesContainer from "components/users/MyPageLikesContainer"
 import MyPagePetPicsContainer from "components/users/MyPagePetPicsContainer"
 import MyPagePetsContainer from "components/users/MyPagePetsContainer"
+import SocialPage from "pages/SocialPage"
+import SocialSuccessContainer from "components/users/SocailSuccessContainer"
+import SocialUpdateContainer from "components/users/SocialUpdateContainer"
+import {
+  getAccessTokenFromSession,
+  getUserInfosFromSession,
+} from "utils/user-utils"
+
+getUserInfosFromSession
 
 function App() {
   const dispatch = useDispatch()
   const isAuthenticated = useSelector(selectIsAuthenticated)
+  const accessToken = getAccessTokenFromSession()
+  const [isLoading, setIsLoading] = useState(true)
 
+  // 액세스 토큰과 isAuthenticated 상태가 변경될 때마다 동작
+  // 액세스 토큰이 있는지 확인하고, 유저 정보가 있다면 세션에 있는 유저 정보를 상태로 가져온다.
+  // 새로고침시 회원 관련 화면 유지를 위한 기능
   useEffect(() => {
-    if (sessionStorage.getItem("accessToken")) {
-      dispatch(setAuthenticated(true))
+    const getUserInfo = () => {
+      if (accessToken) {
+        dispatch(setUserInfos(getUserInfosFromSession()))
+      }
+      setIsLoading(false)
     }
-  })
+
+    getUserInfo()
+  }, [dispatch, accessToken, isAuthenticated])
 
   return (
     <Routes>
@@ -75,6 +91,10 @@ function App() {
         </Route>
       </Route>
       <Route path="/users/" element={<UsersLayout />}>
+        <Route path="social" element={<SocialPage />}>
+          <Route path="success" element={<SocialSuccessContainer />}></Route>
+          <Route path="update" element={<SocialUpdateContainer />}></Route>
+        </Route>
         <Route path="login" element={<LoginPage />}></Route>
         <Route path="sign-up" element={<SignUpPage />}></Route>
         <Route path="update" element={<UpdateProfilePage />}></Route>
@@ -83,6 +103,7 @@ function App() {
           element={
             <PrivateRoute
               component={<MyPage />}
+              isLoading={isLoading}
               isAuthenticated={isAuthenticated}
             />
           }
