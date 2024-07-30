@@ -15,6 +15,7 @@ import site.petbridge.domain.user.domain.User;
 import site.petbridge.domain.user.repository.UserRepository;
 import site.petbridge.global.oauth2.CustomOAuth2User;
 import site.petbridge.global.oauth2.OAuthAttributes;
+import site.petbridge.global.oauth2.exception.DuplicateNicknameException;
 
 import java.util.Collections;
 import java.util.Map;
@@ -104,7 +105,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     private User saveUser(OAuthAttributes attributes, SocialType socialType) {
         User createdUser = attributes.toEntity(socialType, attributes.getOAuth2UserInfo());
         if (userRepository.existsByNickname(createdUser.getNickname())) {
-            throw new IllegalArgumentException("이미 존재하는 닉네임입니다." + createdUser.getNickname());
+            throw new DuplicateNicknameException();
         }
 
         return userRepository.save(createdUser);

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import site.petbridge.domain.board.dto.response.BoardResponseDto;
 import site.petbridge.domain.user.domain.enums.Role;
 import site.petbridge.domain.user.domain.User;
+import site.petbridge.domain.user.dto.request.UserModifyRequestDto;
 import site.petbridge.domain.user.dto.request.UserSignUpRequestDto;
 import site.petbridge.domain.user.dto.response.UserResponseDto;
 import site.petbridge.domain.user.repository.UserRepository;
@@ -49,12 +50,51 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserResponseDto> getDetailMyUser(HttpServletRequest httpServletRequest) throws Exception {
-
         String accessToken = jwtService.extractAccessToken(httpServletRequest).orElse(null);
         String email = jwtService.extractEmail(accessToken).orElse(null);
 
         return Optional.ofNullable(userRepository.findByEmail(email).orElseThrow().transferToUserResponseDto());
     }
 
+    @Override
+    public Optional<UserResponseDto> editUser(HttpServletRequest httpServletRequest, UserModifyRequestDto userModifyRequestDto) throws Exception {
+        String accessToken = jwtService.extractAccessToken(httpServletRequest).orElse(null);
+        String email = jwtService.extractEmail(accessToken).orElse(null);
+        if (email == null) {
+            throw new Exception("Invalid token");
+        }
+
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (user.getSocialType() == null) {
+                user.updateUserInfo(userModifyRequestDto);
+                user.passwordEncode(passwordEncoder);
+            } else {
+                user.updateSocialUserInfo(userModifyRequestDto);
+            }
+            return Optional.ofNullable(user.transferToUserResponseDto());
+        } else {
+            throw new Exception("user not found");
+        }
+    }
+
+    @Override
+    public Optional<UserResponseDto> removeUser(HttpServletRequest httpServletRequest) throws Exception {
+        String accessToken = jwtService.extractAccessToken(httpServletRequest).orElse(null);
+        String email = jwtService.extractEmail(accessToken).orElse(null);
+        if (email == null) {
+            throw new Exception("Invalid token");
+        }
+
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.disableUser();
+            return Optional.ofNullable(user.transferToUserResponseDto());
+        } else {
+            throw new Exception("user not found");
+        }
+    }
 
 }

@@ -5,9 +5,8 @@ import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import site.petbridge.domain.user.domain.enums.Role;
 import site.petbridge.domain.user.domain.enums.SocialType;
+import site.petbridge.domain.user.dto.request.UserModifyRequestDto;
 import site.petbridge.domain.user.dto.response.UserResponseDto;
-
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -94,12 +93,32 @@ public class User {
                 .build();
     }
 
+    // 유저 수정 메소드
+    public void updateUserInfo(UserModifyRequestDto userModifyRequestDto) {
+        this.password = userModifyRequestDto.password();
+        this.nickname = userModifyRequestDto.nickname();
+        this.birth = userModifyRequestDto.birth();
+        this.phone = userModifyRequestDto.phone();
+    }
+
+    // 소셜 유저 수정 메소드
+    public void updateSocialUserInfo(UserModifyRequestDto userModifyRequestDto) {
+        this.nickname = userModifyRequestDto.nickname();
+        this.birth = userModifyRequestDto.birth();
+        this.phone = userModifyRequestDto.phone();
+    }
+
     // 유저 권한 설정 메소드
     public void authorizeSocialUser() { this.role = Role.USER; }
 
    // 비밀번호 암호화 메소드
     public void passwordEncode(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
+    }
+
+    // 회원 탈퇴
+    public void disableUser() {
+        this.disabled = true;
     }
 
     //== 유저 필드 업데이트 ==//
