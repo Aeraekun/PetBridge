@@ -4,8 +4,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import site.petbridge.domain.user.Role;
-import site.petbridge.domain.user.User;
+import site.petbridge.domain.user.domain.enums.Role;
+import site.petbridge.domain.user.domain.User;
 import site.petbridge.domain.user.dto.UserSignUpDto;
 import site.petbridge.domain.user.repository.UserRepository;
 

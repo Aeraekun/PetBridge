@@ -3,7 +3,7 @@ package site.petbridge.global.oauth2;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import site.petbridge.domain.user.Role;
+import site.petbridge.domain.user.domain.enums.Role;
 
 import java.util.Collection;
 import java.util.Map;

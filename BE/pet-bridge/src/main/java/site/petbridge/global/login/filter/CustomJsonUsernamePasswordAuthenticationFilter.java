@@ -36,6 +36,7 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
     private static final String USERNAME_KEY = "email";
     // 회원 로그인 시 비밀번호 요청 JSON Key : "password"
     private static final String PASSWORD_KEY = "password";
+
     // "/api/users/login" + POST로 오는 요청에 매칭된다.
     private static final AntPathRequestMatcher DEFAULT_LOGIN_PATH_REQUEST_MATCHER =
             new AntPathRequestMatcher(DEFAULT_LOGIN_REQUEST_URL, HTTP_METHOD);
@@ -48,7 +49,7 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
     }
 
     /**
-     * 인증 처리 메소드
+     * attemptAuthentication : 인증 처리 메소드
      * 
      * UsernamePasswordAuthenticationFilter와 동일하게 UsernamePasswordAuthenticationToken 사용
      * StreamUtils를 통해 request에서 messageBody(JSON) 반환
@@ -70,7 +71,7 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException {
         if (request.getContentType() == null || !request.getContentType().equals(CONTENT_TYPE)) {
-            throw new AuthenticationServiceException("Authentication Content-Type not supported : " + request.getContentType());
+            throw new AuthenticationServiceException("로그인 Authentication Content-Type not supported : " + request.getContentType());
         }
 
         String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
