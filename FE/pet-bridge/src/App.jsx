@@ -9,6 +9,9 @@ import ArticleBoardList from "components/board/articles/ArticleBoardList"
 import ArticleDetail from "components/board/articles/ArticleDetail"
 import ArticleBoardWrite from "components/board/articles/ArticleBoardWrite"
 import AnimalBoardList from "components/board/animals/AnimalBoardList"
+import AnimalDetail from "components/board/animals/AnimalDetail"
+import AnimalRegist from "components/board/animals/AnimalRegist"
+import AnimalDetailModify from "components/board/animals/AnimalDetailModify"
 import ShortsPage from "pages/ShortsPage"
 import ShortsComment from "components/shorts/ShortsComment"
 import LostAndFoundPage from "pages/LostAndFoundPage"
@@ -50,12 +53,23 @@ function App() {
         <Route path="/shelter" element={<AnimalPage />}>
           <Route index element={<AnimalBoardList />} />
           <Route path=":bcode" element={<AnimalBoardList />} />
+          <Route path="details/:id" element={<AnimalDetail />} />
+          <Route path="modify/:id" element={<AnimalDetailModify />} />
+          <Route path="regist" element={<AnimalRegist />} />
         </Route>
         <Route path="/communities" element={<BoardPage />}>
           <Route index element={<ArticleBoardList />} />
           <Route path=":bcode" element={<ArticleBoardList />} />
           <Route path="details/:id" element={<ArticleDetail />} />
-          <Route path="write" element={<ArticleBoardWrite />} />
+          <Route
+            path="write"
+            element={
+              <PrivateRoute
+                component={<ArticleBoardWrite />}
+                isAuthenticated={isAuthenticated}
+              />
+            }
+          ></Route>
         </Route>
       </Route>
       <Route path="/users/" element={<UsersLayout />}>
@@ -93,8 +107,16 @@ function App() {
       <Route path="/shorts" element={<ShortsLayout />}>
         <Route path="comments" element={<ShortsComment />}></Route>
         <Route path="tag" element={<ShortsTagDetail />}></Route>
+        <Route
+          path="write"
+          element={
+            <PrivateRoute
+              component={<ShortsWrite />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
+        ></Route>
       </Route>
-      <Route path="/shorts/write" element={<ShortsWrite />}></Route>
     </Routes>
   )
 }
