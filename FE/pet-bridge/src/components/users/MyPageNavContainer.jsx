@@ -47,12 +47,14 @@ const MyPageNavList = () => {
   ]
 
   return (
-    <nav className="flex h-[260px] w-[250px] flex-col justify-between ">
+    <nav className="flex h-[260px] w-[300px] flex-col justify-between px-5">
       {navItems.map((item) => (
         <NavLink
           key={item.id}
           to={item.url}
-          className={({isActive}) => [isActive ? "bg-yellow" : ""]}
+          className={({isActive}) =>
+            `rounded-xl ${isActive ? "bg-yellow" : ""}`
+          }
         >
           <MyPageNavComponent text={item.text} imgSrc={item.imgSrc} />
         </NavLink>
