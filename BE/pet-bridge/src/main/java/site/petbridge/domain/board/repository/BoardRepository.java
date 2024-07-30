@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import site.petbridge.domain.board.domain.Board;
 
 public interface BoardRepository extends JpaRepository<Board, Long>, BoardCustomRepository {
-    Optional<Board> findById(int id);
+	Optional<Board> findById(int id);
 }
