@@ -34,6 +34,11 @@ const AnimalBoardList = () => {
     let path = `/shelter/regist`
     navigate(path)
   }
+  const goDetail = (animal) => {
+    const id = animal.user_id
+    let path = `/shelter/details/${id}`
+    navigate(path)
+  }
   return (
     <>
       <Search />
@@ -47,7 +52,7 @@ const AnimalBoardList = () => {
           })
           .map((data, index) => (
             <li key={index}>
-              <AnimalItem data={data} />
+              <AnimalItem data={data} onSelectArticle={goDetail} />
             </li>
           ))}
       </ul>
