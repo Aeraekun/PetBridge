@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 import site.petbridge.domain.board.dto.response.BoardResponseDto;
 import site.petbridge.domain.board.dto.response.QBoardResponseDto;
 
-
 @Repository
 @Transactional
 @Data
