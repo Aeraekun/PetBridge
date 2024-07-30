@@ -19,18 +19,11 @@ RUN npm run build
 # Production stage
 FROM nginx:alpine
 
-# Copy custom Nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# Copy SSL options configuration
-COPY options-ssl-nginx.conf /etc/letsencrypt/options-ssl-nginx.conf
-
 # Copy built assets from the build stage
 COPY --from=build /app/build /var/jenkins_home/workspace/MasterFE/FE/pet-bridge/public
 
 # Expose port
-EXPOSE 80
-EXPOSE 443
+EXPOSE 3000
 
 # Start Nginx server
 CMD ["nginx", "-g", "daemon off;"]
