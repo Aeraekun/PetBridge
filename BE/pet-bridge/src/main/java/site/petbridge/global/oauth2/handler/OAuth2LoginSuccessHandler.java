@@ -3,12 +3,16 @@ package site.petbridge.global.oauth2.handler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
+import site.petbridge.domain.user.domain.User;
+import site.petbridge.domain.user.domain.enums.Role;
+import site.petbridge.domain.user.repository.UserRepository;
 import site.petbridge.global.jwt.service.JwtService;
 import site.petbridge.global.oauth2.CustomOAuth2User;
 
@@ -17,10 +21,14 @@ import java.io.IOException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@Transactional
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtService jwtService;
-    private static final String URI = "/users/oauth/success";
+    private static final String GUEST_URI = "http://localhost:3000/users/social/update";
+    private static final String USER_URI = "http://localhost:3000/users/social/success";
+    private final UserRepository userRepository;
+
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -29,17 +37,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         try {
             CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
-            // User의 Role이 GUEST일 경우, 처음 요청한 회원이므로 회원가입 페이지로 리다이렉트
-//            if (oAuth2User.getRole() == Role.GUEST) {
-//                String accessToken = jwtService.createAccessToken(oAuth2User.getEmail());
-//                response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
-//                response.sendRedirect("/users/signup/add");
-//
-//                jwtService.sendAccessAndRefreshToken(response, accessToken, null);
-//            } else {
-//                // 로그인에 성공한 경우, accessToken, refreshToken 생성
-//                loginSuccess(response, oAuth2User);
-//            }
             loginSuccess(response, oAuth2User);
         } catch (Exception e) {
             throw e;
@@ -58,13 +55,22 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         System.out.println("refreshToken = " + refreshToken);
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         jwtService.updateRefreshToken(oAuth2User.getEmail(), refreshToken);
-//        response.sendRedirect("http://localhost:3000"); // 프론트의 인덱스로 이동
 
+        String redirectUrl = "";
         // 토큰 전달을 위한 redirect
-        String redirectUrl = UriComponentsBuilder.fromUriString(URI)
-                .queryParam("access-token", accessToken)
-                .queryParam("refresh-token", refreshToken)
-                .build().toUriString();
+        if (oAuth2User.getRole() == Role.GUEST) {
+            redirectUrl = UriComponentsBuilder.fromUriString(GUEST_URI)
+                    .queryParam("access-token", accessToken)
+                    .queryParam("refresh-token", refreshToken)
+                    .build().toUriString();
+            User user = userRepository.findByEmail(oAuth2User.getEmail()).get();
+            user.authorizeSocialUser();
+        } else if (oAuth2User.getRole() == Role.USER) {
+            redirectUrl = UriComponentsBuilder.fromUriString(USER_URI)
+                    .queryParam("access-token", accessToken)
+                    .queryParam("refresh-token", refreshToken)
+                    .build().toUriString();
+        }
 
         response.sendRedirect(redirectUrl);
     }
