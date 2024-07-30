@@ -67,7 +67,12 @@ public class UserServiceImpl implements UserService {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            user.updateUserInfo(userModifyRequestDto);
+            if (user.getSocialType() == null) {
+                user.updateUserInfo(userModifyRequestDto);
+                user.passwordEncode(passwordEncoder);
+            } else {
+                user.updateSocialUserInfo(userModifyRequestDto);
+            }
             return Optional.ofNullable(user.transferToUserResponseDto());
         } else {
             throw new Exception("user not found");
