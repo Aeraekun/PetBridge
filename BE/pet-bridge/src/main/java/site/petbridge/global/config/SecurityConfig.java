@@ -91,6 +91,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/board-comments").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/api/board-comments/{id}", "/*").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/api/board-comments/{id}/disable", "/*").permitAll()
+
+                        // 동물
+                        .requestMatchers(HttpMethod.GET, "/api/animals").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/animals/user/{userId}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/animals/{id}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/animals").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/api/animals/{id}").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/api/animals/{id}/disable").permitAll()
                         .anyRequest().authenticated()
                 )
                 // 소셜 로그인
