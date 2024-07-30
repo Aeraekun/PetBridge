@@ -79,5 +79,22 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public Optional<UserResponseDto> removeUser(HttpServletRequest httpServletRequest) throws Exception {
+        String accessToken = jwtService.extractAccessToken(httpServletRequest).orElse(null);
+        String email = jwtService.extractEmail(accessToken).orElse(null);
+        if (email == null) {
+            throw new Exception("Invalid token");
+        }
+
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.disableUser();
+            return Optional.ofNullable(user.transferToUserResponseDto());
+        } else {
+            throw new Exception("user not found");
+        }
+    }
 
 }
