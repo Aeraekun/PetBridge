@@ -20,4 +20,5 @@ public interface UserService {
     Optional<UserResponseDto> registUser(UserSignUpRequestDto userSignUpRequestDto) throws Exception;
     Optional<UserResponseDto> getDetailMyUser(HttpServletRequest httpServletRequest) throws Exception;
     Optional<UserResponseDto> editUser(HttpServletRequest httpServletRequest, UserModifyRequestDto userModifyRequestDto) throws Exception;
+    Optional<UserResponseDto> removeUser(HttpServletRequest httpServletRequest) throws Exception;
 }

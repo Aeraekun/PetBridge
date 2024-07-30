@@ -116,6 +116,11 @@ public class User {
         this.password = passwordEncoder.encode(this.password);
     }
 
+    // 회원 탈퇴
+    public void disableUser() {
+        this.disabled = true;
+    }
+
     //== 유저 필드 업데이트 ==//
     public void updateNickname(String updateNickname) {
         this.nickname = updateNickname;
