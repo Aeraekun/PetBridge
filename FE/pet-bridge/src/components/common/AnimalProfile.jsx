@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+
 // const TagAnimalItem = ({data, isSelected, onSelect}) => {
 //   return (
 //     <card
@@ -43,7 +46,7 @@ const AnimalProfile = ({data, isSelected, onSelect}) => {
   return (
     <div className="p-4">
       <div className="mb-4 flex h-8 items-center justify-around space-x-2.5 ">
-        <card
+        <div
           className={`flex h-24 w-full justify-between space-x-2 rounded bg-gray-300 p-3 hover:bg-gray-700  ${isSelected ? "bg-red-700" : "bg-gray-300"}`}
           onClick={onSelect}
         >
@@ -78,7 +81,7 @@ const AnimalProfile = ({data, isSelected, onSelect}) => {
               </div>
             </tr>
           </div>
-        </card>
+        </div>
       </div>
       <div className=" text-overflow hover:text-clip">{data.title}</div>
     </div>
