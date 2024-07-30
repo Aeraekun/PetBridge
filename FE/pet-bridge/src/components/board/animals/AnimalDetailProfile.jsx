@@ -1,14 +1,54 @@
-const AnimalDetailProfile = ({animal, isEditing, onInputChange}) => {
-  console.log("edit ", isEditing)
+const AnimalDetailProfile = ({
+  animal,
+  isEditing,
+  onInputChange,
+  onFileChange,
+}) => {
+  const handleRemoveImage = () => {
+    onFileChange({target: {files: []}})
+  }
+
   return (
     <div className="flex">
       <div className="flex flex-row">
         {/* Animal Image */}
-        <img
-          src={animal.filename}
-          alt="animal profile"
-          className="size-[500px] object-cover"
-        />
+
+        {isEditing ? (
+          <div>
+            {animal.filename ? (
+              <img
+                src={animal.filename}
+                alt="animal profile"
+                className="size-[500px] object-contain"
+              />
+            ) : (
+              "이미지 없음"
+            )}
+            <input
+              type="file"
+              id="filename"
+              name="filename"
+              accept="image/*"
+              onChange={onFileChange}
+            />
+
+            {onFileChange && <button onClick={handleRemoveImage}> ✖ </button>}
+          </div>
+        ) : (
+          <div id="filename" name="filename">
+            {animal.filename ? (
+              <img
+                src={animal.filename}
+                alt="animal profile"
+                className="size-[500px] object-cover"
+              />
+            ) : (
+              <div className="bg-mild size-[500px] rounded border p-2">
+                이미지 없음
+              </div>
+            )}
+          </div>
+        )}
         <div className="ml-4 flex flex-col space-y-4">
           {/* Animal Details */}
           <div className="flex flex-col space-y-3">
@@ -52,7 +92,7 @@ const AnimalDetailProfile = ({animal, isEditing, onInputChange}) => {
                 <div
                   id="notice_no"
                   name="notice_no"
-                  className="bg-mild w-full rounded border p-2"
+                  className="bg-mild h-10 w-full rounded border p-2"
                 >
                   {animal.notice_no}
                 </div>
@@ -144,7 +184,7 @@ const AnimalDetailProfile = ({animal, isEditing, onInputChange}) => {
                 <div
                   id="kind_cd"
                   name="kind_cd"
-                  className="bg-mild w-full rounded border p-2"
+                  className="bg-mild h-20 w-full rounded border p-2"
                 >
                   {animal.kind_cd}
                 </div>
@@ -236,7 +276,7 @@ const AnimalDetailProfile = ({animal, isEditing, onInputChange}) => {
                 <div
                   id="neuter_yn"
                   name="neuter_yn"
-                  className="bg-mild size-full rounded border p-2"
+                  className="bg-mild w-full rounded border p-2"
                 >
                   {animal.neuter_yn}
                 </div>
@@ -284,7 +324,7 @@ const AnimalDetailProfile = ({animal, isEditing, onInputChange}) => {
                   name="care_addr"
                   className="bg-mild w-full rounded border p-2"
                 >
-                  {animal.care_addr}
+                  s{animal.care_addr}
                 </div>
               )}
             </div>
