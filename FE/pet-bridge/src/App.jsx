@@ -7,6 +7,7 @@ import BoardPage from "pages/BoardPage"
 import AnimalPage from "pages/AnimalPage"
 import ArticleBoardList from "components/board/articles/ArticleBoardList"
 import ArticleDetail from "components/board/articles/ArticleDetail"
+import ArticleDetailModify from "components/board/articles/ArticleDetailModify"
 import ArticleBoardWrite from "components/board/articles/ArticleBoardWrite"
 import AnimalBoardList from "components/board/animals/AnimalBoardList"
 import AnimalDetail from "components/board/animals/AnimalDetail"
@@ -61,6 +62,7 @@ function App() {
           <Route index element={<ArticleBoardList />} />
           <Route path=":bcode" element={<ArticleBoardList />} />
           <Route path="details/:id" element={<ArticleDetail />} />
+          <Route path="modify/:id" element={<ArticleDetailModify />} />
           <Route
             path="write"
             element={
