@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import site.petbridge.domain.user.domain.enums.Role;
 import site.petbridge.domain.user.domain.enums.SocialType;
+import site.petbridge.domain.user.dto.request.UserModifyRequestDto;
 import site.petbridge.domain.user.dto.response.UserResponseDto;
 
 import java.time.LocalDateTime;
@@ -92,6 +93,14 @@ public class User {
                 .socialType(socialType)
                 .socialId(socialId)
                 .build();
+    }
+
+    // 유저 수정 메소드
+    public void updateUserInfo(UserModifyRequestDto userModifyRequestDto) {
+        this.password = userModifyRequestDto.password();
+        this.nickname = userModifyRequestDto.nickname();
+        this.birth = userModifyRequestDto.birth();
+        this.phone = userModifyRequestDto.phone();
     }
 
     // 유저 권한 설정 메소드
