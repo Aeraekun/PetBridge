@@ -46,6 +46,14 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
     }
 
+    @PostMapping("/api/users/find/email")
+    public ResponseEntity<UserResponseDto> getDetailUserByEmail(@RequestBody String email) throws Exception {
+        System.out.println(email);
+        return userService.getDetailUserByEmail(email)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
+    }
+
     @GetMapping("/api/users/jwt-test")
     public String jwtTest() { return "jwtTest 요청 성공"; }
 }
