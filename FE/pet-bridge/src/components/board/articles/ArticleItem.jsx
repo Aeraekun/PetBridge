@@ -9,7 +9,11 @@ const ArticleItem = ({data, onSelectArticle}) => {
         onSelectArticle(data)
       }}
     >
-      <img src={data.thumbnail} alt="imag" className="object-contain" />
+      <img
+        src={data.thumbnail}
+        alt="imag"
+        className="size-[300px] object-contain"
+      />
       <div className="p-4">
         <div className="mb-4 flex h-8 items-center justify-around space-x-2.5">
           <img
@@ -26,7 +30,7 @@ const ArticleItem = ({data, onSelectArticle}) => {
             alt="Comment Icon"
             className="w-5"
           />
-          <div>{data.count}</div>
+          <div>{data.commentCount}</div>
         </div>
         <div className=" text-overflow hover:text-clip">{data.title}</div>
       </div>

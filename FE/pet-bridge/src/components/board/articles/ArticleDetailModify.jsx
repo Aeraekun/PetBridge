@@ -6,20 +6,7 @@ import data from "./articledata"
 import {useNavigate, useParams} from "react-router-dom"
 import {useEffect, useState} from "react"
 
-const Profile = ({nickname}) => {
-  return (
-    <div className="mb-4 flex h-8 items-center justify-around space-x-2.5">
-      <img
-        src="https://via.placeholder.com/50"
-        alt="Author Avatar"
-        className="size-12 rounded-full border "
-      />
-      <div className="flex-1">
-        <p className="text-lg font-semibold">{nickname}</p>
-      </div>
-    </div>
-  )
-}
+import Profile from "components/common/Profile"
 
 const ArticleDetailModify = () => {
   const {id} = useParams()
@@ -106,7 +93,7 @@ const ArticleDetailModify = () => {
         value={title}
       />
       <hr />
-      <Profile nickname={nickname} />
+      <Profile nickname={article.userNickname} image={article.userImage} />
       <div className="my-2 flex flex-row">
         <img src="/icons/icon-tag.svg" alt="Tag Icon" />
       </div>
@@ -135,7 +122,7 @@ const ArticleDetailModify = () => {
         />
         {imageSrc && <button onClick={resetImage}> ✖ </button>}
       </div>
-      <div className="min-h-72 w-full justify-center">
+      <div className="h-[550px] w-full justify-center">
         <Editor value={editorContent} onChange={setEditorContent} />
       </div>
       <div className="flex justify-end">
