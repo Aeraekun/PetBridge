@@ -29,6 +29,12 @@ export const getUserInfo = async () => {
   return res
 }
 
+// 회원 정보 수정
+export const patchUserInfo = async (userInfo) => {
+  const res = await axiosInstance.patch(`/users/modify`, userInfo)
+  return res
+}
+
 // 회원 탈퇴
 export const patchDisableUser = (id) => {
   const res = axiosInstance.patch(`/users/${id}/delete`)

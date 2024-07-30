@@ -1,5 +1,6 @@
+import {patchUserInfo} from "api/users-api"
 import {useState} from "react"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import {
   validateBirth,
   validateNickname,
@@ -7,6 +8,7 @@ import {
 } from "utils/user-validations"
 
 const SocialUpdateContainer = () => {
+  const navigate = useNavigate()
   // 입력시 state와 연동 처리
   // 회원가입 폼 제출을 위한 인자 저장 state
   const [updateFormData, setUpdateFormData] = useState({
@@ -14,6 +16,12 @@ const SocialUpdateContainer = () => {
     birth: "",
     phone: "",
   })
+
+  const setError = (new_error, new_error_message) => {
+    if (new_error) {
+      setErrors({...errors, [new_error]: new_error_message})
+    }
+  }
 
   // 에러 메시지 저장 함수
   const [errors, setErrors] = useState({})
@@ -30,6 +38,43 @@ const SocialUpdateContainer = () => {
     })
   }
 
+  const onSubmitHandler = async (event) => {
+    event.preventDefault()
+
+    let newErrors = {}
+
+    let nicknameError = validateNickname(updateFormData)
+    if (nicknameError.new_error) {
+      newErrors.nickname = nicknameError.new_error_message
+    }
+
+    let birthError = validateBirth(updateFormData)
+    if (birthError.new_error) {
+      newErrors.birth = birthError.new_error_message
+    }
+
+    let phoneError = validatePhone(updateFormData)
+    if (phoneError.new_error) {
+      newErrors.phone = phoneError.new_error_message
+    }
+
+    setErrors(newErrors)
+    // 에러가 없다면
+    if (Object.values(newErrors).every((value) => value === "")) {
+      // patch 비동기 요청
+      try {
+        const res = await patchUserInfo(updateFormData)
+        navigate("/users/social/success")
+        console.log(res)
+        return
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    return console.log(newErrors)
+  }
+
   // 칸 입력 완료 후 Focus 해제(onBlur)시 해당 입력에 대한Validation 동작
   const onBlurHandler = (event) => {
     let new_error = ""
@@ -42,20 +87,21 @@ const SocialUpdateContainer = () => {
     // id 값으로 입력 양식 확인 후 양식 검사
     if (inputType === "nickname") {
       ;({new_error, new_error_message} = validateNickname(updateFormData))
+      setError(new_error, new_error_message)
     } else if (inputType === "birth") {
       ;({new_error, new_error_message} = validateBirth(updateFormData))
+      setError(new_error, new_error_message)
     } else if (inputType === "phone") {
       ;({new_error, new_error_message} = validatePhone(updateFormData))
-    }
-
-    // 공통으로 setUpdateFormData 호출
-    if (new_error) {
-      setErrors({...errors, [new_error]: new_error_message})
+      setError(new_error, new_error_message)
     }
   }
 
   return (
-    <form className="my-10 flex size-full flex-col p-5">
+    <form
+      className="my-10 flex size-full flex-col p-5"
+      onSubmit={onSubmitHandler}
+    >
       <div className="my-5 flex justify-center">
         <span className="text-2xl font-bold"> 회원 필수 정보 입력</span>
       </div>
@@ -112,7 +158,7 @@ const SocialUpdateContainer = () => {
       <div className="my-5 grid w-full grid-cols-2 gap-10">
         {/* 회원가입 버튼 */}
         <button type="submit" className="h-12 rounded-md bg-mild px-3.5 py-2.5">
-          회원가입
+          회원 가입
         </button>
         {/* 가입 취소 버튼 */}
         <Link
