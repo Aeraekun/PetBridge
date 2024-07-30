@@ -31,7 +31,7 @@ const AnimalBoardList = () => {
     (category) => category.id === Number(bcode)
   )
   const goRegist = () => {
-    let path = `/animals/regist`
+    let path = `/shelter/regist`
     navigate(path)
   }
   return (
