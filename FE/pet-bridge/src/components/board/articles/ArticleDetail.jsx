@@ -43,7 +43,7 @@ const ArticleDetail = () => {
     navigate(-1)
   }
   const goModify = () => {
-    navigate(-1)
+    navigate(`/communities/modify/${id}`)
   }
   return (
     <>
@@ -59,11 +59,24 @@ const ArticleDetail = () => {
         <TaggedAnimalProfile data={article} />
       </div>
       <hr />
+      대표사진
+      {article.thumbnail ? (
+        <div className="mt-4">
+          <img
+            src={article.thumbnail}
+            alt="Uploaded Preview"
+            className="size-96 rounded border object-contain"
+          />
+        </div>
+      ) : (
+        <div className="flex h-64 w-96 flex-col items-center justify-center border border-gray-300 px-4 py-2">
+          <>대표사진이 없습니다</>
+        </div>
+      )}
       <div
         className="min-h-72 w-11/12"
         dangerouslySetInnerHTML={{__html: sanitizedContent}}
       ></div>
-
       <div className="flex justify-end">
         <SirenIcon />
       </div>

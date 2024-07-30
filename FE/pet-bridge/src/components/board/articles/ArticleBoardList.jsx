@@ -31,7 +31,6 @@ const ArticleBoardList = () => {
   const navigate = useNavigate()
   const goDetail = (article) => {
     const id = article.id
-
     let path = `/communities/details/${id}`
     navigate(path)
   }
@@ -42,6 +41,7 @@ const ArticleBoardList = () => {
     let path = `/communities/write`
     navigate(path)
   }
+
   return (
     <>
       <Search />
@@ -59,8 +59,7 @@ const ArticleBoardList = () => {
           })
           .map((article) => (
             <li key={article.id}>
-              <ArticleItem data={article} />
-              <ap onClick={() => goDetail(article)}>자세히</ap>
+              <ArticleItem data={article} onSelectArticle={goDetail} />
             </li>
           ))}
       </ul>
