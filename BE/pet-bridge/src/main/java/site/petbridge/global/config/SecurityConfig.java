@@ -74,6 +74,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/users/sign-up", "/users/login").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/users/sign-up").permitAll()
 				.requestMatchers(HttpMethod.GET, "/oauth2/authorization/*").permitAll()
+					.requestMatchers(HttpMethod.POST, "/api/users/find/email").permitAll()
 				.requestMatchers("/users/oauth/success").permitAll()
 
 				// 게시글
@@ -107,7 +108,6 @@ public class SecurityConfig {
 			// 예외 처리
 			.exceptionHandling(exceptionHandling -> exceptionHandling
 				.authenticationEntryPoint((request, response, authException) -> {
-					System.out.println("왜 접속 안됨");
 					response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
 				})
 			);
