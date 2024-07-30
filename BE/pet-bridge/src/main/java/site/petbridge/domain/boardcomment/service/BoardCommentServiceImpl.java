@@ -39,13 +39,13 @@ public class BoardCommentServiceImpl implements BoardCommentService {
 
 	@Override
 	public void registBoardComment(BoardCommentRequestDto boardCommentRequestDto) {
-		BoardComment transferToBoardComment = BoardComment.builder()
+		BoardComment boardComment = BoardComment.builder()
 			.boardId(boardCommentRequestDto.getBoardId())
 			.userId(boardCommentRequestDto.getUserId())
 			.content(boardCommentRequestDto.getContent())
 			.build();
 
-		boardCommentRepository.save(transferToBoardComment);
+		boardCommentRepository.save(boardComment);
 	}
 
 	@Override
