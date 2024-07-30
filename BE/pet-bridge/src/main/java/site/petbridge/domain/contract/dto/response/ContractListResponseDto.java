@@ -46,7 +46,7 @@ public class ContractListResponseDto {
 			.confirmed(contract.isConfirmed())
 			.refunded(contract.isRefunded())
 			.contractorNickname(contractor.getNickname())
-			.contracteeNickname(contractor.getNickname())
+			.contracteeNickname(contractee.getNickname())
 			.animalName(animal.getName())
 			.animalImage(animal.getFilename())
 			.build();

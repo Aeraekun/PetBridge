@@ -3,10 +3,12 @@ package site.petbridge.domain.board.dto.response;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.dsl.*;
 
+import java.io.Serial;
 import java.sql.Timestamp;
 
 public class QBoardResponseDto extends ConstructorExpression<BoardResponseDto> {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	public QBoardResponseDto(

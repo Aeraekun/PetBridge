@@ -11,7 +11,7 @@ public enum Status {
 
 	private final String name;
 
-	private Status(String name) {
+	Status(String name) {
 		this.name = name;
 	}
 
@@ -25,6 +25,6 @@ public enum Status {
 				return status;
 			}
 		}
-        throw new IllegalArgumentException("Unknown status: " + name);
+		throw new IllegalArgumentException("Unknown status: " + name);
 	}
 }
