@@ -1,4 +1,4 @@
-package site.petbridge.domain.user;
+package site.petbridge.domain.user.domain.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

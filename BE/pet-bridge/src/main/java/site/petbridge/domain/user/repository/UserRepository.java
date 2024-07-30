@@ -1,12 +1,14 @@
 package site.petbridge.domain.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import site.petbridge.domain.user.SocialType;
-import site.petbridge.domain.user.User;
+import site.petbridge.domain.user.domain.enums.SocialType;
+import site.petbridge.domain.user.domain.User;
 
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+
+    Optional<User> findById(int id);
 
     Optional<User> findByEmail(String email);
 
