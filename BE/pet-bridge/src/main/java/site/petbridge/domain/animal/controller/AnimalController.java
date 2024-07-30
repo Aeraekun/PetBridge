@@ -61,12 +61,9 @@ public class AnimalController {
 
     @PatchMapping("/{id}/disable")
     public ResponseEntity<Void> removeBoard(@PathVariable("id") int id) throws Exception {
-        try {
-            animalService.removeAnimal(id);
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
+			if(animalService.removeAnimal(id) == 0){
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
         return ResponseEntity.noContent().build();
 
     }

@@ -1,8 +1,5 @@
 package site.petbridge.global.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -18,10 +15,12 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import site.petbridge.domain.user.repository.UserRepository;
 import site.petbridge.global.jwt.filter.JwtAuthenticationProcessingFilter;
 import site.petbridge.global.jwt.service.JwtService;
@@ -33,9 +32,6 @@ import site.petbridge.global.oauth2.handler.OAuth2LoginFailureHandler;
 import site.petbridge.global.oauth2.handler.OAuth2LoginSuccessHandler;
 import site.petbridge.global.oauth2.service.CustomOAuth2UserService;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 /**
  * 인증은 CustomJsonUsernamePasswordAuthenticationFilter에서 authenticate()로 인증된 사용자로 처리
  * JwtAuthenticationProcessingFilter는 AccessToken, RefreshToken 재발급
@@ -45,146 +41,145 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final LoginService loginService;
-    private final JwtService jwtService;
-    private final UserRepository userRepository;
-    private final ObjectMapper objectMapper;
-    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
-    private final CustomOAuth2UserService customOAuth2UserService;
+	private final LoginService loginService;
+	private final JwtService jwtService;
+	private final UserRepository userRepository;
+	private final ObjectMapper objectMapper;
+	private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+	private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+	private final CustomOAuth2UserService customOAuth2UserService;
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
-        return web -> web.ignoring()
-                // error endpoint를 열어줘야 함, favicon.ico 추가!
-                .requestMatchers("/error", "/favicon.ico");
-    }
+	@Bean
+	public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
+		return web -> web.ignoring()
+			// error endpoint를 열어줘야 함, favicon.ico 추가!
+			.requestMatchers("/error", "/favicon.ico");
+	}
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .formLogin(AbstractHttpConfigurer::disable) // FormLogin 사용 X
-                .httpBasic(AbstractHttpConfigurer::disable) // httpBasic 사용 X
-                .csrf(AbstractHttpConfigurer::disable) // csrf 보안 사용 X
-                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http
+			.formLogin(AbstractHttpConfigurer::disable) // FormLogin 사용 X
+			.httpBasic(AbstractHttpConfigurer::disable) // httpBasic 사용 X
+			.csrf(AbstractHttpConfigurer::disable) // csrf 보안 사용 X
+			.sessionManagement(
+				sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+			.authorizeHttpRequests(authorize -> authorize
+				.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 
-                        // 기본 파일
-                        .requestMatchers(HttpMethod.GET, "/","/css/**", "/images/**", "/js/**", "/favicon.ico").permitAll()
+				// 기본 파일
+				.requestMatchers(HttpMethod.GET, "/", "/css/**", "/images/**", "/js/**", "/favicon.ico").permitAll()
 
-                        // 회원
-                        .requestMatchers(HttpMethod.GET, "/users/sign-up", "/users/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users/sign-up").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/oauth2/authorization/*").permitAll()
-                        .requestMatchers("/users/oauth/success").permitAll()
+				// 회원
+				.requestMatchers(HttpMethod.GET, "/users/sign-up", "/users/login").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/users/sign-up").permitAll()
+				.requestMatchers(HttpMethod.GET, "/oauth2/authorization/*").permitAll()
+				.requestMatchers("/users/oauth/success").permitAll()
 
-                        // 게시글
-                        .requestMatchers(HttpMethod.GET, "/api/boards").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/boards/{id}").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/boards").permitAll()
-                        .requestMatchers(HttpMethod.PATCH, "/api/boards/{id}").permitAll()
-                        .requestMatchers(HttpMethod.PATCH, "/api/boards/{id}/disable", "/*").permitAll()
+				// 게시글
+				.requestMatchers(HttpMethod.GET, "/api/boards").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/boards/{id}").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/boards").permitAll()
+				.requestMatchers(HttpMethod.PATCH, "/api/boards/{id}").permitAll()
+				.requestMatchers(HttpMethod.PATCH, "/api/boards/{id}/disable", "/*").permitAll()
 
-                        // 댓글
-                        .requestMatchers(HttpMethod.GET, "/api/board-comments/{boardId}", "/*").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/board-comments").permitAll()
-                        .requestMatchers(HttpMethod.PATCH, "/api/board-comments/{id}", "/*").permitAll()
-                        .requestMatchers(HttpMethod.PATCH, "/api/board-comments/{id}/disable", "/*").permitAll()
+				// 댓글
+				.requestMatchers(HttpMethod.GET, "/api/board-comments/{boardId}", "/*").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/board-comments").permitAll()
+				.requestMatchers(HttpMethod.PATCH, "/api/board-comments/{id}", "/*").permitAll()
+				.requestMatchers(HttpMethod.PATCH, "/api/board-comments/{id}/disable", "/*").permitAll()
 
-                        // 동물
-                        .requestMatchers(HttpMethod.GET, "/api/animals").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/animals/user/{userId}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/animals/{id}").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/animals").permitAll()
-                        .requestMatchers(HttpMethod.PATCH, "/api/animals/{id}").permitAll()
-                        .requestMatchers(HttpMethod.PATCH, "/api/animals/{id}/disable").permitAll()
-                        .anyRequest().authenticated()
-                )
-                // 소셜 로그인
-                .oauth2Login(oauth2 -> oauth2
-                        .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(customOAuth2UserService))
-                        .successHandler(oAuth2LoginSuccessHandler)
-                        .failureHandler(oAuth2LoginFailureHandler)
-                )
-                // 예외 처리
-                .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            System.out.println("왜 접속 안됨");
-                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-                        })
-                );
+				// 동물
+				.requestMatchers(HttpMethod.GET, "/api/animals").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/animals/user/{userId}").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/animals/{id}").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/animals").permitAll()
+				.requestMatchers(HttpMethod.PATCH, "/api/animals/{id}").permitAll()
+				.requestMatchers(HttpMethod.PATCH, "/api/animals/{id}/disable").permitAll()
+				.anyRequest().authenticated()
+			)
+			// 소셜 로그인
+			.oauth2Login(oauth2 -> oauth2
+				.userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(customOAuth2UserService))
+				.successHandler(oAuth2LoginSuccessHandler)
+				.failureHandler(oAuth2LoginFailureHandler)
+			)
+			// 예외 처리
+			.exceptionHandling(exceptionHandling -> exceptionHandling
+				.authenticationEntryPoint((request, response, authException) -> {
+					System.out.println("왜 접속 안됨");
+					response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+				})
+			);
 
-        // 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작
-        // 따라서, LogoutFilter 이후에 우리가 만든 필터 동작하도록 설정
-        // 순서 : LogoutFilter -> JwtAuthenticationProcessingFilter -> CustomJsonUsernamePasswordAuthenticationFilter
-        http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
-        http.addFilterBefore(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter.class);
+		// 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작
+		// 따라서, LogoutFilter 이후에 우리가 만든 필터 동작하도록 설정
+		// 순서 : LogoutFilter -> JwtAuthenticationProcessingFilter -> CustomJsonUsernamePasswordAuthenticationFilter
+		http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
+		http.addFilterBefore(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-    }
+		return http.build();
+	}
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	}
 
-    /**
-     * AuthenticationManager 설정 후 등록
-     * PasswordEncoder를 사용하는 AuthenticationProvider를 지정 (PasswordEncoder는 위에서 등록한 PasswordEncoder 사용)
-     * FormLogin (기존 스프링 시큐리티 로그인)과 동일하게 DaoAuthenticationProvider 사용
-     * UserDetailsService는 커스텀 LoginService로 등록
-     * FormLogin과 동일하게 AuthenticationManager로는 구현체인 ProviderManager 사용 (return ProviderManager)
-     */
-    @Bean
-    public AuthenticationManager authenticationManager() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(loginService);
-        return new ProviderManager(provider);
-    }
+	/**
+	 * AuthenticationManager 설정 후 등록
+	 * PasswordEncoder를 사용하는 AuthenticationProvider를 지정 (PasswordEncoder는 위에서 등록한 PasswordEncoder 사용)
+	 * FormLogin (기존 스프링 시큐리티 로그인)과 동일하게 DaoAuthenticationProvider 사용
+	 * UserDetailsService는 커스텀 LoginService로 등록
+	 * FormLogin과 동일하게 AuthenticationManager로는 구현체인 ProviderManager 사용 (return ProviderManager)
+	 */
+	@Bean
+	public AuthenticationManager authenticationManager() {
+		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+		provider.setPasswordEncoder(passwordEncoder());
+		provider.setUserDetailsService(loginService);
+		return new ProviderManager(provider);
+	}
 
-    /**
-     * 로그인 성공 시 호출되는 LoginSuccessHandler 빈 등록
-     */
-    @Bean
-    public LoginSuccessHandler loginSuccessHandler() {
-        return new LoginSuccessHandler(jwtService, userRepository);
-    }
+	/**
+	 * 로그인 성공 시 호출되는 LoginSuccessHandler 빈 등록
+	 */
+	@Bean
+	public LoginSuccessHandler loginSuccessHandler() {
+		return new LoginSuccessHandler(jwtService, userRepository);
+	}
 
-    /**
-     * 로그인 실패 시 호출되는 LoginFailureHandler 빈 등록
-     */
-    @Bean
-    public LoginFailureHandler loginFailureHandler() {
-        return new LoginFailureHandler();
-    }
+	/**
+	 * 로그인 실패 시 호출되는 LoginFailureHandler 빈 등록
+	 */
+	@Bean
+	public LoginFailureHandler loginFailureHandler() {
+		return new LoginFailureHandler();
+	}
 
-    /**
-     * CustomJsonUsernamePasswordAuthenticationFilter 빈 등록
-     * 커스텀 필터를 사용하기 위해 만든 커스텀 필터를 Bean으로 등록함.
-     * setAuthenticationManager(authenticationManager())로 위에서 등록한 AuthenticationManager(ProviderManager) 설정
-     * 로그인 성공 시 호출할 handler, 실패 시 호출할 handler로 위에서 등록한 handler 설정
-     */
-    @Bean
-    public CustomJsonUsernamePasswordAuthenticationFilter customJsonUsernamePasswordAuthenticationFilter() {
-        CustomJsonUsernamePasswordAuthenticationFilter customJsonUsernamePasswordAuthenticationFilter
-                 = new CustomJsonUsernamePasswordAuthenticationFilter(objectMapper);
-        customJsonUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManager());
-        customJsonUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(loginSuccessHandler());
-        customJsonUsernamePasswordAuthenticationFilter.setAuthenticationFailureHandler(loginFailureHandler());
+	/**
+	 * CustomJsonUsernamePasswordAuthenticationFilter 빈 등록
+	 * 커스텀 필터를 사용하기 위해 만든 커스텀 필터를 Bean으로 등록함.
+	 * setAuthenticationManager(authenticationManager())로 위에서 등록한 AuthenticationManager(ProviderManager) 설정
+	 * 로그인 성공 시 호출할 handler, 실패 시 호출할 handler로 위에서 등록한 handler 설정
+	 */
+	@Bean
+	public CustomJsonUsernamePasswordAuthenticationFilter customJsonUsernamePasswordAuthenticationFilter() {
+		CustomJsonUsernamePasswordAuthenticationFilter customJsonUsernamePasswordAuthenticationFilter
+			= new CustomJsonUsernamePasswordAuthenticationFilter(objectMapper);
+		customJsonUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManager());
+		customJsonUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(loginSuccessHandler());
+		customJsonUsernamePasswordAuthenticationFilter.setAuthenticationFailureHandler(loginFailureHandler());
 
-        return customJsonUsernamePasswordAuthenticationFilter;
-    }
+		return customJsonUsernamePasswordAuthenticationFilter;
+	}
 
-    @Bean
-    public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
-        JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter
-                = new JwtAuthenticationProcessingFilter(jwtService, userRepository);
+	@Bean
+	public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
+		JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter
+			= new JwtAuthenticationProcessingFilter(jwtService, userRepository);
 
-        return jwtAuthenticationProcessingFilter;
-    }
-
-
+		return jwtAuthenticationProcessingFilter;
+	}
 
 }
