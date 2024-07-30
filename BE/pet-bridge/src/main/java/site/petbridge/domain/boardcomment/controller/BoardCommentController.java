@@ -25,7 +25,7 @@ public class BoardCommentController {
     private final BoardCommentService boardCommentService;
 
     @GetMapping("/{boardId}")
-    public ResponseEntity<List<BoardCommentResponseDto>> getListBoardComment(@PathVariable("boardId") int boardId) throws Exception {
+    public ResponseEntity<List<BoardCommentResponseDto>> getListBoardComment(@PathVariable("boardId") int boardId) {
         return boardCommentService.getListBoardComment(boardId)
             .map(ResponseEntity::ok)
             .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());

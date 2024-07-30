@@ -6,10 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import site.petbridge.domain.board.domain.Board;
-import site.petbridge.domain.boardcomment.domain.BoardComment;
-import site.petbridge.domain.boardcomment.dto.response.BoardCommentResponseDto;
-import site.petbridge.domain.user.domain.User;
 
 @Data
 @Builder
@@ -33,6 +29,5 @@ public class BoardResponseDto {
 	private String userImage;
 
 	private int commentCount;
-
 
 }
