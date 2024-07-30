@@ -1,5 +1,6 @@
 package site.petbridge.domain.board.repository;
 
+import static site.petbridge.domain.animal.domain.QAnimal.*;
 import static site.petbridge.domain.board.domain.QBoard.*;
 import static site.petbridge.domain.boardcomment.domain.QBoardComment.*;
 import static site.petbridge.domain.user.domain.QUser.*;
@@ -47,11 +48,14 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 				board.disabled,
 				user.nickname,
 				user.image,
+				animal.name,
+				animal.filename,
 				boardComment.count().intValue()
 			))
 			.from(board)
 			.join(user).on(board.userId.eq(user.id))
 			.leftJoin(boardComment).on(board.id.eq(boardComment.boardId))
+			.leftJoin(animal).on(board.animalId.eq(animal.id))
 			.groupBy(board.id, user.nickname, user.image)
 			.fetch();
 	}
@@ -73,11 +77,14 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 				board.disabled,
 				user.nickname,
 				user.image,
+				animal.name,
+				animal.filename,
 				boardComment.count().intValue()
 			))
 			.from(board)
 			.join(user).on(board.userId.eq(user.id))
 			.leftJoin(boardComment).on(board.id.eq(boardComment.boardId))
+			.leftJoin(animal).on(board.animalId.eq(animal.id))
 			.groupBy(board.id, user.nickname, user.image)
 			.where(board.id.eq(id))
 			.fetchOne();
