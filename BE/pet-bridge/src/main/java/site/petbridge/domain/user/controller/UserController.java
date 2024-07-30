@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import site.petbridge.domain.user.dto.request.EmailDto;
 import site.petbridge.domain.user.dto.request.UserModifyRequestDto;
 import site.petbridge.domain.user.dto.request.UserSignUpRequestDto;
 import site.petbridge.domain.user.dto.response.UserResponseDto;
@@ -47,9 +48,8 @@ public class UserController {
     }
 
     @PostMapping("/api/users/find/email")
-    public ResponseEntity<UserResponseDto> getDetailUserByEmail(@RequestBody String email) throws Exception {
-        System.out.println(email);
-        return userService.getDetailUserByEmail(email)
+    public ResponseEntity<UserResponseDto> getDetailUserByEmail(@RequestBody EmailDto emailDto) throws Exception {
+        return userService.getDetailUserByEmail(emailDto.email())
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
     }
