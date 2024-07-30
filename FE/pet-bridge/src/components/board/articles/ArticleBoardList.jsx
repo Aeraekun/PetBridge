@@ -31,7 +31,6 @@ const ArticleBoardList = () => {
   const navigate = useNavigate()
   const goDetail = (article) => {
     const id = article.id
-
     let path = `/communities/details/${id}`
     navigate(path)
   }

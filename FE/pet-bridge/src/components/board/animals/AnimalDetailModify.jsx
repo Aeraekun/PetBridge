@@ -53,7 +53,6 @@ const ArticleDetailModify = () => {
     navigate(-1)
   }
   const goModify = () => {
-    navigate(-1)
     console.log(animal)
     animaldata[animal.user_id] = animal
     navigate(`/shelter/details/${animal.user_id}`)
