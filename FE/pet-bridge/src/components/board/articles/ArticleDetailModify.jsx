@@ -2,11 +2,12 @@ import SirenIcon from "components/common/SirenIcon"
 import Button from "components/common/Button"
 import AnimalTag from "components/common/AnimalTag"
 import Editor from "components/common/Editor"
-import data from "./articledata"
+// import data from "./articledata"
 import {useNavigate, useParams} from "react-router-dom"
 import {useEffect, useState} from "react"
 
 import Profile from "components/common/Profile"
+import {editArticle, getArticleDetail} from "api/boards-api"
 
 const ArticleDetailModify = () => {
   const {id} = useParams()
@@ -15,8 +16,10 @@ const ArticleDetailModify = () => {
   const [title, setTitle] = useState("")
   const [editorContent, setEditorContent] = useState("")
   const [selectedAnimalId, setSelectedAnimalId] = useState(null)
-  const [nickname, setNickname] = useState("")
   const [imageSrc, setImageSrc] = useState("")
+  const [imageFile, setImageFile] = useState(null)
+  const [thumbnail, setUserTumbnail] = useState(null)
+  // const [type, setType] = useState(null)
 
   // 파일 선택 시 호출되는 함수
   const handleFileChange = (event) => {
@@ -25,22 +28,26 @@ const ArticleDetailModify = () => {
       // 파일의 URL을 생성하여 상태에 저장
       const url = URL.createObjectURL(file)
       setImageSrc(url)
+      setImageFile(file)
+    }
+  }
+
+  const fetchArticle = async () => {
+    const fetchedArticle = await getArticleDetail(Number(id)) //게시글 상세 조회 api
+    if (fetchedArticle) {
+      setArticle(fetchedArticle)
+      setTitle(fetchedArticle.title || "")
+      setEditorContent(fetchedArticle.content || "")
+      setImageSrc(fetchedArticle.thumbnail || "")
+      setSelectedAnimalId(fetchedArticle.animalId)
+      setUserTumbnail(fetchedArticle.thumbnail)
+      // setType(fetchedArticle.type)
     }
   }
 
   useEffect(() => {
-    const fetchArticleData = () => {
-      const fetchArticle = data.find((article) => article.id === Number(id))
-      if (fetchArticle) {
-        setArticle(fetchArticle)
-        setTitle(fetchArticle.title || "")
-        setEditorContent(fetchArticle.content || "")
-        setImageSrc(fetchArticle.thumbnail || "")
-        setNickname(fetchArticle.nickname || "")
-      }
-    }
-    fetchArticleData()
-  }, [id])
+    fetchArticle()
+  }, [])
 
   const resetImage = () => {
     setImageSrc(null)
@@ -54,8 +61,8 @@ const ArticleDetailModify = () => {
     navigate(-1)
   }
 
-  const goModify = () => {
-    if (editorContent.trim() === "" || !imageSrc) {
+  const modifyArticle = async () => {
+    if (title === "" || !imageSrc) {
       alert("제목과 대표사진을 모두 입력하세요.")
       return
     }
@@ -63,19 +70,29 @@ const ArticleDetailModify = () => {
       // 변경된 내용으로 article 업데이트
       const updatedArticle = {
         ...article,
+        animalId: selectedAnimalId,
+        thumbnail: thumbnail,
         title: title,
         content: editorContent,
-        thumbnail: imageSrc,
-        nickname: nickname,
-        name: selectedAnimalId,
+        thumbnailRemoved: true,
+      }
+      const formData = new FormData()
+      formData.append(
+        "boardEditRequestDto",
+        new Blob([JSON.stringify(updatedArticle)], {type: "application/json"})
+      )
+      if (imageFile) {
+        formData.append("file", imageFile)
       }
 
-      // 원본 배열에서 article 업데이트
-      const articleIndex = data.findIndex((a) => a.id === Number(id))
-      if (articleIndex !== -1) {
-        data[articleIndex] = updatedArticle
+      //api 함수 호출
+      try {
+        console.log("updatedArticle", updatedArticle)
+        await editArticle(id, formData)
+        navigate(-1)
+      } catch (e) {
+        console.error(e)
       }
-
       if (article) {
         navigate(`/communities/details/${article.id}`)
       }
@@ -92,8 +109,10 @@ const ArticleDetailModify = () => {
         onChange={(e) => setTitle(e.target.value)}
         value={title}
       />
-      <hr />
-      <Profile nickname={article.userNickname} image={article.userImage} />
+      <hr />{" "}
+      {article && (
+        <Profile nickname={article.userNickname} image={article.userImage} />
+      )}
       <div className="my-2 flex flex-row">
         <img src="/icons/icon-tag.svg" alt="Tag Icon" />
       </div>
@@ -130,7 +149,7 @@ const ArticleDetailModify = () => {
       </div>
       <div className="flex justify-end">
         태그된 동물 번호 {selectedAnimalId}
-        <Button text={"수정하기"} onClick={goModify} />
+        <Button text={"수정하기"} onClick={modifyArticle} />
         <Button text={"삭제하기"} onClick={goBack} />
       </div>
     </>
