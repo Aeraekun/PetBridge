@@ -43,8 +43,8 @@ export const registArticle = async (formData) => {
 }
 
 //게시글 수정
-export const editArticle = async (id,formData) => {
-  console.log(formData)
+export const editArticle = async (id, formData) => {
+  console.log("editArticle", formData)
   try {
     const res = await axios.patch(`${BOARD_API_URL}/${id}`, formData, {
       headers: {
@@ -52,6 +52,7 @@ export const editArticle = async (id,formData) => {
       },
     })
     console.log("editArticle" + res)
+    alert("수정완료")
     return res.data
   } catch (e) {
     console.error(e)
@@ -59,59 +60,61 @@ export const editArticle = async (id,formData) => {
   }
 }
 
-
 //게시글 삭제
-const removeBoard = async (id)=>{
-  try {
-      const res = await axios.patch(`${BOARD_API_URL}/${id}/disable`)                          
-      console.log("removeBoard" + res)
-      return  res.data
-    } catch (e) {
-      console.error(e)
-      return []                                                               
-    }
-  }
-  
-  //댓글 조회
-  export const getListBoardComment = async (boardId) => {
-    try {
-      const res = await axios.get(`${BOARD_COMMENTS_API_URL}/${boardId}`)
-      return res.data
-    } catch (e) {
-      console.error(e)
-      return []
-    }
-  }
+// const removeBoard = async (id) => {
+//   try {
+//     const res = await axios.patch(`${BOARD_API_URL}/${id}/disable`)
+//     console.log("removeBoard" + res)
+//     return res.data
+//   } catch (e) {
+//     console.error(e)
+//     return []
+//   }
+// }
 
-  //댓글 작성
-  export const registBoardComment = async (boardComment) => {
-    try {
-      const res = await axios.post(`${BOARD_COMMENTS_API_URL}`,boardComment)
-      return res.data
-    } catch (e) {
-      console.error(e)
-      return []
-    }
+//댓글 조회
+export const getListBoardComment = async (boardId) => {
+  try {
+    const res = await axios.get(`${BOARD_COMMENTS_API_URL}/${boardId}`)
+    return res.data
+  } catch (e) {
+    console.error(e)
+    return []
   }
+}
+
+//댓글 작성
+export const registBoardComment = async (boardComment) => {
+  try {
+    const res = await axios.post(`${BOARD_COMMENTS_API_URL}`, boardComment)
+    return res.data
+  } catch (e) {
+    console.error(e)
+    return []
+  }
+}
 
 //댓글 수정
-  export const editBoardComment = async (boardId,boardComment) => {
-    try {
-      const res = await axios.patch(`${BOARD_COMMENTS_API_URL}/${boardId}`,boardComment)
-      return res.data
-    } catch (e) {
-      console.error(e)
-      return []
-    }
+export const editBoardComment = async (boardId, boardComment) => {
+  try {
+    const res = await axios.patch(
+      `${BOARD_COMMENTS_API_URL}/${boardId}`,
+      boardComment
+    )
+    return res.data
+  } catch (e) {
+    console.error(e)
+    return []
   }
+}
 
-  const removeBoardComment = async (id)=>{
-    try {
-        const res = await axios.patch(`${BOARD_COMMENTS_API_URL}/${id}/disable`)                          
-        console.log("removeBoardComment" + res)
-        return  res.data
-      } catch (e) {
-        console.error(e)
-        return []                                                               
-      }
-    }
+// const removeBoardComment = async (id) => {
+//   try {
+//     const res = await axios.patch(`${BOARD_COMMENTS_API_URL}/${id}/disable`)
+//     console.log("removeBoardComment" + res)
+//     return res.data
+//   } catch (e) {
+//     console.error(e)
+//     return []
+//   }
+// }
