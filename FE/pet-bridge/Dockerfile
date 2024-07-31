@@ -22,6 +22,9 @@ FROM nginx:alpine
 # Copy built assets from the build stage
 COPY --from=build /app/build /var/jenkins_home/workspace/MasterFE/FE/pet-bridge
 
+# Copy custom Nginx configuration
+COPY /etc/nginx/nginx.conf nginx.conf
+
 # Expose port
 EXPOSE 80
 
