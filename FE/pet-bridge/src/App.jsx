@@ -41,8 +41,8 @@ import {
   getAccessTokenFromSession,
   getUserInfosFromSession,
 } from "utils/user-utils"
-
-getUserInfosFromSession
+import ContractsContainer from "components/contracts/ContractsContainer"
+import ContractsPage from "pages/ContractsPage"
 
 function App() {
   const dispatch = useDispatch()
@@ -139,6 +139,18 @@ function App() {
             />
           }
         ></Route>
+      </Route>
+      <Route
+        path="/contracts"
+        element={
+          <PrivateRoute
+            component={<ContractsPage />}
+            isAuthenticated={isAuthenticated}
+          />
+        }
+      >
+        <Route path=":id" element={<ContractsContainer />}></Route>
+        <Route path="create" element={<ContractsContainer />}></Route>
       </Route>
     </Routes>
   )
