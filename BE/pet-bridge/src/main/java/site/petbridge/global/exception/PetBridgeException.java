@@ -6,5 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class PetBridgeException extends RuntimeException{
-    private ErrorCode errorCode;
+
+    private final ErrorCode errorCode;
 }
