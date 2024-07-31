@@ -1,11 +1,16 @@
 import {useEffect, useRef, useState} from "react"
-
 import OptionIcon from "./OptionIcon"
-const Comment = ({data}) => {
+
+const Comment = ({data, currentUserId, onDelete}) => {
   const [isFixedSize, setIsFixedSize] = useState(true)
+  const [isWriter, setIsWriter] = useState(false)
   // console.log(isFixedSize)
   const handleToggleSize = () => {
     setIsFixedSize(!isFixedSize)
+  }
+  const handleDelete = (id) => {
+    console.log(id)
+    onDelete(id)
   }
 
   const [showReadMore, setShowReadMore] = useState(false)
@@ -15,6 +20,10 @@ const Comment = ({data}) => {
     // 댓글이 지정된 높이를 초과할 때 "더보기" 버튼을 표시
     if (contentRef.current) {
       setShowReadMore(contentRef.current.scrollHeight > 64)
+    }
+    //댓글의 작성자와 현재 로그인한 유저의 아이디가 같을 경우 isWriter : true
+    if (Number(currentUserId) === Number(data.userId)) {
+      setIsWriter(true)
     }
   }, [])
 
@@ -31,6 +40,16 @@ const Comment = ({data}) => {
               <div className="  text-base  ">{data.userNickname}</div>
               <div className="  text-sm  ">{data.registTime.split("T")[0]}</div>
             </div>
+            {isWriter && (
+              <button
+                className=""
+                onClick={() => {
+                  handleDelete(data.id)
+                }}
+              >
+                삭제
+              </button>
+            )}
             <OptionIcon></OptionIcon>
           </div>
           <div className="flex flex-col ">
