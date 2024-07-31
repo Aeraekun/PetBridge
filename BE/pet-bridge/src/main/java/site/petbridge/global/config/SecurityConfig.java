@@ -74,8 +74,10 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/users/sign-up", "/users/login").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/users/sign-up").permitAll()
 				.requestMatchers(HttpMethod.GET, "/oauth2/authorization/*").permitAll()
-					.requestMatchers(HttpMethod.POST, "/api/users/find/email").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/users/find/email").permitAll()
 				.requestMatchers("/users/oauth/success").permitAll()
+				.requestMatchers(HttpMethod.GET,"/api/users/authentication/email").permitAll()
+				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email").permitAll()
 
 				// 게시글
 				.requestMatchers(HttpMethod.GET, "/api/boards").permitAll()
