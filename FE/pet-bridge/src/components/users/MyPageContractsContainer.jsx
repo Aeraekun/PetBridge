@@ -3,6 +3,8 @@ import {useEffect, useState} from "react"
 import {useInView} from "react-intersection-observer"
 
 const MyPageContractsContainer = () => {
+  const [isLoading, setIsLoading] = useState(true)
+
   // 초기값 10개
   const [items, setItems] = useState(() => {
     const initItems = Array.from({length: 10}, (_, i) => i + 1)
@@ -33,7 +35,9 @@ const MyPageContractsContainer = () => {
       )
       setImages(initialImages)
     }
+    setIsLoading(false)
     loadInitialImages()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // inView가 바뀔때마다, 추가로 n개만큼 로드
@@ -57,33 +61,38 @@ const MyPageContractsContainer = () => {
       }
       loadMoreImages()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView])
 
   return (
     <div className="flex h-full flex-col items-center">
       {/* 제목 헤더 */}
-      <div className="p-5 text-4xl font-bold">내 입양 기록</div>
-      <div className="flex size-full flex-wrap items-center justify-center overflow-auto">
-        {/* 이미지를 기준으로 반복 */}
-        {images.map((image, index) => (
-          <div
-            key={index}
-            // ref 값이 화면에 들어왔을 때 api가 요청됨
-            ref={index === images.length - 1 ? ref : null}
-            className={`m-2.5 h-[425px] w-[300px] rounded-2xl border`}
-          >
-            <img
-              src={image.download_url}
-              alt={image.author}
-              className="h-[250px] rounded-t-2xl"
-            />
-            <div className="space-y-2.5 p-2">
-              <p>picsum 예시 사진 - axios 요청 API</p>
-              <p>{image.id} 번</p>
-              <p>{image.author}</p>
+      <div className="p-2.5 text-4xl font-bold">내 입양 기록</div>
+      <div className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
+        {isLoading ? (
+          <div>로딩중입니다</div>
+        ) : (
+          // 이미지 기준으로 반복
+          images.map((image, index) => (
+            <div
+              key={index}
+              // ref 값이 화면에 들어왔을 때 api가 요청됨
+              ref={index === images.length - 1 ? ref : null}
+              className="m-2.5 h-[450px] w-[300px] snap-center rounded-xl border"
+            >
+              <img
+                src={image.download_url}
+                alt={image.author}
+                className="h-[300px] rounded-t-xl"
+              />
+              <div className="space-y-2.5 p-2.5">
+                <p>{image.download_url}</p>
+                <p>{image.id} 번</p>
+                <p>{image.author}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   )
