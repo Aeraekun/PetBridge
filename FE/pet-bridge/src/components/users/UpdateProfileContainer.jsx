@@ -6,10 +6,12 @@ import {
   selectImage,
   selectNickname,
   selectPhone,
+  setUserInfos,
 } from "features/user/users-slice"
 import {useState} from "react"
-import {useSelector} from "react-redux"
+import {useDispatch, useSelector} from "react-redux"
 import {Link, useNavigate} from "react-router-dom"
+import {setUserInfosAtSession} from "utils/user-utils"
 import {
   validateBirth,
   validateNickname,
@@ -18,6 +20,7 @@ import {
 } from "utils/user-validations"
 const UpdateProfileContainer = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const userId = useSelector(selectId)
   const nickname = useSelector(selectNickname)
@@ -28,11 +31,10 @@ const UpdateProfileContainer = () => {
   // 유저 정보 수정 폼 제출을 위한 인자 저장 state
   const [updateFormData, setUpdateFormData] = useState({
     password: "",
-    passwordConfirm: "",
-    nickname: [nickname],
-    birth: [birth],
-    phone: [phone],
-    image: [image],
+    nickname: nickname,
+    birth: birth,
+    phone: phone,
+    image: image,
   })
 
   // 유효성 검사 실패 에러 메시지 저장을 위한 state
@@ -97,6 +99,9 @@ const UpdateProfileContainer = () => {
         const res = await patchUserInfo(updateFormData)
         navigate(`/users/${userId}`)
         console.log(res)
+
+        setUserInfosAtSession(res.data)
+        dispatch(setUserInfos(res.data))
         return
       } catch (error) {
         console.log(error)

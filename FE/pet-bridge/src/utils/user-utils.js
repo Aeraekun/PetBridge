@@ -7,7 +7,6 @@ export const getAccessTokenFromSession = () => {
 // 액세스 토큰을 세션에 저장
 export const setAccessTokenAtSession = (accessToken) => {
   sessionStorage.setItem("accessToken", accessToken)
-  console.log("user-utils.js > accessToken set:", accessToken)
   return accessToken
 }
 
@@ -20,13 +19,11 @@ export const getRefreshTokenFromLocalStorage = () => {
 // 리프레시 토큰을 로컬 스토리지에 저장
 export const setRefreshTokenAtLocalStorage = (refreshToken) => {
   localStorage.setItem("refreshToken", refreshToken)
-  console.log("user-utils.js > refreshToken set:", refreshToken)
   return refreshToken
 }
 
 // 유저 정보를 세션 스토리지에 저장
 export const setUserInfosAtSession = (userInfos) => {
-  console.log("setUserInfosAtSession", userInfos)
   Object.keys(userInfos).forEach((key) => {
     sessionStorage.setItem(key, userInfos[key])
   })
@@ -53,8 +50,6 @@ export const getUserInfosFromSession = () => {
       userInfos[key] = item
     }
   })
-
-  console.log(userInfos)
 
   return userInfos
 }

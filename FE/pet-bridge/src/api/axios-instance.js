@@ -25,10 +25,8 @@ const checkAccessTokenExpiration = (accessToken) => {
   const tokenExpirationTime = decodedAccessToken.exp
 
   let isAccessTokenValid = false
-
+  // 현재 시간과 액세스 토큰의 만료 시간을 비교해서 액세스 토큰의 유효성을 검사
   if (currentTime <= tokenExpirationTime) {
-    console.log("currentTime: ", currentTime)
-    console.log("tokenExpirationTime: ", tokenExpirationTime)
     isAccessTokenValid = true
   }
 
@@ -40,6 +38,7 @@ const checkAccessTokenExpiration = (accessToken) => {
 axiosInstance.interceptors.request.use(
   (config) => {
     // 요청 인터셉터 동작 확인
+    console.groupCollapsed("request interceptors")
     console.log("요청 인터셉터 동작")
     // 액세스 토큰을 상태에서 가져옴
     let isAccessTokenValid = false
@@ -53,6 +52,7 @@ axiosInstance.interceptors.request.use(
       accessToken,
       refreshToken
     )
+    console.groupEnd("request interceptors")
 
     // 액세스 토큰이 있으면, 유효성 확인
     if (accessToken) {
@@ -93,6 +93,7 @@ axiosInstance.interceptors.response.use(
     const accessToken = headers.authorization
     const refreshToken = headers["authorization-refresh"]
 
+    console.groupCollapsed("JWT fetched")
     console.log(
       "axios-instance.js > 응답 인터셉터에서 받은 액세스 토큰 :",
       accessToken
@@ -101,6 +102,7 @@ axiosInstance.interceptors.response.use(
       "axios-instance.js > 응답 인터셉터에서 받은 리프레시 토큰 :",
       refreshToken
     )
+    console.groupEnd()
 
     // 액세스 토큰이 존재하는 경우 dispatch를 사용해서 액세스 토큰을 sessionStorage에 저장
     if (accessToken) {
