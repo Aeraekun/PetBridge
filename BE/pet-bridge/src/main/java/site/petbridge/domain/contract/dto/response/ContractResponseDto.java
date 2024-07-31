@@ -28,10 +28,14 @@ public class ContractResponseDto {
 	private boolean refunded;
 
 	private String contractorNickname;
+	private String contractorImage;
 	private String contracteeNickname;
+	private String contracteeImage;
 
 	private String animalName;
 	private String animalImage;
+	private String animalKind;
+	private String animalAge;
 
 	private LocalDate month1;
 	private LocalDate month2;
@@ -61,9 +65,13 @@ public class ContractResponseDto {
 			.confirmed(contract.isConfirmed())
 			.refunded(contract.isRefunded())
 			.contractorNickname(contractor.getNickname())
+			.contractorImage(contractor.getImage())
 			.contracteeNickname(contractee.getNickname())
+			.contracteeImage(contractee.getImage())
 			.animalName(animal.getName())
 			.animalImage(animal.getFilename())
+			.animalKind(animal.getKindCd())
+			.animalAge(animal.getAge())
 			.month1(contractCheck.getMonth1())
 			.month2(contractCheck.getMonth2())
 			.month3(contractCheck.getMonth3())
