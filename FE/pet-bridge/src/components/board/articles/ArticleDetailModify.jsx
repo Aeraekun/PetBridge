@@ -7,7 +7,7 @@ import {useNavigate, useParams} from "react-router-dom"
 import {useEffect, useState} from "react"
 
 import Profile from "components/common/Profile"
-import {editArticle, getArticleDetail} from "api/boards-api"
+import {editArticle, getArticleDetail, removeArticle} from "api/boards-api"
 
 const ArticleDetailModify = () => {
   const {id} = useParams()
@@ -61,6 +61,15 @@ const ArticleDetailModify = () => {
     navigate(-1)
   }
 
+  const goRemove = async () => {
+    //게시글 삭제 api 함수 호출
+    try {
+      await removeArticle(id)
+      navigate(-1)
+    } catch (e) {
+      console.error(e)
+    }
+  }
   const modifyArticle = async () => {
     if (title === "" || !imageSrc) {
       alert("제목과 대표사진을 모두 입력하세요.")
@@ -150,7 +159,7 @@ const ArticleDetailModify = () => {
       <div className="flex justify-end">
         태그된 동물 번호 {selectedAnimalId}
         <Button text={"수정하기"} onClick={modifyArticle} />
-        <Button text={"삭제하기"} onClick={goBack} />
+        <Button text={"삭제하기"} onClick={goRemove} />
       </div>
     </>
   )
