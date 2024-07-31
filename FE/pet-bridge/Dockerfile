@@ -20,10 +20,10 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copy built assets from the build stage
-COPY --from=build /var/jenkins_home/workspace/MasterFE/FE/pet-bridge/public /app/build
+COPY --from=build /app/build /var/jenkins_home/workspace/MasterFE/FE/pet-bridge
 
 # Expose port
-EXPOSE 3000
+EXPOSE 80
 
 # Start Nginx server
 CMD ["nginx", "-g", "daemon off;"]
