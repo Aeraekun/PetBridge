@@ -97,6 +97,14 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.POST, "/api/animals").permitAll()
 				.requestMatchers(HttpMethod.PATCH, "/api/animals/{id}").permitAll()
 				.requestMatchers(HttpMethod.PATCH, "/api/animals/{id}/disable").permitAll()
+
+				// 계약서
+				.requestMatchers(HttpMethod.GET, "/api/contracts/user/{userId}").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/contracts/{id}").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/contracts").permitAll()
+				.requestMatchers(HttpMethod.PATCH, "/api/contracts/{id}").permitAll()
+				.requestMatchers(HttpMethod.DELETE, "/api/contracts/{id}/disable").permitAll()
+				.requestMatchers(HttpMethod.PATCH, "/api/contract-checks/{id}").permitAll()
 				.anyRequest().authenticated()
 			)
 			// 소셜 로그인

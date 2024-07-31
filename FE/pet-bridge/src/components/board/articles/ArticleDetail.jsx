@@ -8,6 +8,8 @@ import React, {useEffect, useState} from "react"
 import {selectId} from "features/user/users-slice"
 import DOMPurify from "dompurify"
 import Profile from "components/common/Profile"
+import ArticleComments from "./ArticleComments"
+import CommentIcon from "components/common/CommentIcon"
 
 const ArticleDetail = () => {
   const [article, setArticle] = useState([])
@@ -20,8 +22,8 @@ const ArticleDetail = () => {
     const fetchArticle = async () => {
       const data = await getArticleDetail(Number(id)) //게시글 상세 조회 api
       setArticle(data)
+      console.log(data)
     }
-
     fetchArticle()
   }, []) // 빈 배열을 두 번째 인자로 전달하여 마운트 시 한 번만 실행
 
@@ -33,7 +35,7 @@ const ArticleDetail = () => {
   }
 
   return (
-    <>
+    <div className="rounded-xl border p-4">
       <button onClick={goBack} className="flex justify-start">
         돌아가기
       </button>
@@ -42,7 +44,10 @@ const ArticleDetail = () => {
       <Profile nickname={article.userNickname} image={article.userImage} />
       <div className="flex flex-row space-x-2 pl-6">
         <img src="/icons/icon-tag.svg" alt="Tag Icon" />
-        <Profile nickname={article.userNickname} image={article.userImage} />
+        <Profile
+          nickname={article.animalName}
+          image={article.animalThumbnail}
+        />
       </div>
       <hr />
       대표사진
@@ -51,7 +56,7 @@ const ArticleDetail = () => {
           <img
             src={article.thumbnail}
             alt="Uploaded Preview"
-            className="size-96 rounded border object-contain"
+            className="ml-[100px] size-96 rounded border object-contain"
           />
         </div>
       ) : (
@@ -60,7 +65,7 @@ const ArticleDetail = () => {
         </div>
       )}
       <div
-        className="min-h-72 w-11/12"
+        className=" mx-auto min-h-72 w-[800px]"
         dangerouslySetInnerHTML={{__html: sanitizedContent}}
       ></div>
       <div className="flex justify-end">
@@ -75,7 +80,15 @@ const ArticleDetail = () => {
           </div>
         )}
       </div>
-    </>
+      <hr />
+      <div className="m-3 flex items-center space-x-2">
+        <CommentIcon size={"small"} />
+        <div>댓글 {article.commentCount}</div>
+      </div>
+      <div className="px-8">
+        <ArticleComments articleId={id} userId={currentUserId} />
+      </div>
+    </div>
   )
 }
 

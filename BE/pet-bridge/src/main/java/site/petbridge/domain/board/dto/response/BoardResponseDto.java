@@ -28,6 +28,9 @@ public class BoardResponseDto {
 	private String userNickname;
 	private String userImage;
 
+	private String animalName;
+	private String animalThumbnail;
+
 	private int commentCount;
 
 }
