@@ -114,7 +114,7 @@ const Login = () => {
           <Link to="/">
             <Button text="PW 찾기" />
           </Link>
-          <Link to="/sign-up">
+          <Link to="/users/sign-up">
             <Button text="회원가입" />
           </Link>
         </div>

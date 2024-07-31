@@ -6,7 +6,7 @@ import {
   setAccessTokenAtSession,
   setRefreshTokenAtLocalStorage,
 } from "utils/user-utils"
-const BASE_API_URL = "http://localhost:8080/api"
+export const BASE_API_URL = "http://localhost:8080/api"
 
 const axiosInstance = axios.create({
   baseURL: BASE_API_URL,

@@ -48,3 +48,23 @@ export const jwtTest = async () => {
 
   console.log("users-api.js > res", res)
 }
+
+// 이메일 인증번호 전송
+export const postEmailVerificationCode = async (emailData) => {
+  const res = await axiosInstance.post("/users/authentication/email", emailData)
+
+  return res
+}
+
+// 이메일 인증번호 확인
+// 이메일, 인증코드를 인자로 전송
+export const getEmailVerificationCode = async (data) => {
+  console.log(data)
+  const res = await axiosInstance("/users/authentication/email", {
+    data,
+  })
+
+  console.log(res)
+
+  return res
+}
