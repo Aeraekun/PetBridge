@@ -25,8 +25,9 @@ COPY --from=build /app/build /var/jenkins_home/workspace/MasterFE/FE/pet-bridge
 # Copy custom Nginx configuration
 COPY /etc/nginx/nginx.conf /etc/nginx/nginx.conf
 
-# Copy Let's Encrypt certificates
-COPY /etc/letsencrypt /etc/letsencrypt
+# Copy and extract Let's Encrypt certificates
+COPY letsencrypt.tar.gz /etc/
+RUN tar -xzf /etc/letsencrypt.tar.gz -C /etc && rm /etc/letsencrypt.tar.gz
 
 # Expose port
 EXPOSE 80
