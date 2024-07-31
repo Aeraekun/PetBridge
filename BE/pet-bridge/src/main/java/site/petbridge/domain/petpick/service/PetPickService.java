@@ -9,6 +9,7 @@ import site.petbridge.domain.petpick.dto.response.PetPickResponseDto;
 import java.util.List;
 
 public interface PetPickService {
+
     /**
      * 펫픽 생성
      */
