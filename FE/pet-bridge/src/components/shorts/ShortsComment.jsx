@@ -7,68 +7,69 @@ import ShareIcon from "../common/ShareIcon"
 import CommentIcon from "../common/CommentIcon"
 import ProfileImage from "assets/image/profile.JPG"
 import FollowIcon from "../common/FollowIcon"
+import Comment from "../common/Comment"
 import TagIcon from "../common/TagIcon"
-import React, {useState, useRef, useEffect} from "react"
+import React, {useState} from "react"
 
 import {useSelector} from "react-redux"
 import {selectIsAuthenticated} from "features/user/users-slice"
 
-const Comment = ({data}) => {
-  const [isFixedSize, setIsFixedSize] = useState(true)
-  // console.log(isFixedSize)
-  const handleToggleSize = () => {
-    setIsFixedSize(!isFixedSize)
-  }
+// const Comment = ({data}) => {
+//   const [isFixedSize, setIsFixedSize] = useState(true)
+//   // console.log(isFixedSize)
+//   const handleToggleSize = () => {
+//     setIsFixedSize(!isFixedSize)
+//   }
 
-  const [showReadMore, setShowReadMore] = useState(false)
-  const contentRef = useRef(null)
+//   const [showReadMore, setShowReadMore] = useState(false)
+//   const contentRef = useRef(null)
 
-  useEffect(() => {
-    console.log(contentRef.current.scrollHeight)
-    // 댓글이 지정된 높이를 초과할 때 "더보기" 버튼을 표시
-    if (contentRef.current) {
-      setShowReadMore(contentRef.current.scrollHeight > 64)
-    }
-  }, [])
+//   useEffect(() => {
+//     console.log(contentRef.current.scrollHeight)
+//     // 댓글이 지정된 높이를 초과할 때 "더보기" 버튼을 표시
+//     if (contentRef.current) {
+//       setShowReadMore(contentRef.current.scrollHeight > 64)
+//     }
+//   }, [])
 
-  return (
-    <>
-      <div className="flex space-x-2.5 px-5 py-2.5">
-        <div className="mt-3 h-fit w-12  ">
-          <img src={ProfileImage} alt="profile" />
-          {/* <Image imageName={Siren.png}></Image> */}
-        </div>
-        <div className="w-full ">
-          <div className="flex  h-7 items-center justify-between">
-            <div className="flex items-center space-x-2.5">
-              <div className="  text-sm  ">{data.nickname}</div>
-              <div className="  text-xs  ">
-                {data.regist_time.split("T")[0]}
-              </div>
-            </div>
-            <OptionIcon></OptionIcon>
-          </div>
-          <div className="flex flex-col ">
-            <div
-              ref={contentRef}
-              className={`transition-height w-full pr-3 text-sm  duration-300 ease-in-out ${isFixedSize ? "h-10 overflow-hidden" : "h-fit"}`}
-            >
-              {data.content}
-            </div>
-            {showReadMore && (
-              <button
-                className="text-stroke mr-3 mt-1 flex justify-end rounded text-sm hover:text-black"
-                onClick={handleToggleSize}
-              >
-                {isFixedSize ? "더보기" : "닫기"}
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    </>
-  )
-}
+//   return (
+//     <>
+//       <div className="flex space-x-2.5 px-5 py-2.5">
+//         <div className="mt-3 h-fit w-12  ">
+//           <img src={ProfileImage} alt="profile" />
+//           {/* <Image imageName={Siren.png}></Image> */}
+//         </div>
+//         <div className="w-full ">
+//           <div className="flex  h-7 items-center justify-between">
+//             <div className="flex items-center space-x-2.5">
+//               <div className="  text-sm  ">{data.nickname}</div>
+//               <div className="  text-xs  ">
+//                 {data.regist_time.split("T")[0]}
+//               </div>
+//             </div>
+//             <OptionIcon></OptionIcon>
+//           </div>
+//           <div className="flex flex-col ">
+//             <div
+//               ref={contentRef}
+//               className={`transition-height w-full pr-3 text-sm  duration-300 ease-in-out ${isFixedSize ? "h-10 overflow-hidden" : "h-fit"}`}
+//             >
+//               {data.content}
+//             </div>
+//             {showReadMore && (
+//               <button
+//                 className="text-stroke mr-3 mt-1 flex justify-end rounded text-sm hover:text-black"
+//                 onClick={handleToggleSize}
+//               >
+//                 {isFixedSize ? "더보기" : "닫기"}
+//               </button>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+//     </>
+//   )
+// }
 
 const Profile = (data) => {
   return (
