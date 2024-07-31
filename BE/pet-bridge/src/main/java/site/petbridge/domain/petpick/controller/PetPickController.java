@@ -2,6 +2,7 @@ package site.petbridge.domain.petpick.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,40 +22,49 @@ public class PetPickController {
 
     /**
      * 펫픽 등록(권한)
+     * 
+     * 등록된 정보, 생성된 정보,
+     * ResponseEntity
      */
     @PostMapping
-    public int registPetPick(HttpServletRequest httpServletRequest,
+    public ResponseEntity<Integer> registPetPick(HttpServletRequest httpServletRequest,
                              @RequestPart(name = "petPickRegistRequestDto") final PetPickRegistRequestDto petPickRegistRequestDto,
                              @RequestPart(name = "thumbnail", required = false) MultipartFile thumbnailFile,
                              @RequestPart(name = "video", required = false) MultipartFile videoFile) throws Exception {
-        return petPickService.save(httpServletRequest, petPickRegistRequestDto, thumbnailFile, videoFile);
+        int result = petPickService.save(httpServletRequest, petPickRegistRequestDto, thumbnailFile, videoFile);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     /**
      * 내가 쓴 펫픽 수정 (권한)
+     * 수정 성공 상태 코드
      */
     @PatchMapping("/{id}")
-    public Long editPetPick(HttpServletRequest httpServletRequest,
+    public ResponseEntity<Long> editPetPick(HttpServletRequest httpServletRequest,
                             @PathVariable("id") Long id,
                             @RequestPart(name = "petPickEditRequestDto") final PetPickEditRequestDto petPickEditRequestDto,
                             @RequestPart(name = "thumbnail", required = false) MultipartFile thumbnailFile) throws Exception {
-        return petPickService.update(httpServletRequest, petPickEditRequestDto, id, thumbnailFile);
+        Long result = petPickService.update(httpServletRequest, petPickEditRequestDto, id, thumbnailFile);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**
      * 펫픽 랜덤 조회
+     * 200 + data
      */
     @GetMapping
-    public PetPickResponseDto getRandomDetailPetPick() {
-        return petPickService.getRandomDetailPetPick();
+    public ResponseEntity<PetPickResponseDto> getRandomDetailPetPick() {
+        PetPickResponseDto petPickResponseDto = petPickService.getRandomDetailPetPick();
+        return new ResponseEntity<>(petPickResponseDto, HttpStatus.OK);
     }
 
     /**
      * 내가 쓴 펫픽 삭제(권한)
      */
     @PatchMapping("/{id}/disable")
-    public Long removePetPick(HttpServletRequest httpServletRequest, @PathVariable("id") Long id) throws Exception {
-        return petPickService.delete(httpServletRequest, id);
+    public ResponseEntity<Long> removePetPick(HttpServletRequest httpServletRequest, @PathVariable("id") Long id) throws Exception {
+        Long result = petPickService.delete(httpServletRequest, id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**
