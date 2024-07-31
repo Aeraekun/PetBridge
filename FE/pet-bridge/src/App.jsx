@@ -99,7 +99,7 @@ function App() {
         <Route path="sign-up" element={<SignUpPage />}></Route>
         <Route path="update" element={<UpdateProfilePage />}></Route>
         <Route
-          path=":user-id"
+          path=":userId"
           element={
             <PrivateRoute
               component={<MyPage />}

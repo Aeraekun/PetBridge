@@ -1,8 +1,11 @@
+import {getUserContracts} from "api/contracts-api"
 import axios from "axios"
 import {useEffect, useState} from "react"
 import {useInView} from "react-intersection-observer"
+import {useParams} from "react-router-dom"
 
 const MyPageContractsContainer = () => {
+  const {userId} = useParams()
   const [isLoading, setIsLoading] = useState(true)
 
   // 초기값 10개
@@ -64,8 +67,15 @@ const MyPageContractsContainer = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView])
 
+  const onClickHandler = async () => {
+    const res = await getUserContracts(userId)
+
+    console.log("입양계약정보", res)
+  }
+
   return (
     <div className="flex h-full flex-col items-center">
+      <button onClick={onClickHandler}>버튼</button>
       {/* 제목 헤더 */}
       <div className="p-2.5 text-4xl font-bold">내 입양 기록</div>
       <div className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
