@@ -140,15 +140,7 @@ function App() {
           }
         ></Route>
       </Route>
-      <Route
-        path="/contracts"
-        element={
-          <PrivateRoute
-            component={<ContractsPage />}
-            isAuthenticated={isAuthenticated}
-          />
-        }
-      >
+      <Route path="/contracts" element={<ContractsPage />}>
         <Route path=":id" element={<ContractsContainer />}></Route>
         <Route path="create" element={<ContractsContainer />}></Route>
       </Route>
