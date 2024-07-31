@@ -1,7 +1,13 @@
 import {useState} from "react"
-import {postLoginUser, signUpUser} from "api/users-api"
+import {
+  getEmailVerificationCode,
+  postEmailVerificationCode,
+  signUpUser,
+} from "api/users-api"
 import {Link, useNavigate} from "react-router-dom"
 import {useDispatch} from "react-redux"
+import {loginUserThunk} from "features/user/users-slice"
+import Timer from "components/common/Timer"
 
 const SignUp = () => {
   const dispatch = useDispatch()
@@ -29,6 +35,9 @@ const SignUp = () => {
   // 이메일 유효성 검사
   const [isValidEmail, setIsValidEmail] = useState(false)
   const [isValidEmailButton, setIsValidEmailButton] = useState(false)
+  const [isSendCodeButtonDisalbed, setIsSendCodeButtonDisalbed] =
+    useState(false)
+  const [isEmailVerified, setIsEmailVerified] = useState(false)
 
   // 전화번호 유효성 검사
   const [isValidPhone, setIsValidPhone] = useState(false)
@@ -150,7 +159,7 @@ const SignUp = () => {
           email: email,
           password: password,
         }
-        dispatch(postLoginUser(loginData))
+        await dispatch(loginUserThunk(loginData))
         navigate("/")
       } catch {
         return
@@ -193,6 +202,35 @@ const SignUp = () => {
     }
   }
 
+  // 인증번호 전송
+  const onClickSendMailCodeHandler = async () => {
+    const res = await postEmailVerificationCode({email: signUpFormData.email})
+
+    if (res?.status === 201) {
+      setIsValidEmailButton(true)
+      setIsSendCodeButtonDisalbed(true)
+    } else {
+      console.log(res)
+    }
+  }
+
+  // 인증번호 확인
+  const onClickMailVerifyHandler = () => {
+    getEmailVerificationCode()
+    // try {
+    //   const emailConfirmData = {
+    //     email: signUpFormData.email,
+    //     code: Number(confirmNumbers.emailConfirm),
+    //   }
+    //   getEmailVerificationCode(emailConfirmData)
+    //   console.log("Email Verified")
+    // } catch (error) {
+    //   console.log(error)
+    //   return
+    // }
+    setIsEmailVerified(true)
+  }
+
   return (
     // form 태그
     <form
@@ -202,25 +240,65 @@ const SignUp = () => {
       <div className=" flex w-full flex-col ">
         {/* 이메일 입력 창 */}
         <div className="grid w-full grid-cols-12 items-center gap-x-2.5">
-          <input
-            value={signUpFormData.email}
-            onChange={changeHandler}
-            type="email"
-            className="col-span-9  my-1 rounded-md border p-2.5"
-            placeholder="이메일 주소"
-            id="email"
-            maxLength={255}
-            autoComplete="username"
-            onBlur={validateEmail}
-          />
-          <button
-            disabled={!isValidEmail}
-            type="button"
-            className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
-            onClick={() => setIsValidEmailButton(true)}
-          >
-            인증코드 전송
-          </button>
+          {isSendCodeButtonDisalbed && isValidEmail ? (
+            <>
+              <input
+                disabled={true}
+                value={signUpFormData.email}
+                type="email"
+                className="col-span-9  my-1 rounded-md border bg-stroke p-2.5"
+                placeholder="이메일 주소"
+                id="email"
+                maxLength={255}
+                autoComplete="username"
+              />
+              <button
+                disabled={true}
+                type="button"
+                className="col-span-3 h-12 rounded-md border bg-stroke px-3.5 py-2.5"
+              >
+                <Timer initialMinutes={5} initialSeconds={0} />
+              </button>
+            </>
+          ) : (
+            <>
+              {isValidEmail ? (
+                <>
+                  <input
+                    value={signUpFormData.email}
+                    onChange={changeHandler}
+                    type="email"
+                    className="col-span-full  my-1 rounded-md border p-2.5"
+                    placeholder="이메일 주소"
+                    id="email"
+                    maxLength={255}
+                    autoComplete="username"
+                    onBlur={validateEmail}
+                  />
+                  <button
+                    disabled={!isValidEmail}
+                    type="button"
+                    className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
+                    onClick={onClickSendMailCodeHandler}
+                  >
+                    인증번호 전송
+                  </button>
+                </>
+              ) : (
+                <input
+                  value={signUpFormData.email}
+                  onChange={changeHandler}
+                  type="email"
+                  className="col-span-full  my-1 rounded-md border p-2.5"
+                  placeholder="이메일 주소"
+                  id="email"
+                  maxLength={255}
+                  autoComplete="username"
+                  onBlur={validateEmail}
+                />
+              )}
+            </>
+          )}
         </div>
         {!isValidEmail && (
           <span className="col-span-12 text-alert">{errors.email}</span>
@@ -234,12 +312,14 @@ const SignUp = () => {
               className="col-span-9  my-1 rounded-md border p-2.5"
               placeholder="인증 번호"
               id="emailConfirm"
-              maxLength={255}
+              minLength={6}
+              maxLength={6}
               autoComplete="username"
             />
             <button
               type="button"
               className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
+              onClick={onClickMailVerifyHandler}
             >
               인증하기
             </button>
@@ -351,9 +431,23 @@ const SignUp = () => {
 
       <div className="grid w-full grid-cols-2 gap-10">
         {/* 회원가입 버튼 */}
-        <button type="submit" className="h-12 rounded-md bg-mild px-3.5 py-2.5">
-          회원가입
-        </button>
+        {isEmailVerified ? (
+          <button
+            type="submit"
+            className="h-12 rounded-md bg-mild px-3.5 py-2.5"
+          >
+            회원가입
+          </button>
+        ) : (
+          <button
+            disabled={true}
+            type="submit"
+            className="h-12 rounded-md bg-stroke px-3.5 py-2.5"
+          >
+            회원가입
+          </button>
+        )}
+
         {/* 가입 취소 버튼 */}
         <Link
           to="/"

@@ -1,77 +1,94 @@
-import SirenIcon from "components/common/SirenIcon"
+// import data from "./articledata"
+import SirenButton from "components/common/SirenButton"
 import Button from "components/common/Button"
-import data from "./articledata"
+import {useSelector} from "react-redux"
 import {useNavigate, useParams} from "react-router-dom"
+import {getArticleDetail} from "api/boards-api"
+import React, {useEffect, useState} from "react"
+import {selectId} from "features/user/users-slice"
 import DOMPurify from "dompurify"
+import Profile from "components/common/Profile"
+import ArticleComments from "./ArticleComments"
+import CommentIcon from "components/common/CommentIcon"
 
-const Profile = ({nickname}) => {
-  return (
-    <div className="mb-4 flex h-8 items-center justify-around space-x-2.5">
-      <img
-        src="https://via.placeholder.com/50"
-        alt="Author Avatar"
-        className="size-12 rounded-full border "
-      />
-      <div className="flex-1">
-        <p className="text-lg font-semibold">{nickname}</p>
-      </div>
-    </div>
-  )
-}
-
-const TaggedAnimalProfile = ({data}) => {
-  return (
-    <div className="mb-4 ml-6 flex h-8 items-center justify-around space-x-2.5">
-      <img
-        src="https://via.placeholder.com/50"
-        alt="Author Avatar"
-        className="size-12 rounded-full border "
-      />
-      <div className="flex-1">
-        <p className="text-lg font-semibold">{data.name}</p>
-      </div>
-    </div>
-  )
-}
 const ArticleDetail = () => {
+  const [article, setArticle] = useState([])
   const {id} = useParams()
   const navigate = useNavigate()
-  const article = data.find((article) => article.id === Number(id))
+  const sanitizedContent = DOMPurify.sanitize(article.content) //Quill안정성 높이기 위함
+  const currentUserId = useSelector(selectId)
 
-  const sanitizedContent = DOMPurify.sanitize(article.content)
+  useEffect(() => {
+    const fetchArticle = async () => {
+      const data = await getArticleDetail(Number(id)) //게시글 상세 조회 api
+      setArticle(data)
+      console.log(data)
+    }
+    fetchArticle()
+  }, []) // 빈 배열을 두 번째 인자로 전달하여 마운트 시 한 번만 실행
+
   const goBack = () => {
     navigate(-1)
   }
   const goModify = () => {
-    navigate(-1)
+    navigate(`/communities/modify/${id}`)
   }
+
   return (
-    <>
+    <div className="rounded-xl border p-4">
       <button onClick={goBack} className="flex justify-start">
-        돌아가기{" "}
+        돌아가기
       </button>
       <div className="text-center text-4xl font-bold">{article.title}</div>
       <hr />
-      <Profile nickname={article.nickname} />
-      <div className="my-2 flex flex-row">
+      <Profile nickname={article.userNickname} image={article.userImage} />
+      <div className="flex flex-row space-x-2 pl-6">
         <img src="/icons/icon-tag.svg" alt="Tag Icon" />
-
-        <TaggedAnimalProfile data={article} />
+        <Profile
+          nickname={article.animalName}
+          image={article.animalThumbnail}
+        />
       </div>
       <hr />
+      대표사진
+      {article.thumbnail ? (
+        <div className="mt-4">
+          <img
+            src={article.thumbnail}
+            alt="Uploaded Preview"
+            className="ml-[100px] size-96 rounded border object-contain"
+          />
+        </div>
+      ) : (
+        <div className="flex h-64 w-96 flex-col items-center justify-center border border-gray-300 px-4 py-2">
+          <>대표사진이 없습니다</>
+        </div>
+      )}
       <div
-        className="min-h-72 w-11/12"
+        className=" mx-auto min-h-72 w-[800px]"
         dangerouslySetInnerHTML={{__html: sanitizedContent}}
       ></div>
-
       <div className="flex justify-end">
-        <SirenIcon />
+        {Number(currentUserId) === Number(article.userId) ? (
+          <div className="flex  space-x-3">
+            <Button text={"수정하기"} onClick={goModify} />
+            <Button text={"삭제하기"} onClick={goBack} />
+          </div>
+        ) : (
+          <div className="flex">
+            <SirenButton />
+          </div>
+        )}
       </div>
-      <div className="flex justify-end">
-        <Button text={"수정하기"} onClick={goModify} />
-        <Button text={"삭제하기"} onClick={goBack} />
+      <hr />
+      <div className="m-3 flex items-center space-x-2">
+        <CommentIcon size={"small"} />
+        <div>댓글 {article.commentCount}</div>
       </div>
-    </>
+      <div className="px-8">
+        <ArticleComments articleId={id} userId={currentUserId} />
+      </div>
+    </div>
   )
 }
 

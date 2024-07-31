@@ -4,10 +4,10 @@ import axiosInstance from "./axios-instance"
 export const signUpUser = async (signUpData) => {
   try {
     const res = await axiosInstance.post("/users/sign-up", signUpData)
+    res
 
     const {email, password} = signUpData
     const loginData = {email: email, password: password}
-    console.log(res)
 
     // 회원가입 후 바로 로그인을 위해 loginUser thunk를 dispatch로 호출
     return postLoginUser(loginData)
@@ -23,14 +23,21 @@ export const postLoginUser = (loginData) => {
 }
 
 // 회원 조회
-export const getUserInfo = (userId) => {
-  const res = axiosInstance.get(`/users/${userId}`)
+export const getUserInfo = async () => {
+  const res = await axiosInstance.get(`/users/info`)
+  console.log("users-api.ks > getUserInfo", res.data)
+  return res
+}
+
+// 회원 정보 수정
+export const patchUserInfo = async (userInfo) => {
+  const res = await axiosInstance.patch(`/users/modify`, userInfo)
   return res
 }
 
 // 회원 탈퇴
-export const patchDisableUser = (userId) => {
-  const res = axiosInstance.patch(`/users/${userId}/delete`)
+export const patchDeleteUser = () => {
+  const res = axiosInstance.patch(`/users/delete`)
 
   return res
 }
@@ -40,4 +47,24 @@ export const jwtTest = async () => {
   const res = await axiosInstance.get("/users/jwt-test")
 
   console.log("users-api.js > res", res)
+}
+
+// 이메일 인증번호 전송
+export const postEmailVerificationCode = async (emailData) => {
+  const res = await axiosInstance.post("/users/authentication/email", emailData)
+
+  return res
+}
+
+// 이메일 인증번호 확인
+// 이메일, 인증코드를 인자로 전송
+export const getEmailVerificationCode = async (data) => {
+  console.log(data)
+  const res = await axiosInstance("/users/authentication/email", {
+    data,
+  })
+
+  console.log(res)
+
+  return res
 }

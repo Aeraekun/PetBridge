@@ -32,9 +32,9 @@ const LoginForm = () => {
     e.preventDefault()
 
     const loginData = loginForm
-    // 로그인 Api 호출
+    // loginUserThunk Dispatch
     const loginResult = await dispatch(loginUserThunk(loginData))
-    console.log(loginResult)
+    console.log("Login.jsx > handleLoginSubmit", loginResult)
   }
 
   return (
@@ -114,7 +114,7 @@ const Login = () => {
           <Link to="/">
             <Button text="PW 찾기" />
           </Link>
-          <Link to="/sign-up">
+          <Link to="/users/sign-up">
             <Button text="회원가입" />
           </Link>
         </div>
