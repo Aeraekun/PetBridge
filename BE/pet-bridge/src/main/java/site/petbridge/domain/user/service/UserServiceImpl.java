@@ -19,6 +19,8 @@ import site.petbridge.domain.user.dto.request.UserModifyRequestDto;
 import site.petbridge.domain.user.dto.request.UserSignUpRequestDto;
 import site.petbridge.domain.user.dto.response.UserResponseDto;
 import site.petbridge.domain.user.repository.UserRepository;
+import site.petbridge.global.exception.ErrorCode;
+import site.petbridge.global.exception.PetBridgeException;
 import site.petbridge.global.jwt.service.JwtService;
 import site.petbridge.global.redis.service.RedisService;
 
@@ -38,6 +40,34 @@ public class UserServiceImpl implements UserService {
 
 	@Value("${spring.auth-code-expiration-millis}")
 	private int authCodeExpirationMillis;
+
+	@Override
+	public Optional<UserResponseDto> isValidTokenUser(HttpServletRequest httpServletRequest) throws Exception {
+		String accessToken = jwtService.extractAccessToken(httpServletRequest).orElse(null);
+		String email = jwtService.extractEmail(accessToken).orElse(null);
+
+		if (email == null) {
+			throw new PetBridgeException(ErrorCode.UNAUTHORIZED);
+		}
+
+		Optional<User> optionalUser = userRepository.findByEmail(email);
+		if (optionalUser.isPresent()) {
+			User user = optionalUser.get();
+			UserResponseDto userResponseDto = new UserResponseDto(user.getId(),
+																	user.getEmail(),
+																	user.getNickname(),
+																	user.getBirth(),
+																	user.getPhone(),
+																	user.getImage(),
+																	user.isDisabled(),
+																	user.getRole(),
+																	user.getSocialType(),
+																	user.getSocialId());
+			return Optional.of(userResponseDto);
+		} else {
+			throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND);
+		}
+	}
 
 	@Override
 	public Optional<UserResponseDto> registUser(UserSignUpRequestDto userSignUpRequestDto) throws Exception {

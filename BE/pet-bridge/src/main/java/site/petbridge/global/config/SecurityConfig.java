@@ -79,6 +79,10 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET,"/api/users/authentication/email").permitAll()
 				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email").permitAll()
 
+				// 쇼츠
+				.requestMatchers(HttpMethod.GET,"/api/shorts").permitAll()
+				.requestMatchers(HttpMethod.POST,"/api/shorts").permitAll()
+
 				// 게시글
 				.requestMatchers(HttpMethod.GET, "/api/boards").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/boards/{id}").permitAll()
