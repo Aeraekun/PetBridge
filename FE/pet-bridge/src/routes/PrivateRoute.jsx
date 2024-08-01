@@ -1,6 +1,10 @@
 import {Navigate} from "react-router-dom"
 
-const PrivateRoute = ({isAuthenticated, component: Component}) => {
+const PrivateRoute = ({isAuthenticated, isLoading, component: Component}) => {
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
   return isAuthenticated ? (
     Component
   ) : (

@@ -7,65 +7,69 @@ import ShareIcon from "../common/ShareIcon"
 import CommentIcon from "../common/CommentIcon"
 import ProfileImage from "assets/image/profile.JPG"
 import FollowIcon from "../common/FollowIcon"
+import Comment from "../common/Comment"
 import TagIcon from "../common/TagIcon"
-import React, {useState, useRef, useEffect} from "react"
+import React, {useState} from "react"
 
-const Comment = ({data}) => {
-  const [isFixedSize, setIsFixedSize] = useState(true)
-  // console.log(isFixedSize)
-  const handleToggleSize = () => {
-    setIsFixedSize(!isFixedSize)
-  }
+import {useSelector} from "react-redux"
+import {selectIsAuthenticated} from "features/user/users-slice"
 
-  const [showReadMore, setShowReadMore] = useState(false)
-  const contentRef = useRef(null)
+// const Comment = ({data}) => {
+//   const [isFixedSize, setIsFixedSize] = useState(true)
+//   // console.log(isFixedSize)
+//   const handleToggleSize = () => {
+//     setIsFixedSize(!isFixedSize)
+//   }
 
-  useEffect(() => {
-    console.log(contentRef.current.scrollHeight)
-    // 댓글이 지정된 높이를 초과할 때 "더보기" 버튼을 표시
-    if (contentRef.current) {
-      setShowReadMore(contentRef.current.scrollHeight > 64)
-    }
-  }, [])
+//   const [showReadMore, setShowReadMore] = useState(false)
+//   const contentRef = useRef(null)
 
-  return (
-    <>
-      <div className="flex space-x-2.5 px-5 py-2.5">
-        <div className="mt-3 h-fit w-12  ">
-          <img src={ProfileImage} alt="profile" />
-          {/* <Image imageName={Siren.png}></Image> */}
-        </div>
-        <div className="w-full ">
-          <div className="flex  h-7 items-center justify-between">
-            <div className="flex items-center space-x-2.5">
-              <div className="  text-sm  ">{data.nickname}</div>
-              <div className="  text-xs  ">
-                {data.regist_time.split("T")[0]}
-              </div>
-            </div>
-            <OptionIcon></OptionIcon>
-          </div>
-          <div className="flex flex-col ">
-            <div
-              ref={contentRef}
-              className={`transition-height w-full pr-3 text-sm  duration-300 ease-in-out ${isFixedSize ? "h-10 overflow-hidden" : "h-fit"}`}
-            >
-              {data.content}
-            </div>
-            {showReadMore && (
-              <button
-                className="text-stroke mr-3 mt-1 flex justify-end rounded text-sm hover:text-black"
-                onClick={handleToggleSize}
-              >
-                {isFixedSize ? "더보기" : "닫기"}
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    </>
-  )
-}
+//   useEffect(() => {
+//     console.log(contentRef.current.scrollHeight)
+//     // 댓글이 지정된 높이를 초과할 때 "더보기" 버튼을 표시
+//     if (contentRef.current) {
+//       setShowReadMore(contentRef.current.scrollHeight > 64)
+//     }
+//   }, [])
+
+//   return (
+//     <>
+//       <div className="flex space-x-2.5 px-5 py-2.5">
+//         <div className="mt-3 h-fit w-12  ">
+//           <img src={ProfileImage} alt="profile" />
+//           {/* <Image imageName={Siren.png}></Image> */}
+//         </div>
+//         <div className="w-full ">
+//           <div className="flex  h-7 items-center justify-between">
+//             <div className="flex items-center space-x-2.5">
+//               <div className="  text-sm  ">{data.nickname}</div>
+//               <div className="  text-xs  ">
+//                 {data.regist_time.split("T")[0]}
+//               </div>
+//             </div>
+//             <OptionIcon></OptionIcon>
+//           </div>
+//           <div className="flex flex-col ">
+//             <div
+//               ref={contentRef}
+//               className={`transition-height w-full pr-3 text-sm  duration-300 ease-in-out ${isFixedSize ? "h-10 overflow-hidden" : "h-fit"}`}
+//             >
+//               {data.content}
+//             </div>
+//             {showReadMore && (
+//               <button
+//                 className="text-stroke mr-3 mt-1 flex justify-end rounded text-sm hover:text-black"
+//                 onClick={handleToggleSize}
+//               >
+//                 {isFixedSize ? "더보기" : "닫기"}
+//               </button>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+//     </>
+//   )
+// }
 
 const Profile = (data) => {
   return (
@@ -97,6 +101,7 @@ const Shorts = () => {
 }
 
 const CommentInput = () => {
+  const isAuthenticated = useSelector(selectIsAuthenticated)
   const [inputComment, setInputComment] = useState("")
   const sendMsg = () => {
     console.log({inputComment})
@@ -121,18 +126,26 @@ const CommentInput = () => {
 
   return (
     <div className="flex h-16 flex-col justify-between space-x-2.5 ">
-      <div className="flex items-center space-x-2.5">
-        <input
-          type="text"
-          className="outline-stroke mx-2 h-10 w-full rounded-md  text-sm outline outline-1"
-          placeholder="좋아요와 댓글을 남기려면 로그인하세요"
-          value={inputComment}
-          onChange={(e) => setInputComment(e.target.value)}
-        />
-        <button className="h-10   w-12" onClick={sendMsg}>
-          <img src="/icons/icon-send.svg" alt="sendIcon" />
-        </button>
-      </div>
+      {isAuthenticated ? (
+        <div className="flex items-center space-x-2.5">
+          <input
+            type="text"
+            className="outline-stroke mx-2 h-10 w-full rounded-md  text-sm outline outline-1"
+            placeholder="댓글을 남겨보세요"
+            value={inputComment}
+            onChange={(e) => setInputComment(e.target.value)}
+          />
+          <button className="h-10   w-12" onClick={sendMsg}>
+            <img src="/icons/icon-send.svg" alt="sendIcon" />
+          </button>
+        </div>
+      ) : (
+        <div className="flex items-center space-x-2.5">
+          <div className="outline-stroke text-stroke mx-2 h-10 w-full  content-center rounded-md text-sm outline outline-1">
+            좋아요와 댓글을 남기려면 로그인하세요{" "}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -165,7 +178,7 @@ const ShortsComment = () => {
         </ul>
         <div className="flex flex-1 flex-col space-y-2.5">
           <Shorts></Shorts>
-          <CommentInput></CommentInput>
+          <CommentInput />
         </div>
       </div>
     </>

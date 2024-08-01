@@ -12,9 +12,9 @@ const dummyData = [
     title: "입양 가능한 사랑스러운 코리안 숏헤어를 소개합니다!",
     thumbnail: "img1.jpg",
     content: "우리 고양이가 새 장난감으로 놀아요! 정말 귀엽죠?",
-    regist_time: "2024-07-24T09:00:00Z",
-    nickname: "고양이사랑",
-    image: "img1.jpg",
+    registTime: "2024-07-24T09:00:00Z",
+    userNickName: "고양이사랑",
+    userImage: "img1.jpg",
     age: "2018년생",
   },
   {
@@ -31,9 +31,9 @@ const dummyData = [
     thumbnail: "img2.jpg",
     content:
       "오늘은 우리 강아지와 함께 공원에서 산책을 했어요. 너무 기분 좋았어요!",
-    regist_time: "2024-07-24T09:15:00Z",
-    nickname: "반려견행복",
-    image: "img2.jpg",
+    registTime: "2024-07-24T09:15:00Z",
+    userNickName: "반려견행복",
+    userImage: "img2.jpg",
     age: "2017년생",
   },
   {
@@ -49,9 +49,9 @@ const dummyData = [
     title: "새로운 가족 구성원, 샴 고양이 보리의 첫 날!",
     thumbnail: "img3.jpg",
     content: "오늘 우리 가족에 새로운 구성원이 늘었어요! 환영해주세요.",
-    regist_time: "2024-07-24T09:30:00Z",
-    nickname: "새로운가족",
-    image: "img3.jpg",
+    registTime: "2024-07-24T09:30:00Z",
+    userNickName: "새로운가족",
+    userImage: "img3.jpg",
     age: "2019년생",
   },
   {
@@ -67,9 +67,9 @@ const dummyData = [
     title: "자유롭게 하늘을 나는 앵무새 바비의 일상",
     thumbnail: "img4.jpg",
     content: "오늘 우리 앵무새가 자유롭게 하늘을 날아다녀요. 정말 멋지죠?",
-    regist_time: "2024-07-24T09:45:00Z",
-    nickname: "앵무새의자유",
-    image: "img4.jpg",
+    registTime: "2024-07-24T09:45:00Z",
+    userNickName: "앵무새의자유",
+    userImage: "img4.jpg",
     age: "2020년생",
   },
   {
@@ -86,9 +86,9 @@ const dummyData = [
     thumbnail: "img5.jpg",
     content:
       "오늘 정원에서 아름다운 꽃과 나비들을 만났어요. 자연의 아름다움에 감동했어요!",
-    regist_time: "2024-07-24T10:00:00Z",
-    nickname: "자연의아름다움",
-    image: "img5.jpg",
+    registTime: "2024-07-24T10:00:00Z",
+    userNickName: "자연의아름다움",
+    userImage: "img5.jpg",
     age: "2018년생",
   },
   {
@@ -104,9 +104,9 @@ const dummyData = [
     title: "햇살 좋은 날, 페르시안 고양이 고미의 평화로운 순간",
     thumbnail: "img6.jpg",
     content: "우리 고양이가 창가에 앉아 햇살을 쬐고 있어요. 너무 귀엽죠?",
-    regist_time: "2024-07-24T10:15:00Z",
-    nickname: "햇살좋은날",
-    image: "img6.jpg",
+    registTime: "2024-07-24T10:15:00Z",
+    userNickName: "햇살좋은날",
+    userImage: "img6.jpg",
     age: "2016년생",
   },
   {
@@ -123,9 +123,9 @@ const dummyData = [
     thumbnail: "img7.jpg",
     content:
       "오늘은 산책을 통해 자연 속에서 새로운 발견을 했어요. 행복한 시간이었어요!",
-    regist_time: "2024-07-24T10:30:00Z",
-    nickname: "산책자연",
-    image: "img7.jpg",
+    registTime: "2024-07-24T10:30:00Z",
+    userNickName: "산책자연",
+    userImage: "img7.jpg",
     age: "2019년생",
   },
   {
@@ -142,9 +142,9 @@ const dummyData = [
     thumbnail: "img8.jpg",
     content:
       "오늘은 호수에서 평온한 시간을 보냈어요. 물고기와 함께 자연 속을 즐겼어요.",
-    regist_time: "2024-07-24T10:45:00Z",
-    nickname: "호수의평온",
-    image: "img8.jpg",
+    registTime: "2024-07-24T10:45:00Z",
+    userNickName: "호수의평온",
+    userImage: "img8.jpg",
     age: "2018년생",
   },
   {
@@ -161,9 +161,9 @@ const dummyData = [
     thumbnail: "img9.jpg",
     content:
       "말들이 바람을 맞으며 들판을 달리는 모습이 너무 멋있었어요. 자유로움이 느껴졌어요!",
-    regist_time: "2024-07-24T11:00:00Z",
-    nickname: "말의자유",
-    image: "img9.jpg",
+    registTime: "2024-07-24T11:00:00Z",
+    userNickName: "말의자유",
+    userImage: "img9.jpg",
     age: "2017년생",
   },
   {
@@ -179,10 +179,10 @@ const dummyData = [
     title: "터키시 앙고라 바람의 평화로운 힐링 타임",
     thumbnail: "img10.jpg",
     content:
-      "천천히 흐르는 시간 속에서 자연의 소리와 함께 여유를 느꼈어요. 힐링타임이었어요.",
-    regist_time: "2024-07-24T11:15:00Z",
-    nickname: "자연의소리",
-    image: "img10.jpg",
+      "천천히 흐르는 시간 속에서 자연의 시간 속에서 자연의 시간 속에서 자연의 시간 속에서 자연의 시간 속에서 자연의 시간 속에서 자연의 시간 속에서 자연의 시간 속에서 자연의 소리와 함께 여유를 느꼈어요. 힐링타임이었어요.",
+    registTime: "2024-07-24T11:15:00Z",
+    userNickName: "자연의소리",
+    userImage: "img10.jpg",
     age: "2016년생",
   },
 ]
