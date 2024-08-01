@@ -25,7 +25,7 @@ import java.util.Map;
  * 커스텀 JSON 필터에서도 AbstractAuthenticationProcessingFilter를 상속받아 구현했습니다.
  */
 public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-    
+
     // "/api/users/login"로 오는 요청을 처리
     private static final String DEFAULT_LOGIN_REQUEST_URL = "/api/users/login";
     // 로그인의 HTTP 메소드는 POST
@@ -70,6 +70,7 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException {
+        System.out.println("커스텀 JSON 로그인 필터 들어옴");
         if (request.getContentType() == null || !request.getContentType().equals(CONTENT_TYPE)) {
             throw new AuthenticationServiceException("로그인 Authentication Content-Type not supported : " + request.getContentType());
         }

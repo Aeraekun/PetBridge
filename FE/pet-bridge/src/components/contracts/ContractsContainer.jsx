@@ -6,11 +6,14 @@ import {useParams} from "react-router-dom"
 import ContractDetail from "./ContractDetail"
 import ContractStamp from "./ContractStamp"
 import {patchThisMonthStamp} from "utils/contract-utils"
+import {useSelector} from "react-redux"
+import {selectId} from "features/user/users-slice"
 
 const ContractsContainer = () => {
   // 정보 초기화
+  const userId = useSelector(selectId)
   const [isLoading, setIsLoading] = useState(true)
-  const [contractInfo, setContractInfo] = useState({})
+  const [contractInfo, setContractInfo] = useState(null)
   const {id} = useParams()
 
   // 페이지 초기 로드
@@ -19,16 +22,18 @@ const ContractsContainer = () => {
     // 백엔드 서버에서 계약서 API 호출해서, 반환값을 상세 정보에 저장
     const initContractInfo = async () => {
       const contractInfo = await getContractDetail(id)
-      console.log(contractInfo)
-      setContractInfo(contractInfo.data)
+      if (contractInfo.data) {
+        setContractInfo(contractInfo.data)
+      }
     }
 
     initContractInfo()
-    console.log(contractInfo)
-  }, [])
+  }, [id])
 
   useEffect(() => {
-    setIsLoading(false)
+    if (contractInfo !== null) {
+      setIsLoading(false)
+    }
   }, [contractInfo])
 
   // 스탬프  찍기를 누르면
@@ -63,16 +68,18 @@ const ContractsContainer = () => {
             <ContractAnimal
               imageSrc={contractInfo.animalImage}
               name={contractInfo.animalName}
-              kind="동물 종"
+              kind={contractInfo.animalKind}
               age="3살"
             />
             {/* 임보자 정보란 */}
             <ContractPerson
+              imageSrc={contractInfo.contractorImage}
               title="보호자"
               nickname={contractInfo.contractorNickname}
             />
             {/* 입양자 정보란 */}
             <ContractPerson
+              imageSrc={contractInfo.contracteeImage}
               title="입양자"
               nickname={contractInfo.contracteeNickname}
             />
@@ -99,12 +106,18 @@ const ContractsContainer = () => {
                 />
               ))}
             </div>
-            <button
-              className="rounded-2xl bg-mild p-2.5 text-2xl font-bold text-white"
-              onClick={onClickStampHandler}
-            >
-              이번 달 스탬프 찍기
-            </button>
+            <div className="flex h-20 items-center justify-center">
+              {Number(userId) == contractInfo.contractorId ? (
+                <button
+                  className="rounded-2xl bg-mild p-2.5 text-2xl font-bold text-white"
+                  onClick={onClickStampHandler}
+                >
+                  이번 달 스탬프 찍기
+                </button>
+              ) : (
+                <div>스탬프를 받기 위해 계약 내용을 잘 이행해주세요.</div>
+              )}
+            </div>
           </div>
         </>
       )}

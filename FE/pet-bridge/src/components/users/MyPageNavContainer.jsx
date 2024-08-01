@@ -5,7 +5,7 @@ import {
   selectNickname,
 } from "features/user/users-slice"
 import {Link, NavLink, useNavigate} from "react-router-dom"
-import MyPageNavComponent from "./MyPageNavComponent"
+import MyPageNav from "./MyPageNav"
 import DefaulUser150 from "assets/icons/icon-default-user-150.svg"
 import iconMyArticles from "assets/icons/icon-my-articles.svg"
 import iconMyShorts from "assets/icons/icon-my-shorts.svg"
@@ -56,7 +56,7 @@ const MyPageNavList = () => {
             `rounded-xl ${isActive ? "bg-yellow" : ""}`
           }
         >
-          <MyPageNavComponent text={item.text} imgSrc={item.imgSrc} />
+          <MyPageNav text={item.text} imgSrc={item.imgSrc} />
         </NavLink>
       ))}
     </nav>

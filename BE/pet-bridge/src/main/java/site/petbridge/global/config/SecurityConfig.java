@@ -76,8 +76,12 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/oauth2/authorization/*").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/users/find/email").permitAll()
 				.requestMatchers("/users/oauth/success").permitAll()
-				.requestMatchers(HttpMethod.GET,"/api/users/authentication/email").permitAll()
+				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email/check").permitAll()
 				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email").permitAll()
+
+				// 쇼츠
+				.requestMatchers(HttpMethod.GET,"/api/shorts").permitAll()
+				.requestMatchers(HttpMethod.POST,"/api/shorts").permitAll()
 
 				// 게시글
 				.requestMatchers(HttpMethod.GET, "/api/boards").permitAll()
