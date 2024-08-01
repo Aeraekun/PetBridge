@@ -10,7 +10,6 @@ import DOMPurify from "dompurify"
 import Profile from "components/common/Profile"
 import ArticleComments from "./ArticleComments"
 import CommentIcon from "components/common/CommentIcon"
-import OptionPopover from "components/common/OptionPopover"
 
 const ArticleDetail = () => {
   const [article, setArticle] = useState([])
@@ -47,7 +46,6 @@ const ArticleDetail = () => {
   }
   return (
     <div className="rounded-xl border p-4">
-      <OptionPopover />
       <button onClick={goBack} className="flex justify-start">
         돌아가기
       </button>
