@@ -1,12 +1,15 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
-import axiosInstance from "api/axios-instance"
-import {postLoginUser} from "api/users-api"
-axiosInstance
+import {getUserInfo, postLoginUser} from "api/users-api"
+import {setUserInfosAtSession} from "utils/user-utils"
 
 // usersSlice의 상태 초기화
 const initialState = {
-  userName: "user",
-  userId: "1",
+  nickname: "",
+  id: "",
+  email: "",
+  birth: "",
+  phone: "",
+  img: "",
   isAuthenticated: false,
   loading: false,
   error: null,
@@ -18,7 +21,7 @@ export const loginUserThunk = createAsyncThunk(
   // user/loginUser라는 Action을 정의
   "user/loginUser",
   // async - await 문법으로 프로미스 객체 활용
-  async (loginData, {rejectWithValue}) => {
+  async (loginData, {rejectWithValue, dispatch}) => {
     console.log("usersApi.ks => loginUser => console.log(loginData)", loginData)
 
     const res = await postLoginUser(loginData)
@@ -35,6 +38,21 @@ export const loginUserThunk = createAsyncThunk(
     }
 
     console.log("loginUserThunk fulfilled")
+    dispatch(getUserInfoThunk())
+    return res.data
+  }
+)
+
+// 사용자 정보를 가져오는 getUserInfoThunk
+export const getUserInfoThunk = createAsyncThunk(
+  "user/getUserInfo",
+  async (_, {rejectWithValue}) => {
+    const res = await getUserInfo()
+
+    if (res.status !== 200) {
+      return rejectWithValue(res.response.data)
+    }
+    setUserInfosAtSession(res.data)
     return res.data
   }
 )
@@ -44,10 +62,25 @@ export const usersSlice = createSlice({
   initialState,
   reducers: {
     logOut: (state) => {
+      state.id = ""
+      state.nickname = ""
+      state.email = ""
+      state.birth = ""
+      state.phone = ""
+      state.img = ""
       state.isAuthenticated = false
     },
     setAuthenticated(state, action) {
       state.isAuthenticated = action.payload
+    },
+    setUserInfos: (state, action) => {
+      state.id = action.payload.id
+      state.nickname = action.payload.nickname
+      state.email = action.payload.email
+      state.birth = action.payload.birth
+      state.phone = action.payload.phone
+      state.img = action.payload.img
+      state.isAuthenticated = true
     },
   },
   extraReducers: (builder) => {
@@ -64,14 +97,26 @@ export const usersSlice = createSlice({
         state.loading = false
         state.error = action.payload
       })
+      .addCase(getUserInfoThunk.fulfilled, (state, action) => {
+        state.id = action.payload.id
+        state.nickname = action.payload.nickname
+        state.email = action.payload.email
+        state.birth = action.payload.birth
+        state.phone = action.payload.phone
+        state.img = action.payload.img
+        state.isAuthenticated = true
+      })
   },
 })
 
 // 선택자 함수 정의
-export const selectUserName = (state) => state.user.userName
-export const selectUserId = (state) => state.user.userId
+export const selectNickname = (state) => state.user.nickname
+export const selectId = (state) => state.user.id
+export const selectBirth = (state) => state.user.birth
+export const selectPhone = (state) => state.user.phone
+export const selectImage = (state) => state.user.img
 export const selectIsAuthenticated = (state) => state.user.isAuthenticated
 export const selectLoading = (state) => state.user.loading
 export const selectError = (state) => state.user.error
-export const {logOut, setAuthenticated} = usersSlice.actions
+export const {logOut, setAuthenticated, setUserInfos} = usersSlice.actions
 export default usersSlice.reducer

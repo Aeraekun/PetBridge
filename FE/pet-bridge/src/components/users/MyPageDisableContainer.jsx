@@ -1,8 +1,32 @@
+import {patchDeleteUser} from "api/users-api"
 import Siren from "assets/image/Siren-white.png"
+import {logOut} from "features/user/users-slice"
+import {useDispatch} from "react-redux"
+import {useNavigate, useParams} from "react-router-dom"
+import {logOutUser} from "utils/user-utils"
 
 const MyPageDisableContainer = () => {
+  const dispatch = useDispatch()
+
+  let {userId} = useParams()
   const onClickHandler = () => {
     console.log("MyPageDisableContainer > 취소 버튼 클릭")
+    navigate(`/users/${userId}`)
+  }
+  const navigate = useNavigate()
+  const onClickDisableHandler = async () => {
+    if (confirm("정말 탈퇴하시겠습니까?")) {
+      try {
+        const res = await patchDeleteUser()
+        console.log(res)
+        dispatch(logOut())
+        logOutUser()
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    navigate("/")
   }
   return (
     <div className="flex size-full items-center justify-center">
@@ -41,6 +65,7 @@ const MyPageDisableContainer = () => {
           <button
             type="button"
             className="mr-3 inline-flex w-36 justify-center rounded-md bg-alert p-3 text-sm text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-36"
+            onClick={onClickDisableHandler}
           >
             탈퇴하기
           </button>

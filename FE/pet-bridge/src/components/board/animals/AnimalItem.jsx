@@ -1,6 +1,14 @@
-const AnimalItem = ({data}) => {
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+
+const AnimalItem = ({data, onSelectArticle}) => {
   return (
-    <div className="border-stroke mx-auto my-4 h-[425px] w-72 overflow-hidden rounded-xl border">
+    <div
+      className="border-stroke mx-auto my-4 h-[425px] w-72 overflow-hidden rounded-xl border"
+      onClick={() => {
+        onSelectArticle(data)
+      }}
+    >
       <img
         src={data.filename}
         alt="imag"

@@ -1,5 +1,5 @@
-import {useNavigate} from "react-router-dom"
-import {Outlet} from "react-router-dom"
+import {useNavigate, Outlet} from "react-router-dom"
+
 // import ArticleBoardList from "../components/board/ArticleBoardList"
 
 const categories = [
@@ -57,7 +57,7 @@ const BoardPage = () => {
   // const [selectedCategory, setSelectedCategory] = useState(categories[0].id)
 
   return (
-    <div className="flex flex-col w-[1000px] my-10 space-y-3">
+    <div className="my-10 flex w-[1000px] flex-col space-y-3 sm:w-11/12">
       <BoardNavbar />
       <hr className="" />
 

@@ -3,29 +3,20 @@ import Button from "components/common/Button"
 import {
   logOut,
   selectIsAuthenticated,
-  selectUserId,
+  selectId,
 } from "features/user/users-slice"
 import {useSelector, useDispatch} from "react-redux"
-import {Link, useNavigate} from "react-router-dom"
+import {Link} from "react-router-dom"
+import {logOutUser} from "utils/user-utils"
 
 const NavAction = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated)
-  const userId = useSelector(selectUserId)
+  const id = useSelector(selectId)
   const dispatch = useDispatch()
 
-  const navigate = useNavigate()
-
-  const deleteJWT = () => {
-    console.log("NavAction.jsx => deleteJWT => 리프레시 토큰 삭제")
-    localStorage.removeItem("refreshToken")
-    sessionStorage.removeItem("accessToken")
-    navigate("/")
-  }
-
   const handleLogOut = () => {
-    console.log("NavAction.jsx => handleLogOut 함수 호출")
+    logOutUser()
     dispatch(logOut())
-    deleteJWT()
   }
 
   const handleJwtTest = () => {
@@ -43,7 +34,7 @@ const NavAction = () => {
             <button onClick={handleLogOut}>로그아웃</button>
           </li>
           <li className="mx-2.5 flex h-full cursor-pointer items-center text-xl">
-            <Link to={`/users/${userId}`}>
+            <Link to={`/users/${id}`}>
               <Button text="마이 페이지" />
             </Link>
           </li>

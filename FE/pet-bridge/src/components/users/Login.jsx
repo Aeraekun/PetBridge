@@ -32,9 +32,9 @@ const LoginForm = () => {
     e.preventDefault()
 
     const loginData = loginForm
-    // 로그인 Api 호출
+    // loginUserThunk Dispatch
     const loginResult = await dispatch(loginUserThunk(loginData))
-    console.log(loginResult)
+    console.log("Login.jsx > handleLoginSubmit", loginResult)
   }
 
   return (
@@ -87,7 +87,8 @@ const LoginForm = () => {
 
 const Login = () => {
   // 소셜 로그인 URL
-  const SOCIAL_BASE_URL = "http://localhost:8080/oauth2/authorization/"
+  const SOCIAL_BASE_URL =
+    process.env.REACT_APP_API_URL + "oauth2/authorization/"
 
   // 소셜 로그인 클릭시 호출 함수
   const handleSocialLogin = (e) => {
@@ -114,7 +115,7 @@ const Login = () => {
           <Link to="/">
             <Button text="PW 찾기" />
           </Link>
-          <Link to="/sign-up">
+          <Link to="/users/sign-up">
             <Button text="회원가입" />
           </Link>
         </div>

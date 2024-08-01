@@ -31,7 +31,12 @@ const AnimalBoardList = () => {
     (category) => category.id === Number(bcode)
   )
   const goRegist = () => {
-    let path = `/animals/regist`
+    let path = `/shelter/regist`
+    navigate(path)
+  }
+  const goDetail = (animal) => {
+    const id = animal.user_id
+    let path = `/shelter/details/${id}`
     navigate(path)
   }
   return (
@@ -47,7 +52,7 @@ const AnimalBoardList = () => {
           })
           .map((data, index) => (
             <li key={index}>
-              <AnimalItem data={data} />
+              <AnimalItem data={data} onSelectArticle={goDetail} />
             </li>
           ))}
       </ul>
