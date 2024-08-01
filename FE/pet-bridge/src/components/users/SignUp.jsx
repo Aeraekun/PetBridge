@@ -1,6 +1,6 @@
 import {useState} from "react"
 import {
-  getEmailVerificationCode,
+  postEmailCheck,
   postEmailVerificationCode,
   signUpUser,
 } from "api/users-api"
@@ -214,21 +214,20 @@ const SignUp = () => {
     }
   }
 
-  // 인증번호 확인
-  const onClickMailVerifyHandler = () => {
-    getEmailVerificationCode()
-    // try {
-    //   const emailConfirmData = {
-    //     email: signUpFormData.email,
-    //     code: Number(confirmNumbers.emailConfirm),
-    //   }
-    //   getEmailVerificationCode(emailConfirmData)
-    //   console.log("Email Verified")
-    // } catch (error) {
-    //   console.log(error)
-    //   return
-    // }
-    setIsEmailVerified(true)
+  // 이메일 인증번호 확인
+  const onClickMailCheckHandler = async () => {
+    const emailConfirmData = {
+      email: signUpFormData.email,
+      code: Number(confirmNumbers.emailConfirm),
+    }
+    const res = await postEmailCheck(emailConfirmData)
+
+    if (res?.status === 200) {
+      setIsEmailVerified(true)
+    } else {
+      console.log(res)
+      alert("잘못된 인증번호입니다. 다시 확인해주세요.")
+    }
   }
 
   return (
@@ -261,7 +260,11 @@ const SignUp = () => {
                   type="button"
                   className="bg-stroke col-span-3 h-12 rounded-md border px-3.5 py-2.5"
                 >
-                  <Timer initialMinutes={5} initialSeconds={0} />
+                  {isEmailVerified ? (
+                    "인증 완료"
+                  ) : (
+                    <Timer initialMinutes={5} initialSeconds={0} />
+                  )}
                 </button>
               </>
             ) : (
@@ -307,12 +310,13 @@ const SignUp = () => {
           {!isValidEmail && (
             <span className="text-alert col-span-12">{errors.email}</span>
           )}
-          {isValidEmailButton && (
+          {isValidEmailButton && !isEmailVerified ? (
             <div className="grid w-full grid-cols-12 items-center gap-2.5">
               <input
+                disabled={isEmailVerified}
                 value={confirmNumbers.emailConfirm}
                 onChange={changeConfirmHandler}
-                type="email"
+                type="text"
                 className="col-span-9  my-1 rounded-md border p-2.5"
                 placeholder="인증 번호"
                 id="emailConfirm"
@@ -321,13 +325,16 @@ const SignUp = () => {
                 autoComplete="username"
               />
               <button
+                disabled={isEmailVerified}
                 type="button"
                 className="bg-mild col-span-3 h-12 rounded-md px-3.5 py-2.5"
-                onClick={onClickMailVerifyHandler}
+                onClick={onClickMailCheckHandler}
               >
                 인증하기
               </button>
             </div>
+          ) : (
+            <></>
           )}
           {/* 비밀번호 입력 창 */}
           <input
