@@ -1,4 +1,4 @@
-import MyPageNavContainer from "components/users/MyPageNavContainer"
+import MyPageNavContainer from "components/my-page/MyPageNavContainer"
 import {Outlet} from "react-router-dom"
 
 const MyPage = () => {
