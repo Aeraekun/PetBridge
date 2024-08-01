@@ -1,7 +1,11 @@
 import {useDispatch, useSelector} from "react-redux"
-import {logOut, selectUserName} from "features/user/users-slice"
+import {
+  getUserInfoThunk,
+  logOut,
+  selectNickname,
+} from "features/user/users-slice"
 import {Link, NavLink, useNavigate} from "react-router-dom"
-import MyPageNavComponent from "./MyPageNavComponent"
+import MyPageNav from "./MyPageNav"
 import DefaulUser150 from "assets/icons/icon-default-user-150.svg"
 import iconMyArticles from "assets/icons/icon-my-articles.svg"
 import iconMyShorts from "assets/icons/icon-my-shorts.svg"
@@ -43,14 +47,16 @@ const MyPageNavList = () => {
   ]
 
   return (
-    <nav className="flex h-[260px] w-[250px] flex-col justify-between ">
+    <nav className="flex h-[260px] w-[300px] flex-col justify-between px-5">
       {navItems.map((item) => (
         <NavLink
           key={item.id}
           to={item.url}
-          className={({isActive}) => [isActive ? "bg-yellow" : ""]}
+          className={({isActive}) =>
+            `rounded-xl ${isActive ? "bg-yellow" : ""}`
+          }
         >
-          <MyPageNavComponent text={item.text} imgSrc={item.imgSrc} />
+          <MyPageNav text={item.text} imgSrc={item.imgSrc} />
         </NavLink>
       ))}
     </nav>
@@ -59,7 +65,7 @@ const MyPageNavList = () => {
 
 const MyPageNavContainer = () => {
   // 유저 이름 초기화
-  const userName = useSelector(selectUserName)
+  const userName = useSelector(selectNickname)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   // 로그아웃
@@ -77,6 +83,10 @@ const MyPageNavContainer = () => {
     deleteJWT()
   }
 
+  const onClickUsernameHandler = () => {
+    console.log(getUserInfoThunk())
+  }
+
   return (
     // 마이페이지 전체 틀
     <div className="flex h-full w-[300px] flex-col  items-center justify-center space-y-4 py-2.5 text-center">
@@ -87,7 +97,9 @@ const MyPageNavContainer = () => {
         className="size-[150px] rounded-full"
       />
       {/* 2. 유저 이름 */}
-      <span className="bg-white text-2xl">{userName}</span>
+      <button className="bg-white text-2xl" onClick={onClickUsernameHandler}>
+        {userName}
+      </button>
       {/* 3. 수정하기, 로그아웃 */}
       <div className="flex space-x-5">
         <Link
