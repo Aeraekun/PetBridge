@@ -12,7 +12,7 @@ const ContractsCreateContainer = () => {
   const nickname = useSelector(selectNickname)
   const userImage = useSelector(selectImage)
   // 동물 선택 상태에 따른 동물 컴포넌트 표시 - 상태 관리
-  const [isAnimalSelected, setIsAnimalSelected] = useState(false)
+  const [selectedAnimal, setSelectedAnimal] = useState("")
   selectId
   const [isContracteeSelected, setIsContracteeSelected] = useState(false)
   const [contractFormData, setContractFormData] = useState({
@@ -22,8 +22,6 @@ const ContractsCreateContainer = () => {
     month: "month",
     payment: "payment",
     content: "content",
-    contractDate: "contractDate",
-    expirationDate: "expirationDate",
   })
   setContractFormData
   // 제출 정보
@@ -32,13 +30,19 @@ const ContractsCreateContainer = () => {
   const monthsOption = Array.from({length: 12}, (_, index) => index + 1)
 
   // 입양 보낼 동물 선택 양식 정해야함
-  const onChangeIsSelectedAnimalHandler = () => {
-    setIsAnimalSelected(!isAnimalSelected)
+  const onChangeIsSelectedAnimalHandler = (event) => {
+    // 현재 select값이 선택하고 있는 option값
+    const selectedAnimalId = event.target.value
+    console.log(selectedAnimalId)
+    setSelectedAnimal(selectedAnimalId)
   }
 
   // 입양 보낼 동물 선택 양식 정해야함
-  const onChangeIsSelectedContracteeHandler = () => {
-    setIsContracteeSelected(!isContracteeSelected)
+  const onChangeIsSelectedContracteeHandler = (event) => {
+    // 현재 select값이 선택하고 있는 option값
+    const selectedContracteeId = event.target.value
+    console.log(selectedContracteeId)
+    setIsContracteeSelected()
   }
 
   // 계약서 작성하기 클릭시 동작
@@ -59,6 +63,8 @@ const ContractsCreateContainer = () => {
     }
   }
 
+  const options = Array.from({length: 12}, (_, index) => index + 1)
+
   return (
     <form
       className="my-10 flex w-[1000px] flex-col items-center space-y-10"
@@ -71,21 +77,32 @@ const ContractsCreateContainer = () => {
             className="col-span-2"
             onChange={onChangeIsSelectedAnimalHandler}
             label="입양보낼 동물 선택 드롭다운(모달)"
+            id="animal"
           >
-            <option value={1}>미선택</option>
-            <option value={2}>선택</option>
+            <option key={0} value="">
+              입양 보낼 동물을 선택해주세요
+            </option>
+            {options.map((index) => (
+              <option key={index} value={index}>
+                {index}번 동물
+              </option>
+            ))}
           </select>
           <span className="col-span-1">작성자 정보</span>
           <select
             className="col-span-1"
             onChange={onChangeIsSelectedContracteeHandler}
             label="입양자 선택 드롭다운(모달)"
+            id="contractee"
           >
-            <option value={1}>미선택</option>
-            <option value={2}>선택</option>
+            {options.map((index) => (
+              <option key={index} value={index}>
+                {index}번 유저
+              </option>
+            ))}
           </select>
           {/* 입양 동물 정보란 */}
-          {isAnimalSelected ? (
+          {selectedAnimal ? (
             <ContractAnimal
               isCreate={true}
               imageSrc="imgScr"
@@ -121,14 +138,9 @@ const ContractsCreateContainer = () => {
       </section>
       <section className="w-full">
         <span className="text-4xl font-bold">계약서 작성 폼</span>
-        <p className="font-bold">- 계약 내용</p>
-        <div className="flex space-x-5">
-          <p className="font-bold">- 계약 시작일</p>
-          <input type="date" id="startDate" className="rounded-lg border-2" />
-          <p className="font-bold">- 계약 만료일</p>
-          <input type="date" id="endDate" className="rounded-lg border-2" />
-        </div>
-        <p className="font-bold">- 계약 기간</p>
+        <p className="font-bold">
+          - 입양자가 계약을 이행할 시간을 선택해주세요.
+        </p>
         <select
           name="monthSelect"
           id="monthSelect"
@@ -140,13 +152,15 @@ const ContractsCreateContainer = () => {
             </option>
           ))}
         </select>
-        <p className="font-bold">- 계약 금액 (정수 천원단위)</p>
+        <p className="font-bold">- 계약 금액을 선택해주세요. (1 ~ 12 개월)</p>
         <input
           type="number"
           placeholder="계약 금액"
           className="rounded-lg border-2"
         />
-        <p className="font-bold">- 특약</p>
+        <p className="font-bold">
+          - 추가적으로 이행할 특약 내용을 자유롭게 입력해주세요.
+        </p>
         <textarea
           name="content"
           id="content"
