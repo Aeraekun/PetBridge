@@ -1,106 +1,89 @@
 import {getUserContracts} from "api/contracts-api"
-import axios from "axios"
-import {useEffect, useState} from "react"
+import {useEffect, useRef, useState} from "react"
 import {useInView} from "react-intersection-observer"
-import {useParams} from "react-router-dom"
+import {Link, useParams} from "react-router-dom"
 
 const MyPageContractsContainer = () => {
   const {userId} = useParams()
+
+  // 초기에 api 요청이 완료되기 전 로딩 현황
   const [isLoading, setIsLoading] = useState(true)
 
-  // 초기값 10개
-  const [items, setItems] = useState(() => {
-    const initItems = Array.from({length: 10}, (_, i) => i + 1)
-    return initItems
-  })
-  // 이미지 초기값 선언
-  const [images, setImages] = useState([])
+  // 게시글 초기값 선언
+  const [allItems, setAllItems] = useState([])
+  const [viewItems, setViewItems] = useState([])
+  const rootRef = useRef(null)
 
+  // inView 사용
+  // ref: observer가 지켜 볼 객체를 선정
+  // inView: view 상태 (Boolean)
   const {ref, inView} = useInView({
-    rootMargin: "-100px 0px",
+    root: rootRef.current,
+    rootMargin: "0px 0px",
   })
 
-  // id 값으로 picsum 예시 이미지를 받아오는 함수
-  // 차후에 각 게시판별로 바꿔서 값을 받아오고, 카드 컴포넌트에 넣어줘야함
-  const fetchImageInfo = async (id) => {
-    const response = await axios.get(`https://picsum.photos/id/${id}/info`)
-    return response.data
-  }
-
-  // 이미지 초기값 로드 (최초 입양 기록 페이지 로드시)
+  // 컴포넌트 처음 마운트시, 백엔드에 API 요청을 보내서 유저 관련 모든 정보를 받아와서 페이지 상태에 저장한다.
   useEffect(() => {
-    const loadInitialImages = async () => {
-      const initialImages = await Promise.all(
-        items.map(async (item) => {
-          const imageInfo = await fetchImageInfo(item)
-          return imageInfo
-        })
-      )
-      setImages(initialImages)
+    const loadInitialItems = async () => {
+      const res = await getUserContracts(userId)
+
+      setAllItems(res.data)
+      setViewItems(res.data.slice(0, 10))
+      setIsLoading(false)
     }
-    setIsLoading(false)
-    loadInitialImages()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    loadInitialItems()
   }, [])
 
-  // inView가 바뀔때마다, 추가로 n개만큼 로드
-  // 우선 10개로 선정, 차후 백엔드와 소통 후 갯수 선정 필요
-  // 최초 갯수, 최대 갯수, 없을시 출력 확인 필요
+  // ref 객체를 화면에서 감지했을 때, inView 값이 true로 변경된다.
+  // 해당 이벤트 발생시 allArticles에 남아 있는 게시글들을 viewItems에 추가 (10개씩)
   useEffect(() => {
-    if (inView) {
-      const loadMoreImages = async () => {
-        const newItems = []
-        for (let i = 1; i <= 10; i++) {
-          newItems.push(items.length + i)
-        }
-        const newImages = await Promise.all(
-          newItems.map(async (item) => {
-            const imageInfo = await fetchImageInfo(item)
-            return imageInfo
-          })
-        )
-        setItems((prevItems) => [...prevItems, ...newItems])
-        setImages((prevImages) => [...prevImages, ...newImages])
-      }
-      loadMoreImages()
+    if (inView && viewItems.length < allItems.length) {
+      const nextItems = allItems.slice(viewItems.length, viewItems.length + 10)
+      setViewItems((prevItems) => [...prevItems, ...nextItems])
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inView])
-
-  const onClickHandler = async () => {
-    const res = await getUserContracts(userId)
-
-    console.log("입양계약정보", res)
-  }
+  }, [inView, allItems, viewItems.length])
 
   return (
     <div className="flex h-full flex-col items-center">
-      <button onClick={onClickHandler}>버튼</button>
-      {/* 제목 헤더 */}
-      <div className="p-2.5 text-4xl font-bold">내 입양 기록</div>
-      <div className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
+      <div className="flex w-full justify-between p-2.5 ">
+        <div></div>
+        <button className="text-4xl font-bold">내 입양기록</button>
+        <Link className="rounded-xl bg-mild p-2.5" to="/contracts/create">
+          입양 보내기
+        </Link>
+      </div>
+      <div
+        ref={rootRef}
+        className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth"
+      >
         {isLoading ? (
           <div>로딩중입니다</div>
         ) : (
           // 이미지 기준으로 반복
-          images.map((image, index) => (
-            <div
+          viewItems.map((item, index) => (
+            <Link
+              to={`/contracts/${item.id}`}
               key={index}
               // ref 값이 화면에 들어왔을 때 api가 요청됨
-              ref={index === images.length - 1 ? ref : null}
+              ref={index === viewItems.length - 1 ? ref : null}
               className="m-2.5 h-[450px] w-[300px] snap-center rounded-xl border"
             >
               <img
-                src={image.download_url}
-                alt={image.author}
+                src={`/data/petBridge/uploads/animal/${item.animalImage}`}
+                alt={item.animalName}
                 className="h-[300px] rounded-t-xl"
               />
               <div className="space-y-2.5 p-2.5">
-                <p>{image.download_url}</p>
-                <p>{image.id} 번</p>
-                <p>{image.author}</p>
+                <p>{item.animalName}</p>
+                <p>계약일 : {item.contractDate}</p>
+                {item.contractorId === Number(userId) ? (
+                  <span>입양자 : </span>
+                ) : (
+                  <span>보호자 : </span>
+                )}
+                <span>{item.contracteeNickname}</span>
               </div>
-            </div>
+            </Link>
           ))
         )}
       </div>

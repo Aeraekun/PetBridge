@@ -28,6 +28,7 @@ export const getArticleDetail = async (id) => {
 //게시글 등록
 export const registArticle = async (formData) => {
   console.log(formData)
+  alert("등록완료")
   try {
     const res = await axios.post(`${BOARD_API_URL}`, formData, {
       headers: {
@@ -61,16 +62,17 @@ export const editArticle = async (id, formData) => {
 }
 
 //게시글 삭제
-// const removeBoard = async (id) => {
-//   try {
-//     const res = await axios.patch(`${BOARD_API_URL}/${id}/disable`)
-//     console.log("removeBoard" + res)
-//     return res.data
-//   } catch (e) {
-//     console.error(e)
-//     return []
-//   }
-// }
+export const removeArticle = async (id) => {
+  try {
+    const res = await axios.patch(`${BOARD_API_URL}/${id}/disable`)
+    console.log("removeBoard" + res)
+    alert("삭제 되었습니다.")
+    return res.data
+  } catch (e) {
+    console.error(e)
+    return []
+  }
+}
 
 //댓글 조회
 export const getListBoardComment = async (boardId) => {
@@ -86,6 +88,7 @@ export const getListBoardComment = async (boardId) => {
 //댓글 작성
 export const registBoardComment = async (boardComment) => {
   try {
+    alert("댓글작성")
     const res = await axios.post(`${BOARD_COMMENTS_API_URL}`, boardComment)
     return res.data
   } catch (e) {
@@ -108,13 +111,14 @@ export const editBoardComment = async (boardId, boardComment) => {
   }
 }
 
-// const removeBoardComment = async (id) => {
-//   try {
-//     const res = await axios.patch(`${BOARD_COMMENTS_API_URL}/${id}/disable`)
-//     console.log("removeBoardComment" + res)
-//     return res.data
-//   } catch (e) {
-//     console.error(e)
-//     return []
-//   }
-// }
+export const removeBoardComment = async (id) => {
+  try {
+    alert("댓글 삭제")
+    const res = await axios.patch(`${BOARD_COMMENTS_API_URL}/${id}/disable`)
+    console.log("removeBoardComment" + res)
+    return res.data
+  } catch (e) {
+    console.error(e)
+    return []
+  }
+}

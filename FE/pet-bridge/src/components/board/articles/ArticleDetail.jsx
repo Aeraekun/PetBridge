@@ -3,7 +3,7 @@ import SirenButton from "components/common/SirenButton"
 import Button from "components/common/Button"
 import {useSelector} from "react-redux"
 import {useNavigate, useParams} from "react-router-dom"
-import {getArticleDetail} from "api/boards-api"
+import {getArticleDetail, removeArticle} from "api/boards-api"
 import React, {useEffect, useState} from "react"
 import {selectId} from "features/user/users-slice"
 import DOMPurify from "dompurify"
@@ -30,10 +30,20 @@ const ArticleDetail = () => {
   const goBack = () => {
     navigate(-1)
   }
-  const goModify = () => {
+  const goModifyArticle = () => {
     navigate(`/communities/modify/${id}`)
   }
 
+  const goRemoveArticle = async (id) => {
+    //게시글 삭제 api 함수 호출
+    try {
+      await removeArticle(id)
+
+      navigate(-1)
+    } catch (e) {
+      console.error(e)
+    }
+  }
   return (
     <div className="rounded-xl border p-4">
       <button onClick={goBack} className="flex justify-start">
@@ -71,8 +81,13 @@ const ArticleDetail = () => {
       <div className="flex justify-end">
         {Number(currentUserId) === Number(article.userId) ? (
           <div className="flex  space-x-3">
-            <Button text={"수정하기"} onClick={goModify} />
-            <Button text={"삭제하기"} onClick={goBack} />
+            <Button text={"수정하기"} onClick={goModifyArticle} />
+            <Button
+              text={"삭제하기"}
+              onClick={() => {
+                goRemoveArticle(id)
+              }}
+            />
           </div>
         ) : (
           <div className="flex">
@@ -86,7 +101,7 @@ const ArticleDetail = () => {
         <div>댓글 {article.commentCount}</div>
       </div>
       <div className="px-8">
-        <ArticleComments articleId={id} userId={currentUserId} />
+        <ArticleComments articleId={id} currentUserId={currentUserId} />
       </div>
     </div>
   )
