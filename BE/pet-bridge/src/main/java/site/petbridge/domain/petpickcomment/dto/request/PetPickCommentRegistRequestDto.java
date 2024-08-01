@@ -11,13 +11,12 @@ import site.petbridge.domain.petpickcomment.domain.PetPickComment;
 public class PetPickCommentRegistRequestDto {
 
     private int petPickId;
-    private int userId;
     private String content;
 
-    public PetPickComment toEntity() {
+    public PetPickComment toEntity(int userId) {
         return PetPickComment.builder()
-                .userId(userId)
                 .petPickId(petPickId)
+                .userId(userId)
                 .content(content)
                 .build();
     }
