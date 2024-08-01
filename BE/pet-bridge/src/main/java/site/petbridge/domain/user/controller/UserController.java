@@ -70,7 +70,7 @@ public class UserController {
 
     }
 
-    @GetMapping("/api/users/authentication/email")
+    @PostMapping("/api/users/authentication/email/check")
     public ResponseEntity<UserResponseDto> checkEmailAuthenticationCode(
         @RequestBody EmailRequestDto emailRequestDto) throws Exception {
         if (userService.checkEmailDuplicate(emailRequestDto)) {
