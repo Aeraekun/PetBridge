@@ -83,6 +83,9 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET,"/api/shorts").permitAll()
 				.requestMatchers(HttpMethod.POST,"/api/shorts").permitAll()
 
+				// 쇼츠 댓글
+				.requestMatchers(HttpMethod.GET,"/api/short-comments/**").permitAll()
+
 				// 게시글
 				.requestMatchers(HttpMethod.GET, "/api/boards").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/boards/{id}").permitAll()
@@ -90,7 +93,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.PATCH, "/api/boards/{id}").permitAll()
 				.requestMatchers(HttpMethod.PATCH, "/api/boards/{id}/disable", "/*").permitAll()
 
-				// 댓글
+				// 게시글 댓글
 				.requestMatchers(HttpMethod.GET, "/api/board-comments/{boardId}", "/*").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/board-comments").permitAll()
 				.requestMatchers(HttpMethod.PATCH, "/api/board-comments/{id}", "/*").permitAll()

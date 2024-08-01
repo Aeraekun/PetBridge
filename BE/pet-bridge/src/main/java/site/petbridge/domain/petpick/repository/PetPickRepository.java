@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface PetPickRepository extends JpaRepository<PetPick, Long> {
 
-    @Query(value = "SELECT * FROM shorts WHERE disabled = 0 ORDER BY RAND() LIMIT 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM petpicks WHERE disabled = 0 ORDER BY RAND() LIMIT 1", nativeQuery = true)
     Optional<PetPick> findRandomPetPick();
 }
