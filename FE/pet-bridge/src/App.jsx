@@ -44,6 +44,7 @@ import {
 import ContractsContainer from "components/contracts/ContractsContainer"
 import ContractsPage from "pages/ContractsPage"
 import ContractsCreateContainer from "components/contracts/ContractsCreateContainer"
+import MainPage from "pages/MainPage"
 
 function App() {
   const dispatch = useDispatch()
@@ -68,6 +69,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
+        <Route path="/" element={<MainPage />} exact />
         <Route path="/shelter" element={<AnimalPage />}>
           <Route index element={<AnimalBoardList />} />
           <Route path=":bcode" element={<AnimalBoardList />} />
