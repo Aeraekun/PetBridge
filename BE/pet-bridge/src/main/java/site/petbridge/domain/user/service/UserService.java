@@ -11,6 +11,8 @@ import site.petbridge.domain.user.dto.response.UserResponseDto;
 
 public interface UserService {
 
+    Optional<UserResponseDto> isValidTokenUser(HttpServletRequest httpServletRequest) throws Exception;
+
     Optional<UserResponseDto> registUser(UserSignUpRequestDto userSignUpRequestDto) throws Exception;
 
     Optional<UserResponseDto> getDetailMyUser(HttpServletRequest httpServletRequest) throws Exception;

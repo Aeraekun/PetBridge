@@ -77,7 +77,7 @@ public class GlobalExceptionHandler {
     /*
      * HTTP 500 Exception
      */
-    @ExceptionHandler(HttpServerErrorException.InternalServerError.class)
+    @ExceptionHandler({HttpServerErrorException.InternalServerError.class, Exception.class})
     protected ResponseEntity<ErrorResponse> handleException(final Exception e) {
         log.error("handleException: {}", e.getMessage());
         return ResponseEntity
