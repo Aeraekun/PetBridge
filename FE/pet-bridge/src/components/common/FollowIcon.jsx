@@ -1,22 +1,25 @@
 // import Follow from "icons/icon-follow.svg"
 
-const FollowIcon = ({isFollowing}) => {
+const FollowIcon = ({isFollowing, size}) => {
+  const sizeClass =
+    size === "small" ? "w-5 h-5" : size === "medium" ? "w-6 h-6" : "w-6 h-6"
+
   return (
-    <>
+    <button>
       {isFollowing ? (
-        <img
-          src="/icons/icon-follow.svg"
-          alt="followIcon"
-          className="size-8 pr-1"
-        />
-      ) : (
         <img
           src="/icons/icon-follow-white.svg"
           alt="followwhiteIcon"
-          className="size-8 pr-1"
+          className={sizeClass}
+        />
+      ) : (
+        <img
+          src="/icons/icon-follow.svg"
+          alt="followwhiteIcon"
+          className={sizeClass}
         />
       )}
-    </>
+    </button>
   )
 }
 

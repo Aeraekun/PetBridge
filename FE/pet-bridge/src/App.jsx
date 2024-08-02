@@ -1,6 +1,7 @@
 import {Route, Routes} from "react-router-dom"
 import Layout from "./layout/Layout"
-import ShortsLayout from "./layout/ShortsLayout"
+import LoginPage from "./pages/LoginPage"
+import SignUpPage from "pages/SignUpPage"
 import BoardPage from "pages/BoardPage"
 import AnimalPage from "pages/AnimalPage"
 import ArticleBoardList from "components/board/articles/ArticleBoardList"
@@ -11,11 +12,8 @@ import AnimalBoardList from "components/board/animals/AnimalBoardList"
 import AnimalDetail from "components/board/animals/AnimalDetail"
 import AnimalRegist from "components/board/animals/AnimalRegist"
 import AnimalDetailModify from "components/board/animals/AnimalDetailModify"
-import ShortsPage from "pages/ShortsPage"
-import ShortsComment from "components/shorts/ShortsComment"
 import LostAndFoundPage from "pages/LostAndFoundPage"
-import ShortsTagDetail from "components/shorts/ShortsTagDetail"
-import ShortsWrite from "components/shorts/ShortsWrite"
+import PetpickWrite from "components/petpick/PetpickWrite"
 import Report from "./components/map/Report"
 
 import {useDispatch, useSelector} from "react-redux"
@@ -54,6 +52,8 @@ import {
 // 계약서
 import ContractsContainer from "components/contracts/ContractsContainer"
 import ContractsPage from "pages/ContractsPage"
+import PetpickComments from "components/petpick/PetpickComments"
+import PetpickTagDetail from "components/petpick/PetpickTagDetail"
 import ContractsCreateContainer from "components/contracts/ContractsCreateContainer"
 
 // 메인페이지
@@ -148,19 +148,21 @@ function App() {
       <Route path="/lost-and-found" element={<LostAndFoundPage />}>
         <Route path="/lost-and-found/report" element={<Report />}></Route>
       </Route>
-      <Route path="/short" element={<ShortsPage />}></Route>
-      <Route path="/shorts" element={<ShortsLayout />}>
-        <Route path="comments" element={<ShortsComment />}></Route>
-        <Route path="tag" element={<ShortsTagDetail />}></Route>
-        <Route
-          path="write"
-          element={
-            <PrivateRoute
-              component={<ShortsWrite />}
-              isAuthenticated={isAuthenticated}
-            />
-          }
-        ></Route>
+      <Route path="/petpick" element={<PetpickComments />}></Route>
+      <Route path="/petpick/:id/tag" element={<PetpickTagDetail />}></Route>
+
+      <Route
+        path="/petpick/write"
+        element={
+          <PrivateRoute
+            component={<PetpickWrite />}
+            isAuthenticated={isAuthenticated}
+          />
+        }
+      ></Route>
+      <Route path="/contracts" element={<ContractsPage />}>
+        <Route path=":id" element={<ContractsContainer />}></Route>
+        <Route path="create" element={<ContractsContainer />}></Route>
       </Route>
     </Routes>
   )
