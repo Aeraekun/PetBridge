@@ -2,7 +2,7 @@ const data = [
   {
     id: "1",
     userId: "user1",
-    boardId: "board1",
+    boardId: "1",
     animalId: "animal1",
     title: "귀여운 강아지",
     content: "이 귀여운 강아지를 보세요!",
@@ -12,7 +12,7 @@ const data = [
     userImage: "user1.jpg",
     like: true,
     follow: false,
-    ListPetPickCommentResponseDto: [
+    comments: [
       {
         id: 1,
         userId: 1,
@@ -114,7 +114,7 @@ const data = [
   {
     id: "2",
     userId: "user2",
-    boardId: "board2",
+    boardId: "2",
     animalId: "animal2",
     title: "멋진 고양이",
     content: "이 멋진 고양이를 보세요!",
@@ -124,7 +124,7 @@ const data = [
     userImage: "user2.jpg",
     like: false,
     follow: true,
-    ListPetPickCommentResponseDto: [
+    comments: [
       {
         id: 1,
         userId: 1,
@@ -226,7 +226,7 @@ const data = [
   {
     id: "3",
     userId: "user3",
-    boardId: "board3",
+    boardId: "3",
     animalId: "animal3",
     title: "귀여운 햄스터",
     content: "이 귀여운 햄스터를 보세요!",
@@ -236,7 +236,7 @@ const data = [
     userImage: "user3.jpg",
     like: true,
     follow: true,
-    ListPetPickCommentResponseDto: [
+    comments: [
       {
         id: 1,
         userId: 1,
@@ -338,7 +338,7 @@ const data = [
   {
     id: "4",
     userId: "user4",
-    boardId: "board4",
+    boardId: "4",
     animalId: "animal4",
     title: "장난감 토끼",
     content: "이 장난감 토끼를 보세요!",
@@ -348,7 +348,7 @@ const data = [
     userImage: "user4.jpg",
     like: true,
     follow: false,
-    ListPetPickCommentResponseDto: [
+    comments: [
       {
         id: 1,
         userId: 1,
@@ -450,7 +450,7 @@ const data = [
   {
     id: "5",
     userId: "user5",
-    boardId: "board5",
+    boardId: "5",
     animalId: "animal5",
     title: "귀여운 고양이",
     content: "이 귀여운 고양이를 보세요!",
@@ -460,7 +460,7 @@ const data = [
     userImage: "user5.jpg",
     like: false,
     follow: true,
-    ListPetPickCommentResponseDto: [
+    comments: [
       {
         id: 1,
         userId: 1,
@@ -562,7 +562,7 @@ const data = [
   {
     id: "6",
     userId: "user6",
-    boardId: "board6",
+    boardId: "6",
     animalId: "animal6",
     title: "재밌는 강아지",
     content: "이 재밌는 강아지를 보세요!",
@@ -572,7 +572,7 @@ const data = [
     userImage: "user6.jpg",
     like: true,
     follow: false,
-    ListPetPickCommentResponseDto: [
+    comments: [
       {
         id: 1,
         userId: 1,
@@ -674,7 +674,7 @@ const data = [
   {
     id: "7",
     userId: "user7",
-    boardId: "board7",
+    boardId: "7",
     animalId: "animal7",
     title: "귀여운 새끼 고양이",
     content: "이 귀여운 새끼 고양이를 보세요!",
@@ -684,7 +684,7 @@ const data = [
     userImage: "user7.jpg",
     like: false,
     follow: true,
-    ListPetPickCommentResponseDto: [
+    comments: [
       {
         id: 1,
         userId: 1,

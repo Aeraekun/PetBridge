@@ -18,20 +18,20 @@ const PetpickTagDetail = () => {
     let path = `/petpick/write`
     navigate(path)
   }
-
   const goPetpickTagDetail = () => {
-    if (location.pathname !== `/petpick/${id}/detail`) {
-      navigate(`/petpick/${id}/tag`)
+    const currentPath = location.pathname
+    const tagPath = `/petpick/${id}/tag`
+    const basePath = `/petpick`
+    console.log(currentPath)
+    if (currentPath === tagPath) {
+      navigate(basePath)
     } else {
-      navigate(`/petpick/${id}`)
+      navigate(tagPath)
     }
   }
+
   const goPetpickComment = () => {
-    if (location.pathname !== `/petpick/${id}/comments`) {
-      navigate(`/petpick/${id}/comments`)
-    } else {
-      navigate(`/petpick/${id}`)
-    }
+    navigate(`/petpick`)
   }
 
   return (

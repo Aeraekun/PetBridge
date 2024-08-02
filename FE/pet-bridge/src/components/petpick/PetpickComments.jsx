@@ -3,12 +3,18 @@ import OptionIcon from "../common/OptionIcon"
 import ProfileImage from "assets/image/profile.JPG"
 import Comment from "../common/Comment"
 import React, {useEffect, useState} from "react"
-
-import {useSelector} from "react-redux"
+import dummydata from "./dummydata"
+import {useDispatch, useSelector} from "react-redux"
 import {selectIsAuthenticated} from "features/user/users-slice"
 import PetpickIconContainer from "components/petpick/PetpickIconContainer"
 import PetpickVideo from "./PetpickVideo"
-import Navbar from "components/header/Navbar"
+import {
+  // fetchPetpickList,
+  selectPetpickData,
+  setNowPetpick,
+  // selectPetpickStatus,
+  // selectPetpickError,
+} from "features/petpick/petpick-slice"
 
 const Profile = (data) => {
   return (
@@ -82,17 +88,35 @@ const PetpickInfo = ({title, content}) => {
   )
 }
 
-const PetpickComments = ({data, onVisible}) => {
-  // const [petpick, setPetpick] = useState(contextData)
-  const petpick = data
+const PetpickComments = () => {
+  // const [petpick, setPetpick] = useState([])
+  // const petpick = []
   const [commentList, setCommentList] = useState([])
   const [isVisible, setIsVisible] = useState(false)
   //댓글리스트 불러올때 필요
 
+  const dispatch = useDispatch()
+  const petpick = useSelector(selectPetpickData) // 상태에서 petpick 데이터 가져오기
+  // const status = useSelector(selectPetpickStatus)
+  // const error = useSelector(selectPetpickError)
+
+  // const [petpickId, setPetpickId] = useState(0)
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
+    console.log("받아온정보", petpick)
+  }, [isVisible])
+
+  useEffect(() => {
+    setIndex(index + 1)
+    // setPetpickId(dummydata[index])
+    dispatch(setNowPetpick(dummydata[index]))
+  }, [])
+
   const fetchComments = async () => {
-    const commentList = petpick?.ListPetPickCommentResponseDto || [] // 펫픽 댓글 조회 API
+    const commentList = petpick?.comments || [] // 펫픽 댓글 조회 API
     setCommentList(commentList)
-    // console.log(commentList)
+    console.log(commentList)
     // console.log("comment", petpick.ListPetPickCommentResponseDto)
   }
 
@@ -114,10 +138,6 @@ const PetpickComments = ({data, onVisible}) => {
     }
     console.log(petpick?.ListPetPickCommentResponseDto)
   }, [petpick])
-
-  useEffect(() => {
-    console.log(petpick.ListPetPickCommentResponseDto)
-  }, [])
 
   //댓글 등록하고나서 필요
   const handleCommentAdded = () => {
@@ -152,15 +172,14 @@ const PetpickComments = ({data, onVisible}) => {
     return <div>Loading...</div>
   }
 
-  const toggleVisible = (newVisibility) => {
-    setIsVisible(newVisibility)
-    onVisible(newVisibility)
+  const handleVisible = () => {
+    console.log("visible", isVisible)
+    setIsVisible((prev) => !prev)
   }
 
   return (
     <>
-      {isVisible}
-      {isVisible && <Navbar />}
+      {/* {isVisible && <Navbar />} */}
       <div className="mx-auto flex h-screen w-[1000px] flex-row justify-center sm:w-11/12">
         <PetpickVideo />
         {isVisible ? (
@@ -188,7 +207,8 @@ const PetpickComments = ({data, onVisible}) => {
             <div className="flex flex-1 flex-col space-y-2.5">
               <PetpickIconContainer
                 direct={"row"}
-                toggleVisible={toggleVisible}
+                toggleComment={handleVisible}
+                petpickId={petpick.boardId}
               />
               <CommentInput
                 boardId={petpick.boardId}
@@ -197,7 +217,11 @@ const PetpickComments = ({data, onVisible}) => {
             </div>
           </div>
         ) : (
-          <PetpickIconContainer direct={"col"} />
+          <PetpickIconContainer
+            direct={"col"}
+            toggleComment={handleVisible}
+            petpickId={petpick.boardId}
+          />
         )}
       </div>
     </>

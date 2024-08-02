@@ -4,30 +4,22 @@ import ShareIcon from "../common/ShareIcon"
 import CommentIcon from "../common/CommentIcon"
 import FollowIcon from "../common/FollowIcon"
 import TagIcon from "../common/TagIcon"
-import {useLocation, useNavigate, useParams} from "react-router-dom"
+import {useLocation, useNavigate} from "react-router-dom"
 
-const PetpickIconContainer = ({direct, toggleVisible}) => {
+const PetpickIconContainer = ({direct, toggleComment, petpickId}) => {
   const isVertical = direct === "col"
-  const {id} = useParams()
   const location = useLocation()
   const navigate = useNavigate()
-  const goPetpickComment = () => {
-    console.log(id)
-    toggleVisible((prev) => !prev)
-    // if (location.pathname !== `/petpick/${id}/comments`) {
-    //   navigate(`/petpick/${id}/comments`)
-    //   isVisible(true)
-    // } else {
-    //   navigate(`/petpick/${id}`)
-    //   isVisible(false)
-    // }
-  }
 
   const goPetpickTagDetail = () => {
-    if (location.pathname !== `/petpick/${id}/tag`) {
-      navigate(`/petpick/${id}/tag`)
+    const currentPath = location.pathname
+    const tagPath = `/petpick/${petpickId}/tag`
+    const basePath = `/petpick`
+    console.log(currentPath)
+    if (currentPath === tagPath) {
+      navigate(basePath)
     } else {
-      navigate(`/petpick/${id}`)
+      navigate(tagPath)
     }
   }
   return (
@@ -36,7 +28,7 @@ const PetpickIconContainer = ({direct, toggleVisible}) => {
     >
       <HeartIcon className="w-12" />
       <SirenIcon className="w-12" />
-      <CommentIcon className="w-12" onClick={goPetpickComment} />
+      <CommentIcon className="w-12" onClick={toggleComment} />
       <FollowIcon isFollowing={true} className="w-12" />
       <ShareIcon className="w-12" />
       <TagIcon className="w-12" onClick={goPetpickTagDetail} />

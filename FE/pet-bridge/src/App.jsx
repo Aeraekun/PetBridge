@@ -1,6 +1,5 @@
 import {Route, Routes} from "react-router-dom"
 import Layout from "./layout/Layout"
-import ShortsLayout from "./layout/ShortsLayout"
 import LoginPage from "./pages/LoginPage"
 import SignUpPage from "pages/SignUpPage"
 import BoardPage from "pages/BoardPage"
@@ -13,7 +12,6 @@ import AnimalBoardList from "components/board/animals/AnimalBoardList"
 import AnimalDetail from "components/board/animals/AnimalDetail"
 import AnimalRegist from "components/board/animals/AnimalRegist"
 import AnimalDetailModify from "components/board/animals/AnimalDetailModify"
-import PetpickPage from "pages/PetpickPage"
 import LostAndFoundPage from "pages/LostAndFoundPage"
 import PetpickWrite from "components/petpick/PetpickWrite"
 import Report from "./components/map/Report"
@@ -126,21 +124,18 @@ function App() {
       <Route path="/lost-and-found" element={<LostAndFoundPage />}>
         <Route path="/lost-and-found/report" element={<Report />}></Route>
       </Route>
-      <Route path="/petpick/:id/comments" element={<PetpickComments />}></Route>
-      <Route path="/petpick" element={<ShortsLayout />}>
-        {/* <Route path="" element={<PetpickPage />}></Route> */}
-        <Route path=":id" element={<PetpickPage />}></Route>
-        <Route path=":id/tag" element={<PetpickTagDetail />}></Route>
-        <Route
-          path="write"
-          element={
-            <PrivateRoute
-              component={<PetpickWrite />}
-              isAuthenticated={isAuthenticated}
-            />
-          }
-        ></Route>
-      </Route>
+      <Route path="/petpick" element={<PetpickComments />}></Route>
+      <Route path="/petpick/:id/tag" element={<PetpickTagDetail />}></Route>
+
+      <Route
+        path="/petpick/write"
+        element={
+          <PrivateRoute
+            component={<PetpickWrite />}
+            isAuthenticated={isAuthenticated}
+          />
+        }
+      ></Route>
       <Route path="/contracts" element={<ContractsPage />}>
         <Route path=":id" element={<ContractsContainer />}></Route>
         <Route path="create" element={<ContractsContainer />}></Route>
