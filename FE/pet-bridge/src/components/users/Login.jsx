@@ -73,7 +73,7 @@ const LoginForm = () => {
 
       {/* 로그인 버튼 */}
       <button
-        className="h-12 w-full rounded-md bg-yellow px-3.5 py-2.5"
+        className="bg-yellow h-12 w-full rounded-md px-3.5 py-2.5"
         disabled={loading}
       >
         {loading ? "로그인 중..." : "로그인"}
@@ -88,7 +88,7 @@ const LoginForm = () => {
 const Login = () => {
   // 소셜 로그인 URL
   const SOCIAL_BASE_URL =
-    process.env.REACT_APP_API_URL + "oauth2/authorization/"
+    process.env.REACT_APP_API_URL + "/oauth2/authorization/"
 
   // 소셜 로그인 클릭시 호출 함수
   const handleSocialLogin = (e) => {

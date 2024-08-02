@@ -25,15 +25,15 @@ import {useEffect, useState} from "react"
 import MyPage from "pages/MyPage"
 import UsersLayout from "layout/UsersLayout"
 import {selectIsAuthenticated, setUserInfos} from "features/user/users-slice"
-import MyPageDisableContainer from "components/users/MyPageDisableContainer"
+import MyPageDisableContainer from "components/my-page/MyPageDisableContainer"
 import UpdateProfilePage from "pages/UpdateProfilePage"
 import PrivateRoute from "routes/PrivateRoute"
-import MyPageArtilcesContainer from "components/users/MyPageArticlesContainer"
-import MyPageContractsContainer from "components/users/MyPageContractsContainer"
-import MyPageFavoritesContainer from "components/users/MyPageFavoritesContainer"
-import MyPageLikesContainer from "components/users/MyPageLikesContainer"
-import MyPagePetPicsContainer from "components/users/MyPagePetPicsContainer"
-import MyPagePetsContainer from "components/users/MyPagePetsContainer"
+import MyPageArtilcesContainer from "components/my-page/MyPageArticlesContainer"
+import MyPageContractsContainer from "components/my-page/MyPageContractsContainer"
+import MyPageFavoritesContainer from "components/my-page/MyPageFavoritesContainer"
+import MyPageLikesContainer from "components/my-page/MyPageLikesContainer"
+import MyPagePetPicsContainer from "components/my-page/MyPagePetPicsContainer"
+import MyPagePetsContainer from "components/my-page/MyPagePetsContainer"
 import SocialPage from "pages/SocialPage"
 import SocialSuccessContainer from "components/users/SocailSuccessContainer"
 import SocialUpdateContainer from "components/users/SocialUpdateContainer"
@@ -44,6 +44,7 @@ import {
 import ContractsContainer from "components/contracts/ContractsContainer"
 import ContractsPage from "pages/ContractsPage"
 import ContractsCreateContainer from "components/contracts/ContractsCreateContainer"
+import MainPage from "pages/MainPage"
 
 function App() {
   const dispatch = useDispatch()
@@ -68,6 +69,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
+        <Route path="/" element={<MainPage />} exact />
         <Route path="/shelter" element={<AnimalPage />}>
           <Route index element={<AnimalBoardList />} />
           <Route path=":bcode" element={<AnimalBoardList />} />
