@@ -13,13 +13,13 @@ public interface PetPickService {
     /**
      * 펫픽 생성
      */
-    int save(HttpServletRequest httpServletRequest, final PetPickRegistRequestDto petPickRegistRequestDto, MultipartFile thumbnailFile,
+    void registPetPick(HttpServletRequest httpServletRequest, final PetPickRegistRequestDto petPickRegistRequestDto, MultipartFile thumbnailFile,
              MultipartFile videoFile) throws Exception;
 
     /**
      * 펫픽 목록 조회
      */
-    List<PetPickResponseDto> findAll();
+    List<PetPickResponseDto> getRandomListPetPick();
 
     /**
      * 펫픽 수정
@@ -35,6 +35,6 @@ public interface PetPickService {
     /**
      * 랜덤 펫픽 조회
      */
-    PetPickResponseDto getRandomDetailPetPick();
+//    PetPickResponseDto getRandomDetailPetPick();
 
 }
