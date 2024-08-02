@@ -66,3 +66,10 @@ export const postEmailCheck = async (emailConfirmData) => {
 
   return res
 }
+
+// 회원 삭제
+export const deleteUser = async (userId) => {
+  const res = await axiosInstance.delete(`/users/${userId}`)
+
+  return res
+}
