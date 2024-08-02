@@ -7,7 +7,7 @@ const ArticleInfo = ({data}) => {
     <div className="flex w-full flex-col ">
       <div className="flex w-full justify-between space-x-2 p-1">
         <ArticleState state={data.process_state}></ArticleState>
-        <div className="text-sm">{data.regist_time.split("T")[0]}</div>
+        <div className="text-sm">{data.registTime.split("T")[0]}</div>
       </div>
 
       <div className="text-base">{data.title}</div>
@@ -22,7 +22,7 @@ const ArticleState = ({state}) => {
   )
 }
 
-const TagArticle = ({data}) => {
+const TaggedArticleItem = ({data}) => {
   return (
     <div className="flex h-24 w-full justify-between space-x-2 p-3">
       <div className="flex w-full space-x-3">
@@ -39,4 +39,4 @@ const TagArticle = ({data}) => {
   )
 }
 
-export default TagArticle
+export default TaggedArticleItem

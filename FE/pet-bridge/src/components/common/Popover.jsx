@@ -1,6 +1,6 @@
 import React, {useState} from "react"
 import AnimalProfile from "./AnimalProfile"
-import TaggedArticleItem from "components/shorts/TaggedArticleItem"
+import TaggedArticleItem from "../petpick/TaggedArticleItem"
 
 const Popover = ({list, children, type, onSelectAnimal, onVisible}) => {
   const [visible, setVisible] = useState(false)

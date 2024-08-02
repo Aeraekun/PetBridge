@@ -13,11 +13,9 @@ import AnimalBoardList from "components/board/animals/AnimalBoardList"
 import AnimalDetail from "components/board/animals/AnimalDetail"
 import AnimalRegist from "components/board/animals/AnimalRegist"
 import AnimalDetailModify from "components/board/animals/AnimalDetailModify"
-import ShortsPage from "pages/ShortsPage"
-import ShortsComment from "components/shorts/ShortsComment"
+import PetpickPage from "pages/PetpickPage"
 import LostAndFoundPage from "pages/LostAndFoundPage"
-import ShortsTagDetail from "components/shorts/ShortsTagDetail"
-import ShortsWrite from "components/shorts/ShortsWrite"
+import PetpickWrite from "components/petpick/PetpickWrite"
 import Report from "./components/map/Report"
 
 import {useDispatch, useSelector} from "react-redux"
@@ -43,6 +41,8 @@ import {
 } from "utils/user-utils"
 import ContractsContainer from "components/contracts/ContractsContainer"
 import ContractsPage from "pages/ContractsPage"
+import PetpickComments from "components/petpick/PetpickComments"
+import PetpickTagDetail from "components/petpick/PetpickTagDetail"
 
 function App() {
   const dispatch = useDispatch()
@@ -126,15 +126,16 @@ function App() {
       <Route path="/lost-and-found" element={<LostAndFoundPage />}>
         <Route path="/lost-and-found/report" element={<Report />}></Route>
       </Route>
-      <Route path="/short" element={<ShortsPage />}></Route>
-      <Route path="/shorts" element={<ShortsLayout />}>
-        <Route path="comments" element={<ShortsComment />}></Route>
-        <Route path="tag" element={<ShortsTagDetail />}></Route>
+      <Route path="/petpick/:id/comments" element={<PetpickComments />}></Route>
+      <Route path="/petpick" element={<ShortsLayout />}>
+        {/* <Route path="" element={<PetpickPage />}></Route> */}
+        <Route path=":id" element={<PetpickPage />}></Route>
+        <Route path=":id/tag" element={<PetpickTagDetail />}></Route>
         <Route
           path="write"
           element={
             <PrivateRoute
-              component={<ShortsWrite />}
+              component={<PetpickWrite />}
               isAuthenticated={isAuthenticated}
             />
           }

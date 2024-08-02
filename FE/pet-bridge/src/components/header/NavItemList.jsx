@@ -28,7 +28,7 @@ const NavItemList = () => {
       <NavLogo />
       <NavItem category={"보호 동물"} href={"/shelter/0"} />
       <NavItem category={"실종 동물"} href={"/lost-and-found"} />
-      <NavItem category={"쇼츠"} href={"/short"} />
+      <NavItem category={"펫픽"} href={"/petpick"} />
       <NavItem category={"커뮤니티"} href={"/communities"} />
     </ul>
   )
