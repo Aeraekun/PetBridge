@@ -3,6 +3,7 @@ import React from "react"
 const TagIcon = ({onClick}) => {
   const handleClick = () => {
     onClick()
+    console.log("click")
   }
 
   return (
