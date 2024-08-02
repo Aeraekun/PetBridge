@@ -1,7 +1,5 @@
 import {Route, Routes} from "react-router-dom"
 import Layout from "./layout/Layout"
-import LoginPage from "./pages/LoginPage"
-import SignUpPage from "pages/SignUpPage"
 import BoardPage from "pages/BoardPage"
 import AnimalPage from "pages/AnimalPage"
 import ArticleBoardList from "components/board/articles/ArticleBoardList"
@@ -14,6 +12,7 @@ import AnimalRegist from "components/board/animals/AnimalRegist"
 import AnimalDetailModify from "components/board/animals/AnimalDetailModify"
 import LostAndFoundPage from "pages/LostAndFoundPage"
 import PetpickWrite from "components/petpick/PetpickWrite"
+import ShortsLayout from "layout/ShortsLayout"
 import Report from "./components/map/Report"
 
 import {useDispatch, useSelector} from "react-redux"
@@ -149,6 +148,7 @@ function App() {
         <Route path="/lost-and-found/report" element={<Report />}></Route>
       </Route>
       <Route path="/petpick" element={<PetpickComments />}></Route>
+      <Route path="/petpick/s" element={<ShortsLayout />}></Route>
       <Route path="/petpick/:id/tag" element={<PetpickTagDetail />}></Route>
 
       <Route
