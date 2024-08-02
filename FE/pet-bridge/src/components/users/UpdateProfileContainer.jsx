@@ -30,7 +30,6 @@ const UpdateProfileContainer = () => {
 
   // 유저 정보 수정 폼 제출을 위한 인자 저장 state
   const [updateFormData, setUpdateFormData] = useState({
-    password: "",
     nickname: nickname,
     birth: birth,
     phone: phone,
