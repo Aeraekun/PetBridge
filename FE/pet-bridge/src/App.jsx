@@ -1,8 +1,6 @@
 import {Route, Routes} from "react-router-dom"
 import Layout from "./layout/Layout"
 import ShortsLayout from "./layout/ShortsLayout"
-import LoginPage from "./pages/LoginPage"
-import SignUpPage from "pages/SignUpPage"
 import BoardPage from "pages/BoardPage"
 import AnimalPage from "pages/AnimalPage"
 import ArticleBoardList from "components/board/articles/ArticleBoardList"
@@ -22,28 +20,43 @@ import Report from "./components/map/Report"
 
 import {useDispatch, useSelector} from "react-redux"
 import {useEffect, useState} from "react"
-import MyPage from "pages/MyPage"
-import UsersLayout from "layout/UsersLayout"
 import {selectIsAuthenticated, setUserInfos} from "features/user/users-slice"
-import MyPageDisableContainer from "components/my-page/MyPageDisableContainer"
-import UpdateProfilePage from "pages/UpdateProfilePage"
 import PrivateRoute from "routes/PrivateRoute"
+
+// 유저
+import LoginPage from "./pages/LoginPage"
+import SignUpPage from "pages/SignUpPage"
+import UsersLayout from "layout/UsersLayout"
+import UpdateProfilePage from "pages/UpdateProfilePage"
+
+// 소셜로그인
+import SocialPage from "pages/SocialPage"
+import SocialSuccessContainer from "components/users/SocailSuccessContainer"
+import SocialUpdateContainer from "components/users/SocialUpdateContainer"
+
+// 마이페이지
+import MyPage from "pages/MyPage"
+import MyPageDisableContainer from "components/my-page/MyPageDisableContainer"
 import MyPageArtilcesContainer from "components/my-page/MyPageArticlesContainer"
 import MyPageContractsContainer from "components/my-page/MyPageContractsContainer"
 import MyPageFavoritesContainer from "components/my-page/MyPageFavoritesContainer"
 import MyPageLikesContainer from "components/my-page/MyPageLikesContainer"
 import MyPagePetPicsContainer from "components/my-page/MyPagePetPicsContainer"
 import MyPagePetsContainer from "components/my-page/MyPagePetsContainer"
-import SocialPage from "pages/SocialPage"
-import SocialSuccessContainer from "components/users/SocailSuccessContainer"
-import SocialUpdateContainer from "components/users/SocialUpdateContainer"
+import MyPageReportsContainer from "components/my-page/MyPageReportsContainer"
+import MyPageUsersContainer from "components/my-page/MyPageUsersContainer"
+
 import {
   getAccessTokenFromSession,
   getUserInfosFromSession,
 } from "utils/user-utils"
+
+// 계약서
 import ContractsContainer from "components/contracts/ContractsContainer"
 import ContractsPage from "pages/ContractsPage"
 import ContractsCreateContainer from "components/contracts/ContractsCreateContainer"
+
+// 메인페이지
 import MainPage from "pages/MainPage"
 
 function App() {
@@ -111,19 +124,15 @@ function App() {
             />
           }
         >
-          <Route path="disable" element={<MyPageDisableContainer />}></Route>
-          <Route path="articles" element={<MyPageArtilcesContainer />}></Route>
-          <Route path="petpics" element={<MyPagePetPicsContainer />}></Route>
-          <Route path="pets" element={<MyPagePetsContainer />}></Route>
-          <Route
-            path="contracts"
-            element={<MyPageContractsContainer />}
-          ></Route>
-          <Route
-            path="favorites"
-            element={<MyPageFavoritesContainer />}
-          ></Route>
-          <Route path="likes" element={<MyPageLikesContainer />}></Route>
+          <Route path="disable" element={<MyPageDisableContainer />} />
+          <Route path="articles" element={<MyPageArtilcesContainer />} />
+          <Route path="petpics" element={<MyPagePetPicsContainer />} />
+          <Route path="pets" element={<MyPagePetsContainer />} />
+          <Route path="contracts" element={<MyPageContractsContainer />} />
+          <Route path="favorites" element={<MyPageFavoritesContainer />} />
+          <Route path="likes" element={<MyPageLikesContainer />} />
+          <Route path="admin-users" element={<MyPageUsersContainer />} />
+          <Route path="admin-reports" element={<MyPageReportsContainer />} />
         </Route>
       </Route>
       <Route path="/lost-and-found" element={<LostAndFoundPage />}>

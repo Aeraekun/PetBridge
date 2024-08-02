@@ -10,6 +10,7 @@ const initialState = {
   birth: "",
   phone: "",
   img: "",
+  role: "",
   isAuthenticated: false,
   loading: false,
   error: null,
@@ -68,6 +69,7 @@ export const usersSlice = createSlice({
       state.birth = ""
       state.phone = ""
       state.img = ""
+      state.role = ""
       state.isAuthenticated = false
     },
     setAuthenticated(state, action) {
@@ -80,6 +82,7 @@ export const usersSlice = createSlice({
       state.birth = action.payload.birth
       state.phone = action.payload.phone
       state.img = action.payload.img
+      state.role = action.payload.role
       state.isAuthenticated = true
     },
   },
@@ -104,6 +107,7 @@ export const usersSlice = createSlice({
         state.birth = action.payload.birth
         state.phone = action.payload.phone
         state.img = action.payload.img
+        state.role = action.payload.role
         state.isAuthenticated = true
       })
   },
@@ -118,5 +122,6 @@ export const selectImage = (state) => state.user.img
 export const selectIsAuthenticated = (state) => state.user.isAuthenticated
 export const selectLoading = (state) => state.user.loading
 export const selectError = (state) => state.user.error
+export const selectRole = (state) => state.user.role
 export const {logOut, setAuthenticated, setUserInfos} = usersSlice.actions
 export default usersSlice.reducer

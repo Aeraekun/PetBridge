@@ -19,15 +19,8 @@ const NavAction = () => {
     dispatch(logOut())
   }
 
-  const handleJwtTest = () => {
-    console.log(document.cookie)
-  }
-
   return (
     <ul className="flex h-12 items-center text-xl">
-      <li className="mx-2.5 flex h-full cursor-pointer items-center text-xl">
-        <button onClick={handleJwtTest}>JWT 테스트</button>
-      </li>
       {isAuthenticated ? (
         <>
           <li className="mx-2.5 flex h-full cursor-pointer items-center text-xl">
