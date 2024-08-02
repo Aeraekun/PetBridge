@@ -7,7 +7,12 @@ import {useInView} from "react-intersection-observer"
 const MyPageFavoritesContainer = () => {
   // isLoading true로 설정해두고, 화면 초기 로드 완료시 false로 변경 후 스크롤 페이지 렌더링
   const [isLoading, setIsLoading] = useState(true)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [items, setItems] = useState([])
+  const [pageNo, setPageNo] = useState(1)
+
+  // API 요청을 보내기 위한 파라미터
+  const [searchParams, setSearchParams] = useState({numOfRows: 12, pageNo: 1})
 
   // 초기값 로딩
   useEffect(() => {
@@ -15,7 +20,7 @@ const MyPageFavoritesContainer = () => {
       const newItems = await fetchData()
       // 데이터 로드 성공시 (응답 배열에 데이터가 있다면)
       if (newItems && newItems.length > 0) {
-        // 페이지 +1, 로딩상태 해제
+        // 로딩상태 해제, 새로 받아온 값을 배열에 추가
         setIsLoading(false)
         setItems((prevItems) => [...prevItems, ...newItems])
       }
@@ -23,10 +28,6 @@ const MyPageFavoritesContainer = () => {
 
     fetchInitData()
   }, [])
-
-  // API 요청을 보내기 위한 파라미터
-  let pageNo = 1
-  const [searchParams] = useState({numOfRows: 12, pageNo: pageNo})
 
   // 농림축산부 API를 호출해서, 12개씩 페이징된 데이터를 받아온다.
   const fetchData = async () => {
@@ -36,7 +37,7 @@ const MyPageFavoritesContainer = () => {
     if (res.data) {
       console.log("fetch 성공!!!", res)
       newItems = res.data.response.body.items.item
-      pageNo++
+      setPageNo((prevPageNo) => prevPageNo + 1)
       return newItems
     } else {
       alert("추가 데이터 로드에 실패했습니다.")
@@ -52,18 +53,21 @@ const MyPageFavoritesContainer = () => {
       const newItems = await fetchData()
       // 데이터 로드 성공시 (응답 배열에 데이터가 있다면)
       if (newItems && newItems.length > 0) {
-        // 페이지 +1, 로딩상태 해제
-        console.log(pageNo)
-        setIsLoading(false)
+        setIsLoadingMore(false)
         setItems((prevItems) => [...prevItems, ...newItems])
       }
     }
 
     // inView 값이 true가 됐을 때,
     if (inView) {
+      setIsLoadingMore(true)
       fetchMoreData()
     }
   }, [inView])
+
+  useEffect(() => {
+    setSearchParams({...searchParams, pageNo: pageNo})
+  }, [pageNo])
 
   const onClickFetchDataHandler = () => {
     fetchData()
@@ -76,15 +80,15 @@ const MyPageFavoritesContainer = () => {
         <button onClick={onClickFetchDataHandler}>데이터 받아오기</button>
       </div>
       {isLoading ? (
-        <div>
-          <div className="bg-mild mx-2.5 inline-flex size-3 animate-ping rounded-full"></div>
+        <div className="flex items-center">
+          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
           <span>로딩중입니다</span>
         </div>
       ) : (
         <div className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
           {items.map((item, index) => (
             <Link
-              key={item.desertionNo}
+              key={index}
               to={`/shelter/details/${item.desertionNo}`}
               className="m-2.5 "
               // 화면에 들어오는지 확인할 객체를 선택하기 위한 ref 설정 : 배열의 마지막 값
@@ -100,6 +104,12 @@ const MyPageFavoritesContainer = () => {
               />
             </Link>
           ))}
+          {isLoadingMore ? (
+            <div className="flex items-center">
+              <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
+              <span>추가 데이터를 로딩중입니다</span>
+            </div>
+          ) : null}
         </div>
       )}
     </div>
