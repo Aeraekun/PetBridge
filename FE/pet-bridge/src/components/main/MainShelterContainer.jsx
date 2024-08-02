@@ -489,7 +489,7 @@ const MainShelterContainer = () => {
               key={item.desertionNo}
               noticeNo={item.noticeNo}
               sexCd={item.sexCd}
-              filename={item.filename}
+              popfile={item.popfile}
               kindCd={item.kindCd}
               cardNm={item.cardNm}
             />
@@ -505,7 +505,7 @@ const MainShelterContainer = () => {
               key={item.desertionNo}
               noticeNo={item.noticeNo}
               sexCd={item.sexCd}
-              filename={item.filename}
+              popfile={item.popfile}
               kindCd={item.kindCd}
               cardNm={item.cardNm}
             />
@@ -521,7 +521,7 @@ const MainShelterContainer = () => {
               key={item.desertionNo}
               noticeNo={item.noticeNo}
               sexCd={item.sexCd}
-              filename={item.filename}
+              popfile={item.popfile}
               kindCd={item.kindCd}
               cardNm={item.cardNm}
             />

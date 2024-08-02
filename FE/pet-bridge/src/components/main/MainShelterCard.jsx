@@ -1,9 +1,9 @@
-const MainShelterCard = ({noticeNo, sexCd, filename, kindCd, cardNm}) => {
+const MainShelterCard = ({noticeNo, sexCd, popfile, kindCd, cardNm}) => {
   return (
     <li className="h-[400px] w-[300px] rounded-2xl border shadow">
       <div className="flex h-[250px] w-full items-center justify-center overflow-y-hidden bg-white">
         <img
-          src={filename}
+          src={popfile}
           alt={kindCd}
           className="h-auto w-full object-cover"
         />
