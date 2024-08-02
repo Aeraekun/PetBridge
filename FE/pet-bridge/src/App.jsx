@@ -58,6 +58,9 @@ import ContractsCreateContainer from "components/contracts/ContractsCreateContai
 
 // 메인페이지
 import MainPage from "pages/MainPage"
+import AiPage from "pages/AiPage"
+import AiEyes from "components/ai/AiEyes"
+import AiSkin from "components/ai/AiSkin"
 
 function App() {
   const dispatch = useDispatch()
@@ -78,7 +81,6 @@ function App() {
 
     getUserInfo()
   }, [dispatch, accessToken, isAuthenticated])
-
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
@@ -104,6 +106,14 @@ function App() {
               />
             }
           ></Route>
+        </Route>
+        <Route path="/contracts" element={<ContractsPage />}>
+          <Route path=":id" element={<ContractsContainer />}></Route>
+          <Route path="create" element={<ContractsCreateContainer />}></Route>
+        </Route>
+        <Route path="/ai" element={<AiPage />}>
+          <Route path="eyes" element={<AiEyes />} />
+          <Route path="skin" element={<AiSkin />} />
         </Route>
       </Route>
       <Route path="/users/" element={<UsersLayout />}>
@@ -151,10 +161,6 @@ function App() {
             />
           }
         ></Route>
-      </Route>
-      <Route path="/contracts" element={<ContractsPage />}>
-        <Route path=":id" element={<ContractsContainer />}></Route>
-        <Route path="create" element={<ContractsCreateContainer />}></Route>
       </Route>
     </Routes>
   )
