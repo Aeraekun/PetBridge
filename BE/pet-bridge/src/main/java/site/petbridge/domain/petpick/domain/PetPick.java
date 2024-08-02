@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor(access =  AccessLevel.PROTECTED)
 @Entity
-@Table(name = "shorts")
+@Table(name = "petpicks")
 public class PetPick {
 
     @Id
@@ -22,7 +22,7 @@ public class PetPick {
     @Column(name = "user_id")
     private int userId;
 
-    @Column(name = "post_id")
+    @Column(name = "board_id")
     private int boardId;
 
     @Column(name = "animal_id")
