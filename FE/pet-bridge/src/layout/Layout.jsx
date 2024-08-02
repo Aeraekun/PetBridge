@@ -3,12 +3,12 @@ import Navbar from "components/header/Navbar"
 
 const Layout = () => {
   return (
-    <div>
+    <>
       <Navbar />
       <main className="flex flex-col items-center">
         <Outlet className="w-[1000px]"></Outlet>
       </main>
-    </div>
+    </>
   )
 }
 
