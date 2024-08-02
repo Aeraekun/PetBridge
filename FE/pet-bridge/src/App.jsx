@@ -18,29 +18,49 @@ import Report from "./components/map/Report"
 
 import {useDispatch, useSelector} from "react-redux"
 import {useEffect, useState} from "react"
-import MyPage from "pages/MyPage"
-import UsersLayout from "layout/UsersLayout"
 import {selectIsAuthenticated, setUserInfos} from "features/user/users-slice"
-import MyPageDisableContainer from "components/users/MyPageDisableContainer"
-import UpdateProfilePage from "pages/UpdateProfilePage"
 import PrivateRoute from "routes/PrivateRoute"
-import MyPageArtilcesContainer from "components/users/MyPageArticlesContainer"
-import MyPageContractsContainer from "components/users/MyPageContractsContainer"
-import MyPageFavoritesContainer from "components/users/MyPageFavoritesContainer"
-import MyPageLikesContainer from "components/users/MyPageLikesContainer"
-import MyPagePetPicsContainer from "components/users/MyPagePetPicsContainer"
-import MyPagePetsContainer from "components/users/MyPagePetsContainer"
+
+// 유저
+import LoginPage from "./pages/LoginPage"
+import SignUpPage from "pages/SignUpPage"
+import UsersLayout from "layout/UsersLayout"
+import UpdateProfilePage from "pages/UpdateProfilePage"
+
+// 소셜로그인
 import SocialPage from "pages/SocialPage"
 import SocialSuccessContainer from "components/users/SocailSuccessContainer"
 import SocialUpdateContainer from "components/users/SocialUpdateContainer"
+
+// 마이페이지
+import MyPage from "pages/MyPage"
+import MyPageDisableContainer from "components/my-page/MyPageDisableContainer"
+import MyPageArtilcesContainer from "components/my-page/MyPageArticlesContainer"
+import MyPageContractsContainer from "components/my-page/MyPageContractsContainer"
+import MyPageFavoritesContainer from "components/my-page/MyPageFavoritesContainer"
+import MyPageLikesContainer from "components/my-page/MyPageLikesContainer"
+import MyPagePetPicsContainer from "components/my-page/MyPagePetPicsContainer"
+import MyPagePetsContainer from "components/my-page/MyPagePetsContainer"
+import MyPageReportsContainer from "components/my-page/MyPageReportsContainer"
+import MyPageUsersContainer from "components/my-page/MyPageUsersContainer"
+
 import {
   getAccessTokenFromSession,
   getUserInfosFromSession,
 } from "utils/user-utils"
+
+// 계약서
 import ContractsContainer from "components/contracts/ContractsContainer"
 import ContractsPage from "pages/ContractsPage"
 import PetpickComments from "components/petpick/PetpickComments"
 import PetpickTagDetail from "components/petpick/PetpickTagDetail"
+import ContractsCreateContainer from "components/contracts/ContractsCreateContainer"
+
+// 메인페이지
+import MainPage from "pages/MainPage"
+import AiPage from "pages/AiPage"
+import AiEyes from "components/ai/AiEyes"
+import AiSkin from "components/ai/AiSkin"
 
 function App() {
   const dispatch = useDispatch()
@@ -61,10 +81,10 @@ function App() {
 
     getUserInfo()
   }, [dispatch, accessToken, isAuthenticated])
-
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
+        <Route path="/" element={<MainPage />} exact />
         <Route path="/shelter" element={<AnimalPage />}>
           <Route index element={<AnimalBoardList />} />
           <Route path=":bcode" element={<AnimalBoardList />} />
@@ -87,6 +107,14 @@ function App() {
             }
           ></Route>
         </Route>
+        <Route path="/contracts" element={<ContractsPage />}>
+          <Route path=":id" element={<ContractsContainer />}></Route>
+          <Route path="create" element={<ContractsCreateContainer />}></Route>
+        </Route>
+        <Route path="/ai" element={<AiPage />}>
+          <Route path="eyes" element={<AiEyes />} />
+          <Route path="skin" element={<AiSkin />} />
+        </Route>
       </Route>
       <Route path="/users/" element={<UsersLayout />}>
         <Route path="social" element={<SocialPage />}>
@@ -106,19 +134,15 @@ function App() {
             />
           }
         >
-          <Route path="disable" element={<MyPageDisableContainer />}></Route>
-          <Route path="articles" element={<MyPageArtilcesContainer />}></Route>
-          <Route path="petpics" element={<MyPagePetPicsContainer />}></Route>
-          <Route path="pets" element={<MyPagePetsContainer />}></Route>
-          <Route
-            path="contracts"
-            element={<MyPageContractsContainer />}
-          ></Route>
-          <Route
-            path="favorites"
-            element={<MyPageFavoritesContainer />}
-          ></Route>
-          <Route path="likes" element={<MyPageLikesContainer />}></Route>
+          <Route path="disable" element={<MyPageDisableContainer />} />
+          <Route path="articles" element={<MyPageArtilcesContainer />} />
+          <Route path="petpics" element={<MyPagePetPicsContainer />} />
+          <Route path="pets" element={<MyPagePetsContainer />} />
+          <Route path="contracts" element={<MyPageContractsContainer />} />
+          <Route path="favorites" element={<MyPageFavoritesContainer />} />
+          <Route path="likes" element={<MyPageLikesContainer />} />
+          <Route path="admin-users" element={<MyPageUsersContainer />} />
+          <Route path="admin-reports" element={<MyPageReportsContainer />} />
         </Route>
       </Route>
       <Route path="/lost-and-found" element={<LostAndFoundPage />}>

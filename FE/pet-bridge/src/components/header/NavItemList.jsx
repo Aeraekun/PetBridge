@@ -1,5 +1,4 @@
-import {Link} from "react-router-dom"
-import PropTypes from "prop-types"
+import {Link, NavLink} from "react-router-dom"
 
 const NavLogo = () => {
   return (
@@ -9,28 +8,52 @@ const NavLogo = () => {
   )
 }
 
-const NavItem = ({category, href}) => {
-  return (
-    <li className="flex h-12 cursor-pointer items-center px-2.5 text-xl">
-      <Link to={href}>{category}</Link>
-    </li>
-  )
-}
-
-NavItem.propTypes = {
-  category: PropTypes.string.isRequired,
-  href: PropTypes.string.isRequired,
-}
-
 const NavItemList = () => {
+  let itemId = 0
+  const navItems = [
+    {
+      id: itemId++,
+      category: "보호동물",
+      to: "/shelter/0",
+    },
+    {
+      id: itemId++,
+      category: "실종",
+      to: "/lost-and-found",
+    },
+    {
+      id: itemId++,
+      category: "쇼츠",
+      to: "/short",
+    },
+    {
+      id: itemId++,
+      category: "커뮤니티",
+      to: "/communities",
+    },
+    {
+      id: itemId++,
+      category: "동물 건강 진단",
+      to: "/ai",
+    },
+  ]
   return (
-    <ul className="flex h-12 items-center">
+    <nav className="flex h-12 items-center">
       <NavLogo />
-      <NavItem category={"보호 동물"} href={"/shelter/0"} />
-      <NavItem category={"실종 동물"} href={"/lost-and-found"} />
-      <NavItem category={"펫픽"} href={"/petpick"} />
-      <NavItem category={"커뮤니티"} href={"/communities"} />
-    </ul>
+      {navItems.map((item) => (
+        <NavLink
+          key={item.id}
+          to={item.to}
+          className={({isActive}) =>
+            `rounded-xl ${isActive ? "bg-yellow font-bold" : ""}`
+          }
+        >
+          <span className="flex h-12 cursor-pointer items-center px-2.5 text-xl">
+            {item.category}
+          </span>
+        </NavLink>
+      ))}
+    </nav>
   )
 }
 

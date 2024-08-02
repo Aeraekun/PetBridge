@@ -1,5 +1,5 @@
 import axios from "axios"
-const BASE_API_URL = "http://localhost:8080/api/animals"
+const BASE_API_URL = process.env.REACT_APP_API_URL + "/animals"
 
 const getListAnimalByUserId = async (userId) => {
   try {

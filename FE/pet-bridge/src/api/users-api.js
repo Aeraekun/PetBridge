@@ -58,13 +58,18 @@ export const postEmailVerificationCode = async (emailData) => {
 
 // 이메일 인증번호 확인
 // 이메일, 인증코드를 인자로 전송
-export const getEmailVerificationCode = async (data) => {
-  console.log(data)
-  const res = await axiosInstance("/users/authentication/email", {
-    data,
-  })
+export const postEmailCheck = async (emailConfirmData) => {
+  const res = await axiosInstance.post(
+    "/users/authentication/email/check",
+    emailConfirmData
+  )
 
-  console.log(res)
+  return res
+}
+
+// 회원 삭제
+export const deleteUser = async (userId) => {
+  const res = await axiosInstance.delete(`/users/${userId}`)
 
   return res
 }

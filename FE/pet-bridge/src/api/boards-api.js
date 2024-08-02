@@ -1,6 +1,6 @@
 import axios from "axios"
-const BOARD_API_URL = "http://localhost:8080/api/boards"
-const BOARD_COMMENTS_API_URL = "http://localhost:8080/api/board-comments"
+const BOARD_API_URL = process.env.REACT_APP_API_URL + "/boards"
+const BOARD_COMMENTS_API_URL = process.env.REACT_APP_API_URL + "/board-comments"
 
 //게시글 다 가져오기
 export const getArticle = async () => {

@@ -76,12 +76,15 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/oauth2/authorization/*").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/users/find/email").permitAll()
 				.requestMatchers("/users/oauth/success").permitAll()
-				.requestMatchers(HttpMethod.GET,"/api/users/authentication/email").permitAll()
+				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email/check").permitAll()
 				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email").permitAll()
 
 				// 쇼츠
 				.requestMatchers(HttpMethod.GET,"/api/shorts").permitAll()
 				.requestMatchers(HttpMethod.POST,"/api/shorts").permitAll()
+
+				// 쇼츠 댓글
+				.requestMatchers(HttpMethod.GET,"/api/short-comments/**").permitAll()
 
 				// 게시글
 				.requestMatchers(HttpMethod.GET, "/api/boards").permitAll()
@@ -90,7 +93,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.PATCH, "/api/boards/{id}").permitAll()
 				.requestMatchers(HttpMethod.PATCH, "/api/boards/{id}/disable", "/*").permitAll()
 
-				// 댓글
+				// 게시글 댓글
 				.requestMatchers(HttpMethod.GET, "/api/board-comments/{boardId}", "/*").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/board-comments").permitAll()
 				.requestMatchers(HttpMethod.PATCH, "/api/board-comments/{id}", "/*").permitAll()

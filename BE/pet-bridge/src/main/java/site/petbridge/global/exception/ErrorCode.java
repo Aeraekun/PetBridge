@@ -33,6 +33,11 @@ public enum ErrorCode {
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "허용되지 않은 메서드입니다."),
 
     /**
+     * 409
+     */
+    CONFLICT(HttpStatus.CONFLICT, "리소스 충돌이 발생했습니다."),
+
+    /**
      * 500 INTERNAL_SERVER_ERROR: 내부 서버 오류
      */
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "내부 서버 오류입니다."),

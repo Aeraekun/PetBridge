@@ -37,10 +37,10 @@ public class PetPickServiceImpl implements PetPickService {
      */
     @Override
     @Transactional
-    public int save(HttpServletRequest httpServletRequest, final PetPickRegistRequestDto petPickRegistRequestDto,
+    public void registPetPick(HttpServletRequest httpServletRequest, final PetPickRegistRequestDto petPickRegistRequestDto,
                     MultipartFile thumbnailFile, MultipartFile videoFile) throws Exception {
 
-        // 미인증
+        // 미인증 처리
         UserResponseDto userResponseDto = userService.isValidTokenUser(httpServletRequest).orElse(null);
         if (userResponseDto == null) {
             throw new PetBridgeException(ErrorCode.UNAUTHORIZED);
@@ -59,18 +59,23 @@ public class PetPickServiceImpl implements PetPickService {
 
         PetPick entity = petPickRegistRequestDto.toEntity(userResponseDto.id(), savedThumbnailFileName, savedVideoFileName);
         petPickRepository.save(entity);
-
-        return entity.getId();
     }
 
     /**
-     * 펫픽 목록 조회
+     * 펫픽 랜덤 목록 조회
+     * @Override
+     *     public List<PetPickCommentResponseDto> getListPetPickComment(Long petPickId, int page, int size) {
+     *
+     *         Pageable pageable = PageRequest.of(page, size);
+     *         Page<PetPickCommentResponseDto> petPickComments = petPickCommentRepository.findByPetPickId(petPickId, pageable);
+     *
+     *         return petPickComments.getContent();
+     *     }
      */
     @Override
-    public List<PetPickResponseDto> findAll() {
+    public List<PetPickResponseDto> getRandomListPetPick() {
 
-        Sort sort = Sort.by(Sort.Direction.DESC, "id", "registTime");
-        List<PetPick> list = petPickRepository.findAll(sort);
+        List<PetPick> list = petPickRepository.findRandomPetPicks();
         return list.stream().map(PetPickResponseDto::new).collect(Collectors.toList());
     }
 
@@ -128,6 +133,7 @@ public class PetPickServiceImpl implements PetPickService {
 
         // 펫픽 없을 때
         PetPick entity = petPickRepository.findById(petPickId).orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+
         // 내가 작성한 쇼츠가 아닐 때
         if (userResponseDto.id() != entity.getUserId()) {
             throw new PetBridgeException(ErrorCode.FORBIDDEN);
@@ -138,19 +144,19 @@ public class PetPickServiceImpl implements PetPickService {
         return petPickId;
     }
 
-    /**
-     * 랜덤 펫픽 조회
-     */
-    @Override
-    public PetPickResponseDto getRandomDetailPetPick() {
-
-        // 펫픽 없을 때
-        PetPick petPick = petPickRepository.findRandomPetPick()
-                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
-
-        System.out.println("petPick.getId() = " + petPick.getId());
-        return new PetPickResponseDto(petPick);
-    }
+//    /**
+//     * 랜덤 펫픽 조회
+//     */
+//    @Override
+//    public PetPickResponseDto getRandomDetailPetPick() {
+//
+//        // 펫픽 없을 때
+//        PetPick petPick = petPickRepository.findRandomPetPick()
+//                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+//
+//        System.out.println("petPick.getId() = " + petPick.getId());
+//        return new PetPickResponseDto(petPick);
+//    }
 
 
 }

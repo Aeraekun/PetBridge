@@ -20,3 +20,10 @@ export const patchContractCheck = async (contractInfo) => {
   )
   return res
 }
+
+// 계약서 작성 요청
+export const postContract = async (contractFormData) => {
+  const res = await axiosInstance.post("contracts", contractFormData)
+
+  return res
+}

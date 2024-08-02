@@ -16,9 +16,9 @@ public class PetPickRegistRequestDto {
     private String title;
     private String content;
 
-    public PetPick toEntity(int id, String thumbnailFile, String videoFile) {
+    public PetPick toEntity(int userId, String thumbnailFile, String videoFile) {
         return PetPick.builder()
-                .userId(id)
+                .userId(userId)
                 .boardId(boardId)
                 .animalId(animalId)
                 .title(title)
