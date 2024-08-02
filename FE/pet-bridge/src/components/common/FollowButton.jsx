@@ -3,8 +3,8 @@ import FollowIcon from "./FollowIcon"
 const FollowButton = ({ifFollowing}) => {
   return (
     <>
-      {ifFollowing ? (
-        <div className="flex h-8 flex-row rounded border border-white bg-blue-500 p-1  font-bold hover:bg-cyan-100">
+      {!ifFollowing ? (
+        <div className="flex h-8 flex-row rounded border border-white bg-blue-500 p-1 font-bold  text-white hover:bg-cyan-100">
           <FollowIcon isFollowing={true} />
           <div className="text-white">팔로잉</div>
         </div>

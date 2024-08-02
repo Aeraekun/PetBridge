@@ -5,7 +5,7 @@ const SelectIcon = () => {
   const navigate = useNavigate()
 
   function goCommentPage() {
-    navigate("/shorts/comments")
+    navigate("/petpick/comments")
   }
 
   return (

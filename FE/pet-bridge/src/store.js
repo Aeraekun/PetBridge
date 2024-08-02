@@ -1,5 +1,6 @@
 import {configureStore} from "@reduxjs/toolkit"
 import userReducer from "features/user/users-slice"
+import petpickReducer from "features/petpick/petpick-slice"
 
 // Redux ToolKit의 configureStore 동작
 // reducer: {} 안에 입력하는 모든 reducer를 root reducer에 포함시킴
@@ -10,6 +11,7 @@ import userReducer from "features/user/users-slice"
 const store = configureStore({
   reducer: {
     user: userReducer,
+    petpick: petpickReducer,
   },
 })
 

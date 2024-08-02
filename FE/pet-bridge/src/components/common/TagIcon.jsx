@@ -1,17 +1,9 @@
 import React from "react"
 
-import {useLocation, useNavigate} from "react-router-dom"
-
-const TagIcon = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
-
+const TagIcon = ({onClick}) => {
   const handleClick = () => {
-    if (location.pathname !== "/shorts/tag") {
-      navigate("/shorts/tag")
-    } else {
-      navigate("/short")
-    }
+    onClick()
+    console.log("click")
   }
 
   return (
