@@ -170,7 +170,6 @@ const UpdateProfileContainer = () => {
           className="size-[200px] rounded-full"
         />
       )}
-
       {/* 비밀번호 입력 */}
       <div className="w-full">
         {/* 비밀번호 입력 창 */}
@@ -199,7 +198,7 @@ const UpdateProfileContainer = () => {
           autoComplete="new-password"
         />
         {errors.password && (
-          <span className="col-span-12 text-alert">{errors.password}</span>
+          <span className="text-alert col-span-12">{errors.password}</span>
         )}
       </div>
 
@@ -216,7 +215,7 @@ const UpdateProfileContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.nickname && (
-          <span className="col-span-12 text-alert">{errors.nickname}</span>
+          <span className="text-alert col-span-12">{errors.nickname}</span>
         )}
       </div>
       {/* 전화번호 입력 창 */}
@@ -233,7 +232,7 @@ const UpdateProfileContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.phone && (
-          <span className="col-span-12 text-alert">{errors.phone}</span>
+          <span className="text-alert col-span-12">{errors.phone}</span>
         )}
       </div>
       {/* 생년월일 창 */}
@@ -241,7 +240,7 @@ const UpdateProfileContainer = () => {
         <input
           value={updateFormData.birth}
           onChange={changeHandler}
-          type="text"
+          type="date"
           className=" my-1 w-full rounded-md border p-2.5"
           placeholder="생년월일 8자리 (YYYYMMDD)"
           id="birth"
@@ -250,20 +249,20 @@ const UpdateProfileContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.birth && (
-          <span className="col-span-12 text-alert">{errors.birth}</span>
+          <span className="text-alert col-span-12">{errors.birth}</span>
         )}
       </div>
 
       <div className="grid w-full grid-cols-2 gap-10">
         {/* 수정하기 버튼 */}
-        <button type="submit" className="h-12 rounded-md bg-mild px-3.5 py-2.5">
+        <button type="submit" className="bg-mild h-12 rounded-md px-3.5 py-2.5">
           수정하기
         </button>
         {/* 취소 버튼 */}
         <Link
           to="/"
           type="button"
-          className="rounded-md bg-mild px-3.5 py-2.5 text-center"
+          className="bg-mild rounded-md px-3.5 py-2.5 text-center"
         >
           취소하기
         </Link>
