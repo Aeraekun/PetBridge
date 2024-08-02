@@ -22,9 +22,6 @@ public class PetPickController {
 
     /**
      * 펫픽 등록(권한)
-     * 
-     * 등록된 정보, 생성된 정보,
-     * ResponseEntity
      */
     @PostMapping
     public ResponseEntity<Integer> registPetPick(HttpServletRequest httpServletRequest,
@@ -37,7 +34,6 @@ public class PetPickController {
 
     /**
      * 내가 쓴 펫픽 수정 (권한)
-     * 수정 성공 상태 코드
      */
     @PatchMapping("/{id}")
     public ResponseEntity<Long> editPetPick(HttpServletRequest httpServletRequest,
@@ -50,7 +46,6 @@ public class PetPickController {
 
     /**
      * 펫픽 랜덤 조회
-     * 200 + data
      */
     @GetMapping
     public ResponseEntity<PetPickResponseDto> getRandomDetailPetPick() {

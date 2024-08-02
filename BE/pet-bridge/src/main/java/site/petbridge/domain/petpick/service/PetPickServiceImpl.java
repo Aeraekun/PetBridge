@@ -128,6 +128,7 @@ public class PetPickServiceImpl implements PetPickService {
 
         // 펫픽 없을 때
         PetPick entity = petPickRepository.findById(petPickId).orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+
         // 내가 작성한 쇼츠가 아닐 때
         if (userResponseDto.id() != entity.getUserId()) {
             throw new PetBridgeException(ErrorCode.FORBIDDEN);
