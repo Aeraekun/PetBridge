@@ -6,7 +6,7 @@ import ContractPerson from "components/contracts/ContractPerson"
 import {useState} from "react"
 import {postContract} from "api/contracts-api"
 import {useNavigate} from "react-router-dom"
-
+import SearchDropDown from "components/common/SearchDropDown"
 const ContractsCreateContainer = () => {
   const navigate = useNavigate()
   const nickname = useSelector(selectNickname)
@@ -14,7 +14,7 @@ const ContractsCreateContainer = () => {
   // 동물 선택 상태에 따른 동물 컴포넌트 표시 - 상태 관리
   const [selectedAnimal, setSelectedAnimal] = useState("")
   selectId
-  const [isContracteeSelected, setIsContracteeSelected] = useState(false)
+  const [isContracteeSelected] = useState(false)
   const [contractFormData, setContractFormData] = useState({
     contractorId: "contractorId",
     contracteeId: "contracteeId",
@@ -38,12 +38,12 @@ const ContractsCreateContainer = () => {
   }
 
   // 입양 보낼 동물 선택 양식 정해야함
-  const onChangeIsSelectedContracteeHandler = (event) => {
-    // 현재 select값이 선택하고 있는 option값
-    const selectedContracteeId = event.target.value
-    console.log(selectedContracteeId)
-    setIsContracteeSelected()
-  }
+  // const onChangeIsSelectedContracteeHandler = (event) => {
+  //   // 현재 select값이 선택하고 있는 option값
+  //   const selectedContracteeId = event.target.value
+  //   console.log(selectedContracteeId)
+  //   setIsContracteeSelected()
+  // }
 
   // 계약서 작성하기 클릭시 동작
   const onSubmitContractForm = async (event) => {
@@ -89,18 +89,11 @@ const ContractsCreateContainer = () => {
             ))}
           </select>
           <span className="col-span-1">작성자 정보</span>
-          <select
-            className="col-span-1"
-            onChange={onChangeIsSelectedContracteeHandler}
-            label="입양자 선택 드롭다운(모달)"
-            id="contractee"
-          >
-            {options.map((index) => (
-              <option key={index} value={index}>
-                {index}번 유저
-              </option>
-            ))}
-          </select>
+          <SearchDropDown
+            subtitle="유저를 선택해주세요."
+            placeholder="유저 닉네임으로 검색"
+            itemName="유저"
+          />
           {/* 입양 동물 정보란 */}
           {selectedAnimal ? (
             <ContractAnimal
