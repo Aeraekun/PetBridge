@@ -147,8 +147,10 @@ function App() {
       <Route path="/lost-and-found" element={<LostAndFoundPage />}>
         <Route path="/lost-and-found/report" element={<Report />}></Route>
       </Route>
-      <Route path="/petpick" element={<PetpickComments />}></Route>
-      <Route path="/petpick/s" element={<ShortsLayout />}></Route>
+
+      <Route path="/petpick" element={<ShortsLayout />}>
+        <Route path="" element={<PetpickComments />}></Route>
+      </Route>
       <Route path="/petpick/:id/tag" element={<PetpickTagDetail />}></Route>
 
       <Route
