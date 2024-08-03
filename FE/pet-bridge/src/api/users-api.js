@@ -31,7 +31,11 @@ export const getUserInfo = async () => {
 
 // 회원 정보 수정
 export const patchUserInfo = async (userInfo) => {
-  const res = await axiosInstance.patch(`/users/modify`, userInfo)
+  const res = await axiosInstance.patch(`/users/modify`, userInfo, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  })
   return res
 }
 
