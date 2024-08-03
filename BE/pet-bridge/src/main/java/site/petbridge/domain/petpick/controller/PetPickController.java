@@ -5,12 +5,15 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import site.petbridge.domain.petpick.dto.request.PetPickEditRequestDto;
 import site.petbridge.domain.petpick.dto.request.PetPickRegistRequestDto;
 import site.petbridge.domain.petpick.dto.response.PetPickResponseDto;
 import site.petbridge.domain.petpick.service.PetPickService;
+import site.petbridge.global.login.userdetail.CustomUserDetail;
 
 import java.util.List;
 import java.util.Optional;
@@ -85,7 +88,7 @@ public class PetPickController {
      * 내 펫픽 수정
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> editPetPick(HttpServletRequest httpServletRequest,
+    public ResponseEntity<Void> editPetPick(HttpServletRequest httpServletRequest, Authentication authentication,
                             @PathVariable("id") Long id,
                             @RequestPart(name = "petPickEditRequestDto") PetPickEditRequestDto petPickEditRequestDto,
                             @RequestPart(name = "thumbnail", required = false) MultipartFile thumbnailFile) throws Exception {
