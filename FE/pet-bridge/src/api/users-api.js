@@ -78,6 +78,13 @@ export const deleteUser = async (userId) => {
   return res
 }
 
+// 신고 상태 수정
+export const patchReport = async (reportId) => {
+  const res = await axiosInstance.patch(`/reports/${reportId}`)
+
+  return res
+}
+
 // 닉네임 중복 조회
 
 export const getIsDuplicatedNickname = (nickname) => {
