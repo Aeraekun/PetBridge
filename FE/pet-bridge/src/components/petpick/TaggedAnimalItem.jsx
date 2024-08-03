@@ -7,8 +7,8 @@ const AnimalInfo = ({data}) => {
   return (
     <>
       <div className="flex flex-col space-y-1">
-        <div className="text-base">{data.petname} </div>
-        <div className="text-base">{data.kind_cd}</div>
+        <div className="text-base">{data.name} </div>
+        <div className="text-base">{data.kindCd}</div>
       </div>
     </>
   )
@@ -34,7 +34,7 @@ const TagAnimal = ({data}) => {
         <AnimalInfo data={data}></AnimalInfo>
       </div>
       <div className="flex h-full flex-col justify-between">
-        <State state={data.process_state} />
+        <State state={data.processState} />
 
         <FollowButton ifFollowing={true} />
       </div>

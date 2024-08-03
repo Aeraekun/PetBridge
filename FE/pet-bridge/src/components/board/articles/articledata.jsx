@@ -11,7 +11,7 @@ const articledata = [
     count: 5,
     thumbnail: "https://via.placeholder.com/300",
     name: "Buddy",
-    process_state: "입양중",
+    processState: "입양중",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007876.jpeg",
   },
@@ -25,7 +25,7 @@ const articledata = [
     count: 8,
     thumbnail: "https://via.placeholder.com/300",
     name: "Whiskers",
-    process_state: "입양가능",
+    processState: "입양가능",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007877.jpeg",
   },
@@ -39,7 +39,7 @@ const articledata = [
     count: 2,
     thumbnail: "https://via.placeholder.com/300",
     name: "Max",
-    process_state: "입양가능",
+    processState: "입양가능",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007878.jpeg",
   },
@@ -53,7 +53,7 @@ const articledata = [
     count: 3,
     thumbnail: "https://via.placeholder.com/300",
     name: "Fluffy",
-    process_state: "보호중",
+    processState: "보호중",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007879.jpeg",
   },
@@ -67,7 +67,7 @@ const articledata = [
     count: 4,
     thumbnail: "https://via.placeholder.com/300",
     name: "Polly",
-    process_state: "입양완료",
+    processState: "입양완료",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007880.jpeg",
   },
@@ -81,7 +81,7 @@ const articledata = [
     count: 6,
     thumbnail: "https://via.placeholder.com/300",
     name: "Nibbles",
-    process_state: "입양중",
+    processState: "입양중",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007881.jpeg",
   },
@@ -95,7 +95,7 @@ const articledata = [
     count: 1,
     thumbnail: "https://via.placeholder.com/300",
     name: "Shelly",
-    process_state: "입양가능",
+    processState: "입양가능",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007882.jpeg",
   },
@@ -109,7 +109,7 @@ const articledata = [
     count: 5,
     thumbnail: "https://via.placeholder.com/300",
     name: "Pip",
-    process_state: "보호중",
+    processState: "보호중",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007883.jpeg",
   },
@@ -123,7 +123,7 @@ const articledata = [
     count: 7,
     thumbnail: "https://via.placeholder.com/300",
     name: "Goldie",
-    process_state: "입양완료",
+    processState: "입양완료",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007884.jpeg",
   },
@@ -137,7 +137,7 @@ const articledata = [
     count: 9,
     thumbnail: "https://via.placeholder.com/300",
     name: "Chilla",
-    process_state: "입양중",
+    processState: "입양중",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007885.jpeg",
   },
@@ -153,7 +153,7 @@ const articledata = [
     count: 3,
     thumbnail: "https://via.placeholder.com/300",
     name: "Buddy",
-    process_state: "입양완료",
+    processState: "입양완료",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007886.jpeg",
   },
@@ -167,7 +167,7 @@ const articledata = [
     count: 5,
     thumbnail: "https://via.placeholder.com/300",
     name: "Whiskers",
-    process_state: "입양완료",
+    processState: "입양완료",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007887.jpeg",
   },
@@ -181,7 +181,7 @@ const articledata = [
     count: 2,
     thumbnail: "https://via.placeholder.com/300",
     name: "Max",
-    process_state: "입양완료",
+    processState: "입양완료",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007888.jpeg",
   },
@@ -195,7 +195,7 @@ const articledata = [
     count: 4,
     thumbnail: "https://via.placeholder.com/300",
     name: "Fluffy",
-    process_state: "입양완료",
+    processState: "입양완료",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007889.jpeg",
   },
@@ -209,7 +209,7 @@ const articledata = [
     count: 6,
     thumbnail: "https://via.placeholder.com/300",
     name: "Polly",
-    process_state: "입양완료",
+    processState: "입양완료",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007890.jpeg",
   },
@@ -223,7 +223,7 @@ const articledata = [
     count: 7,
     thumbnail: "https://via.placeholder.com/300",
     name: "Nibbles",
-    process_state: "입양완료",
+    processState: "입양완료",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007891.jpeg",
   },
@@ -237,7 +237,7 @@ const articledata = [
     count: 5,
     thumbnail: "https://via.placeholder.com/300",
     name: "Shelly",
-    process_state: "입양완료",
+    processState: "입양완료",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007892.jpeg",
   },
@@ -251,7 +251,7 @@ const articledata = [
     count: 9,
     thumbnail: "https://via.placeholder.com/300",
     name: "Pip",
-    process_state: "입양완료",
+    processState: "입양완료",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007893.jpeg",
   },
@@ -265,7 +265,7 @@ const articledata = [
     count: 6,
     thumbnail: "https://via.placeholder.com/300",
     name: "Goldie",
-    process_state: "입양완료",
+    processState: "입양완료",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007894.jpeg",
   },
@@ -279,7 +279,7 @@ const articledata = [
     count: 8,
     thumbnail: "https://via.placeholder.com/300",
     name: "Chilla",
-    process_state: "입양완료",
+    processState: "입양완료",
     filename:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007895.jpeg",
   },

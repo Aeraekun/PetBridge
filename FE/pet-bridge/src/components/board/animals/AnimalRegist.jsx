@@ -1,7 +1,7 @@
 import SirenIcon from "components/common/SirenIcon"
 import Button from "components/common/Button"
 import {useNavigate} from "react-router-dom"
-import animaldata from "./animaldata"
+// import animaldata from "./animaldata"
 import React, {useState, useEffect} from "react"
 import AnimalDetailProfile from "./AnimalDetailProfile"
 const Profile = ({nickname}) => {
@@ -27,26 +27,24 @@ const ArticleRegist = () => {
     // 실제 데이터를 불러오는 코드로 대체할 수 있습니다.
     const fetchAnimalData = () => {
       const fetchedAnimalData = {
-        user_id: animaldata.length + 1, // Assuming this is auto-incremented
         name: "",
-        filename: "",
-        happen_dt: "",
-        kind_cd: "",
-        color_cd: "",
+        happenDt: null,
+        kindCd: "",
+        colorCd: "",
         age: "",
         weight: "",
-        notice_no: "",
+        noticeNo: "",
         popfile: "",
-        process_state: "",
-        sex_cd: "",
-        neuter_yn: "",
-        special_mark: "",
-        care_addr: "",
-        notice_comment: "",
-        category: 1,
+        processState: "",
+        sexCd: "",
+        neuterYn: "",
+        specialMark: "",
+        careAddr: "",
+        noticeComment: "",
       }
 
       setAnimal(fetchedAnimalData)
+      console.log(fetchedAnimalData)
     }
 
     fetchAnimalData()
@@ -81,15 +79,11 @@ const ArticleRegist = () => {
   const goBack = () => {
     navigate(-1)
   }
-  const goModify = () => {
-    navigate(`/shelter/modify/${animal.user_id}`)
-  }
 
   const registAnimal = () => {
     console.log(animal)
-    animaldata.push(animal)
 
-    navigate(`/shelter/details/${animal.user_id}`)
+    navigate(`/shelter`)
   }
   return (
     <>
@@ -110,7 +104,6 @@ const ArticleRegist = () => {
       </div>
       <div className="flex justify-end">
         <Button text={"등록하기"} onClick={registAnimal} />
-        <Button text={"수정하기"} onClick={goModify} />
         <Button text={"삭제하기"} onClick={goBack} />
       </div>
     </>
