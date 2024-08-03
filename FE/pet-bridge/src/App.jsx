@@ -60,6 +60,7 @@ import MainPage from "pages/MainPage"
 import AiPage from "pages/AiPage"
 import AiEyes from "components/ai/AiEyes"
 import AiSkin from "components/ai/AiSkin"
+import ChatModal from "pages/ChatModal"
 
 function App() {
   const dispatch = useDispatch()
@@ -80,93 +81,96 @@ function App() {
 
     getUserInfo()
   }, [dispatch, accessToken, isAuthenticated])
+
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route path="/" element={<MainPage />} exact />
-        <Route path="/shelter" element={<AnimalPage />}>
-          <Route index element={<AnimalBoardList />} />
-          <Route path=":bcode" element={<AnimalBoardList />} />
-          <Route path="details/:id" element={<AnimalDetail />} />
-          <Route path="modify/:id" element={<AnimalDetailModify />} />
-          <Route path="regist" element={<AnimalRegist />} />
+    <div>
+      <ChatModal />
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route path="/" element={<MainPage />} exact />
+          <Route path="/shelter" element={<AnimalPage />}>
+            <Route index element={<AnimalBoardList />} />
+            <Route path=":bcode" element={<AnimalBoardList />} />
+            <Route path="details/:id" element={<AnimalDetail />} />
+            <Route path="modify/:id" element={<AnimalDetailModify />} />
+            <Route path="regist" element={<AnimalRegist />} />
+          </Route>
+          <Route path="/communities" element={<BoardPage />}>
+            <Route index element={<ArticleBoardList />} />
+            <Route path=":bcode" element={<ArticleBoardList />} />
+            <Route path="details/:id" element={<ArticleDetail />} />
+            <Route path="modify/:id" element={<ArticleDetailModify />} />
+            <Route
+              path="write"
+              element={
+                <PrivateRoute
+                  component={<ArticleBoardWrite />}
+                  isAuthenticated={isAuthenticated}
+                />
+              }
+            ></Route>
+          </Route>
+          <Route path="/contracts" element={<ContractsPage />}>
+            <Route path=":id" element={<ContractsContainer />}></Route>
+            <Route path="create" element={<ContractsCreateContainer />}></Route>
+          </Route>
+          <Route path="/ai" element={<AiPage />}>
+            <Route path="eyes" element={<AiEyes />} />
+            <Route path="skin" element={<AiSkin />} />
+          </Route>
         </Route>
-        <Route path="/communities" element={<BoardPage />}>
-          <Route index element={<ArticleBoardList />} />
-          <Route path=":bcode" element={<ArticleBoardList />} />
-          <Route path="details/:id" element={<ArticleDetail />} />
-          <Route path="modify/:id" element={<ArticleDetailModify />} />
+        <Route path="/users/" element={<UsersLayout />}>
+          <Route path="social" element={<SocialPage />}>
+            <Route path="success" element={<SocialSuccessContainer />}></Route>
+            <Route path="update" element={<SocialUpdateContainer />}></Route>
+          </Route>
+          <Route path="login" element={<LoginPage />}></Route>
+          <Route path="sign-up" element={<SignUpPage />}></Route>
+          <Route path="update" element={<UpdateProfilePage />}></Route>
           <Route
-            path="write"
+            path=":userId"
             element={
               <PrivateRoute
-                component={<ArticleBoardWrite />}
+                component={<MyPage />}
+                isLoading={isLoading}
                 isAuthenticated={isAuthenticated}
               />
             }
-          ></Route>
+          >
+            <Route path="disable" element={<MyPageDisableContainer />} />
+            <Route path="articles" element={<MyPageArtilcesContainer />} />
+            <Route path="petpics" element={<MyPagePetPicsContainer />} />
+            <Route path="pets" element={<MyPagePetsContainer />} />
+            <Route path="contracts" element={<MyPageContractsContainer />} />
+            <Route path="favorites" element={<MyPageFavoritesContainer />} />
+            <Route path="likes" element={<MyPageLikesContainer />} />
+            <Route path="admin-users" element={<MyPageUsersContainer />} />
+            <Route path="admin-reports" element={<MyPageReportsContainer />} />
+          </Route>
         </Route>
-        <Route path="/contracts" element={<ContractsPage />}>
-          <Route path=":id" element={<ContractsContainer />}></Route>
-          <Route path="create" element={<ContractsCreateContainer />}></Route>
+        <Route path="/lost-and-found" element={<LostAndFoundPage />}>
+          <Route path="/lost-and-found/report" element={<Report />}></Route>
         </Route>
-        <Route path="/ai" element={<AiPage />}>
-          <Route path="eyes" element={<AiEyes />} />
-          <Route path="skin" element={<AiSkin />} />
+        <Route path="/petpick" element={<ShortsLayout />}>
+          <Route path="" element={<PetpickComments />}></Route>
         </Route>
-      </Route>
-      <Route path="/users/" element={<UsersLayout />}>
-        <Route path="social" element={<SocialPage />}>
-          <Route path="success" element={<SocialSuccessContainer />}></Route>
-          <Route path="update" element={<SocialUpdateContainer />}></Route>
-        </Route>
-        <Route path="login" element={<LoginPage />}></Route>
-        <Route path="sign-up" element={<SignUpPage />}></Route>
-        <Route path="update" element={<UpdateProfilePage />}></Route>
+        <Route path="/petpick/:id/tag" element={<PetpickTagDetail />}></Route>
+
         <Route
-          path=":userId"
+          path="/petpick/write"
           element={
             <PrivateRoute
-              component={<MyPage />}
-              isLoading={isLoading}
+              component={<PetpickWrite />}
               isAuthenticated={isAuthenticated}
             />
           }
-        >
-          <Route path="disable" element={<MyPageDisableContainer />} />
-          <Route path="articles" element={<MyPageArtilcesContainer />} />
-          <Route path="petpics" element={<MyPagePetPicsContainer />} />
-          <Route path="pets" element={<MyPagePetsContainer />} />
-          <Route path="contracts" element={<MyPageContractsContainer />} />
-          <Route path="favorites" element={<MyPageFavoritesContainer />} />
-          <Route path="likes" element={<MyPageLikesContainer />} />
-          <Route path="admin-users" element={<MyPageUsersContainer />} />
-          <Route path="admin-reports" element={<MyPageReportsContainer />} />
+        ></Route>
+        <Route path="/contracts" element={<ContractsPage />}>
+          <Route path=":id" element={<ContractsContainer />}></Route>
+          <Route path="create" element={<ContractsContainer />}></Route>
         </Route>
-      </Route>
-      <Route path="/lost-and-found" element={<LostAndFoundPage />}>
-        <Route path="/lost-and-found/report" element={<Report />}></Route>
-      </Route>
-
-      <Route path="/petpick" element={<ShortsLayout />}>
-        <Route path="" element={<PetpickComments />}></Route>
-      </Route>
-      <Route path="/petpick/:id/tag" element={<PetpickTagDetail />}></Route>
-
-      <Route
-        path="/petpick/write"
-        element={
-          <PrivateRoute
-            component={<PetpickWrite />}
-            isAuthenticated={isAuthenticated}
-          />
-        }
-      ></Route>
-      <Route path="/contracts" element={<ContractsPage />}>
-        <Route path=":id" element={<ContractsContainer />}></Route>
-        <Route path="create" element={<ContractsContainer />}></Route>
-      </Route>
-    </Routes>
+      </Routes>
+    </div>
   )
 }
 
