@@ -19,11 +19,14 @@ public class LoginService implements UserDetailsService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("해당 이메일" + email + "이 존재하지 않습니다."));
 
+        System.out.println("해당 유저 존재");
+
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getEmail())
                 .password(user.getPassword())
                 .roles(user.getRole().name())
                 .build();
+//        return new CustomUserDetail(user);
 
     }
 }
