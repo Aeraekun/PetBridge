@@ -1,4 +1,3 @@
-import dummydata from "./dummydata"
 import Button from "../common/Button"
 import TagAnimal from "./TaggedAnimalItem"
 import TagArticle from "./TaggedArticleItem"
@@ -10,8 +9,11 @@ import CommentIcon from "../common/CommentIcon"
 import Profile from "components/common/Profile"
 import PetpickVideo from "./PetpickVideo"
 import Navbar from "components/header/Navbar"
+import {useSelector} from "react-redux"
+import {selectPetpickData} from "features/petpick/petpick-slice"
 
 const PetpickTagDetail = () => {
+  const petpick = useSelector(selectPetpickData)
   const navigate = useNavigate()
   const {id} = useParams()
   const goWritePetpick = () => {
@@ -48,15 +50,15 @@ const PetpickTagDetail = () => {
             </div>
             <Button onClick={goWritePetpick}>새팻픽 </Button>
 
-            <TagAnimal data={dummydata[3]} />
-            <TagArticle data={dummydata[3]} />
-            <TagArticle data={dummydata[4]} />
+            <TagAnimal data={petpick} />
+            <TagArticle data={petpick} />
+            <TagArticle data={petpick} />
           </div>
           <CommentIcon
             className="absolute bottom-10 right-0"
             onClick={goPetpickComment}
           ></CommentIcon>
-          <TagIcon data={dummydata[4]} onClick={goPetpickTagDetail} />
+          <TagIcon data={petpick} onClick={goPetpickTagDetail} />
         </div>
       </div>
     </div>
