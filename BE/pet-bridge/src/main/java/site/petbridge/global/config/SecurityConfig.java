@@ -79,12 +79,12 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email/check").permitAll()
 				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email").permitAll()
 
-				// 쇼츠
-				.requestMatchers(HttpMethod.GET,"/api/shorts").permitAll()
-				.requestMatchers(HttpMethod.POST,"/api/shorts").permitAll()
+				// 펫픽
+				.requestMatchers(HttpMethod.GET,"/api/petpicks").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/petpicks/**").permitAll()
 
-				// 쇼츠 댓글
-				.requestMatchers(HttpMethod.GET,"/api/short-comments/**").permitAll()
+				// 펫픽 댓글
+				.requestMatchers(HttpMethod.GET,"/api/petpick-comments/**").permitAll()
 
 				// 게시글
 				.requestMatchers(HttpMethod.GET, "/api/boards").permitAll()

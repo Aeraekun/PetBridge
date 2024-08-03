@@ -26,6 +26,9 @@ public class AnimalController {
 
     private final AnimalService animalService;
 
+    /**
+     *
+     */
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<AnimalResponseDto>> getListAnimalByUserId(@PathVariable("userId") int userId) {
         return animalService.getListAnimalByUserId(userId)

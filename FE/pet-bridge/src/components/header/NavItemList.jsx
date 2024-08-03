@@ -24,12 +24,17 @@ const NavItemList = () => {
     {
       id: itemId++,
       category: "쇼츠",
-      to: "/short",
+      to: "/petpick",
     },
     {
       id: itemId++,
       category: "커뮤니티",
       to: "/communities",
+    },
+    {
+      id: itemId++,
+      category: "동물 건강 진단",
+      to: "/ai",
     },
   ]
   return (
@@ -40,7 +45,7 @@ const NavItemList = () => {
           key={item.id}
           to={item.to}
           className={({isActive}) =>
-            `rounded-xl ${isActive ? "bg-yellow" : ""}`
+            `rounded-xl ${isActive ? "bg-yellow font-bold" : ""}`
           }
         >
           <span className="flex h-12 cursor-pointer items-center px-2.5 text-xl">

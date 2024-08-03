@@ -1,6 +1,7 @@
 package site.petbridge.domain.petpick.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,14 +16,14 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/shorts")
+@RequestMapping("/api/petpicks")
 @RequiredArgsConstructor
 public class PetPickController {
 
     private final PetPickService petPickService;
 
     /**
-     * 펫픽 등록(권한)
+     * 펫픽 등록
      */
     @PostMapping
     public ResponseEntity<Void> registPetPick(HttpServletRequest httpServletRequest,
@@ -36,21 +37,11 @@ public class PetPickController {
 
     /**
      * 펫픽 랜덤 목록 조회
-     *@GetMapping("/{short_id}")
-     *     public ResponseEntity<List<PetPickCommentResponseDto>> getListPetPickComment(@PathVariable("short_id") Long petPickId,
-     *                                                                                  @RequestParam(defaultValue = "0") int page,
-     *                                                                                  @RequestParam(defaultValue = "12") int size) {
-     *         List<PetPickCommentResponseDto> petPickCommentResponseDtos = petPickCommentService.getListPetPickComment(petPickId, page, size);
-     *
-     *         return Optional.ofNullable(petPickCommentResponseDtos)
-     *                 .filter(list -> !list.isEmpty())
-     *                 .map(ResponseEntity::ok)
-     *                 .orElseGet(() -> ResponseEntity.noContent().build());
-     *     }
      */
     @GetMapping
-    public ResponseEntity<List<PetPickResponseDto>> getRandomListPetPick() {
-        List<PetPickResponseDto> petPickResponseDtos = petPickService.getRandomListPetPick();
+    public ResponseEntity<List<PetPickResponseDto>> getRandomListPetPick(HttpServletRequest httpServletRequest,
+                                                                         @RequestParam(name = "initcommentsize") int initCommentSize) throws Exception {
+        List<PetPickResponseDto> petPickResponseDtos = petPickService.getRandomListPetPick(httpServletRequest, initCommentSize);
 
         return Optional.ofNullable(petPickResponseDtos)
                 .filter(list -> !list.isEmpty())
@@ -59,32 +50,56 @@ public class PetPickController {
     }
 
     /**
-     * 내가 쓴 펫픽 수정 (권한)
+     * 내가 쓴 펫픽 목록 조회
+     */
+    @GetMapping("/my")
+    public ResponseEntity<List<PetPickResponseDto>> getListMyPetPick(HttpServletRequest httpServletRequest,
+                                                                     @RequestParam(name = "page") int page,
+                                                                     @RequestParam(name = "size") int size,
+                                                                     @RequestParam(name = "initcommentsize") int initCommentSize) throws Exception {
+        List<PetPickResponseDto> petPickResponseDtos = petPickService.getListMyPetPick(httpServletRequest, page, size, initCommentSize);
+
+        return Optional.ofNullable(petPickResponseDtos)
+                .filter(list -> !list.isEmpty())
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.noContent().build());
+    }
+
+    /**
+     * 내가 좋아요 한 펫픽 목록 조회
+     */
+    @GetMapping("/like")
+    public ResponseEntity<List<PetPickResponseDto>> getListLikePetPick(HttpServletRequest httpServletRequest,
+                                                                     @RequestParam(name = "page") int page,
+                                                                     @RequestParam(name = "size") int size,
+                                                                     @RequestParam(name = "initcommentsize") int initCommentSize) throws Exception {
+        List<PetPickResponseDto> petPickResponseDtos = petPickService.getListLikePetPick(httpServletRequest, page, size, initCommentSize);
+
+        return Optional.ofNullable(petPickResponseDtos)
+                .filter(list -> !list.isEmpty())
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.noContent().build());
+    }
+
+    /**
+     * 내 펫픽 수정
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<Long> editPetPick(HttpServletRequest httpServletRequest,
+    public ResponseEntity<Void> editPetPick(HttpServletRequest httpServletRequest,
                             @PathVariable("id") Long id,
-                            @RequestPart(name = "petPickEditRequestDto") final PetPickEditRequestDto petPickEditRequestDto,
+                            @RequestPart(name = "petPickEditRequestDto") PetPickEditRequestDto petPickEditRequestDto,
                             @RequestPart(name = "thumbnail", required = false) MultipartFile thumbnailFile) throws Exception {
-        Long result = petPickService.update(httpServletRequest, petPickEditRequestDto, id, thumbnailFile);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-
-
-    /**
-     * 내가 쓴 펫픽 삭제(권한)
-     */
-    @PatchMapping("/{id}/disable")
-    public ResponseEntity<Long> removePetPick(HttpServletRequest httpServletRequest, @PathVariable("id") Long id) throws Exception {
-        Long result = petPickService.delete(httpServletRequest, id);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        petPickService.editPetPick(httpServletRequest, petPickEditRequestDto, id, thumbnailFile);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
-     * 내가 쓴 펫픽 목록 조회(권한)
+     * 내 펫픽 삭제
      */
+    @PatchMapping("/{id}/delete")
+    public ResponseEntity<Void> removePetPick(HttpServletRequest httpServletRequest, @PathVariable("id") Long id) throws Exception {
+        petPickService.delete(httpServletRequest, id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-
-
+    }
 }

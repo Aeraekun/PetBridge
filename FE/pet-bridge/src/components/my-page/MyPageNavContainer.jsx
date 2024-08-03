@@ -3,6 +3,7 @@ import {
   getUserInfoThunk,
   logOut,
   selectNickname,
+  selectRole,
 } from "features/user/users-slice"
 import {Link, NavLink, useNavigate} from "react-router-dom"
 import MyPageNav from "./MyPageNav"
@@ -66,6 +67,7 @@ const MyPageNavList = () => {
 const MyPageNavContainer = () => {
   // 유저 이름 초기화
   const userName = useSelector(selectNickname)
+  const role = useSelector(selectRole)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   // 로그아웃
@@ -104,12 +106,12 @@ const MyPageNavContainer = () => {
       <div className="flex space-x-5">
         <Link
           to="/users/update"
-          className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild"
+          className="bg-mild flex h-[35px] w-[100px] items-center justify-center rounded-xl"
         >
           수정하기
         </Link>
         <button
-          className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild"
+          className="bg-mild flex h-[35px] w-[100px] items-center justify-center rounded-xl"
           onClick={handleLogOut}
         >
           로그아웃
@@ -117,13 +119,36 @@ const MyPageNavContainer = () => {
       </div>
       {/* 카테고리 리스트 */}
       <MyPageNavList />
-      {/* 회원 버튼 */}
-      <NavLink
-        to="disable"
-        className={({isActive}) => [isActive ? "text-red-400" : "text-stroke"]}
-      >
-        [회원 탈퇴하기]
-      </NavLink>
+      {role === "ADMIN" ? (
+        // 관리자
+        <div>
+          <NavLink
+            to="admin-users"
+            className={({isActive}) => [
+              isActive ? "text-red-400" : "text-stroke",
+            ]}
+          >
+            [회원 관리]
+          </NavLink>
+          <NavLink
+            to="admin-reports"
+            className={({isActive}) => [
+              isActive ? "text-red-400" : "text-stroke",
+            ]}
+          >
+            [신고 관리]
+          </NavLink>
+        </div>
+      ) : (
+        <NavLink
+          to="disable"
+          className={({isActive}) => [
+            isActive ? "text-red-400" : "text-stroke",
+          ]}
+        >
+          [회원 탈퇴하기]
+        </NavLink>
+      )}
     </div>
   )
 }

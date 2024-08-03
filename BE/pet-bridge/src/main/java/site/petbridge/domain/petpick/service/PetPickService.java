@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 import site.petbridge.domain.petpick.dto.request.PetPickEditRequestDto;
 import site.petbridge.domain.petpick.dto.request.PetPickRegistRequestDto;
 import site.petbridge.domain.petpick.dto.response.PetPickResponseDto;
+import site.petbridge.domain.user.domain.User;
 
 import java.util.List;
 
@@ -17,24 +18,32 @@ public interface PetPickService {
              MultipartFile videoFile) throws Exception;
 
     /**
-     * 펫픽 목록 조회
+     * 펫픽 랜덤 목록 조회
      */
-    List<PetPickResponseDto> getRandomListPetPick();
+    List<PetPickResponseDto> getRandomListPetPick(HttpServletRequest httpServletRequest, int initCommentSize) throws Exception;
 
     /**
-     * 펫픽 수정
+     * 내가 쓴 펫픽 목록 조회
      */
-    Long update(HttpServletRequest httpServletRequest, final PetPickEditRequestDto petPickEditRequestDto,
-                final Long petPickId, MultipartFile thumbnailFile) throws Exception;
+    List<PetPickResponseDto> getListMyPetPick(HttpServletRequest httpServletRequest, int page, int size,
+                                                     int initCommentSize) throws Exception;
 
     /**
-     * 펫픽 삭제
+     * 내가 좋아요한 펫픽 목록 조회
      */
-    Long delete(HttpServletRequest httpServletRequest, final Long id) throws Exception;
+    List<PetPickResponseDto> getListLikePetPick(HttpServletRequest httpServletRequest, int page, int size,
+                                              int initCommentSize) throws Exception;
 
     /**
-     * 랜덤 펫픽 조회
+     * 내 펫픽 수정
      */
-//    PetPickResponseDto getRandomDetailPetPick();
+    void editPetPick(HttpServletRequest httpServletRequest, PetPickEditRequestDto petPickEditRequestDto,
+                     Long petPickId, MultipartFile thumbnailFile) throws Exception;
+
+    /**
+     * 내 펫픽 삭제
+     */
+    void delete(HttpServletRequest httpServletRequest, final Long id) throws Exception;
+
 
 }

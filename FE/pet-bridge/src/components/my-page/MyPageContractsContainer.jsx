@@ -48,7 +48,7 @@ const MyPageContractsContainer = () => {
       <div className="flex w-full justify-between p-2.5 ">
         <div></div>
         <button className="text-4xl font-bold">내 입양기록</button>
-        <Link className="rounded-xl bg-mild p-2.5" to="/contracts/create">
+        <Link className="bg-mild rounded-xl p-2.5" to="/contracts/create">
           입양 보내기
         </Link>
       </div>
@@ -61,29 +61,31 @@ const MyPageContractsContainer = () => {
         ) : (
           // 이미지 기준으로 반복
           viewItems.map((item, index) => (
-            <Link
-              to={`/contracts/${item.id}`}
-              key={index}
-              // ref 값이 화면에 들어왔을 때 api가 요청됨
-              ref={index === viewItems.length - 1 ? ref : null}
-              className="m-2.5 h-[450px] w-[300px] snap-center rounded-xl border"
-            >
-              <img
-                src={`/data/petBridge/uploads/animal/${item.animalImage}`}
-                alt={item.animalName}
-                className="h-[300px] rounded-t-xl"
-              />
-              <div className="space-y-2.5 p-2.5">
-                <p>{item.animalName}</p>
-                <p>계약일 : {item.contractDate}</p>
-                {item.contractorId === Number(userId) ? (
-                  <span>입양자 : </span>
-                ) : (
-                  <span>보호자 : </span>
-                )}
-                <span>{item.contracteeNickname}</span>
-              </div>
-            </Link>
+            <>
+              <Link
+                to={`/contracts/${item.id}`}
+                key={index}
+                // ref 값이 화면에 들어왔을 때 api가 요청됨
+                ref={index === viewItems.length - 1 ? ref : null}
+                className="m-2.5 h-[450px] w-[300px] snap-center rounded-xl border"
+              >
+                <img
+                  src={`/data/petBridge/uploads/animal/${item.animalImage}`}
+                  alt={item.animalName}
+                  className="h-[300px] rounded-t-xl"
+                />
+                <div className="space-y-2.5 p-2.5">
+                  <p>{item.animalName}</p>
+                  <p>계약일 : {item.contractDate}</p>
+                  {item.contractorId === Number(userId) ? (
+                    <span>입양자 : </span>
+                  ) : (
+                    <span>보호자 : </span>
+                  )}
+                  <span>{item.contracteeNickname}</span>
+                </div>
+              </Link>
+            </>
           ))
         )}
       </div>

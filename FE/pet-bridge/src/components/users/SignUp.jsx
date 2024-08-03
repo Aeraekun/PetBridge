@@ -46,9 +46,10 @@ const SignUp = () => {
   // 유효성 검사 정규표현식
   const emailPattern = /\S+@\S+\.\S+/
   const passwordPattern = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/
-  const birthTypePattern = /^\d{8}$/
-  const birthPattern =
-    /^(19[0-9]{2}|20[0-9]{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/
+  // 생일 유효성 검사 패턴 -> input type date로 변경
+  // const birthTypePattern = /^\d{8}$/
+  // const birthPattern =
+  //   /^(19[0-9]{2}|20[0-9]{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/
   const phonePattern = /^\d{3}\d{4}\d{4}$/
 
   // 에러 메세지 변경
@@ -107,11 +108,6 @@ const SignUp = () => {
   const validateBirth = () => {
     if (!signUpFormData.birth) {
       errors.birth = "*생년월일: 필수 정보입니다."
-    } else if (!birthTypePattern.test(signUpFormData.birth)) {
-      errors.birth = "*생년월일: 20240723 양식으로 작성해주세요."
-    } else if (!birthPattern.test(signUpFormData.birth)) {
-      errors.birth =
-        "*생년월일: 19000101 - 20991231 이내의 생일을 입력해주세요."
     } else {
       errors.birth = ""
     }
@@ -427,7 +423,7 @@ const SignUp = () => {
           <input
             value={signUpFormData.birth}
             onChange={changeHandler}
-            type="text"
+            type="date"
             className=" my-1 w-full rounded-md border p-2.5"
             placeholder="생년월일 8자리 (YYYYMMDD)"
             id="birth"
