@@ -1,7 +1,7 @@
 const NavInput = () => {
   return (
     <input
-      className="w-60 rounded-md border p-2.5"
+      className="hidden w-60 rounded-md border p-2.5 lg:inline"
       type="text"
       name=""
       id="nav-input"
