@@ -73,3 +73,14 @@ export const deleteUser = async (userId) => {
 
   return res
 }
+
+// 닉네임 중복 조회
+
+export const getIsDuplicatedNickname = (nickname) => {
+  console.group("users-api.js > getIsDuplicatedNickname")
+  console.log("getIsDuplicatedNickname")
+  const res = axiosInstance.get(`/users/${nickname}`)
+  console.log(res)
+  console.groupEnd()
+  return res
+}
