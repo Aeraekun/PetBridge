@@ -17,6 +17,7 @@ import site.petbridge.domain.user.domain.User;
 import site.petbridge.domain.user.repository.UserRepository;
 import site.petbridge.global.jwt.service.JwtService;
 import site.petbridge.global.jwt.util.PasswordUtil;
+import site.petbridge.global.login.userdetail.CustomUserDetail;
 
 import java.io.IOException;
 
@@ -185,11 +186,12 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             password = PasswordUtil.generateRandomPassword();
         }
 
-        UserDetails userDetailsUser = org.springframework.security.core.userdetails.User.builder()
-                .username(myUser.getEmail())
-                .password(password)
-                .roles(myUser.getRole().name())
-                .build();
+        CustomUserDetail userDetailsUser = new CustomUserDetail(myUser);
+//        UserDetails userDetailsUser = org.springframework.security.core.userdetails.User.builder()
+//                .username(myUser.getEmail())
+//                .password(password)
+//                .roles(myUser.getRole().name())
+//                .build();
 
         Authentication authentication =
                 new UsernamePasswordAuthenticationToken(userDetailsUser, null,

@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import site.petbridge.domain.user.domain.User;
 import site.petbridge.domain.user.repository.UserRepository;
 import site.petbridge.global.jwt.service.JwtService;
+import site.petbridge.global.login.userdetail.CustomUserDetail;
 
 import java.io.IOException;
 
@@ -28,7 +30,10 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     public void onAuthenticationSuccess (HttpServletRequest request, HttpServletResponse response,
                                          Authentication authentication) throws IOException, ServletException {
         // 인증 정보에서 Username(email) 추출
-        String email = extractUsername(authentication);
+//        String email = extractUsername(authentication);
+        CustomUserDetail userDetails = (CustomUserDetail) authentication.getPrincipal();
+        User loginUser = userDetails.getUser();
+        String email = loginUser.getEmail();
         // JwtService의 createAccessToken으로 AccessToken을 발급
         String accessToken = jwtService.createAccessToken(email);
         // JwtService의 createRefreshToken으로 RefreshToken을 발급

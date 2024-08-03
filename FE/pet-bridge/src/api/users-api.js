@@ -31,7 +31,11 @@ export const getUserInfo = async () => {
 
 // 회원 정보 수정
 export const patchUserInfo = async (userInfo) => {
-  const res = await axiosInstance.patch(`/users/modify`, userInfo)
+  const res = await axiosInstance.patch(`/users/modify`, userInfo, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  })
   return res
 }
 
@@ -71,5 +75,23 @@ export const postEmailCheck = async (emailConfirmData) => {
 export const deleteUser = async (userId) => {
   const res = await axiosInstance.delete(`/users/${userId}`)
 
+  return res
+}
+
+// 신고 상태 수정
+export const patchReport = async (reportId) => {
+  const res = await axiosInstance.patch(`/reports/${reportId}`)
+
+  return res
+}
+
+// 닉네임 중복 조회
+
+export const getIsDuplicatedNickname = (nickname) => {
+  console.group("users-api.js > getIsDuplicatedNickname")
+  console.log("getIsDuplicatedNickname")
+  const res = axiosInstance.get(`/users/${nickname}`)
+  console.log(res)
+  console.groupEnd()
   return res
 }
