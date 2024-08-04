@@ -135,27 +135,11 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     public void checkAccessTokenAndAuthentication(HttpServletRequest request, HttpServletResponse response,
                                                   FilterChain filterChain) throws ServletException, IOException {
         log.info("checkAccessTokenAndAuthentication() 호출");
-//        jwtService.extractAccessToken(request)
-//                        .filter(jwtService::isTokenValid)
-//                                .ifPresent(accessToken -> jwtService.extractEmail(accessToken)
-//                                                .ifPresent(email -> userRepository.findByEmail(email)
-//                                                                .ifPresent(this::saveAuthentication)));
-
-        boolean tokenValid = jwtService.extractAccessToken(request)
-                .filter(jwtService::isTokenValid)
-                .map(accessToken -> {
-                    jwtService.extractEmail(accessToken)
-                            .ifPresent(email -> userRepository.findByEmail(email)
-                                    .ifPresent(this::saveAuthentication));
-                    return true;
-                })
-                .orElse(false);
-
-        if (!tokenValid) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Access Token is expired or invalid");
-            System.out.println("not valid token");
-            return;
-        }
+        jwtService.extractAccessToken(request)
+                        .filter(jwtService::isTokenValid)
+                                .ifPresent(accessToken -> jwtService.extractEmail(accessToken)
+                                                .ifPresent(email -> userRepository.findByEmail(email)
+                                                                .ifPresent(this::saveAuthentication)));
 
         filterChain.doFilter(request, response);
     }

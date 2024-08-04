@@ -19,7 +19,6 @@ public class UserResponseDto {
     private Role role;
     private SocialType socialType;
     private String socialId;
-    private String refreshToken;
     private boolean disabled;
 
     public UserResponseDto(User entity) {
@@ -32,7 +31,6 @@ public class UserResponseDto {
         this.role = entity.getRole();
         this.socialType = entity.getSocialType();
         this.socialId = entity.getSocialId();
-        this.refreshToken = entity.getRefreshToken();
         this.disabled = entity.isDisabled();
     }
 }

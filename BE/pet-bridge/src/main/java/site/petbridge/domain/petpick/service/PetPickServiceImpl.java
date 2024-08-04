@@ -29,6 +29,7 @@ import site.petbridge.global.exception.ErrorCode;
 import site.petbridge.global.exception.PetBridgeException;
 import site.petbridge.global.jwt.service.JwtService;
 import site.petbridge.global.login.userdetail.CustomUserDetail;
+import site.petbridge.util.AuthUtil;
 import site.petbridge.util.FileUtil;
 
 import java.util.List;
@@ -47,6 +48,7 @@ public class PetPickServiceImpl implements PetPickService {
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final AuthUtil authUtil;
 
     /**
      * 펫픽 등록
@@ -56,11 +58,7 @@ public class PetPickServiceImpl implements PetPickService {
     public void registPetPick(HttpServletRequest httpServletRequest, final PetPickRegistRequestDto petPickRegistRequestDto,
                     MultipartFile thumbnailFile, MultipartFile videoFile) throws Exception {
 
-        // 회원 정보
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-        User user = userRepository.findByIdAndDisabledFalse(userId)
-                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+        User user = authUtil.getAuthenticatedUser(userRepository);
 
         String savedThumbnailFileName = null;
         String savedVideoFileName = null;
@@ -83,11 +81,7 @@ public class PetPickServiceImpl implements PetPickService {
     @Override
     public List<PetPickResponseDto> getRandomListPetPick(HttpServletRequest httpServletRequest,
                                                          int initCommentSize) throws Exception {
-        // 로그인 여부 확인
-        String accessToken = jwtService.extractAccessToken(httpServletRequest).orElse(null);
-        String email = jwtService.extractEmail(accessToken).orElse(null);
-
-        User user = userRepository.findByEmail(email).orElse(null);
+        User user = authUtil.getAuthenticatedUser(userRepository);
 
         List<PetPick> petPicks = petPickRepository.findRandomPetPicks();
 
@@ -124,11 +118,7 @@ public class PetPickServiceImpl implements PetPickService {
     public List<PetPickResponseDto> getListMyPetPick(HttpServletRequest httpServletRequest, int page, int size,
                                                      int initCommentSize) throws Exception {
 
-        // 회원 정보
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-        User user = userRepository.findByIdAndDisabledFalse(userId)
-                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+        User user = authUtil.getAuthenticatedUser(userRepository);
 
         Sort sort = Sort.by(Sort.Direction.DESC, "registTime");
         Pageable pageable = PageRequest.of(page, size, sort);
@@ -143,11 +133,7 @@ public class PetPickServiceImpl implements PetPickService {
     @Override
     public List<PetPickResponseDto> getListLikePetPick(HttpServletRequest httpServletRequest, int page, int size, int initCommentSize) throws Exception {
 
-        // 회원 정보
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-        User user = userRepository.findByIdAndDisabledFalse(userId)
-                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+        User user = authUtil.getAuthenticatedUser(userRepository);
 
         Sort sort = Sort.by(Sort.Direction.DESC, "registTime");
         Pageable pageable = PageRequest.of(page, size, sort);
@@ -199,11 +185,7 @@ public class PetPickServiceImpl implements PetPickService {
     public void editPetPick(HttpServletRequest httpServletRequest, PetPickEditRequestDto petPickEditRequestDto,
                             Long petPickId, MultipartFile thumbnailFile) throws Exception {
 
-        // 회원 정보
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-        User user = userRepository.findByIdAndDisabledFalse(userId)
-                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+        User user = authUtil.getAuthenticatedUser(userRepository);
         // 펫픽 없을 때
         PetPick entity = petPickRepository.findById(petPickId).orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
         // 내가 작성한 펫픽이 아닐 때
@@ -233,11 +215,7 @@ public class PetPickServiceImpl implements PetPickService {
     @Override
     public void delete(HttpServletRequest httpServletRequest, final Long petPickId) throws Exception {
 
-        // 회원 정보
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-        User user = userRepository.findByIdAndDisabledFalse(userId)
-                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+        User user = authUtil.getAuthenticatedUser(userRepository);
 
         // 펫픽 없을 때
         PetPick entity = petPickRepository.findById(petPickId).orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));

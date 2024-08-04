@@ -28,6 +28,7 @@ import site.petbridge.domain.user.service.UserService;
 import site.petbridge.global.exception.ErrorCode;
 import site.petbridge.global.exception.PetBridgeException;
 import site.petbridge.global.login.userdetail.CustomUserDetail;
+import site.petbridge.util.AuthUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,6 +41,7 @@ public class PetPickCommentServiceImpl implements PetPickCommentService {
     private final PetPickRepository petPickRepository;
     private final PetPickCommentRepository petPickCommentRepository;
     private final UserRepository userRepository;
+    private final AuthUtil authUtil;
 
     /**
      * 펫픽 댓글 등록(권한)
@@ -48,11 +50,7 @@ public class PetPickCommentServiceImpl implements PetPickCommentService {
     @Override
     public void registPetPickComment(HttpServletRequest httpServletRequest, PetPickCommentRegistRequestDto petPickCommentRegistRequestDto) throws Exception {
 
-        // 회원 정보
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-        User user = userRepository.findByIdAndDisabledFalse(userId)
-                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+        User user = authUtil.getAuthenticatedUser(userRepository);
 
         PetPickComment entity = petPickCommentRegistRequestDto.toEntity(user.getId());
 
@@ -84,11 +82,7 @@ public class PetPickCommentServiceImpl implements PetPickCommentService {
     @Override
     public void editPetPickComment(HttpServletRequest httpServletRequest, Long id, PetPickCommentEditRequestDto petPickCommentEditRequestDto) throws Exception {
 
-        // 회원 정보
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-        User user = userRepository.findByIdAndDisabledFalse(userId)
-                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+        User user = authUtil.getAuthenticatedUser(userRepository);
 
         // 해당 id 펫픽 댓글 없을 때
         PetPickComment entity = petPickCommentRepository.findById(id)
@@ -109,11 +103,7 @@ public class PetPickCommentServiceImpl implements PetPickCommentService {
     @Override
     public void removePetPickComment(HttpServletRequest httpServletRequest, Long id) throws Exception {
 
-        // 회원 정보
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-        User user = userRepository.findByIdAndDisabledFalse(userId)
-                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+        User user = authUtil.getAuthenticatedUser(userRepository);
 
         // 해당 id 펫픽 댓글 없을 때
         PetPickComment entity = petPickCommentRepository.findById(id)
