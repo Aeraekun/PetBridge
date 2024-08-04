@@ -1,7 +1,7 @@
 import MyPageCard from "components/my-page/MyPageCard"
 import {Link} from "react-router-dom"
 import {useEffect, useState} from "react"
-import {getShelterAnimals} from "api/test-api"
+import {getShelterAnimals} from "api/mypage-api"
 import {useInView} from "react-intersection-observer"
 
 const MyPageFavoritesContainer = () => {
@@ -69,20 +69,15 @@ const MyPageFavoritesContainer = () => {
     setSearchParams({...searchParams, pageNo: pageNo})
   }, [pageNo])
 
-  const onClickFetchDataHandler = () => {
-    fetchData()
-  }
-
   return (
     <div className="flex h-full flex-col items-center">
       <div className="flex w-full justify-center p-2.5 ">
         <button className="text-4xl font-bold">내 관심 등록 동물</button>
-        <button onClick={onClickFetchDataHandler}>데이터 받아오기</button>
       </div>
       {isLoading ? (
-        <div className="flex items-center">
-          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
-          <span>로딩중입니다</span>
+        <div className="flex size-full items-center justify-center">
+          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+          <span className="px-5 text-6xl font-bold">Loading...</span>
         </div>
       ) : (
         <div className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
@@ -106,7 +101,7 @@ const MyPageFavoritesContainer = () => {
           ))}
           {isLoadingMore ? (
             <div className="flex items-center">
-              <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
+              <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
               <span>추가 데이터를 로딩중입니다</span>
             </div>
           ) : null}
