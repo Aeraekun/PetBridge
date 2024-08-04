@@ -1,4 +1,5 @@
 import axios from "axios"
+import axiosInstance from "./axios-instance"
 const BASE_API_URL = process.env.REACT_APP_API_URL + "/animals"
 
 export const getListAnimalByUserId = async (userId) => {
@@ -15,7 +16,17 @@ export const getListAnimalByUserId = async (userId) => {
 export const getDetailAnimal = async (id) => {
   try {
     const res = await axios.get(`${BASE_API_URL}/${id}`)
-    console.log("getDetailAnimal" + res)
+    console.log("getDetailAnimal" + res.data)
+    return res.data
+  } catch (e) {
+    console.error(e)
+    return []
+  }
+}
+export const getAnimalList = async (searchParams) => {
+  try {
+    const res = await axios.get(`${BASE_API_URL}`, {params: searchParams})
+    console.log("getAnimalList" + res.data)
     return res.data
   } catch (e) {
     console.error(e)
@@ -44,16 +55,16 @@ export const getDetailAnimal = async (id) => {
 */
 export const registAnimal = async (formData) => {
   try {
-    const res = await axios.post(`${BASE_API_URL}`, formData, {
+    const res = await axiosInstance.post(`/animals`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     })
-    console.log("registAnimal" + res)
+    console.log("registAnimal response:", res)
     return res.data
-  } catch (e) {
-    console.error(e)
-    return []
+  } catch (error) {
+    console.error("Error in registAnimal:", error)
+    throw error // 호출한 쪽에서 에러를 처리할 수 있도록 합니다.
   }
 }
 
@@ -109,6 +120,7 @@ export const getSidoAPI = async () => {
     serviceKey:
       "w2SoV2W8SJI41W31IkRtQyPg9X2RLZ0QXU0ZQAPtwQ5Fy8ubzMDUFzzCbm4NRbK+2EKs3Fc+g/3oiBW0ftcCDw==",
     _type: "json",
+    numOfRows: 100,
   }
   const res = await axios.get(
     `http://apis.data.go.kr/1543061/abandonmentPublicSrvc/sido`,
@@ -123,6 +135,7 @@ export const getSigunguAPI = async (selectedSido) => {
       "w2SoV2W8SJI41W31IkRtQyPg9X2RLZ0QXU0ZQAPtwQ5Fy8ubzMDUFzzCbm4NRbK+2EKs3Fc+g/3oiBW0ftcCDw==",
     _type: "json",
     upr_cd: selectedSido,
+    numOfRows: 100,
   }
   const res = await axios.get(
     `http://apis.data.go.kr/1543061/abandonmentPublicSrvc/sigungu`,

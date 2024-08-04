@@ -68,6 +68,7 @@ const ArticleDetailModify = () => {
         animal={animal}
         isEditing={true}
         onInputChange={handleInputChange}
+        isShelter={false}
       />
 
       <div className="flex justify-end">
