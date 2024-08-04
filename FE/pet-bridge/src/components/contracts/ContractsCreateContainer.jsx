@@ -7,12 +7,13 @@ import {useState} from "react"
 import {postContract} from "api/contracts-api"
 import {useNavigate} from "react-router-dom"
 import SearchDropDown from "components/common/SearchDropDown"
+import AnimalTag from "components/common/AnimalTag"
 const ContractsCreateContainer = () => {
   const navigate = useNavigate()
   const nickname = useSelector(selectNickname)
   const userImage = useSelector(selectImage)
   // 동물 선택 상태에 따른 동물 컴포넌트 표시 - 상태 관리
-  const [selectedAnimal, setSelectedAnimal] = useState("")
+  const [selectedAnimal, setSelectedAnimalId] = useState("")
   selectId
   const [isContracteeSelected] = useState(false)
   const [contractFormData, setContractFormData] = useState({
@@ -29,14 +30,10 @@ const ContractsCreateContainer = () => {
   // 1 ~ 12개월 계약 기간 선택을 위한 숫자
   const monthsOption = Array.from({length: 12}, (_, index) => index + 1)
 
-  // 입양 보낼 동물 선택 양식 정해야함
-  const onChangeIsSelectedAnimalHandler = (event) => {
-    // 현재 select값이 선택하고 있는 option값
-    const selectedAnimalId = event.target.value
-    console.log(selectedAnimalId)
-    setSelectedAnimal(selectedAnimalId)
+  // 동물 선택
+  const handleAnimalSelect = (id) => {
+    setSelectedAnimalId(id)
   }
-
   // 입양 보낼 동물 선택 양식 정해야함
   // const onChangeIsSelectedContracteeHandler = (event) => {
   //   // 현재 select값이 선택하고 있는 option값
@@ -63,7 +60,10 @@ const ContractsCreateContainer = () => {
     }
   }
 
-  const options = Array.from({length: 12}, (_, index) => index + 1)
+  // 날짜 선택시
+  const onSelectMonthHandler = (event) => {
+    console.log(event.target.value)
+  }
 
   return (
     <form
@@ -73,39 +73,24 @@ const ContractsCreateContainer = () => {
       <span className="text-4xl font-bold">입양 보내기</span>
       <section className="w-full">
         <div className="grid w-full grid-cols-4">
-          <select
-            className="col-span-2"
-            onChange={onChangeIsSelectedAnimalHandler}
-            label="입양보낼 동물 선택 드롭다운(모달)"
-            id="animal"
-          >
-            <option key={0} value="">
-              입양 보낼 동물을 선택해주세요
-            </option>
-            {options.map((index) => (
-              <option key={index} value={index}>
-                {index}번 동물
-              </option>
-            ))}
-          </select>
-          <span className="col-span-1">작성자 정보</span>
-          <SearchDropDown
-            subtitle="유저를 선택해주세요."
-            placeholder="유저 닉네임으로 검색"
-            itemName="유저"
-          />
           {/* 입양 동물 정보란 */}
           {selectedAnimal ? (
-            <ContractAnimal
-              isCreate={true}
-              imageSrc="imgScr"
-              name="name"
-              kind="kind"
-              age="3살"
-            />
+            <div className="col-span-2 rounded-l-xl border p-2.5">
+              <AnimalTag onSelectAnimalId={handleAnimalSelect} />
+              <ContractAnimal
+                isCreate={true}
+                imageSrc="imgScr"
+                name="name"
+                kind="kind"
+                age="3살"
+              />
+            </div>
           ) : (
             <div className="col-span-2 rounded-l-xl border p-2.5">
               아직 보호중인 동물을 선택하지 않았어요. 입양갈 동물을 선택해주세요
+              <div>
+                <AnimalTag onSelectAnimalId={handleAnimalSelect} />
+              </div>
             </div>
           )}
 
@@ -123,8 +108,15 @@ const ContractsCreateContainer = () => {
               nickname="입양자 닉네임"
             />
           ) : (
-            <div className="col-span-1 rounded-l-xl border p-2.5">
+            <div className="col-span-1 rounded-r-xl border p-2.5">
               아직 동물이 입양갈 곳을 찾지 못했어요. 입양자를 선택해주세요
+              <div>
+                <SearchDropDown
+                  subtitle="유저를 선택해주세요."
+                  placeholder="유저 닉네임으로 검색"
+                  itemName="유저"
+                />
+              </div>
             </div>
           )}
         </div>
@@ -138,6 +130,7 @@ const ContractsCreateContainer = () => {
           name="monthSelect"
           id="monthSelect"
           className="rounded-lg border-2"
+          onChange={onSelectMonthHandler}
         >
           {monthsOption.map((item) => (
             <option key={item} value={item}>
@@ -165,12 +158,12 @@ const ContractsCreateContainer = () => {
       <div className="flex h-[600px] w-full flex-col items-center rounded-2xl bg-stroke p-5">
         <p className="my-10 text-4xl font-bold">계약서 미리보기</p>
         <ContractDetail
-          contractorNickname="보호자 닉네임"
-          contracteeNickname="계약자 닉네임"
-          animalName="동물 닉네임"
-          month="선택 개월수"
-          payment="계약 금액"
-          content="특약 내용"
+          contractorNickname="(보호자 닉네임)"
+          contracteeNickname="(계약자 닉네임)"
+          animalName="(동물 닉네임)"
+          month="(선택 개월수)"
+          payment="(계약 금액)"
+          content="(특약 내용)"
         />
       </div>
 

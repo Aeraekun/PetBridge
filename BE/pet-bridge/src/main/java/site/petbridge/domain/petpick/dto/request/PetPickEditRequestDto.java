@@ -1,5 +1,6 @@
 package site.petbridge.domain.petpick.dto.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +11,11 @@ import site.petbridge.domain.petpick.domain.PetPick;
 public class PetPickEditRequestDto {
 
     private int boardId;
+
     private int animalId;
+
     private String title;
+
     private String content;
 
     public PetPick toEntity(String thumbnailFile) {
