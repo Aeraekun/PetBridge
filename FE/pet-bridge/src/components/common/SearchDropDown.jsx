@@ -1,9 +1,9 @@
 import {useState, useRef} from "react"
 
-const SearchDropDown = ({subtitle, placeholder, itemName}) => {
+const SearchDropDown = ({subtitle, placeholder, itemName, onDataChange}) => {
   const [searchValue, setSearchValue] = useState("")
   const [isOpen, setIsOpen] = useState(false)
-  const [position, setPosition] = useState({x: 0, y: 0})
+  const [position] = useState({x: 180, y: 80})
   const buttonRef = useRef(null)
   let id = 1
   let nicknameId = 1
@@ -30,16 +30,22 @@ const SearchDropDown = ({subtitle, placeholder, itemName}) => {
   }
 
   const clickHandler = () => {
-    const rect = buttonRef.current.getBoundingClientRect()
-    setPosition({x: rect.left, y: rect.bottom})
+    // const rect = buttonRef.current.getBoundingClientRect()
+    // setPosition({x: rect.left, y: rect.bottom})
     setIsOpen(!isOpen)
   }
+
+  const onClickHandler = (event) => {
+    const selectedSearchId = event.target.id
+    onDataChange(selectedSearchId)
+  }
+
   position
 
   return (
     <>
       <button onClick={clickHandler} ref={buttonRef}>
-        선택하기
+        {subtitle}
       </button>
       {isOpen && (
         <div
@@ -73,7 +79,11 @@ const SearchDropDown = ({subtitle, placeholder, itemName}) => {
               {userDatas.map((user) => (
                 <li key={user.id} className="flex items-center">
                   <span className="w-5"></span>
-                  <button className="me-3 inline-flex h-10 grow items-center rounded-xl p-3 hover:bg-stroke hover:text-white">
+                  <button
+                    id={user.id}
+                    onClick={onClickHandler}
+                    className="me-3 inline-flex h-10 grow items-center rounded-xl p-3 hover:bg-stroke hover:text-white"
+                  >
                     {user.nickname}
                   </button>
                 </li>

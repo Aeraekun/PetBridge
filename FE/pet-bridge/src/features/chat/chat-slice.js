@@ -1,10 +1,33 @@
-import {createSlice} from "@reduxjs/toolkit"
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit"
+import {getChatRoomList} from "api/chat-api"
+import {selectId} from "features/user/users-slice"
+import {useSelector} from "react-redux"
 
 const initialState = {
   isChatModalOpen: false,
   isChatMinimized: false,
   currentChatId: null,
+  chatMessages: {},
+  chatRoomInfos: [],
 }
+
+export const getChatRoomListThunk = createAsyncThunk(
+  "chat/getChatRoomList",
+  async (_, {rejectWithValue}) => {
+    const userId = useSelector(selectId)
+    try {
+      const res = await getChatRoomList(userId)
+
+      if (res.data) {
+        return res.data
+      } else {
+        return rejectWithValue("채팅 정보가 없습니다.")
+      }
+    } catch (error) {
+      return error
+    }
+  }
+)
 
 export const chatSlice = createSlice({
   name: "chat",
@@ -19,6 +42,18 @@ export const chatSlice = createSlice({
     setCurrentChatId: (state, action) => {
       state.currentChatId = action.payload
     },
+    setChatRoomList: (state, action) => {
+      state.chatRoomInfos = action.payload
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getChatRoomListThunk.fulfilled, (state, action) => {
+        state.chatRoomInfos = action.payload
+      })
+      .addCase(getChatRoomListThunk.rejected, (state, action) => {
+        console.log("chat-slice.js ", action.payload)
+      })
   },
 })
 

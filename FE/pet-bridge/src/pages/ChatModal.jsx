@@ -1,11 +1,13 @@
 import {useDispatch, useSelector} from "react-redux"
 import {useState} from "react"
-import {selectImage, selectNickname} from "features/user/users-slice"
+import {selectId, selectImage, selectNickname} from "features/user/users-slice"
 import {
   selectIsChatModalOpen,
   selectIsChatMinimized,
   setIsChatModalOpen,
   setIsChatMinimized,
+  selectCurrentChatId,
+  setCurrentChatId,
 } from "features/chat/chat-slice"
 import Draggable from "react-draggable"
 import ChatIcon from "assets/icons/icon-chat.svg"
@@ -14,13 +16,17 @@ import CloseIcon from "assets/icons/icon-close.svg"
 import MinimizeIcon from "assets/icons/icon-minimize.svg"
 import ChatListItem from "components/chat/ChatListItem"
 import ChatMain from "components/chat/ChatMain"
+import SearchDropDown from "components/common/SearchDropDown"
+import {createChatRoom} from "api/chat-api"
 
 const ChatModal = () => {
   // 채팅이 열려있는지 확인하는 State
+  const userId = useSelector(selectId)
   const myImage = useSelector(selectImage)
   const nickname = useSelector(selectNickname)
   const isOpen = useSelector(selectIsChatModalOpen)
   const isMinimized = useSelector(selectIsChatMinimized)
+  const currentChatId = useSelector(selectCurrentChatId)
   const [isDragging, setIsDragging] = useState(false)
 
   // 새 채팅 감지 -> 구현시 redux state로
@@ -86,6 +92,7 @@ const ChatModal = () => {
   ])
 
   const dispatch = useDispatch()
+  // 채팅 종료 X 버튼 클릭시 동작
   const onClickXHandler = () => {
     dispatch(setIsChatModalOpen())
   }
@@ -96,9 +103,19 @@ const ChatModal = () => {
 
   // 최소화 버튼 클릭시 동작
   const onClickMinimizeHandler = () => {
+    if (currentChatId) {
+      dispatch(setCurrentChatId(null))
+      return
+    }
     dispatch(setIsChatMinimized())
   }
 
+  // 채팅방 만들기 아이콘 클릭시
+  const clickChatAddHandler = () => {
+    console.log("Chat Add")
+  }
+
+  // 채팅 플로팅 아이콘
   const handleStart = () => {
     setIsDragging(false)
   }
@@ -119,10 +136,18 @@ const ChatModal = () => {
     }
   }
 
+  // 선택 드롭다운 값 변경시
+  const onDataChangeHandler = (newData) => {
+    console.log(newData)
+    if (confirm(`${newData} 님과의 채팅을 시작히시겠습니까?`)) {
+      createChatRoom(userId, newData)
+    }
+  }
+
   return (
     <div>
       {isOpen ? (
-        <div className="fixed left-20 top-40 h-screen w-screen">
+        <div className="fixed left-20 top-40 z-10 size-1 h-screen w-screen">
           {isMinimized ? (
             // 채팅 모달 버튼 정의
             <Draggable
@@ -132,7 +157,7 @@ const ChatModal = () => {
             >
               <button
                 onClick={handleClick}
-                className="rounded-full border bg-white p-2 shadow-xl hover:outline"
+                className="rounded-full border bg-white p-2 shadow-xl transition-all hover:outline"
               >
                 <img
                   src={ChatIcon}
@@ -148,7 +173,9 @@ const ChatModal = () => {
           ) : (
             <Draggable handle=".bg-alert">
               {/* 전체 틀 */}
-              <div className="flex h-[450px] w-[700px] flex-col divide-y overflow-hidden rounded-2xl border bg-white shadow-2xl">
+              <div
+                className={`flex h-[450px] flex-col divide-y overflow-hidden rounded-2xl border bg-white shadow-2xl transition-[width] ${!currentChatId ? "w-48" : "w-[800px]"}`}
+              >
                 {/* 채팅 헤더 */}
                 <header className="flex h-8 shrink-0 flex-row-reverse bg-alert px-2.5">
                   <button
@@ -165,9 +192,9 @@ const ChatModal = () => {
                   </button>
                 </header>
                 {/* 채팅 메인 화면 */}
-                <main className="flex divide-x">
+                <main className="flex h-full divide-x">
                   {/* 채팅 네비게이션 목록 */}
-                  <div className="flex h-full w-1/4 flex-col divide-y">
+                  <div className="flex h-full w-48 flex-col divide-y">
                     <div className="h-1/4 w-full p-3">
                       <div className="flex h-3/4 items-center space-x-3">
                         <img
@@ -179,11 +206,22 @@ const ChatModal = () => {
                       </div>
                       <div className="flex justify-between">
                         내 채팅 목록
-                        <img
-                          src={ChatAddIcon}
-                          alt=""
-                          className="inline-flex size-6"
-                        />
+                        <button onClick={clickChatAddHandler}>
+                          <img
+                            src={ChatAddIcon}
+                            alt="chat-add"
+                            className="inline-flex size-6"
+                          />
+                        </button>
+                        <div className="fixed left-60">
+                          <SearchDropDown
+                            subtitle="유저를 선택해주세요."
+                            placeholder="유저 닉네임으로 검색"
+                            itemName="유저"
+                            onDataChange={onDataChangeHandler}
+                            className="fixed"
+                          />
+                        </div>
                       </div>
                     </div>
                     <div className="w-full grow overflow-y-scroll">
@@ -199,7 +237,7 @@ const ChatModal = () => {
                       ))}
                     </div>
                   </div>
-                  <ChatMain />
+                  {currentChatId && <ChatMain />}
                 </main>
               </div>
             </Draggable>
