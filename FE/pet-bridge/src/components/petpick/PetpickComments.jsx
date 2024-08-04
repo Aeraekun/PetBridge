@@ -1,6 +1,4 @@
 // import Image from "./Image"
-import OptionIcon from "../common/OptionIcon"
-import ProfileImage from "assets/image/profile.JPG"
 import Comment from "../common/Comment"
 import React, {forwardRef, useEffect, useState} from "react"
 // import dummydata from "./dummydata"
@@ -16,23 +14,7 @@ import {
   // selectPetpickError,
 } from "features/petpick/petpick-slice"
 import {useInView} from "react-intersection-observer"
-
-const Profile = (data) => {
-  return (
-    <div className="mx-3  flex h-16 items-center space-x-2.5 ">
-      <div className="flex h-fit w-full items-center justify-between text-xl    ">
-        <div className="flex items-center space-x-2.5">
-          <div className="h-fit w-12 text-xl   ">
-            <img src={ProfileImage} alt="profile" />
-            {/* <Image imageName={Siren.png}></Image> */}
-          </div>
-          <div className="text-sm  ">{data.nickname}닉네임</div>
-        </div>
-        <OptionIcon></OptionIcon>
-      </div>
-    </div>
-  )
-}
+import Profile from "components/common/Profile"
 
 const CommentInput = ({boardId, onCommentAdded}) => {
   const isAuthenticated = useSelector(selectIsAuthenticated)
@@ -60,7 +42,7 @@ const CommentInput = ({boardId, onCommentAdded}) => {
         <div className="flex items-center space-x-2.5">
           <input
             type="text"
-            className="outline-stroke mx-2 h-10 w-full rounded-md  text-sm outline outline-1"
+            className="mx-2 h-10 w-full rounded-md text-sm  outline outline-1 outline-stroke"
             placeholder="댓글을 남겨보세요"
             value={inputComment}
             onChange={(e) => setInputComment(e.target.value)}
@@ -71,7 +53,7 @@ const CommentInput = ({boardId, onCommentAdded}) => {
         </div>
       ) : (
         <div className="flex items-center space-x-2.5">
-          <div className="text-stroke outline-stroke mx-2 h-10 w-full  content-center rounded-md text-sm outline outline-1">
+          <div className="mx-2 h-10 w-full content-center rounded-md  text-sm text-stroke outline outline-1 outline-stroke">
             좋아요와 댓글을 남기려면 로그인하세요{" "}
           </div>
         </div>
@@ -185,7 +167,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
       {isVisible ? (
         <div className="flex h-full min-w-[400px]  flex-col justify-between bg-gray-50 ">
           <div className=" flex-1">
-            <Profile nickname={"dd"} image={"ddd"} />
+            <Profile nickname={"SD"} image={"ddd"} />
             <hr className="my-1 border-gray-300" />
             <PetpickInfo
               title={petpick.title}
