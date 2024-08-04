@@ -35,7 +35,7 @@ const ScrollableComponent = () => {
     if (index === list.length - 1) {
       loadMoreData()
     }
-  }, [list])
+  }, [list, index])
 
   //화면 중앙에 보이도록 해줌
   useEffect(() => {
@@ -65,7 +65,7 @@ const ScrollableComponent = () => {
   }, [index])
 
   return (
-    <div className="h-screen ">
+    <div className=" h-screen">
       <div className=" fixed mb-4 text-lg">현재 인덱스: {index}</div>
 
       <div className="fixed right-8 top-1/2 flex flex-col space-y-8">
@@ -90,7 +90,7 @@ const ScrollableComponent = () => {
       </div>
       <div
         ref={containerRef}
-        className="h-full overflow-y-scroll border border-gray-300"
+        className="scrollbar-hide h-full overflow-y-scroll border border-gray-300"
       >
         {list.map((item, i) => (
           <PetpickComments
