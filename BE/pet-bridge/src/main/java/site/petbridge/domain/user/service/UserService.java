@@ -1,26 +1,32 @@
 package site.petbridge.domain.user.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import jakarta.mail.internet.MimeMessage;
-import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.multipart.MultipartFile;
 import site.petbridge.domain.user.dto.request.EmailRequestDto;
-import site.petbridge.domain.user.dto.request.UserModifyRequestDto;
+import site.petbridge.domain.user.dto.request.UserEditRequestDto;
 import site.petbridge.domain.user.dto.request.UserSignUpRequestDto;
 import site.petbridge.domain.user.dto.response.UserResponseDto;
 
 public interface UserService {
 
-    Optional<UserResponseDto> isValidTokenUser(HttpServletRequest httpServletRequest) throws Exception;
+//    Optional<UserResponseDto> isValidTokenUser(HttpServletRequest httpServletRequest) throws Exception;
 
-    Optional<UserResponseDto> registUser(UserSignUpRequestDto userSignUpRequestDto) throws Exception;
+    void registUser(UserSignUpRequestDto userSignUpRequestDto) throws Exception;
 
-    Optional<UserResponseDto> getDetailMyUser(HttpServletRequest httpServletRequest) throws Exception;
+    List<UserResponseDto> getListUser(int page, int size) throws Exception;
 
-    Optional<UserResponseDto> editUser(HttpServletRequest httpServletRequest,
-        UserModifyRequestDto userModifyRequestDto) throws Exception;
+    UserResponseDto getDetailMyUser() throws Exception;
 
-    Optional<UserResponseDto> removeUser(HttpServletRequest httpServletRequest) throws Exception;
+    UserResponseDto getDetailUserByNickname(String nickname) throws Exception;
+
+    void editUser(UserEditRequestDto userEditRequestDto, MultipartFile imageFile) throws Exception;
+
+    void removeUser() throws Exception;
+
+    void removeUserAdmin(int id) throws Exception;
 
     Optional<UserResponseDto> getDetailUserByEmail(String email) throws Exception;
 

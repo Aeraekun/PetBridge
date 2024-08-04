@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import site.petbridge.domain.animal.dto.request.AnimalEditRequestDto;
 
 @Entity
 @Getter
@@ -66,19 +67,18 @@ public class Animal {
 		this.careAddr = careAddr;
 	}
 
-	public void update(String name, String filename, String species, String kindCd, String colorCd,
-					   int age, int weight, char sexCd, char neuterYn, String specialMark, String careAddr) {
-		this.name = name;
+	public void update(AnimalEditRequestDto animalEditRequestDto, String filename) {
+		this.name = animalEditRequestDto.getName();
 		this.filename = filename;
-		this.species = species;
-		this.kindCd = kindCd;
-		this.colorCd = colorCd;
-		this.age = age;
-		this.weight = weight;
-		this.sexCd = sexCd;
-		this.neuterYn = neuterYn;
-		this.specialMark = specialMark;
-		this.careAddr = careAddr;
+		this.species = animalEditRequestDto.getSpecies();
+		this.kindCd = animalEditRequestDto.getKindCd();
+		this.colorCd = animalEditRequestDto.getColorCd();
+		this.age = animalEditRequestDto.getAge();
+		this.weight = animalEditRequestDto.getWeight();
+		this.sexCd = animalEditRequestDto.getSexCd();
+		this.neuterYn = animalEditRequestDto.getNeuterYn();
+		this.specialMark = animalEditRequestDto.getSpecialMark();
+		this.careAddr = animalEditRequestDto.getCareAddr();
 	}
 
 	public void disable() {

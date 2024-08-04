@@ -81,9 +81,7 @@ public class AnimalServiceImpl implements AnimalService {
 			savedImageFileName = fileUtil.saveFile(imageFile, "animals");
 		}
 
-		entity.update(animalEditRequestDto.getName(), savedImageFileName, animalEditRequestDto.getSpecies(), animalEditRequestDto.getKindCd(),
-				animalEditRequestDto.getColorCd(), animalEditRequestDto.getAge(), animalEditRequestDto.getWeight(), animalEditRequestDto.getSexCd(),
-				animalEditRequestDto.getNeuterYn(), animalEditRequestDto.getSpecialMark(), animalEditRequestDto.getCareAddr());
+		entity.update(animalEditRequestDto, savedImageFileName);
 		animalRepository.save(entity);
 	}
 
