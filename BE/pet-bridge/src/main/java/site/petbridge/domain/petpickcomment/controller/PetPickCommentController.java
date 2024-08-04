@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/short-comments")
+@RequestMapping("/api/petpick-comments")
 @RequiredArgsConstructor
 public class PetPickCommentController {
 

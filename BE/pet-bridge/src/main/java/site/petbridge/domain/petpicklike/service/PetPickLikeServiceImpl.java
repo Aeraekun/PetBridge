@@ -51,6 +51,7 @@ public class PetPickLikeServiceImpl implements PetPickLikeService {
         petPickLikeRepository.save(entity);
     }
 
+    @Transactional
     @Override
     public void deletePetPickLike(HttpServletRequest httpServletRequest,
                                   PetPickLikeRequestDto petPickLikeRequestDto) throws Exception {
