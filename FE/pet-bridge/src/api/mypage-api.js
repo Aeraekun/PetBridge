@@ -1,5 +1,5 @@
 import axios from "axios"
-import axiosInstance from "./axios-instance"
+import axiosInstance from "api/axios-instance"
 
 // 보호소 동물 조회
 export const getShelterAnimals = async (searchParams) => {
