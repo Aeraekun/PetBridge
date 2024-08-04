@@ -100,12 +100,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.PATCH, "/api/board-comments/{id}/disable", "/*").permitAll()
 
 				// 동물
-				.requestMatchers(HttpMethod.GET, "/api/animals").permitAll()
-				.requestMatchers(HttpMethod.GET, "/api/animals/user/{userId}").permitAll()
-				.requestMatchers(HttpMethod.GET, "/api/animals/{id}").permitAll()
-				.requestMatchers(HttpMethod.POST, "/api/animals").permitAll()
-				.requestMatchers(HttpMethod.PATCH, "/api/animals/{id}").permitAll()
-				.requestMatchers(HttpMethod.PATCH, "/api/animals/{id}/disable").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/animals/**").permitAll()
 
 				// 계약서
 				.requestMatchers(HttpMethod.GET, "/api/contracts/user/{userId}").permitAll()
