@@ -143,7 +143,8 @@ axiosInstance.interceptors.response.use(
       }
     }
     console.log("인터셉터 에러", error)
-    return error
+    // reject를 반환해서, 요청한 api에서 올바르게 오류 처리를 할 수 있도록 함
+    return Promise.reject(error)
   }
 )
 

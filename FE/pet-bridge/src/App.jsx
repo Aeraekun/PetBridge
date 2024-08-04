@@ -39,7 +39,7 @@ import MyPageContractsContainer from "components/my-page/MyPageContractsContaine
 import MyPageFavoritesContainer from "components/my-page/MyPageFavoritesContainer"
 import MyPageLikesContainer from "components/my-page/MyPageLikesContainer"
 import MyPagePetPicsContainer from "components/my-page/MyPagePetPicsContainer"
-import MyPagePetsContainer from "components/my-page/MyPagePetsContainer"
+import MyPageAnimalsContainer from "components/my-page/MyPageAnimalsContainer"
 import MyPageReportsContainer from "components/my-page/MyPageReportsContainer"
 import MyPageUsersContainer from "components/my-page/MyPageUsersContainer"
 
@@ -140,7 +140,7 @@ function App() {
             <Route path="disable" element={<MyPageDisableContainer />} />
             <Route path="articles" element={<MyPageArtilcesContainer />} />
             <Route path="petpics" element={<MyPagePetPicsContainer />} />
-            <Route path="pets" element={<MyPagePetsContainer />} />
+            <Route path="pets" element={<MyPageAnimalsContainer />} />
             <Route path="contracts" element={<MyPageContractsContainer />} />
             <Route path="favorites" element={<MyPageFavoritesContainer />} />
             <Route path="likes" element={<MyPageLikesContainer />} />
