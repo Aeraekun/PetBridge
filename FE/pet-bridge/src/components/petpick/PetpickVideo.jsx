@@ -1,10 +1,12 @@
 import ReactPlayer from "react-player"
 
-const PetpickVideo = () => {
+const PetpickVideo = ({videoURL}) => {
+  console.log(videoURL)
+  const path = videoURL
   return (
-    <div className="min-w-[400px] max-w-[400px]">
+    <div className="min-h-[600px] min-w-[200px] max-w-[400px] bg-black">
       <ReactPlayer
-        url="/petpicks/cat.mp4" // 여기에 로컬 MP4 파일 경로 입력
+        url={path}
         controls={true}
         playing={true}
         width="100%"
@@ -13,4 +15,5 @@ const PetpickVideo = () => {
     </div>
   )
 }
+
 export default PetpickVideo

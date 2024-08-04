@@ -12,7 +12,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00224",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007876.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "M",
     neuter_yn: "Y",
     special_mark: "암수동반입소, 순함",
@@ -33,7 +33,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00225",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007877.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "F",
     neuter_yn: "N",
     special_mark: "순함",
@@ -54,7 +54,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00226",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007878.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "M",
     neuter_yn: "Y",
     special_mark: "활발",
@@ -75,7 +75,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00227",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007879.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "F",
     neuter_yn: "Y",
     special_mark: "사람을 잘 따름",
@@ -96,7 +96,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00228",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007880.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "M",
     neuter_yn: "N",
     special_mark: "귀여움",
@@ -117,7 +117,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00229",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007881.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "F",
     neuter_yn: "Y",
     special_mark: "조용함",
@@ -138,7 +138,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00230",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007882.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "M",
     neuter_yn: "N",
     special_mark: "활발함",
@@ -159,7 +159,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00231",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007883.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "F",
     neuter_yn: "Y",
     special_mark: "조용함",
@@ -180,7 +180,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00232",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007884.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "M",
     neuter_yn: "Y",
     special_mark: "활발함",
@@ -201,7 +201,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00233",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007885.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "F",
     neuter_yn: "N",
     special_mark: "귀여움",
@@ -222,7 +222,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00234",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007886.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "M",
     neuter_yn: "Y",
     special_mark: "순함",
@@ -243,7 +243,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00235",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007887.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "F",
     neuter_yn: "N",
     special_mark: "활발함",
@@ -264,7 +264,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00236",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007888.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "M",
     neuter_yn: "Y",
     special_mark: "온순함",
@@ -285,7 +285,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00237",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007889.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "F",
     neuter_yn: "Y",
     special_mark: "사람을 잘 따름",
@@ -306,7 +306,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00238",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007890.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "M",
     neuter_yn: "N",
     special_mark: "귀여움",
@@ -327,7 +327,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00239",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007891.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "F",
     neuter_yn: "Y",
     special_mark: "활발함",
@@ -348,7 +348,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00240",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007892.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "M",
     neuter_yn: "Y",
     special_mark: "활발함",
@@ -369,7 +369,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00241",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007893.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "F",
     neuter_yn: "N",
     special_mark: "조용함",
@@ -390,7 +390,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00242",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007894.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "M",
     neuter_yn: "Y",
     special_mark: "순함",
@@ -411,7 +411,7 @@ const animaldata = [
     notice_no: "경남-거창-2024-00243",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007895.jpeg",
-    process_state: "보호중",
+    processState: "보호중",
     sex_cd: "F",
     neuter_yn: "N",
     special_mark: "귀여움",
@@ -433,7 +433,7 @@ const animaldata = [
     notice_no: "임시-거창-2024-00244",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007896.jpeg",
-    process_state: "임시보호중",
+    processState: "임시보호중",
     sex_cd: "M",
     neuter_yn: null,
     special_mark: "순함",
@@ -454,7 +454,7 @@ const animaldata = [
     notice_no: "임시-거창-2024-00245",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007897.jpeg",
-    process_state: "임시보호중",
+    processState: "임시보호중",
     sex_cd: "F",
     neuter_yn: null,
     special_mark: "활발함",
@@ -475,7 +475,7 @@ const animaldata = [
     notice_no: "임시-거창-2024-00246",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007898.jpeg",
-    process_state: "임시보호중",
+    processState: "임시보호중",
     sex_cd: "M",
     neuter_yn: null,
     special_mark: "온순함",
@@ -496,7 +496,7 @@ const animaldata = [
     notice_no: "임시-거창-2024-00247",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007899.jpeg",
-    process_state: "임시보호중",
+    processState: "임시보호중",
     sex_cd: "F",
     neuter_yn: null,
     special_mark: "활발함",
@@ -517,7 +517,7 @@ const animaldata = [
     notice_no: "임시-거창-2024-00248",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007900.jpeg",
-    process_state: "임시보호중",
+    processState: "임시보호중",
     sex_cd: "M",
     neuter_yn: null,
     special_mark: "순함",
@@ -538,7 +538,7 @@ const animaldata = [
     notice_no: "임시-거창-2024-00249",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007901.jpeg",
-    process_state: "임시보호중",
+    processState: "임시보호중",
     sex_cd: "F",
     neuter_yn: null,
     special_mark: "활발함",
@@ -559,7 +559,7 @@ const animaldata = [
     notice_no: "임시-거창-2024-00250",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007902.jpeg",
-    process_state: "임시보호중",
+    processState: "임시보호중",
     sex_cd: "M",
     neuter_yn: null,
     special_mark: "귀여움",
@@ -580,7 +580,7 @@ const animaldata = [
     notice_no: "임시-거창-2024-00251",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007903.jpeg",
-    process_state: "임시보호중",
+    processState: "임시보호중",
     sex_cd: "F",
     neuter_yn: null,
     special_mark: "순함",
@@ -601,7 +601,7 @@ const animaldata = [
     notice_no: "임시-거창-2024-00252",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007904.jpeg",
-    process_state: "임시보호중",
+    processState: "임시보호중",
     sex_cd: "M",
     neuter_yn: null,
     special_mark: "귀여움",
@@ -622,7 +622,7 @@ const animaldata = [
     notice_no: "임시-거창-2024-00253",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007905.jpeg",
-    process_state: "임시보호중",
+    processState: "임시보호중",
     sex_cd: "F",
     neuter_yn: null,
     special_mark: "순함",
@@ -643,7 +643,7 @@ const animaldata = [
     notice_no: "임시-거창-2024-00254",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007906.jpeg",
-    process_state: "임시보호중",
+    processState: "임시보호중",
     sex_cd: "M",
     neuter_yn: null,
     special_mark: "활발함",
@@ -664,7 +664,7 @@ const animaldata = [
     notice_no: "임시-거창-2024-00255",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007907.jpeg",
-    process_state: "임시보호중",
+    processState: "임시보호중",
     sex_cd: "F",
     neuter_yn: null,
     special_mark: "순함",
@@ -685,7 +685,7 @@ const animaldata = [
     notice_no: "임시-거창-2024-00256",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007908.jpeg",
-    process_state: "임시보호중",
+    processState: "임시보호중",
     sex_cd: "M",
     neuter_yn: null,
     special_mark: "귀여움",
@@ -706,7 +706,7 @@ const animaldata = [
     notice_no: "임시-거창-2024-00257",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007909.jpeg",
-    process_state: "임시보호중",
+    processState: "임시보호중",
     sex_cd: "F",
     neuter_yn: null,
     special_mark: "활발함",
@@ -727,7 +727,7 @@ const animaldata = [
     notice_no: "임시-거창-2024-00258",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007910.jpeg",
-    process_state: "임시보호중",
+    processState: "임시보호중",
     sex_cd: "M",
     neuter_yn: null,
     special_mark: "귀여움",
@@ -748,7 +748,7 @@ const animaldata = [
     notice_no: "임시-거창-2024-00259",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007911.jpeg",
-    process_state: "임시보호중",
+    processState: "임시보호중",
     sex_cd: "F",
     neuter_yn: null,
     special_mark: "순함",
@@ -769,7 +769,7 @@ const animaldata = [
     notice_no: "임시-거창-2024-00260",
     popfile:
       "http://www.animal.go.kr/files/shelter/2024/07/202407161007912.jpeg",
-    process_state: "임시보호중",
+    processState: "임시보호중",
     sex_cd: "F",
     neuter_yn: null,
     special_mark: "귀여움",

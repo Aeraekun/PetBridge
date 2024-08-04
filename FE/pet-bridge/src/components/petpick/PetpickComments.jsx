@@ -2,19 +2,20 @@
 import OptionIcon from "../common/OptionIcon"
 import ProfileImage from "assets/image/profile.JPG"
 import Comment from "../common/Comment"
-import React, {useEffect, useState} from "react"
-import dummydata from "./dummydata"
+import React, {forwardRef, useEffect, useState} from "react"
+// import dummydata from "./dummydata"
 import {useDispatch, useSelector} from "react-redux"
 import {selectIsAuthenticated} from "features/user/users-slice"
 import PetpickIconContainer from "components/petpick/PetpickIconContainer"
 import PetpickVideo from "./PetpickVideo"
+
 import {
   // fetchPetpickList,
-  selectPetpickData,
   setNowPetpick,
   // selectPetpickStatus,
   // selectPetpickError,
 } from "features/petpick/petpick-slice"
+import {useInView} from "react-intersection-observer"
 
 const Profile = (data) => {
   return (
@@ -59,7 +60,7 @@ const CommentInput = ({boardId, onCommentAdded}) => {
         <div className="flex items-center space-x-2.5">
           <input
             type="text"
-            className="mx-2 h-10 w-full rounded-md text-sm  outline outline-1 outline-stroke"
+            className="outline-stroke mx-2 h-10 w-full rounded-md  text-sm outline outline-1"
             placeholder="댓글을 남겨보세요"
             value={inputComment}
             onChange={(e) => setInputComment(e.target.value)}
@@ -70,7 +71,7 @@ const CommentInput = ({boardId, onCommentAdded}) => {
         </div>
       ) : (
         <div className="flex items-center space-x-2.5">
-          <div className="mx-2 h-10 w-full content-center rounded-md  text-sm text-stroke outline outline-1 outline-stroke">
+          <div className="text-stroke outline-stroke mx-2 h-10 w-full  content-center rounded-md text-sm outline outline-1">
             좋아요와 댓글을 남기려면 로그인하세요{" "}
           </div>
         </div>
@@ -88,55 +89,46 @@ const PetpickInfo = ({title, content}) => {
   )
 }
 
-const PetpickComments = () => {
+const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
+  const {ref: observerRef, inView} = useInView({
+    threshold: 0.51, // Trigger when 20% of the item is visible
+  })
+
+  useEffect(() => {
+    if (inView) {
+      onInView(nowindex)
+    }
+  }, [inView, onInView, nowindex])
   // const [petpick, setPetpick] = useState([])
   // const petpick = []
   const [commentList, setCommentList] = useState([])
   const [isVisible, setIsVisible] = useState(false)
-  //댓글리스트 불러올때 필요
 
   const dispatch = useDispatch()
-  const petpick = useSelector(selectPetpickData) // 상태에서 petpick 데이터 가져오기
+  const petpick = pet // 상태에서 petpick 데이터 가져오기
+  //댓글리스트 불러올때 필요
+
   // const status = useSelector(selectPetpickStatus)
   // const error = useSelector(selectPetpickError)
 
   // const [petpickId, setPetpickId] = useState(0)
-  const [index, setIndex] = useState(0)
+
+  useEffect(() => {}, [isVisible])
 
   useEffect(() => {
-    console.log("받아온정보", petpick)
-  }, [isVisible])
-
-  useEffect(() => {
-    setIndex(index + 1)
-    // setPetpickId(dummydata[index])
-    dispatch(setNowPetpick(dummydata[index]))
+    dispatch(setNowPetpick(pet))
   }, [])
 
   const fetchComments = async () => {
     const commentList = petpick?.comments || [] // 펫픽 댓글 조회 API
     setCommentList(commentList)
-    console.log(commentList)
-    // console.log("comment", petpick.ListPetPickCommentResponseDto)
   }
-
-  // useEffect(() => {
-  //   const storedPetpickData = localStorage.getItem("petpickData")
-  //   if (storedPetpickData) {
-  //     console.log("getItem")
-  //     const parsedData = JSON.parse(storedPetpickData)
-  //     setPetpick(parsedData)
-  //   } else if (contextData) {
-  //     console.log("setItem")
-  //     localStorage.setItem("petpickData", JSON.stringify(contextData))
-  //   }
-  // }, [contextData])
 
   useEffect(() => {
     if (petpick) {
       fetchComments()
     }
-    console.log(petpick?.ListPetPickCommentResponseDto)
+    // console.log(petpick?.comments)
   }, [petpick])
 
   //댓글 등록하고나서 필요
@@ -178,54 +170,64 @@ const PetpickComments = () => {
   }
 
   return (
-    <>
-      {/* {isVisible && <Navbar />} */}
-      <div className="mx-auto flex h-screen w-[1000px] flex-row justify-center sm:w-11/12">
-        <PetpickVideo />
-        {isVisible ? (
-          <div className="flex h-full min-w-[400px]  flex-col justify-between bg-gray-50 ">
-            <div className=" flex-1">
-              <Profile nickname={"dd"} image={"ddd"} />
-              <hr className="my-1 border-gray-300" />
-              <PetpickInfo
-                title={petpick.title}
-                content={"data.content"}
-              ></PetpickInfo>
-            </div>
-
-            <ul className="flex-auto overflow-auto ">
-              {commentList.length > 0 ? (
-                commentList.map((comment, index) => (
-                  <li key={index}>
-                    <Comment data={comment} onDelete={handleDelete} />
-                  </li>
-                ))
-              ) : (
-                <li>댓글이 없습니다</li>
-              )}
-            </ul>
-            <div className="flex flex-1 flex-col space-y-2.5">
-              <PetpickIconContainer
-                direct={"row"}
-                toggleComment={handleVisible}
-                petpickId={petpick.boardId}
-              />
-              <CommentInput
-                boardId={petpick.boardId}
-                onCommentAdded={handleCommentAdded}
-              />
-            </div>
+    <div
+      className=" z-50 mx-auto flex h-screen w-[1000px] flex-row justify-center py-[50px] sm:w-11/12"
+      ref={(node) => {
+        if (node) {
+          if (ref && typeof ref === "object" && "current" in ref) {
+            ref.current = node
+          }
+        }
+        observerRef(node)
+      }}
+    >
+      <PetpickVideo videoURL={petpick.video} />
+      {isVisible ? (
+        <div className="flex h-full min-w-[400px]  flex-col justify-between bg-gray-50 ">
+          <div className=" flex-1">
+            <Profile nickname={"dd"} image={"ddd"} />
+            <hr className="my-1 border-gray-300" />
+            <PetpickInfo
+              title={petpick.title}
+              content={"data.content"}
+            ></PetpickInfo>
           </div>
-        ) : (
-          <PetpickIconContainer
-            direct={"col"}
-            toggleComment={handleVisible}
-            petpickId={petpick.boardId}
-          />
-        )}
-      </div>
-    </>
+
+          <ul className="flex-auto overflow-auto ">
+            {commentList.length > 0 ? (
+              commentList.map((comment, index) => (
+                <li key={index}>
+                  <Comment data={comment} onDelete={handleDelete} />
+                </li>
+              ))
+            ) : (
+              <li>댓글이 없습니다</li>
+            )}
+          </ul>
+          <div className="flex flex-1 flex-col space-y-2.5">
+            <PetpickIconContainer
+              direct={"row"}
+              toggleComment={handleVisible}
+              petpickId={petpick.boardId}
+              // isFollowing={comment.isFollowing}
+              // isLiking={comment.isLiking}
+            />
+            <CommentInput
+              boardId={petpick.boardId}
+              onCommentAdded={handleCommentAdded}
+            />
+          </div>
+        </div>
+      ) : (
+        <PetpickIconContainer
+          direct={"col"}
+          toggleComment={handleVisible}
+          petpickId={petpick.boardId}
+        />
+      )}
+    </div>
   )
-}
+})
+PetpickComments.displayName = "PetpickComments"
 
 export default PetpickComments

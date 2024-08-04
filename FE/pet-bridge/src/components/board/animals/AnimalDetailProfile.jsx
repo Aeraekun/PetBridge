@@ -8,21 +8,69 @@ const AnimalDetailProfile = ({
     onFileChange({target: {files: []}})
   }
 
-  return (
-    <div className="flex">
-      <div className="flex flex-row">
-        {/* Animal Image */}
+  const getFilteredFields = () => {
+    const fields = [
+      {label: "공고번호", name: "noticeNo", value: animal.noticeNo},
+      {label: "성별", name: "sexCd", value: animal.sexCd, options: ["M", "F"]}, // 성별을 셀렉트 박스로 변경
+      {label: "나이", name: "age", value: animal.age},
+      {
+        label: "특징",
+        name: "noticeComment",
+        value: animal.noticeComment || "정보 없음",
+      },
+      {label: "종류", name: "kindCd", value: animal.kindCd},
+      {label: "색상", name: "colorCd", value: animal.colorCd},
+      {label: "체중", name: "weight", value: animal.weight},
+      {
+        label: "보호 상태",
+        name: "processState",
+        value: animal.processState,
+        options: ["보호중", "종료(반환)"], // 보호 상태를 셀렉트 박스로 변경
+      },
+      {
+        label: "중성화 여부",
+        name: "neuterYn",
+        value: animal.neuterYn,
+        options: ["Y", "N"],
+      }, // 중성화 여부를 셀렉트 박스로 변경
+      {label: "주소", name: "careAddr", value: animal.careAddr},
+      {label: "보호소 명", name: "careNm", value: animal.careNm},
+      {label: "보호소 전화", name: "careTel", value: animal.careTel},
+      {label: "담당 지역", name: "chargeNm", value: animal.chargeNm},
+      {label: "발견 장소", name: "happenPlace", value: animal.happenPlace},
+      {label: "발견 일자", name: "happenDt", value: animal.happenDt},
+      {label: "공지 시작일", name: "noticeSdt", value: animal.noticeSdt},
+      {label: "공지 종료일", name: "noticeEdt", value: animal.noticeEdt},
+      {label: "전화번호", name: "officetel", value: animal.officetel},
+      {label: "기관명", name: "orgNm", value: animal.orgNm},
+      {label: "특별 마크", name: "specialMark", value: animal.specialMark},
+    ]
 
+    if (!isEditing) {
+      return fields.filter(({value}) => value && value.trim() !== "")
+    }
+
+    return fields
+  }
+
+  const filteredFields = getFilteredFields()
+
+  return (
+    <div className="flex w-full flex-wrap p-4">
+      {/* Animal Image */}
+      <div className="flex w-full flex-col lg:w-1/2">
         {isEditing ? (
-          <div>
+          <div className="flex w-full flex-col items-center">
             {animal.filename ? (
               <img
                 src={animal.filename}
                 alt="animal profile"
-                className="size-[500px] object-contain"
+                className="h-96 w-full object-contain"
               />
             ) : (
-              "이미지 없음"
+              <div className="flex h-96 w-full items-center justify-center border border-gray-300">
+                이미지 없음
+              </div>
             )}
             <input
               type="file"
@@ -30,308 +78,77 @@ const AnimalDetailProfile = ({
               name="filename"
               accept="image/*"
               onChange={onFileChange}
+              className="mt-2"
             />
-
-            {onFileChange && <button onClick={handleRemoveImage}> ✖ </button>}
+            {onFileChange && (
+              <button onClick={handleRemoveImage} className="mt-2 text-red-500">
+                ✖
+              </button>
+            )}
           </div>
         ) : (
-          <div id="filename" name="filename">
+          <div className="flex h-96 w-full items-center justify-center border border-gray-300">
             {animal.filename ? (
               <img
-                src={animal.filename}
+                src={animal.popfile}
                 alt="animal profile"
-                className="size-[500px] object-cover"
+                className="size-full object-cover"
               />
             ) : (
-              <div className="bg-mild size-[500px] rounded border p-2">
+              <div className="flex size-full items-center justify-center">
                 이미지 없음
               </div>
             )}
           </div>
         )}
-        <div className="ml-4 flex flex-col space-y-4">
-          {/* Animal Details */}
-          <div className="flex flex-col space-y-3">
-            <div className="flex items-center">
-              <label htmlFor="name" className="w-32">
-                이름
-              </label>
-              {isEditing ? (
+      </div>
+
+      {/* Animal Details */}
+      <div className="mt-4 flex w-full flex-col space-y-4 lg:mt-0 lg:w-1/2 lg:pl-4">
+        {filteredFields.map(({label, name, value, options}) => (
+          <div key={name} className="flex items-center">
+            <label htmlFor={name} className="w-32">
+              {label}
+            </label>
+            {isEditing ? (
+              options ? (
+                <select
+                  id={name}
+                  name={name}
+                  value={value}
+                  onChange={onInputChange}
+                  className="bg-mild w-full rounded border p-2"
+                >
+                  {options.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              ) : (
                 <input
                   type="text"
-                  id="name"
-                  name="name"
-                  value={animal.name}
+                  id={name}
+                  name={name}
+                  value={value}
                   onChange={onInputChange}
                   className="bg-mild w-full rounded border p-2"
                 />
-              ) : (
-                <div
-                  id="name"
-                  name="name"
-                  className="bg-mild w-full rounded border p-2"
-                >
-                  {animal.name}
-                </div>
-              )}
-            </div>
-            <div className="flex items-center">
-              <label htmlFor="notice_no" className="w-32">
-                공고번호
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  id="notice_no"
-                  name="notice_no"
-                  value={animal.notice_no}
-                  onChange={onInputChange}
-                  className="bg-mild w-full rounded border p-2"
-                />
-              ) : (
-                <div
-                  id="notice_no"
-                  name="notice_no"
-                  className="bg-mild h-10 w-full rounded border p-2"
-                >
-                  {animal.notice_no}
-                </div>
-              )}
-            </div>
-            <div className="flex items-center">
-              <label htmlFor="sex_cd" className="w-32">
-                성별
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  id="sex_cd"
-                  name="sex_cd"
-                  value={animal.sex_cd}
-                  onChange={onInputChange}
-                  className="bg-mild w-full rounded border p-2"
-                />
-              ) : (
-                <div
-                  id="sex_cd"
-                  name="sex_cd"
-                  className="bg-mild w-full rounded border p-2"
-                >
-                  {animal.sex_cd}
-                </div>
-              )}
-            </div>
-            <div className="flex items-center">
-              <label htmlFor="age" className="w-32">
-                나이
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  id="age"
-                  name="age"
-                  value={animal.age}
-                  onChange={onInputChange}
-                  className="bg-mild w-full rounded border p-2"
-                />
-              ) : (
-                <div
-                  id="age"
-                  name="age"
-                  className="bg-mild w-full rounded border p-2"
-                >
-                  {animal.age}
-                </div>
-              )}
-            </div>
-            <div className="flex items-center">
-              <label htmlFor="notice_comment" className="w-32">
-                특징
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  id="notice_comment"
-                  name="notice_comment"
-                  value={animal.notice_comment || ""}
-                  onChange={onInputChange}
-                  className="bg-mild w-full rounded border p-2"
-                />
-              ) : (
-                <div
-                  id="notice_comment"
-                  name="notice_comment"
-                  className="bg-mild w-full rounded border p-2"
-                >
-                  {animal.notice_comment || "정보 없음"}
-                </div>
-              )}
-            </div>
-            <div className="flex items-center">
-              <label htmlFor="kind_cd" className="w-32">
-                종류
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  id="kind_cd"
-                  name="kind_cd"
-                  value={animal.kind_cd}
-                  onChange={onInputChange}
-                  className="bg-mild w-full rounded border p-2"
-                />
-              ) : (
-                <div
-                  id="kind_cd"
-                  name="kind_cd"
-                  className="bg-mild h-20 w-full rounded border p-2"
-                >
-                  {animal.kind_cd}
-                </div>
-              )}
-            </div>
-            <div className="flex items-center">
-              <label htmlFor="color_cd" className="w-32">
-                색상
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  id="color_cd"
-                  name="color_cd"
-                  value={animal.color_cd}
-                  onChange={onInputChange}
-                  className="bg-mild w-full rounded border p-2"
-                />
-              ) : (
-                <div
-                  id="color_cd"
-                  name="color_cd"
-                  className="bg-mild w-full rounded border p-2"
-                >
-                  {animal.color_cd}
-                </div>
-              )}
-            </div>
-            <div className="flex items-center">
-              <label htmlFor="weight" className="w-32">
-                체중
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  id="weight"
-                  name="weight"
-                  value={animal.weight}
-                  onChange={onInputChange}
-                  className="bg-mild w-full rounded border p-2"
-                />
-              ) : (
-                <div
-                  id="weight"
-                  name="weight"
-                  className="bg-mild w-full rounded border p-2"
-                >
-                  {animal.weight}
-                </div>
-              )}
-            </div>
-            <div className="flex items-center">
-              <label htmlFor="process_state" className="w-32">
-                보호 상태
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  id="process_state"
-                  name="process_state"
-                  value={animal.process_state}
-                  onChange={onInputChange}
-                  className="bg-mild w-full rounded border p-2"
-                />
-              ) : (
-                <div
-                  id="process_state"
-                  name="process_state"
-                  className="bg-mild w-full rounded border p-2"
-                >
-                  {animal.process_state}
-                </div>
-              )}
-            </div>
-            <div className="flex items-center">
-              <label htmlFor="neuter_yn" className="w-32">
-                중성화 여부
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  id="neuter_yn"
-                  name="neuter_yn"
-                  value={animal.neuter_yn}
-                  onChange={onInputChange}
-                  className="bg-mild w-full rounded border p-2"
-                />
-              ) : (
-                <div
-                  id="neuter_yn"
-                  name="neuter_yn"
-                  className="bg-mild w-full rounded border p-2"
-                >
-                  {animal.neuter_yn}
-                </div>
-              )}
-            </div>
-            <div className="flex items-center">
-              <label htmlFor="special_mark" className="w-32">
-                특별 마크
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  id="special_mark"
-                  name="special_mark"
-                  value={animal.special_mark}
-                  onChange={onInputChange}
-                  className="bg-mild w-full rounded border p-2"
-                />
-              ) : (
-                <div
-                  id="special_mark"
-                  name="special_mark"
-                  className="bg-mild w-full rounded border p-2"
-                >
-                  {animal.special_mark}
-                </div>
-              )}
-            </div>
-            <div className="flex items-center">
-              <label htmlFor="care_addr" className="w-32">
-                주소
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  id="care_addr"
-                  name="care_addr"
-                  value={animal.care_addr}
-                  onChange={onInputChange}
-                  className="bg-mild w-full rounded border p-2"
-                />
-              ) : (
-                <div
-                  id="care_addr"
-                  name="care_addr"
-                  className="bg-mild w-full rounded border p-2"
-                >
-                  s{animal.care_addr}
-                </div>
-              )}
-            </div>
+              )
+            ) : (
+              <div
+                id={name}
+                name={name}
+                className="bg-mild w-full rounded border p-2"
+              >
+                {value}
+              </div>
+            )}
           </div>
-        </div>
+        ))}
       </div>
     </div>
   )
 }
+
 export default AnimalDetailProfile

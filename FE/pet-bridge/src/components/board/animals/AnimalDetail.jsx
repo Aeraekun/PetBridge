@@ -1,8 +1,8 @@
 import SirenIcon from "components/common/SirenIcon"
 import Button from "components/common/Button"
-import data from "./animaldata"
-import {useNavigate, useParams} from "react-router-dom"
+import {useLocation, useNavigate, useParams} from "react-router-dom"
 import AnimalDetailProfile from "./AnimalDetailProfile"
+import {useEffect} from "react"
 
 const Profile = ({nickname}) => {
   return (
@@ -19,16 +19,23 @@ const Profile = ({nickname}) => {
   )
 }
 
-const ArticleDetail = () => {
-  const {id} = useParams()
-  const navigate = useNavigate()
-  const animal = data.find((animal) => animal.user_id === Number(id))
+const AnimalDetail = () => {
+  const location = useLocation()
+  const animal = location.state.animal || {}
 
+  const {animalId} = useParams()
+  console.log(animalId)
+  const navigate = useNavigate()
+  useEffect(() => {
+    console.log(animal)
+  }, [])
   const goBack = () => {
     navigate(-1)
   }
-  const goModify = () => {
-    navigate(`/shelter/modify/${animal.user_id}`)
+  const goAnimalModify = (animal) => {
+    const animalId =
+      animal.desertionNo !== "" ? animal.desertionNo : animal.animalId
+    navigate(`/shelter/modify/${animalId}`, {state: {animal}})
   }
   return (
     <>
@@ -36,7 +43,7 @@ const ArticleDetail = () => {
         돌아가기{" "}
       </button>
       <hr />
-      <Profile nickname={animal.name} />
+      <Profile nickname={"내이름"} />
       <hr />
 
       <AnimalDetailProfile animal={animal} isEditing={false} />
@@ -45,11 +52,11 @@ const ArticleDetail = () => {
         <SirenIcon />
       </div>
       <div className="flex justify-end">
-        <Button text={"수정하기"} onClick={goModify} />
+        <Button text={"수정하기"} onClick={() => goAnimalModify(animal)} />
         <Button text={"삭제하기"} onClick={goBack} />
       </div>
     </>
   )
 }
 
-export default ArticleDetail
+export default AnimalDetail
