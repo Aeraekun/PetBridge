@@ -31,8 +31,20 @@ export const getUserInfo = async () => {
 
 // 회원 정보 수정
 export const patchUserInfo = async (userInfo) => {
-  const res = await axiosInstance.patch(`/users/modify`, userInfo)
-  return res
+  try {
+    const res = await axiosInstance.patch(`/users/modify`, userInfo, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    return res
+  } catch (error) {
+    if (error.response.status === 409) {
+      alert("중복된 닉네임입니다. 닉네임을 다시 확인해주세요.")
+    } else {
+      alert("요청에 실패했습니다.")
+    }
+  }
 }
 
 // 회원 탈퇴
@@ -69,7 +81,75 @@ export const postEmailCheck = async (emailConfirmData) => {
 
 // 회원 삭제
 export const deleteUser = async (userId) => {
-  const res = await axiosInstance.delete(`/users/${userId}`)
+  try {
+    const res = await axiosInstance.delete(`/users/${userId}`)
+    console.log(res)
+    // 성공시 결과 반환
+    return res
+  } catch (error) {
+    console.log(error)
+    // 404번 응답시 - 닉네임을 찾을 수 없음
+    if (error.response.status === 404) {
+      alert(
+        "없는 유저 아이디입니다. 요청을 확인해주세요. 삭제 요청 Id: ",
+        userId
+      )
+      // 이외 예외에 대한 응답
+    } else {
+      alert("요청에 실패했습니다.")
+    }
+  }
+}
+
+// 신고 상태 수정
+export const patchReport = async (reportId) => {
+  const res = await axiosInstance.patch(`/reports/${reportId}`)
 
   return res
+}
+
+// 닉네임 중복 조회
+export const getIsDuplicatedNickname = (nickname) => {
+  try {
+    const res = axiosInstance.get(`/users/${nickname}`)
+    return res
+  } catch (error) {
+    return error
+  }
+}
+
+// 전화번호 인증 코드 발송
+export const postPhoneVerificationCode = (phone) => {
+  try {
+    const res = axiosInstance.post(`/users/authentication/phone`, phone)
+    console.log(res)
+    return true
+  } catch (error) {
+    if (error.response.status === 409) {
+      alert("이미 가입된 전화번호입니다. 전화번호를 확인해주세요.")
+    } else {
+      alert("요청에 실패했습니다.")
+    }
+    return false
+  }
+}
+
+// 전화번호 인증 코드 확인
+export const postPhoneCheck = (phoneConfirmData) => {
+  try {
+    const res = axiosInstance.post(
+      `/users/authentication/phone/check`,
+      phoneConfirmData
+    )
+    console.log(res)
+
+    return true
+  } catch (error) {
+    if (error.response.status === 401) {
+      alert("틀린 인증 번호입니다. 번호를 확인해서 다시 요청해주세요.")
+    } else {
+      alert("요청에 실패했습니다.")
+    }
+    return false
+  }
 }

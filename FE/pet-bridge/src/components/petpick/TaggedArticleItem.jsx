@@ -6,7 +6,7 @@ const ArticleInfo = ({data}) => {
   return (
     <div className="flex w-full flex-col ">
       <div className="flex w-full justify-between space-x-2 p-1">
-        <ArticleState state={data.process_state}></ArticleState>
+        <ArticleState state={data.processState}></ArticleState>
         <div className="text-sm">{data.registTime.split("T")[0]}</div>
       </div>
 

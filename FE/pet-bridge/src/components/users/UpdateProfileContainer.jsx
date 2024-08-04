@@ -39,6 +39,10 @@ const UpdateProfileContainer = () => {
   // 유효성 검사 실패 에러 메시지 저장을 위한 state
   const [errors, setErrors] = useState({})
 
+  // 이미지 파일, 미리보기 URL 저장 state
+  const [selectedImageFile, setSelectedImageFile] = useState(null)
+  const [previewUrl, setPreviewUrl] = useState(image || DefaultUser150)
+
   // 에러메세지 수정
   const setError = (new_error, new_error_message) => {
     if (new_error) {
@@ -56,6 +60,16 @@ const UpdateProfileContainer = () => {
       ...updateFormData,
       [id]: target.value,
     })
+  }
+
+  // 이미지 입력이 변경 Handler
+  const imageChangeHandler = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+      setSelectedImageFile(file)
+      const url = URL.createObjectURL(file)
+      setPreviewUrl(url)
+    }
   }
 
   // 컨펌 입력 처리 함수
@@ -91,8 +105,20 @@ const UpdateProfileContainer = () => {
       newErrors.phone = phoneError.new_error_message
     }
     setErrors(newErrors)
+    console.log("뉴에러ㅓㅓ", newErrors)
     // 에러가 없다면
     if (Object.values(newErrors).every((value) => value === "")) {
+      // 이미지 추가를 위해 FormData 객체 생성 및 이미지 파일 추가
+      const formData = new FormData()
+
+      formData.append("nickname", updateFormData.nickname)
+      formData.append("birth", updateFormData.birth)
+      formData.append("phone", updateFormData.phone)
+      if (selectedImageFile) {
+        formData.append("image", selectedImageFile)
+      }
+      console.log(formData)
+
       // patch 비동기 요청
       try {
         const res = await patchUserInfo(updateFormData)
@@ -103,7 +129,7 @@ const UpdateProfileContainer = () => {
         dispatch(setUserInfos(res.data))
         return
       } catch (error) {
-        console.log(error)
+        console.log("patch 실패 에러", error)
       }
     }
 
@@ -156,19 +182,13 @@ const UpdateProfileContainer = () => {
       onSubmit={onSubmitHandler}
     >
       <span className="text-2xl font-bold">닉네임(아이디)</span>
-      {image ? (
-        <img
-          src={image}
-          alt="유저이미지"
-          className="size-[100px] rounded-full"
-        />
-      ) : (
-        <img
-          src={DefaultUser150}
-          alt="유저이미지"
-          className="size-[200px] rounded-full"
-        />
-      )}
+      <img
+        src={previewUrl}
+        alt="유저이미지"
+        className="size-[100px] rounded-full"
+      />
+      {/* 프로필 입력 */}
+      <input type="file" id="image" onChange={imageChangeHandler} />
       {/* 비밀번호 입력 */}
       <div className="w-full">
         {/* 비밀번호 입력 창 */}
@@ -197,7 +217,7 @@ const UpdateProfileContainer = () => {
           autoComplete="new-password"
         />
         {errors.password && (
-          <span className="text-alert col-span-12">{errors.password}</span>
+          <span className="col-span-12 text-alert">{errors.password}</span>
         )}
       </div>
 
@@ -214,7 +234,7 @@ const UpdateProfileContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.nickname && (
-          <span className="text-alert col-span-12">{errors.nickname}</span>
+          <span className="col-span-12 text-alert">{errors.nickname}</span>
         )}
       </div>
       {/* 전화번호 입력 창 */}
@@ -231,7 +251,7 @@ const UpdateProfileContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.phone && (
-          <span className="text-alert col-span-12">{errors.phone}</span>
+          <span className="col-span-12 text-alert">{errors.phone}</span>
         )}
       </div>
       {/* 생년월일 창 */}
@@ -248,20 +268,20 @@ const UpdateProfileContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.birth && (
-          <span className="text-alert col-span-12">{errors.birth}</span>
+          <span className="col-span-12 text-alert">{errors.birth}</span>
         )}
       </div>
 
       <div className="grid w-full grid-cols-2 gap-10">
         {/* 수정하기 버튼 */}
-        <button type="submit" className="bg-mild h-12 rounded-md px-3.5 py-2.5">
+        <button type="submit" className="h-12 rounded-md bg-mild px-3.5 py-2.5">
           수정하기
         </button>
         {/* 취소 버튼 */}
         <Link
           to="/"
           type="button"
-          className="bg-mild rounded-md px-3.5 py-2.5 text-center"
+          className="rounded-md bg-mild px-3.5 py-2.5 text-center"
         >
           취소하기
         </Link>

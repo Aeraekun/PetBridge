@@ -1,5 +1,9 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
-import {getUserInfo, postLoginUser} from "api/users-api"
+import {
+  getUserInfo,
+  postLoginUser,
+  getIsDuplicatedNickname,
+} from "api/users-api"
 import {setUserInfosAtSession} from "utils/user-utils"
 
 // usersSlice의 상태 초기화
@@ -13,6 +17,7 @@ const initialState = {
   role: "",
   isAuthenticated: false,
   loading: false,
+  isLoadingDuplication: false,
   error: null,
 }
 
@@ -29,15 +34,14 @@ export const loginUserThunk = createAsyncThunk(
 
     // 응답을 200번으로 받지 못한다면, 에러 반환
     if (res.status !== 200) {
-      // 에러 데이터를 담아서 반환함 (로그인 실패)
-      const {data} = res.response
       console.log(
         "usersApi.ks => loginUser => catch => console.log(error)",
         res
       )
-      return rejectWithValue(data)
+      return rejectWithValue("로그인 실패. 아이디와 비밀번호를 확인해주세요.")
     }
 
+    // 로그인에 성공하며 바로 유저 정보를 받아온다.
     console.log("loginUserThunk fulfilled")
     dispatch(getUserInfoThunk())
     return res.data
@@ -55,6 +59,31 @@ export const getUserInfoThunk = createAsyncThunk(
     }
     setUserInfosAtSession(res.data)
     return res.data
+  }
+)
+
+// 닉네임 중복 검사를 하는 getIsDuplicatedNicknameThunk
+export const getIsDuplicatedNicknameThunk = createAsyncThunk(
+  "user/getIsDuplicatedNickname",
+  async (nickname, {rejectWithValue}) => {
+    console.log("------")
+    try {
+      const res = await getIsDuplicatedNickname(nickname)
+      console.log(res)
+
+      if (res.status === 200) {
+        return rejectWithValue(
+          "이미 있는 닉네임입니다. 다른 닉네임을 입력해주세요."
+        )
+      }
+    } catch (error) {
+      if (error.response.status === 404) {
+        alert("사용 가능한 닉네임입니다.")
+        return error
+      } else {
+        console.log("요청에 실패했습니다.")
+      }
+    }
   }
 )
 
@@ -110,6 +139,15 @@ export const usersSlice = createSlice({
         state.role = action.payload.role
         state.isAuthenticated = true
       })
+      .addCase(getIsDuplicatedNicknameThunk.pending, (state) => {
+        state.isLoadingDuplication = true
+      })
+      .addCase(getIsDuplicatedNicknameThunk.fulfilled, (state) => {
+        state.isLoadingDuplication = false
+      })
+      .addCase(getIsDuplicatedNicknameThunk.rejected, (state) => {
+        state.isLoadingDuplication = false
+      })
   },
 })
 
@@ -120,6 +158,8 @@ export const selectBirth = (state) => state.user.birth
 export const selectPhone = (state) => state.user.phone
 export const selectImage = (state) => state.user.img
 export const selectIsAuthenticated = (state) => state.user.isAuthenticated
+export const selectIsLoadingDuplication = (state) =>
+  state.user.isLoadingDuplication
 export const selectLoading = (state) => state.user.loading
 export const selectError = (state) => state.user.error
 export const selectRole = (state) => state.user.role

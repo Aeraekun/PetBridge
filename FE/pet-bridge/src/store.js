@@ -1,5 +1,6 @@
 import {configureStore} from "@reduxjs/toolkit"
 import userReducer from "features/user/users-slice"
+import chatReducer from "features/chat/chat-slice"
 import petpickReducer from "features/petpick/petpick-slice"
 
 // Redux ToolKit의 configureStore 동작
@@ -12,6 +13,7 @@ const store = configureStore({
   reducer: {
     user: userReducer,
     petpick: petpickReducer,
+    chat: chatReducer,
   },
 })
 
