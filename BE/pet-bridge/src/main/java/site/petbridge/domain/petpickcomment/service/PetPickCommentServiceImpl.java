@@ -65,7 +65,7 @@ public class PetPickCommentServiceImpl implements PetPickCommentService {
     @Override
     public List<PetPickCommentResponseDto> getListPetPickComment(Long petPickId, int page, int size) {
 
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "registTime"));
         Page<PetPickCommentResponseDto> petPickComments = petPickCommentRepository.findByPetPickId(petPickId, pageable);
 
         return petPickComments.getContent();

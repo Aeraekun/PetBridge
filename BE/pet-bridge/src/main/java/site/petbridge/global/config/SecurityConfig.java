@@ -79,12 +79,12 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email/check").permitAll()
 				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email").permitAll()
 
-				// 쇼츠
-				.requestMatchers(HttpMethod.GET,"/api/shorts").permitAll()
-				.requestMatchers(HttpMethod.POST,"/api/shorts").permitAll()
+				// 펫픽
+				.requestMatchers(HttpMethod.GET,"/api/petpicks").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/petpicks/**").permitAll()
 
-				// 쇼츠 댓글
-				.requestMatchers(HttpMethod.GET,"/api/short-comments/**").permitAll()
+				// 펫픽 댓글
+				.requestMatchers(HttpMethod.GET,"/api/petpick-comments/**").permitAll()
 
 				// 게시글
 				.requestMatchers(HttpMethod.GET, "/api/boards").permitAll()
@@ -100,12 +100,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.PATCH, "/api/board-comments/{id}/disable", "/*").permitAll()
 
 				// 동물
-				.requestMatchers(HttpMethod.GET, "/api/animals").permitAll()
-				.requestMatchers(HttpMethod.GET, "/api/animals/user/{userId}").permitAll()
-				.requestMatchers(HttpMethod.GET, "/api/animals/{id}").permitAll()
-				.requestMatchers(HttpMethod.POST, "/api/animals").permitAll()
-				.requestMatchers(HttpMethod.PATCH, "/api/animals/{id}").permitAll()
-				.requestMatchers(HttpMethod.PATCH, "/api/animals/{id}/disable").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/animals/**").permitAll()
 
 				// 계약서
 				.requestMatchers(HttpMethod.GET, "/api/contracts/user/{userId}").permitAll()

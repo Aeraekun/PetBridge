@@ -71,7 +71,7 @@ public class ContractResponseDto {
 			.animalName(animal.getName())
 			.animalImage(animal.getFilename())
 			.animalKind(animal.getKindCd())
-			.animalAge(animal.getAge())
+			.animalAge(String.valueOf(animal.getAge()))
 			.month1(contractCheck.getMonth1())
 			.month2(contractCheck.getMonth2())
 			.month3(contractCheck.getMonth3())
