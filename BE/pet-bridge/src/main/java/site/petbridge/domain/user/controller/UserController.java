@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 import site.petbridge.domain.user.dto.request.EmailRequestDto;
+import site.petbridge.domain.user.dto.request.PhoneRequestDto;
 import site.petbridge.domain.user.dto.request.UserEditRequestDto;
 import site.petbridge.domain.user.dto.request.UserSignUpRequestDto;
 import site.petbridge.domain.user.dto.response.UserResponseDto;
@@ -126,6 +127,27 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         if (!userService.checkEmailAuthenticationCode(emailRequestDto)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).build();
+
+    }
+
+
+    @PostMapping("/api/users/authentication/phone")
+    public ResponseEntity<Void> sendPhoneAuthenticationCode(
+        @RequestBody PhoneRequestDto phoneRequestDto) throws Exception {
+        System.out.println("요청들어왔따");
+
+        userService.sendPhoneAuthenticationCode(phoneRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+
+    }
+
+    @PostMapping("/api/users/authentication/phone/check")
+    public ResponseEntity<Void> checkPhoneAuthenticationCode(
+        @RequestBody PhoneRequestDto phoneRequestDto) throws Exception {
+        if (!userService.checkPhoneAuthenticationCode(phoneRequestDto)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         return ResponseEntity.status(HttpStatus.OK).build();
