@@ -13,4 +13,13 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
 
 	Optional<Contract> findById(int id);
 
+	// 입양완료
+	boolean existsByAnimalIdAndConfirmedTrue(int animalId);
+
+	// 입양대기
+	boolean existsByAnimalIdAndConfirmedFalse(int animalId);
+
+	List<Contract> findAllByConfirmedTrue();
+
+	List<Contract> findAllByConfirmedFalse();
 }

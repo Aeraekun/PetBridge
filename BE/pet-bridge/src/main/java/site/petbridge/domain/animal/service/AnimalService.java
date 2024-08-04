@@ -1,21 +1,25 @@
 package site.petbridge.domain.animal.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.web.multipart.MultipartFile;
-
-import site.petbridge.domain.animal.dto.request.AnimalRegistRequestDto;
 import site.petbridge.domain.animal.dto.request.AnimalEditRequestDto;
+import site.petbridge.domain.animal.dto.request.AnimalRegistRequestDto;
 import site.petbridge.domain.animal.dto.response.AnimalResponseDto;
+
+import java.util.List;
 
 public interface AnimalService {
 
-    Optional<List<AnimalResponseDto>> getListAnimalByUserId(int userId);
+    void registAnimal(AnimalRegistRequestDto animalRegistRequestDto, MultipartFile imageFile) throws Exception;
 
-    Optional<AnimalResponseDto> getDetailAnimal(int id);
-    void registAnimal(AnimalRegistRequestDto animalRegistRequestDto, MultipartFile file) throws Exception;
-    int editAnimal(int id, AnimalEditRequestDto animalEditRequestDto, MultipartFile file) throws Exception;
-    int removeAnimal(int id) throws Exception;
+    void editAnimal(int id, AnimalEditRequestDto animalEditRequestDto, MultipartFile imageFile) throws Exception;
 
+    void removeAnimal(int id) throws Exception;
+
+    List<AnimalResponseDto> getListAnimal(int page, int size, String species, String careAddr, String processState) throws Exception;
+
+    List<AnimalResponseDto> getListMyAnimal(int page, int size) throws Exception;
+
+    List<AnimalResponseDto> getListFollowAnimal(int page, int size) throws Exception;
+
+    AnimalResponseDto getDetailAnimal(int id) throws Exception;
 }
