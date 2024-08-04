@@ -47,6 +47,4 @@ public class AnimalRegistRequestDto {
                 .careAddr(careAddr)
                 .build();
     }
-
-
 }
