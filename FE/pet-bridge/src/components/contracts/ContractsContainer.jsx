@@ -1,7 +1,11 @@
 import {useEffect, useState} from "react"
 import ContractAnimal from "./ContractAnimal"
 import ContractPerson from "./ContractPerson"
-import {getContractDetail} from "api/contracts-api"
+import {
+  disalbeContract,
+  getContractDetail,
+  patchContract,
+} from "api/contracts-api"
 import {useParams} from "react-router-dom"
 import ContractDetail from "./ContractDetail"
 import ContractStamp from "./ContractStamp"
@@ -15,15 +19,16 @@ const ContractsContainer = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [contractInfo, setContractInfo] = useState(null)
   const {id} = useParams()
+  const [isStampFilled, setIsStampFilled] = useState(null)
 
   // 페이지 초기 로드
   // 계약서 정보를 불러옴
   useEffect(() => {
     // 백엔드 서버에서 계약서 API 호출해서, 반환값을 상세 정보에 저장
     const initContractInfo = async () => {
-      const contractInfo = await getContractDetail(id)
-      if (contractInfo.data) {
-        setContractInfo(contractInfo.data)
+      const fetchedContractInfo = await getContractDetail(id)
+      if (fetchedContractInfo.data) {
+        setContractInfo(fetchedContractInfo.data)
       }
     }
 
@@ -33,6 +38,18 @@ const ContractsContainer = () => {
   useEffect(() => {
     if (contractInfo !== null) {
       setIsLoading(false)
+
+      let stampFilled = 0
+      for (let i = 1; i < 13; i++) {
+        if (!contractInfo[`month${i}`]) {
+          return
+        }
+        stampFilled++
+      }
+
+      if (Number(contractInfo.month) === stampFilled) {
+        setIsStampFilled(true)
+      }
     }
   }, [contractInfo])
 
@@ -53,6 +70,29 @@ const ContractsContainer = () => {
           "이번 달에 이미 스탬프를 찍었어요. 다음 달에 입양 후기를 확인하구 또 찍어주세요."
         )
       }
+    }
+  }
+
+  // 계약서 삭제 버튼을 누르면
+  const clickDeleteButtonHandler = () => {
+    // 계약서 아이디로 삭제 요청을 보냄
+    if (confirm("계약서를 삭제하시겠습니까?")) {
+      disalbeContract(id)
+    }
+  }
+
+  // 계약 체결 버튼을 누르면
+  const clickPatchButtonHandler = () => {
+    // 계약서 아이디로 삭제 요청을 보냄
+    if (confirm("계약을 체결하시겠습니까?")) {
+      patchContract(id)
+    }
+  }
+
+  // 계약 종료 (환급) 버튼 클릭
+  const clickFinishHandler = () => {
+    if (confirm("환급을 신창하시겠습니까?")) {
+      patchContract(id)
     }
   }
 
@@ -95,30 +135,51 @@ const ContractsContainer = () => {
               content={contractInfo.content}
             />
           </div>
-          <span className="text-4xl font-bold">입양 스탬프북</span>
-          <div className="flex w-full flex-col items-center justify-center rounded-2xl border-2 border-mild p-5">
-            <div className="flex h-full flex-wrap justify-center">
-              {Array.from({length: contractInfo.month}).map((_, index) => (
-                <ContractStamp
-                  key={index}
-                  idx={index + 1}
-                  text={contractInfo[`month${index + 1}`]}
-                />
-              ))}
-            </div>
-            <div className="flex h-20 items-center justify-center">
-              {Number(userId) == contractInfo.contractorId ? (
-                <button
-                  className="rounded-2xl bg-mild p-2.5 text-2xl font-bold text-white"
-                  onClick={onClickStampHandler}
-                >
-                  이번 달 스탬프 찍기
-                </button>
-              ) : (
-                <div>스탬프를 받기 위해 계약 내용을 잘 이행해주세요.</div>
-              )}
-            </div>
-          </div>
+
+          {contractInfo.confirmed ? (
+            <>
+              <span className="text-4xl font-bold">입양 스탬프북</span>
+              <div className="flex w-full flex-col items-center justify-center rounded-2xl border-2 border-mild p-5">
+                <div className="flex h-full flex-wrap justify-center">
+                  {Array.from({length: contractInfo.month}).map((_, index) => (
+                    <ContractStamp
+                      key={index}
+                      idx={index + 1}
+                      text={contractInfo[`month${index + 1}`]}
+                    />
+                  ))}
+                </div>
+                <div className="flex h-20 items-center justify-center">
+                  {Number(userId) == contractInfo.contractorId ? (
+                    <button
+                      className="rounded-2xl bg-mild p-2.5 text-2xl font-bold text-white"
+                      onClick={onClickStampHandler}
+                    >
+                      이번 달 스탬프 찍기
+                    </button>
+                  ) : isStampFilled ? (
+                    <button onClick={clickFinishHandler}>환급 신청하기</button>
+                  ) : (
+                    <div>스탬프를 받기 위해 계약 내용을 잘 이행해주세요.</div>
+                  )}
+                </div>
+              </div>
+            </>
+          ) : Number(userId) !== contractInfo.contractorId ? (
+            <button
+              className="rounded-xl bg-mild p-2.5 text-white"
+              onClick={clickPatchButtonHandler}
+            >
+              계약 체결하기
+            </button>
+          ) : (
+            <button
+              className="rounded-xl bg-alert p-2.5 text-white"
+              onClick={clickDeleteButtonHandler}
+            >
+              계약서 삭제하기
+            </button>
+          )}
         </>
       )}
     </div>
