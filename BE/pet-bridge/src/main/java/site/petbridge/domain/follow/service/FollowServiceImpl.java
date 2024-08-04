@@ -18,6 +18,7 @@ import site.petbridge.domain.user.service.UserService;
 import site.petbridge.global.exception.ErrorCode;
 import site.petbridge.global.exception.PetBridgeException;
 import site.petbridge.global.login.userdetail.CustomUserDetail;
+import site.petbridge.util.AuthUtil;
 
 import java.util.Optional;
 
@@ -29,16 +30,13 @@ public class FollowServiceImpl implements FollowService {
     private final FollowRepository followRepository;
     private final AnimalRepository animalRepository;
     private final UserRepository userRepository;
+    private final AuthUtil authUtil;
 
     @Transactional
     @Override
     public void registFollow(HttpServletRequest httpServletRequest, FollowRequestDto followRequestDto) throws Exception {
 
-        // 회원 정보
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-        User user = userRepository.findByIdAndDisabledFalse(userId)
-                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+        User user = authUtil.getAuthenticatedUser(userRepository);
 
         // 존재하는 animal에 대한 요청인지 확인
         boolean exists = animalRepository.existsById((long) followRequestDto.getAnimalId());
@@ -61,11 +59,7 @@ public class FollowServiceImpl implements FollowService {
     @Override
     public void deleteFollow(HttpServletRequest httpServletRequest, FollowRequestDto followRequestDto) throws Exception {
 
-        // 회원 정보
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-        User user = userRepository.findByIdAndDisabledFalse(userId)
-                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+        User user = authUtil.getAuthenticatedUser(userRepository);
 
         // 존재하는 animal에 대한 요청인지 확인
         boolean exists = animalRepository.existsById((long) followRequestDto.getAnimalId());
