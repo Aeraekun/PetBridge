@@ -72,12 +72,15 @@ public class SecurityConfig {
 
 				// 회원
 				.requestMatchers(HttpMethod.GET, "/users/sign-up", "/users/login").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/users/sign-up").permitAll()
-				.requestMatchers(HttpMethod.GET, "/oauth2/authorization/*").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/oauth2/authorization/**").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/users/find/email").permitAll()
 				.requestMatchers("/users/oauth/success").permitAll()
-				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email/check").permitAll()
 				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email").permitAll()
+				.requestMatchers(HttpMethod.POST,"/api/users/authentication/emailCheck").permitAll()
+				.requestMatchers(HttpMethod.POST,"/api/users/authentication/phone").permitAll()
+				.requestMatchers(HttpMethod.POST,"/api/users/authentication/phone/check").permitAll()
 
 				// 펫픽
 				.requestMatchers(HttpMethod.GET,"/api/petpicks").permitAll()

@@ -20,6 +20,7 @@ import site.petbridge.domain.user.repository.UserRepository;
 import site.petbridge.global.exception.ErrorCode;
 import site.petbridge.global.exception.PetBridgeException;
 import site.petbridge.global.login.userdetail.CustomUserDetail;
+import site.petbridge.util.AuthUtil;
 import site.petbridge.util.FileUtil;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class AnimalServiceImpl implements AnimalService {
 	private final FileUtil fileUtil;
 	private final ContractRepository contractRepository;
 	private final FollowRepository followRepository;
+	private final AuthUtil authUtil;
 
 	/**
 	 * 동물 등록
@@ -42,10 +44,7 @@ public class AnimalServiceImpl implements AnimalService {
 	@Transactional
 	@Override
 	public void registAnimal(AnimalRegistRequestDto animalRegistRequestDto, MultipartFile imageFile) throws Exception {
-		// 회원 정보
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-		User user = userRepository.findById((long) userId).get();
+		User user = authUtil.getAuthenticatedUser(userRepository);
 
 		String savedImageFileName = null;
 		if (imageFile != null) {
@@ -62,17 +61,14 @@ public class AnimalServiceImpl implements AnimalService {
 	@Transactional
 	@Override
 	public void editAnimal(int id, AnimalEditRequestDto animalEditRequestDto, MultipartFile imageFile) throws Exception {
-		// 회원 정보
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-		User user = userRepository.findById((long) userId).get();
+		User user = authUtil.getAuthenticatedUser(userRepository);
 
 		// 없거나 삭제된 동물
 		Animal entity = animalRepository.findByIdAndDisabledFalse(id)
 				.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
 		
 		// 내 동물 아닐때
-		if (userId != entity.getUserId()) {
+		if (user.getId() != entity.getUserId()) {
 			throw new PetBridgeException(ErrorCode.FORBIDDEN);
 		}
 
@@ -81,9 +77,7 @@ public class AnimalServiceImpl implements AnimalService {
 			savedImageFileName = fileUtil.saveFile(imageFile, "animals");
 		}
 
-		entity.update(animalEditRequestDto.getName(), savedImageFileName, animalEditRequestDto.getSpecies(), animalEditRequestDto.getKindCd(),
-				animalEditRequestDto.getColorCd(), animalEditRequestDto.getAge(), animalEditRequestDto.getWeight(), animalEditRequestDto.getSexCd(),
-				animalEditRequestDto.getNeuterYn(), animalEditRequestDto.getSpecialMark(), animalEditRequestDto.getCareAddr());
+		entity.update(animalEditRequestDto, savedImageFileName);
 		animalRepository.save(entity);
 	}
 
@@ -93,17 +87,14 @@ public class AnimalServiceImpl implements AnimalService {
 	@Transactional
 	@Override
 	public void removeAnimal(int id) throws Exception {
-		// 회원 정보
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-		User user = userRepository.findById((long) userId).get();
+		User user = authUtil.getAuthenticatedUser(userRepository);
 
 		// 없거나 삭제된 동물
 		Animal entity = animalRepository.findByIdAndDisabledFalse(id)
 				.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
 
 		// 내 동물 아닐때
-		if (userId != entity.getUserId()) {
+		if (user.getId() != entity.getUserId()) {
 			throw new PetBridgeException(ErrorCode.FORBIDDEN);
 		}
 
@@ -155,15 +146,12 @@ public class AnimalServiceImpl implements AnimalService {
 	 */
 	@Override
 	public List<AnimalResponseDto> getListMyAnimal(int page, int size) throws Exception {
-		// 회원 정보
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-		User user = userRepository.findById((long) userId).get();
+		User user = authUtil.getAuthenticatedUser(userRepository);
 
 		Sort sort = Sort.by(Sort.Direction.DESC, "id");
 		Pageable pageable = PageRequest.of(page, size, sort);
 
-		Page<Animal> animals = animalRepository.findByUserIdAndDisabledFalse(userId, pageable);
+		Page<Animal> animals = animalRepository.findByUserIdAndDisabledFalse(user.getId(), pageable);
 
 		return animals.stream()
 				.map(animal -> new AnimalResponseDto(animal, determineProcessState(animal)))
@@ -175,13 +163,10 @@ public class AnimalServiceImpl implements AnimalService {
 	 */
 	@Override
 	public List<AnimalResponseDto> getListFollowAnimal(int page, int size) throws Exception {
-		// 회원 정보
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-		User user = userRepository.findById((long) userId).get();
+		User user = authUtil.getAuthenticatedUser(userRepository);
 
 		// FollowRepository로부터 팔로우한 동물 목록 가져오기
-		List<Animal> animals = followRepository.findFollowedAnimalsByUserId(userId);
+		List<Animal> animals = followRepository.findFollowedAnimalsByUserId(user.getId());
 
 		// 페이징 처리
 		Sort sort = Sort.by(Sort.Direction.DESC, "id");

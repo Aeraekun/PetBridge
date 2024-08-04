@@ -1,21 +1,17 @@
 package site.petbridge.domain.user.dto.request;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.petbridge.domain.user.domain.User;
-import site.petbridge.domain.user.domain.enums.Role;
 
 import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserSignUpRequestDto {
+public class UserEditRequestDto {
 
-    @NotNull @Email
-    private String email;
     @NotNull
     private String password;
     @NotNull
@@ -25,13 +21,13 @@ public class UserSignUpRequestDto {
     @NotNull
     private String phone;
 
-    public User toEntity() {
+    public User toEntity(String image) {
         return User.builder()
-                .email(email)
                 .password(password)
                 .nickname(nickname)
                 .birth(birth)
-                .role(Role.USER)
+                .phone(phone)
+                .image(image)
                 .build();
     }
 }
