@@ -15,14 +15,21 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.service.DefaultMessageService;
+
+import jakarta.annotation.PostConstruct;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 import site.petbridge.domain.user.domain.User;
 import site.petbridge.domain.user.domain.enums.Role;
 import site.petbridge.domain.user.dto.request.EmailRequestDto;
+import site.petbridge.domain.user.dto.request.PhoneRequestDto;
 import site.petbridge.domain.user.dto.request.UserEditRequestDto;
 import site.petbridge.domain.user.dto.request.UserSignUpRequestDto;
 import site.petbridge.domain.user.dto.response.UserResponseDto;
@@ -51,6 +58,22 @@ public class UserServiceImpl implements UserService {
 
 	@Value("${spring.auth-code-expiration-millis}")
 	private int authCodeExpirationMillis;
+
+	@Value("${coolsms.senderNumber}")
+	private String senderNumber;
+
+	@Value("${coolsms.apiKey}")
+	private String apiKey;
+
+	@Value("${coolsms.apiSecret}")
+	private String apiSecret;
+
+	DefaultMessageService messageService;
+
+	@PostConstruct
+	public void init() {
+		this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
+	}
 
 	/**
 	 * 회원가입
@@ -82,9 +105,9 @@ public class UserServiceImpl implements UserService {
 	public List<UserResponseDto> getListUser(int page, int size) throws Exception {
 		// 회원 정보
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
+		int userId = ((CustomUserDetail)authentication.getPrincipal()).getId();
 		User entity = userRepository.findByIdAndDisabledFalse(userId)
-				.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
 
 		// ADMIN 아닐 때
 		if (entity.getRole() != Role.ADMIN) {
@@ -96,8 +119,8 @@ public class UserServiceImpl implements UserService {
 		Page<User> users = userRepository.findAll(pageable);
 
 		return users.stream()
-				.map(UserResponseDto::new)
-				.collect(Collectors.toList());
+			.map(UserResponseDto::new)
+			.collect(Collectors.toList());
 	}
 
 	/**
@@ -107,9 +130,9 @@ public class UserServiceImpl implements UserService {
 	public UserResponseDto getDetailMyUser() throws Exception {
 		// 회원 정보
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
+		int userId = ((CustomUserDetail)authentication.getPrincipal()).getId();
 		User entity = userRepository.findByIdAndDisabledFalse(userId)
-				.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
 
 		return new UserResponseDto(entity);
 	}
@@ -120,7 +143,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserResponseDto getDetailUserByNickname(String nickname) throws Exception {
 		User entity = userRepository.findByNicknameAndDisabledFalse(nickname)
-				.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
 
 		return new UserResponseDto(entity);
 	}
@@ -133,11 +156,11 @@ public class UserServiceImpl implements UserService {
 	public void editUser(UserEditRequestDto userEditRequestDto, MultipartFile imageFile) throws Exception {
 		// 회원 정보
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	 	int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-		 User entity = userRepository.findById(userId)
-				 .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+		int userId = ((CustomUserDetail)authentication.getPrincipal()).getId();
+		User entity = userRepository.findById(userId)
+			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
 
-		 // 닉네임 중복시 409 CONFLICT
+		// 닉네임 중복시 409 CONFLICT
 		if (userRepository.findByNicknameAndDisabledFalse(userEditRequestDto.getNickname()).isPresent()) {
 			throw new PetBridgeException(ErrorCode.CONFLICT);
 		}
@@ -160,9 +183,9 @@ public class UserServiceImpl implements UserService {
 	public void removeUser() throws Exception {
 		// 회원 정보
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
+		int userId = ((CustomUserDetail)authentication.getPrincipal()).getId();
 		User entity = userRepository.findById(userId)
-				.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
 
 		entity.disable();
 		userRepository.save(entity);
@@ -176,9 +199,9 @@ public class UserServiceImpl implements UserService {
 	public void removeUserAdmin(int id) throws Exception {
 		// 회원 정보
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
+		int userId = ((CustomUserDetail)authentication.getPrincipal()).getId();
 		User user = userRepository.findById(userId)
-				.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
 
 		// ADMIN 아닐 때 or 나 자신을 삭제하려할 때
 		if (user.getRole() != Role.ADMIN || user.getId() == id) {
@@ -187,7 +210,7 @@ public class UserServiceImpl implements UserService {
 
 		// 삭제할 회원
 		User entity = userRepository.findById(id)
-				.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
 
 		userRepository.delete(entity);
 	}
@@ -195,7 +218,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Optional<UserResponseDto> getDetailUserByEmail(String email) throws Exception {
 		User user = userRepository.findByEmail(email)
-				.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
 
 		return Optional.ofNullable(new UserResponseDto(user));
 	}
@@ -244,6 +267,37 @@ public class UserServiceImpl implements UserService {
 		String redisAuthCode = redisService.getValues(emailRequestDto.email());
 		if (!(redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(
 			String.valueOf(emailRequestDto.code())))) {
+			System.out.println("인증코드 불일치");
+			return false;
+		}
+		System.out.println("인증코드 일치");
+		redisService.deleteValues(redisAuthCode);
+		return true;
+	}
+
+	@Override
+	public void sendPhoneAuthenticationCode(PhoneRequestDto phoneRequestDto) throws Exception {
+		String to = phoneRequestDto.phone();
+		int code = (int)(Math.random() * (90000)) + 100000;
+		String certificationNumber = String.valueOf(code);
+
+		Message message = new Message();
+		message.setFrom(senderNumber);
+		message.setTo(to);
+		message.setText("[PetBridge] 본인 확인 인증번호는 [" + code + "]입니다.");
+		message.setText("5분 이내에 인증을 완료해주세요.");
+		messageService.sendOne(new SingleMessageSendingRequest(message));
+
+		// SMS 인증 요청 시 인증 번호 Redis에 저장 ( key = Email / value = AuthCode )
+		redisService.setValues(phoneRequestDto.phone(),
+			String.valueOf(code), Duration.ofMillis(authCodeExpirationMillis));
+	}
+
+	@Override
+	public boolean checkPhoneAuthenticationCode(PhoneRequestDto phoneRequestDto) throws Exception {
+		String redisAuthCode = redisService.getValues(phoneRequestDto.phone());
+		if (!(redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(
+			String.valueOf(phoneRequestDto.code())))) {
 			System.out.println("인증코드 불일치");
 			return false;
 		}
