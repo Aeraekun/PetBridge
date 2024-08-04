@@ -61,6 +61,7 @@ import AiPage from "pages/AiPage"
 import AiEyes from "components/ai/AiEyes"
 import AiSkin from "components/ai/AiSkin"
 import ChatModal from "pages/ChatModal"
+import AnimalAPIBoardLIst from "components/board/animals/AnimalAPIBoardLIst"
 
 function App() {
   const dispatch = useDispatch()
@@ -90,11 +91,21 @@ function App() {
           <Route path="/" element={<MainPage />} exact />
           <Route path="/shelter" element={<AnimalPage />}>
             <Route index element={<AnimalBoardList />} />
-            <Route path=":bcode" element={<AnimalBoardList />} />
+            <Route path="0" element={<AnimalAPIBoardLIst />} />
+            <Route path="1" element={<AnimalBoardList />} />
             <Route path="details/:id" element={<AnimalDetail />} />
             <Route path="modify/:id" element={<AnimalDetailModify />} />
             <Route path="regist" element={<AnimalRegist />} />
           </Route>
+          <Route
+            path="/petpick/write"
+            element={
+              <PrivateRoute
+                component={<PetpickWrite />}
+                isAuthenticated={isAuthenticated}
+              />
+            }
+          ></Route>
           <Route path="/communities" element={<BoardPage />}>
             <Route index element={<ArticleBoardList />} />
             <Route path=":bcode" element={<ArticleBoardList />} />
@@ -156,15 +167,6 @@ function App() {
         </Route>
         <Route path="/petpick/:id/tag" element={<PetpickTagDetail />}></Route>
 
-        <Route
-          path="/petpick/write"
-          element={
-            <PrivateRoute
-              component={<PetpickWrite />}
-              isAuthenticated={isAuthenticated}
-            />
-          }
-        ></Route>
         <Route path="/contracts" element={<ContractsPage />}>
           <Route path=":id" element={<ContractsContainer />}></Route>
           <Route path="create" element={<ContractsContainer />}></Route>
