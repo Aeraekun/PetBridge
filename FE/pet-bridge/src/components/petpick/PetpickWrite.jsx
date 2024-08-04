@@ -85,7 +85,7 @@ const PetpickWrite = () => {
   }
 
   return (
-    <div className="mx-auto mt-[80px] flex h-screen w-[600px] flex-col md:w-11/12 ">
+    <div className="mx-auto mt-[80px] flex h-screen w-[600px] max-w-[1000px] flex-col md:w-11/12 ">
       <Profile nickname={"닉네임"} image={"이미지"} />
       <hr />
       <div className="flex ">
@@ -150,7 +150,7 @@ const PetpickWrite = () => {
         ) : (
           <div
             className="flex h-48 w-32 flex-col items-center justify-center border border-gray-300
-                 px-4 py-2"
+          px-4 py-2"
           >
             <>썸네일을 입력해주세요.</>
           </div>

@@ -39,7 +39,7 @@ const PetpickTagDetail = () => {
   return (
     <div className="flex flex-col">
       <Navbar />
-      <div className="mx-auto flex h-screen w-[1000px] flex-row justify-center sm:w-11/12">
+      <div className="mx-auto flex h-screen w-[600px] max-w-[1000px] flex-row justify-center sm:w-11/12">
         <PetpickVideo />
 
         <div className="relative flex flex-col justify-between">

@@ -30,8 +30,12 @@ const categories = [
 const BoardNavbar = () => {
   const navigate = useNavigate()
   const handleNavigation = (bcode) => {
-    let path = `/shelter/${bcode}`
-    navigate(path)
+    if (bcode === 0) {
+      navigate(`/shelter/0`)
+    }
+    if (bcode === 1) {
+      navigate(`/shelter/1`)
+    }
   }
   return (
     <ul className="flex h-12 items-center  ">
@@ -54,7 +58,7 @@ const AnimalPage = () => {
   // const [selectedCategory, setSelectedCategory] = useState(categories[0].id)
 
   return (
-    <div className="my-10 flex w-[1000px] flex-col space-y-3 sm:w-11/12 ">
+    <div className="my-10 flex w-[400px] max-w-[1000px] flex-col space-y-3 sm:w-11/12 ">
       <BoardNavbar />
       <hr className="" />
 
