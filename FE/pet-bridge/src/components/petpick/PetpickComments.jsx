@@ -42,7 +42,7 @@ const CommentInput = ({boardId, onCommentAdded}) => {
         <div className="flex items-center space-x-2.5">
           <input
             type="text"
-            className="mx-2 h-10 w-full rounded-md text-sm  outline outline-1 outline-stroke"
+            className="outline-stroke mx-2 h-10 w-full rounded-md  text-sm outline outline-1"
             placeholder="댓글을 남겨보세요"
             value={inputComment}
             onChange={(e) => setInputComment(e.target.value)}
@@ -53,7 +53,7 @@ const CommentInput = ({boardId, onCommentAdded}) => {
         </div>
       ) : (
         <div className="flex items-center space-x-2.5">
-          <div className="mx-2 h-10 w-full content-center rounded-md  text-sm text-stroke outline outline-1 outline-stroke">
+          <div className="text-stroke outline-stroke mx-2 h-10 w-full  content-center rounded-md text-sm outline outline-1">
             좋아요와 댓글을 남기려면 로그인하세요{" "}
           </div>
         </div>
@@ -153,7 +153,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
 
   return (
     <div
-      className=" z-50 mx-auto flex h-screen w-[1000px] flex-row justify-center py-[50px] sm:w-11/12"
+      className=" z-50 mx-auto flex h-screen w-[1000px] snap-center flex-row justify-center py-[50px] sm:w-11/12"
       ref={(node) => {
         if (node) {
           if (ref && typeof ref === "object" && "current" in ref) {
@@ -191,8 +191,8 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
               direct={"row"}
               toggleComment={handleVisible}
               petpickId={petpick.boardId}
-              // isFollowing={comment.isFollowing}
-              // isLiking={comment.isLiking}
+              isFollowing={petpick.isFollowing}
+              isLiking={petpick.isLiking}
             />
             <CommentInput
               boardId={petpick.boardId}
@@ -205,6 +205,8 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
           direct={"col"}
           toggleComment={handleVisible}
           petpickId={petpick.boardId}
+          isFollowing={petpick.isFollowing}
+          isLiking={petpick.isLiking}
         />
       )}
     </div>
