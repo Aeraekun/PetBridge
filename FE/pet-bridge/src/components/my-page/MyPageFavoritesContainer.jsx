@@ -31,16 +31,19 @@ const MyPageFavoritesContainer = () => {
 
   // 농림축산부 API를 호출해서, 12개씩 페이징된 데이터를 받아온다.
   const fetchData = async () => {
-    const res = await getShelterAnimals(searchParams)
-    let newItems = []
+    try {
+      const res = await getShelterAnimals(searchParams)
+      let newItems = []
 
-    if (res.data) {
-      console.log("fetch 성공!!!", res)
-      newItems = res.data.response.body.items.item
-      setPageNo((prevPageNo) => prevPageNo + 1)
-      return newItems
-    } else {
+      if (res.data) {
+        console.log("fetch 성공!!!", res)
+        newItems = res.data.response.body.items.item
+        setPageNo((prevPageNo) => prevPageNo + 1)
+        return newItems
+      }
+    } catch (error) {
       alert("추가 데이터 로드에 실패했습니다.")
+      console.log(error)
     }
   }
 

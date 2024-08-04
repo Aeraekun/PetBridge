@@ -8,11 +8,12 @@ const MyPagePetPicsContainer = () => {
   // isLoading true로 설정해두고, 화면 초기 로드 완료시 false로 변경 후 스크롤 페이지 렌더링
   const [isLoading, setIsLoading] = useState(true)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const [isMoreRemained, setIsMoreRemaind] = useState(true)
   const [items, setItems] = useState([])
-  const [pageNo, setPageNo] = useState(1)
+  const [page, setPage] = useState(1)
 
   // API 요청을 보내기 위한 파라미터
-  const [searchParams, setSearchParams] = useState({numOfRows: 12, pageNo: 1})
+  const [searchParams, setSearchParams] = useState({size: 12, page: 1})
 
   // 초기값 로딩
   useEffect(() => {
@@ -29,18 +30,24 @@ const MyPagePetPicsContainer = () => {
     fetchInitData()
   }, [])
 
-  // 농림축산부 API를 호출해서, 12개씩 페이징된 데이터를 받아온다.
+  // 내가 작성한 펫픽을 호출
   const fetchData = async () => {
-    const res = await getMyPetPics(searchParams)
-    let newItems = []
+    try {
+      const res = await getMyPetPics(searchParams)
+      let newItems = []
 
-    if (res.data) {
-      console.log("fetch 성공!!!", res)
-      newItems = res.data.response.body.items.item
-      setPageNo((prevPageNo) => prevPageNo + 1)
-      return newItems
-    } else {
+      if (res.data) {
+        console.log("fetch 성공!!!", res)
+        newItems = res.data.response.body.items.item
+        setPage((prevPageNo) => prevPageNo + 1)
+        return newItems
+      } else {
+        setIsLoading(false)
+        setIsMoreRemaind(false)
+      }
+    } catch (error) {
       alert("추가 데이터 로드에 실패했습니다.")
+      console.log(error)
     }
   }
 
@@ -66,13 +73,19 @@ const MyPagePetPicsContainer = () => {
   }, [inView])
 
   useEffect(() => {
-    setSearchParams({...searchParams, pageNo: pageNo})
-  }, [pageNo])
+    setSearchParams({...searchParams, page: page})
+  }, [page])
 
   return (
     <div className="flex h-full flex-col items-center">
       <div className="flex w-full justify-center p-2.5 ">
         <button className="text-4xl font-bold">내 펫픽</button>
+        <Link
+          className=" fixed right-3 top-3 rounded-xl bg-mild p-2.5"
+          to="/petpick/write"
+        >
+          펫픽 만들기
+        </Link>
       </div>
       {isLoading ? (
         <div className="flex size-full items-center justify-center">
@@ -90,12 +103,12 @@ const MyPagePetPicsContainer = () => {
               ref={index === items.length - 1 ? ref : null}
             >
               <MyPageCard
-                id={item.desertionNo}
-                imageSrc={item.popfile}
-                imageAlt={item.careNm}
-                content1={item.noticeNo}
-                content2={item.kindCd}
-                content3={item.age}
+                id={item.id}
+                imageSrc={item.thumbnail}
+                imageAlt={item.title}
+                content1={item.title}
+                content2={item.animalId}
+                content3={item.content}
               />
             </Link>
           ))}
@@ -105,6 +118,7 @@ const MyPagePetPicsContainer = () => {
               <span>추가 데이터를 로딩중입니다</span>
             </div>
           ) : null}
+          {!isMoreRemained && <p>불러올 데이터가 없습니다.</p>}
         </div>
       )}
     </div>

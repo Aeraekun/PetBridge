@@ -36,14 +36,14 @@ export const getFollowingAnimals = async (searchParams) => {
   }
 }
 
-// 내가 팔로우중인 동물 조회
-export const getProtectingAnimals = async (searchParams) => {
+// 내가 보호중인 동물 조회
+export const getMyAnimals = async (searchParams) => {
   const params = {
     page: searchParams.page,
     size: searchParams.size,
   }
   try {
-    const res = await axiosInstance.get("/animals/follow", {
+    const res = await axiosInstance.get("/animals/user", {
       params: params,
     })
     return res
@@ -58,9 +58,28 @@ export const getMyPetPics = async (searchParams) => {
   const params = {
     page: searchParams.page,
     size: searchParams.size,
+    initcommentsize: 0,
   }
   try {
     const res = await axiosInstance.get("/petpicks/my", {
+      params: params,
+    })
+    return res
+  } catch (error) {
+    console.log(error)
+    return error
+  }
+}
+
+// 내가 좋아요한 펫픽 조회
+export const getMyLikes = async (searchParams) => {
+  const params = {
+    page: searchParams.page,
+    size: searchParams.size,
+    initcommentsize: 0,
+  }
+  try {
+    const res = await axiosInstance.get("/petpicks/like", {
       params: params,
     })
     return res
