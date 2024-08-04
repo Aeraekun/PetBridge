@@ -67,19 +67,23 @@ export const getIsDuplicatedNicknameThunk = createAsyncThunk(
   "user/getIsDuplicatedNickname",
   async (nickname, {rejectWithValue}) => {
     console.log("------")
-    const res = await getIsDuplicatedNickname(nickname)
-    console.log(res)
-    if (res.status === 200) {
-      return rejectWithValue(
-        "이미 있는 닉네임입니다. 다른 닉네임을 입력해주세요."
-      )
-    }
+    try {
+      const res = await getIsDuplicatedNickname(nickname)
+      console.log(res)
 
-    if (res.status === 404) {
-      return res
+      if (res.status === 200) {
+        return rejectWithValue(
+          "이미 있는 닉네임입니다. 다른 닉네임을 입력해주세요."
+        )
+      }
+    } catch (error) {
+      if (error.response.status === 404) {
+        alert("사용 가능한 닉네임입니다.")
+        return error
+      } else {
+        console.log("요청에 실패했습니다.")
+      }
     }
-
-    console.log("dd")
   }
 )
 

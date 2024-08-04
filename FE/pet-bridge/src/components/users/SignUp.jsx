@@ -132,6 +132,8 @@ const SignUp = () => {
           "*닉네임: 중복된 닉네임입니다. 다른 닉네임을 입력해주세요."
       } else if (res.status === 404) {
         errors.nickname = ""
+      } else {
+        console.log("오류")
       }
     }
 
