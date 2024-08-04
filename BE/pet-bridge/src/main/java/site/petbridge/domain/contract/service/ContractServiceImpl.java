@@ -39,7 +39,7 @@ public class ContractServiceImpl implements ContractService {
 						contract,
 						userRepository.findById(contract.getContractorId()).get(),
 						userRepository.findById(contract.getContracteeId()).get(),
-						animalRepository.findById(contract.getAnimalId()).get()
+						animalRepository.findById((long) contract.getAnimalId()).get()
 					)
 				)
 				.collect(Collectors.toList())
@@ -54,7 +54,7 @@ public class ContractServiceImpl implements ContractService {
 			contract,
 			userRepository.findById(contract.getContractorId()).get(),
 			userRepository.findById(contract.getContracteeId()).get(),
-			animalRepository.findById(contract.getAnimalId()).get(),
+			animalRepository.findById((long) contract.getAnimalId()).get(),
 			contractCheckRepository.findByContractId(id)
 		));
 

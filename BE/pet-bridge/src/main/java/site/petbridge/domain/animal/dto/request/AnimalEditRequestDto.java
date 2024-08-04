@@ -1,31 +1,49 @@
 package site.petbridge.domain.animal.dto.request;
 
-import java.sql.Timestamp;
-
-import lombok.Data;
+import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import site.petbridge.domain.animal.domain.Animal;
 
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AnimalEditRequestDto {
 
-    private int id;
-    private int userId;
+    @NotNull
     private String name;
-    private String filename;
-    private Timestamp happenDt;
+    @NotNull
+    private String species;
+    @NotNull
     private String kindCd;
+    @NotNull
     private String colorCd;
-    private String age;
-    private String weight;
-    private String noticeNo;
-    private String popfile;
-    private String processState;
-    private String sexCd;
-    private String neuterYn;
+    @NotNull
+    private int age;
+    @NotNull
+    private int weight;
+    @NotNull
+    private char sexCd;
+    @NotNull
+    private char neuterYn;
+    @NotNull
     private String specialMark;
+    @NotNull
     private String careAddr;
-    private String noticeComment;
 
-    private boolean filenameRemoved;
-
+    public Animal toEntity(String filename) {
+        return Animal.builder()
+                .name(name)
+                .filename(filename)
+                .species(species)
+                .kindCd(kindCd)
+                .colorCd(colorCd)
+                .age(age)
+                .weight(weight)
+                .sexCd(sexCd)
+                .neuterYn(neuterYn)
+                .specialMark(specialMark)
+                .careAddr(careAddr)
+                .build();
+    }
 }

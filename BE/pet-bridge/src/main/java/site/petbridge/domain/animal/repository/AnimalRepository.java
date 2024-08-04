@@ -1,18 +1,20 @@
 package site.petbridge.domain.animal.repository;
 
-import java.util.List;
-import java.util.Optional;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import site.petbridge.domain.animal.domain.Animal;
 
+import java.util.Optional;
+
 public interface AnimalRepository extends JpaRepository<Animal, Long> {
+    Optional<Animal> findByIdAndDisabledFalse(int id);
 
-    Optional<Animal> findById(int id);
+    Page<Animal> findBySpeciesAndCareAddrContainingAndDisabledFalse(String species, String careAddr, Pageable pageable);
 
-    Optional<List<Animal>> findByUserId(int userId);
+    Page<Animal> findBySpeciesAndDisabledFalse(String species, Pageable pageable);
 
-    Optional<List<Animal>> findByUserIdAndProcessState(int userId, String processState);
+    Page<Animal> findByCareAddrContainingAndDisabledFalse(String careAddr, Pageable pageable);
 
+    Page<Animal> findByUserIdAndDisabledFalse(int userId, Pageable pageable);
 }

@@ -1,18 +1,15 @@
 package site.petbridge.domain.animal.domain;
 
-import java.sql.Timestamp;
-
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
-@ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Builder
+@Getter
 @Table(name = "animals")
-@AllArgsConstructor
+@NoArgsConstructor(access =  AccessLevel.PROTECTED)
 public class Animal {
 
 	@Id
@@ -26,30 +23,23 @@ public class Animal {
 
 	private String filename;
 
-	@Column(name = "happen_dt", nullable = false)
-	private Timestamp happenDt;
+	private String species;
 
 	@Column(name = "kind_cd")
 	private String kindCd;
 
 	@Column(name = "color_cd")
 	private String colorCd;
-	private String age;
-	private String weight;
 
-	@Column(name = "notice_no", length = 100, nullable = true)
-	private String noticeNo;
+	private int age;
 
-	private String popfile;
-
-	@Column(name = "process_state")
-	private String processState;
+	private int weight;
 
 	@Column(name = "sex_cd")
-	private String sexCd;
+	private char sexCd;
 
 	@Column(name = "neuter_yn")
-	private String neuterYn;
+	private char neuterYn;
 
 	@Column(name = "special_mark")
 	private String specialMark;
@@ -57,9 +47,41 @@ public class Animal {
 	@Column(name = "care_addr")
 	private String careAddr;
 
-	@Column(name = "notice_comment")
-	private String noticeComment;
-
-	@Builder.Default
 	private boolean disabled = false;
+
+	@Builder
+	public Animal(int userId, String name, String filename, String species, String kindCd, String colorCd,
+				  int age, int weight, char sexCd, char neuterYn, String specialMark, String careAddr) {
+		this.userId = userId;
+		this.name = name;
+		this.filename = filename;
+		this.species = species;
+		this.kindCd = kindCd;
+		this.colorCd = colorCd;
+		this.age = age;
+		this.weight = weight;
+		this.sexCd = sexCd;
+		this.neuterYn = neuterYn;
+		this.specialMark = specialMark;
+		this.careAddr = careAddr;
+	}
+
+	public void update(String name, String filename, String species, String kindCd, String colorCd,
+					   int age, int weight, char sexCd, char neuterYn, String specialMark, String careAddr) {
+		this.name = name;
+		this.filename = filename;
+		this.species = species;
+		this.kindCd = kindCd;
+		this.colorCd = colorCd;
+		this.age = age;
+		this.weight = weight;
+		this.sexCd = sexCd;
+		this.neuterYn = neuterYn;
+		this.specialMark = specialMark;
+		this.careAddr = careAddr;
+	}
+
+	public void disable() {
+		this.disabled = true;
+	}
 }
