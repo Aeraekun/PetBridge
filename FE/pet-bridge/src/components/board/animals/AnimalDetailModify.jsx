@@ -1,7 +1,7 @@
 import SirenIcon from "components/common/SirenIcon"
 import Button from "components/common/Button"
-import animaldata from "./animaldata"
-import {useNavigate, useParams} from "react-router-dom"
+// import animaldata from "./animaldata"
+import {useLocation, useNavigate, useParams} from "react-router-dom"
 import AnimalDetailProfile from "./AnimalDetailProfile"
 import React, {useState, useEffect} from "react"
 
@@ -21,16 +21,15 @@ const Profile = ({nickname}) => {
 }
 
 const ArticleDetailModify = () => {
-  const {id} = useParams()
+  const {animalId} = useParams()
   const navigate = useNavigate()
   const [animal, setAnimal] = useState(null)
-
+  const location = useLocation()
   useEffect(() => {
     // 실제 데이터를 불러오는 코드로 대체할 수 있습니다.
     const fetchAnimalData = () => {
-      const fetchedAnimalData = animaldata.find(
-        (animal) => animal.user_id === Number(id)
-      )
+      const fetchedAnimalData = location.state.animal
+
       console.log("now : ", fetchedAnimalData)
 
       setAnimal(fetchedAnimalData)
@@ -54,8 +53,7 @@ const ArticleDetailModify = () => {
   }
   const goModify = () => {
     console.log(animal)
-    animaldata[animal.user_id] = animal
-    navigate(`/shelter/details/${animal.user_id}`)
+    navigate(`/shelter/details/${animalId}`)
   }
   return (
     <>

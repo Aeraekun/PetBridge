@@ -1,9 +1,9 @@
 const ContractAnimal = ({imageSrc, name, kind, age, isCreate}) => {
   return (
-    <div className="col-span-2 rounded-l-xl border p-2.5">
+    <div className="border">
       <div className="flex">
         <p className="m-1 text-xl font-bold">입양 동물</p>
-        {isCreate ? <p className="m-1">isCreate : true</p> : <p>d</p>}
+        {isCreate ? <p className="m-1">isCreate : true</p> : <p></p>}
       </div>
       <div className="flex space-x-5">
         <img src={imageSrc} alt={name} className="size-20 rounded-xl" />

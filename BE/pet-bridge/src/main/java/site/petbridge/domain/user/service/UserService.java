@@ -6,6 +6,7 @@ import java.util.Optional;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.web.multipart.MultipartFile;
 import site.petbridge.domain.user.dto.request.EmailRequestDto;
+import site.petbridge.domain.user.dto.request.PhoneRequestDto;
 import site.petbridge.domain.user.dto.request.UserEditRequestDto;
 import site.petbridge.domain.user.dto.request.UserSignUpRequestDto;
 import site.petbridge.domain.user.dto.response.UserResponseDto;
@@ -37,5 +38,9 @@ public interface UserService {
     void sendEmailAuthenticationCode(EmailRequestDto emailRequestDto) throws Exception;
 
     boolean checkEmailAuthenticationCode(EmailRequestDto emailRequestDto) throws Exception;
+
+    void sendPhoneAuthenticationCode(PhoneRequestDto phoneRequestDto) throws Exception;
+
+    boolean checkPhoneAuthenticationCode(PhoneRequestDto phoneRequestDto) throws Exception;
 
 }

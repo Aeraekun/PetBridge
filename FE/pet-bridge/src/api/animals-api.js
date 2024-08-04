@@ -1,7 +1,7 @@
 import axios from "axios"
 const BASE_API_URL = process.env.REACT_APP_API_URL + "/animals"
 
-const getListAnimalByUserId = async (userId) => {
+export const getListAnimalByUserId = async (userId) => {
   try {
     const res = await axios.get(`${BASE_API_URL}/user/${userId}`)
     console.log("getListAnimalByUserId" + res)
@@ -12,7 +12,7 @@ const getListAnimalByUserId = async (userId) => {
   }
 }
 
-const getDetailAnimal = async (id) => {
+export const getDetailAnimal = async (id) => {
   try {
     const res = await axios.get(`${BASE_API_URL}/${id}`)
     console.log("getDetailAnimal" + res)
@@ -42,7 +42,7 @@ const getDetailAnimal = async (id) => {
     "noticeComment": "많관부"
     }
 */
-const registAnimal = async (formData) => {
+export const registAnimal = async (formData) => {
   try {
     const res = await axios.post(`${BASE_API_URL}`, formData, {
       headers: {
@@ -58,7 +58,7 @@ const registAnimal = async (formData) => {
 }
 
 //동물 수정
-const editAnimal = async (id, formData) => {
+export const editAnimal = async (id, formData) => {
   try {
     const res = await axios.patch(`${BASE_API_URL}/${id}`, formData, {
       headers: {
@@ -84,3 +84,64 @@ const editAnimal = async (id, formData) => {
 //     return []
 //   }
 // }
+
+export const getShelterAnimalsAPI = async (searchParams) => {
+  const params = {
+    serviceKey:
+      // "g5vQ++oXb4/6B8IvamxV9Vzg1V9U880MIrl02T7y3P9aAeVTHujkgA3wbTaMxcfyyJpmN8nNJBOmF/M21ApXlw==",
+      "w2SoV2W8SJI41W31IkRtQyPg9X2RLZ0QXU0ZQAPtwQ5Fy8ubzMDUFzzCbm4NRbK+2EKs3Fc+g/3oiBW0ftcCDw==",
+    pageNo: searchParams.pageNo,
+    numOfRows: searchParams.numOfRows,
+    _type: "json",
+    ...searchParams,
+  }
+
+  const res = await axios.get(
+    "http://apis.data.go.kr/1543061/abandonmentPublicSrvc/abandonmentPublic",
+    {params: params}
+  )
+
+  return res
+}
+
+export const getSidoAPI = async () => {
+  const params = {
+    serviceKey:
+      "w2SoV2W8SJI41W31IkRtQyPg9X2RLZ0QXU0ZQAPtwQ5Fy8ubzMDUFzzCbm4NRbK+2EKs3Fc+g/3oiBW0ftcCDw==",
+    _type: "json",
+  }
+  const res = await axios.get(
+    `http://apis.data.go.kr/1543061/abandonmentPublicSrvc/sido`,
+    {params: params}
+  )
+  return res
+}
+
+export const getSigunguAPI = async (selectedSido) => {
+  const params = {
+    serviceKey:
+      "w2SoV2W8SJI41W31IkRtQyPg9X2RLZ0QXU0ZQAPtwQ5Fy8ubzMDUFzzCbm4NRbK+2EKs3Fc+g/3oiBW0ftcCDw==",
+    _type: "json",
+    upr_cd: selectedSido,
+  }
+  const res = await axios.get(
+    `http://apis.data.go.kr/1543061/abandonmentPublicSrvc/sigungu`,
+    {params: params}
+  )
+  return res
+}
+
+export const getBreedAPI = async (selectedKindCd) => {
+  console.log("se", selectedKindCd)
+  const params = {
+    serviceKey:
+      "w2SoV2W8SJI41W31IkRtQyPg9X2RLZ0QXU0ZQAPtwQ5Fy8ubzMDUFzzCbm4NRbK+2EKs3Fc+g/3oiBW0ftcCDw==",
+    _type: "json",
+    up_kind_cd: selectedKindCd,
+  }
+  const res = await axios.get(
+    `http://apis.data.go.kr/1543061/abandonmentPublicSrvc/kind`,
+    {params: params}
+  )
+  return res
+}
