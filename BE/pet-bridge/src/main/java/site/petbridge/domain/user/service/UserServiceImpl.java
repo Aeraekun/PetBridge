@@ -39,6 +39,7 @@ import site.petbridge.global.exception.PetBridgeException;
 import site.petbridge.global.jwt.service.JwtService;
 import site.petbridge.global.login.userdetail.CustomUserDetail;
 import site.petbridge.global.redis.service.RedisService;
+import site.petbridge.util.AuthUtil;
 import site.petbridge.util.FileUtil;
 
 @Service
@@ -47,8 +48,8 @@ public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
-	private final JwtService jwtService;
 	private final FileUtil fileUtil;
+	private final AuthUtil authUtil;
 
 	private final JavaMailSender javaMailSender;
 	private final RedisService redisService;
@@ -103,11 +104,7 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public List<UserResponseDto> getListUser(int page, int size) throws Exception {
-		// 회원 정보
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		int userId = ((CustomUserDetail)authentication.getPrincipal()).getId();
-		User entity = userRepository.findByIdAndDisabledFalse(userId)
-			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+		User entity = authUtil.getAuthenticatedUser(userRepository);
 
 		// ADMIN 아닐 때
 		if (entity.getRole() != Role.ADMIN) {
@@ -128,11 +125,7 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public UserResponseDto getDetailMyUser() throws Exception {
-		// 회원 정보
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		int userId = ((CustomUserDetail)authentication.getPrincipal()).getId();
-		User entity = userRepository.findByIdAndDisabledFalse(userId)
-			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+		User entity = authUtil.getAuthenticatedUser(userRepository);
 
 		return new UserResponseDto(entity);
 	}
@@ -154,11 +147,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public void editUser(UserEditRequestDto userEditRequestDto, MultipartFile imageFile) throws Exception {
-		// 회원 정보
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		int userId = ((CustomUserDetail)authentication.getPrincipal()).getId();
-		User entity = userRepository.findById(userId)
-			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+		User entity = authUtil.getAuthenticatedUser(userRepository);
 
 		// 닉네임 중복시 409 CONFLICT
 		if (userRepository.findByNicknameAndDisabledFalse(userEditRequestDto.getNickname()).isPresent()) {
@@ -181,11 +170,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public void removeUser() throws Exception {
-		// 회원 정보
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		int userId = ((CustomUserDetail)authentication.getPrincipal()).getId();
-		User entity = userRepository.findById(userId)
-			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+		User entity = authUtil.getAuthenticatedUser(userRepository);
 
 		entity.disable();
 		userRepository.save(entity);
@@ -197,11 +182,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public void removeUserAdmin(int id) throws Exception {
-		// 회원 정보
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		int userId = ((CustomUserDetail)authentication.getPrincipal()).getId();
-		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+		User user = authUtil.getAuthenticatedUser(userRepository);
 
 		// ADMIN 아닐 때 or 나 자신을 삭제하려할 때
 		if (user.getRole() != Role.ADMIN || user.getId() == id) {
