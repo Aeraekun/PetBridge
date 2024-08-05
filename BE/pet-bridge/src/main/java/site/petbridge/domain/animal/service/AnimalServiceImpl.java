@@ -115,6 +115,7 @@ public class AnimalServiceImpl implements AnimalService {
 
 		// processState에 따라 contract 테이블로부터 동물 id 필터링
 		List<Integer> filteredAnimalIds = filterByProcessState(processState);
+		System.out.println(filteredAnimalIds);
 
 		// animal 테이블에서 species와 careAddr에 따른 검색 (No 페이징)
 		Page<Animal> animals;
@@ -136,7 +137,7 @@ public class AnimalServiceImpl implements AnimalService {
 			.collect(Collectors.toList());
 
 		// 최종 paging 처리
-		int start = (int)pageable.getOffset();
+		int start = (int) pageable.getOffset();
 		int end = Math.min((start + pageable.getPageSize()), filteredAnimals.size());
 		Page<Animal> pagedAnimals = new PageImpl<>(filteredAnimals.subList(start, end), pageable,
 			filteredAnimals.size());
@@ -219,13 +220,16 @@ public class AnimalServiceImpl implements AnimalService {
 		List<Integer> animalIds;
 		switch (processState) {
 			case "입양대기":
+				System.out.println("입양대기 들어음");
 				animalIds = contractRepository.findAllByStatus("계약전").stream()
 					.map(Contract::getAnimalId)
 					.collect(Collectors.toList());
+				break;
 			case "입양완료":
 				animalIds = contractRepository.findAllByStatusNot("계약전").stream()
 					.map(Contract::getAnimalId)
 					.collect(Collectors.toList());
+				break;
 			case "임시보호":
 				List<Integer> waitingAnimalIds = contractRepository.findAllByStatus("계약전")
 					.stream()
@@ -239,11 +243,11 @@ public class AnimalServiceImpl implements AnimalService {
 					.map(Animal::getId)
 					.filter(id -> !confirmedAnimalIds.contains(id) && !waitingAnimalIds.contains(id))
 					.collect(Collectors.toList());
+				break;
 			default:
 				animalIds = animalRepository.findAll().stream()
 					.map(Animal::getId)
 					.collect(Collectors.toList());
-				break;
 		}
 
 		return animalIds;
