@@ -54,10 +54,25 @@ public class AnimalController {
     /**
      * 내가 등록한(보호중인) 동물 목록 조회
      */
-    @GetMapping("/user")
+    @GetMapping("/my")
     public ResponseEntity<List<AnimalResponseDto>> getListMyAnimal(@RequestParam(name = "page") int page,
                                                                    @RequestParam(name = "size") int size) throws Exception {
         List<AnimalResponseDto> animalResponseDtos = animalService.getListMyAnimal(page, size);
+
+        return Optional.ofNullable(animalResponseDtos)
+                .filter(list -> !list.isEmpty())
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.noContent().build());
+    }
+
+    /**
+     * 특정 유저(닉네임)가 보호중인 동물 목록 조회
+     */
+    @GetMapping("/user")
+    public ResponseEntity<List<AnimalResponseDto>> getListUserAnimal(@RequestParam(name = "nickname") String userNickname,
+                                                                     @RequestParam(name = "page", defaultValue = "0") int page,
+                                                                   @RequestParam(name = "size", defaultValue = "12") int size) throws Exception {
+        List<AnimalResponseDto> animalResponseDtos = animalService.getListUserAnimal(userNickname, page, size);
 
         return Optional.ofNullable(animalResponseDtos)
                 .filter(list -> !list.isEmpty())

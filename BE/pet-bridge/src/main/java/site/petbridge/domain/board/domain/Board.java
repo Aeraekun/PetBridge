@@ -37,7 +37,7 @@ public class Board {
     private String content;
 
     @Column(name = "regist_time")
-    private LocalDateTime registTime;
+    private LocalDateTime registTime = LocalDateTime.now();
 
     private String lat;
 
@@ -46,15 +46,14 @@ public class Board {
     private boolean disabled = false;
 
     @Builder
-    public Board(int userId, int animalId, BoardType boardType, String thumbnail, String title, String content,
-                 LocalDateTime registTime, String lat, String lon) {
+    public Board(int userId, int animalId, BoardType boardType, String thumbnail, String title,
+                 String content, String lat, String lon) {
         this.userId = userId;
         this.animalId = animalId;
         this.boardType = boardType;
         this.thumbnail = thumbnail;
         this.title = title;
         this.content = content;
-        this.registTime = registTime;
         this.lat = lat;
         this.lon = lon;
     }

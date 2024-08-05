@@ -126,7 +126,7 @@ public class AnimalServiceImpl implements AnimalService {
 		} else if (careAddr != null) {
 			animals = animalRepository.findByCareAddrContainingAndDisabledFalse(careAddr, Pageable.unpaged());
 		} else {
-			animals = animalRepository.findAll(Pageable.unpaged());
+			animals = animalRepository.findAllByDisabledFalse(Pageable.unpaged());
 		}
 
 		// 동물 id processState 필터링 적용
@@ -161,6 +161,24 @@ public class AnimalServiceImpl implements AnimalService {
 		return animals.stream()
 			.map(animal -> new AnimalResponseDto(animal, determineProcessState(animal)))
 			.collect(Collectors.toList());
+	}
+
+	/**
+	 * 특정 유저가(닉네임) 보호중인 동물 목록 조회
+	 */
+	@Override
+	public List<AnimalResponseDto> getListUserAnimal(String userNickname, int page, int size) throws Exception {
+
+		User user = userRepository.findByNickname(userNickname)
+				.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+
+		Sort sort = Sort.by(Sort.Direction.DESC, "id");
+		Pageable pageable = PageRequest.of(page, size, sort);
+		Page<Animal> animals = animalRepository.findByUserIdAndDisabledFalse(user.getId(), pageable);
+
+		return animals.stream()
+				.map(animal -> new AnimalResponseDto(animal, determineProcessState(animal)))
+				.collect(Collectors.toList());
 	}
 
 	/**

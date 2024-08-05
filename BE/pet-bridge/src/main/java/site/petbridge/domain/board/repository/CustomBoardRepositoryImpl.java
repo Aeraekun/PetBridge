@@ -1,0 +1,87 @@
+package site.petbridge.domain.board.repository;
+
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import site.petbridge.domain.animal.domain.QAnimal;
+import site.petbridge.domain.board.domain.QBoard;
+import site.petbridge.domain.board.dto.response.BoardResponseDto;
+import site.petbridge.domain.boardcomment.domain.QBoardComment;
+import site.petbridge.domain.user.domain.QUser;
+
+import java.util.List;
+
+@RequiredArgsConstructor
+public class CustomBoardRepositoryImpl implements CustomBoardRepository {
+
+    private final JPAQueryFactory queryFactory;
+
+    @Override
+    public Page<BoardResponseDto> findAllByUserNickNameAndTitleContains(String userNickname, String title, Pageable pageable) {
+        QBoard board = QBoard.board;
+        QUser user = QUser.user;
+        QAnimal animal = QAnimal.animal;
+        QBoardComment boardComment = QBoardComment.boardComment;
+
+        List<BoardResponseDto> results = queryFactory
+                .select(Projections.constructor(BoardResponseDto.class,
+                        board.id,
+                        board.userId,
+                        board.animalId,
+                        board.boardType,
+                        board.thumbnail,
+                        board.title,
+                        board.content,
+                        board.registTime,
+                        board.lat,
+                        board.lon,
+                        board.disabled,
+
+                        user.nickname,
+                        user.image,
+
+                        animal.name,
+                        animal.filename,
+
+                        boardComment.id.count().as("commentCount")
+                ))
+                .from(board)
+                .join(user).on(board.userId.eq(user.id))
+                .leftJoin(animal).on(board.animalId.eq(animal.id))
+                .leftJoin(boardComment).on(board.id.eq(boardComment.boardId).and(boardComment.disabled.isFalse()))
+                .where(
+                        board.disabled.isFalse(),
+                        userNicknameEq(userNickname,user),
+                        titleContains(title, board)
+                )
+                .groupBy(board.id, user.id, animal.id)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long total = queryFactory
+                .select(board.count())
+                .from(board)
+                .join(user).on(board.userId.eq(user.id))
+                .where(
+                        board.disabled.isFalse(),
+                        userNicknameEq(userNickname, user),
+                        titleContains(title,board)
+                )
+                .fetchOne();
+
+        return new PageImpl<>(results, pageable, total);
+    }
+
+    private BooleanExpression userNicknameEq(String userNickname, QUser user) {
+        return userNickname != null ? user.nickname.eq(userNickname) : null;
+    }
+
+    private BooleanExpression titleContains(String title, QBoard board) {
+        return title != null ? board.title.contains(title) : null;
+    }
+}

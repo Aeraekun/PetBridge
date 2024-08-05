@@ -23,6 +23,8 @@ public interface UserService {
 
     UserResponseDto getDetailUserByNickname(String nickname) throws Exception;
 
+    List<UserResponseDto> getListUserByNickname(String nickname) throws Exception;
+
     void editUser(UserEditRequestDto userEditRequestDto, MultipartFile imageFile) throws Exception;
 
     void removeUser() throws Exception;

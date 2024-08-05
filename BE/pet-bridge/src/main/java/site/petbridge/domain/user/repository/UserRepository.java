@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import site.petbridge.domain.user.domain.enums.SocialType;
 import site.petbridge.domain.user.domain.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -23,4 +24,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findBySocialTypeAndSocialId(SocialType socialType, String socialId);
 
     boolean existsByNickname(String nickname);
+
+    List<User> findByNicknameContainingAndDisabledFalse(String nickname);
 }
