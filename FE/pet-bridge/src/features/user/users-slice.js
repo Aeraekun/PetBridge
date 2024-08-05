@@ -3,6 +3,8 @@ import {
   getUserInfo,
   postLoginUser,
   getIsDuplicatedNickname,
+  postEmailVerificationCode,
+  postPhoneVerificationCode,
 } from "api/users-api"
 import {setUserInfosAtSession} from "utils/user-utils"
 
@@ -17,6 +19,8 @@ const initialState = {
   role: "",
   isAuthenticated: false,
   loading: false,
+  isLoadingEmailCode: false,
+  isLoadingPhoneCode: false,
   isLoadingDuplication: false,
   error: null,
 }
@@ -66,10 +70,9 @@ export const getUserInfoThunk = createAsyncThunk(
 export const getIsDuplicatedNicknameThunk = createAsyncThunk(
   "user/getIsDuplicatedNickname",
   async (nickname, {rejectWithValue}) => {
-    console.log("------")
+    console.log("-----THUNK-----")
     try {
       const res = await getIsDuplicatedNickname(nickname)
-      console.log(res)
 
       if (res.status === 200) {
         return rejectWithValue(
@@ -77,12 +80,40 @@ export const getIsDuplicatedNicknameThunk = createAsyncThunk(
         )
       }
     } catch (error) {
-      if (error.response.status === 404) {
-        alert("사용 가능한 닉네임입니다.")
-        return error
+      if (error.response && error.response.status === 404) {
+        return true
       } else {
         console.log("요청에 실패했습니다.")
+        return rejectWithValue("요청에 실패했습니다. 다시 시도해주세요.")
       }
+    }
+  }
+)
+
+// 전화번호 인증 Thunk
+export const postPhoneVerificationCodeThunk = createAsyncThunk(
+  "user/postPhoneVerificationCode",
+  async (phoneData) => {
+    console.log("-----PHONE THUNK-----")
+    try {
+      const res = await postPhoneVerificationCode(phoneData)
+      return res.data
+    } catch (error) {
+      return Promise.reject(error)
+    }
+  }
+)
+
+// 이메일 인증 Thunk
+export const postEmailVerificationCodeThunk = createAsyncThunk(
+  "user/postEmailVerificationCode",
+  async (emailData) => {
+    console.log("-----EMAIL THUNK-----")
+    try {
+      const res = await postEmailVerificationCode(emailData)
+      return res.data
+    } catch (error) {
+      return Promise.reject(error)
     }
   }
 )
@@ -148,6 +179,24 @@ export const usersSlice = createSlice({
       .addCase(getIsDuplicatedNicknameThunk.rejected, (state) => {
         state.isLoadingDuplication = false
       })
+      .addCase(postEmailVerificationCodeThunk.pending, (state) => {
+        state.isLoadingEmailCode = true
+      })
+      .addCase(postEmailVerificationCodeThunk.fulfilled, (state) => {
+        state.isLoadingEmailCode = false
+      })
+      .addCase(postEmailVerificationCodeThunk.rejected, (state) => {
+        state.isLoadingEmailCode = false
+      })
+      .addCase(postPhoneVerificationCodeThunk.pending, (state) => {
+        state.isLoadingPhoneCode = true
+      })
+      .addCase(postPhoneVerificationCodeThunk.fulfilled, (state) => {
+        state.isLoadingPhoneCode = false
+      })
+      .addCase(postPhoneVerificationCodeThunk.rejected, (state) => {
+        state.isLoadingPhoneCode = false
+      })
   },
 })
 
@@ -163,5 +212,7 @@ export const selectIsLoadingDuplication = (state) =>
 export const selectLoading = (state) => state.user.loading
 export const selectError = (state) => state.user.error
 export const selectRole = (state) => state.user.role
+export const selectIsLoadingPhoneCode = (state) => state.user.isLoadingPhoneCode
+export const selectIsLoadingEmailCode = (state) => state.user.isLoadingEmailCode
 export const {logOut, setAuthenticated, setUserInfos} = usersSlice.actions
 export default usersSlice.reducer

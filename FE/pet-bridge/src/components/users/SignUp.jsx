@@ -1,16 +1,17 @@
-import {useState} from "react"
-import {
-  postEmailCheck,
-  postEmailVerificationCode,
-  signUpUser,
-} from "api/users-api"
+import {useEffect, useState} from "react"
+import {postEmailCheck, postPhoneCheck, signUpUser} from "api/users-api"
 import {Link, useNavigate} from "react-router-dom"
-import {useDispatch} from "react-redux"
+import {useDispatch, useSelector} from "react-redux"
 import {
   getIsDuplicatedNicknameThunk,
   loginUserThunk,
+  postEmailVerificationCodeThunk,
+  postPhoneVerificationCodeThunk,
+  selectIsLoadingEmailCode,
+  selectIsLoadingPhoneCode,
 } from "features/user/users-slice"
 import Timer from "components/common/Timer"
+import {validateConfirmPassword} from "utils/user-validations"
 
 const SignUp = () => {
   const dispatch = useDispatch()
@@ -41,10 +42,29 @@ const SignUp = () => {
   const [isSendCodeButtonDisalbed, setIsSendCodeButtonDisalbed] =
     useState(false)
   const [isEmailVerified, setIsEmailVerified] = useState(false)
+  const [isValidNickname, setIsValidNickname] = useState(false)
+  const [isLoadingEmailCode, setIsLoadingEmailCode] = useState(false)
+
+  // 이메일 코드 전송 로딩중
+  const isLoadingEmailCodeState = useSelector(selectIsLoadingEmailCode)
+
+  // 전화번호 코드 전송 로딩중
+  const isLoadingPhoneCodeState = useSelector(selectIsLoadingPhoneCode)
+
+  useEffect(() => {
+    setIsLoadingEmailCode(isLoadingEmailCodeState)
+  }, [isLoadingEmailCodeState])
+
+  useEffect(() => {
+    setIsLoadingPhoneCode(isLoadingPhoneCodeState)
+  }, [isLoadingPhoneCodeState])
 
   // 전화번호 유효성 검사
   const [isValidPhone, setIsValidPhone] = useState(false)
   const [isValidPhoneButton, setIsValidPhoneButton] = useState(false)
+  const [isSendPhoneCodeDisalbed, setIsSendPhoneCodeDisalbed] = useState(false)
+  const [isPhoneVerified, setIsPhoneVerified] = useState(false)
+  const [isLoadingPhoneCode, setIsLoadingPhoneCode] = useState(false)
 
   // 유효성 검사 정규표현식
   const emailPattern = /\S+@\S+\.\S+/
@@ -92,6 +112,25 @@ const SignUp = () => {
     setOneError("password", errors.password)
   }
 
+  // 비밀번호 확인 유효성 검사
+  const confirmPasswordHandler = () => {
+    if (!confirmNumbers.passwordConfirm) {
+      errors.passwordConfirm = "*비밀번호 확인: 필수 정보입니다."
+    } else if (
+      validateConfirmPassword(
+        signUpFormData.password,
+        confirmNumbers.passwordConfirm
+      )
+    ) {
+      errors.passwordConfirm = ""
+    } else {
+      errors.passwordConfirm =
+        "*비밀번호 확인: 비밀번호와 동일한 값을 입력해주세요."
+    }
+
+    setOneError("passwordConfirm", errors.passwordConfirm)
+  }
+
   // 전화번호 유효성 검사
   const validatePhone = () => {
     if (!signUpFormData.phone) {
@@ -104,6 +143,25 @@ const SignUp = () => {
     }
 
     setOneError("phone", errors.phone)
+  }
+
+  const clickSendPhoneCodeHandler = async () => {
+    const res = await dispatch(
+      postPhoneVerificationCodeThunk({phone: signUpFormData.phone})
+    )
+
+    console.log(res, signUpFormData)
+
+    // Thunk 결과 처리
+    if (postPhoneVerificationCodeThunk.fulfilled.match(res)) {
+      setIsValidPhoneButton(true)
+      setIsSendPhoneCodeDisalbed(true)
+    } else if (postPhoneVerificationCodeThunk.rejected.match(res)) {
+      console.log(res)
+      alert("이미 가입된 번호입니다. 다른 번호를 시도해주세요.")
+    } else {
+      console.log(res)
+    }
   }
 
   // 생일 유효성 검사
@@ -122,18 +180,18 @@ const SignUp = () => {
   const validateNickname = async () => {
     if (!signUpFormData.nickname) {
       errors.nickname = "*닉네임: 필수 정보입니다."
+      setIsValidNickname(false)
     } else {
       const res = await dispatch(
         getIsDuplicatedNicknameThunk(signUpFormData.nickname)
       )
-
-      if (res.status === 200) {
-        errors.nickname =
-          "*닉네임: 중복된 닉네임입니다. 다른 닉네임을 입력해주세요."
-      } else if (res.status === 404) {
+      console.log(res)
+      if (getIsDuplicatedNicknameThunk.fulfilled.match(res)) {
         errors.nickname = ""
-      } else {
-        console.log("오류")
+        setIsValidNickname(true)
+      } else if (getIsDuplicatedNicknameThunk.rejected.match(res)) {
+        errors.nickname = res.payload
+        setIsValidNickname(false)
       }
     }
 
@@ -212,13 +270,20 @@ const SignUp = () => {
     }
   }
 
-  // 인증번호 전송
-  const onClickSendMailCodeHandler = async () => {
-    const res = await postEmailVerificationCode({email: signUpFormData.email})
+  // 이메일 인증번호 전송
+  const clickSendMailCodeHandler = async () => {
+    const res = await dispatch(
+      postEmailVerificationCodeThunk({
+        email: signUpFormData.email,
+      })
+    )
 
-    if (res?.status === 201) {
+    // Thunk 결과 처리
+    if (postEmailVerificationCodeThunk.fulfilled.match(res)) {
       setIsValidEmailButton(true)
       setIsSendCodeButtonDisalbed(true)
+    } else if (postEmailVerificationCodeThunk.rejected.match(res)) {
+      alert("이미 가입된 이메일입니다. 다른 이메일을 시도해주세요.")
     } else {
       console.log(res)
     }
@@ -234,6 +299,22 @@ const SignUp = () => {
 
     if (res?.status === 200) {
       setIsEmailVerified(true)
+    } else {
+      console.log(res)
+      alert("잘못된 인증번호입니다. 다시 확인해주세요.")
+    }
+  }
+
+  // 전화번호 인증번호 확인
+  const onClickPhoneCheckHandler = async () => {
+    const phoneConfirmData = {
+      phone: signUpFormData.phone,
+      code: Number(confirmNumbers.phoneConfirm),
+    }
+    const res = await postPhoneCheck(phoneConfirmData)
+    console.log("postPhoneCheck", res)
+    if (res?.status === 200) {
+      setIsPhoneVerified(true)
     } else {
       console.log(res)
       alert("잘못된 인증번호입니다. 다시 확인해주세요.")
@@ -259,7 +340,7 @@ const SignUp = () => {
                   disabled={true}
                   value={signUpFormData.email}
                   type="email"
-                  className="col-span-9 my-1 rounded-md border bg-stroke p-2.5"
+                  className="bg-stroke col-span-9 my-1 rounded-md border p-2.5"
                   placeholder="이메일 주소"
                   id="email"
                   maxLength={255}
@@ -268,7 +349,7 @@ const SignUp = () => {
                 <button
                   disabled={true}
                   type="button"
-                  className="col-span-3 h-12 rounded-md border bg-stroke px-3.5 py-2.5"
+                  className="bg-stroke col-span-3 h-12 rounded-md border px-3.5 py-2.5"
                 >
                   {isEmailVerified ? (
                     "인증 완료"
@@ -293,12 +374,12 @@ const SignUp = () => {
                       onBlur={validateEmail}
                     />
                     <button
-                      disabled={!isValidEmail}
+                      disabled={!isValidEmail || isLoadingEmailCode}
                       type="button"
-                      className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
-                      onClick={onClickSendMailCodeHandler}
+                      className={`${isLoadingEmailCode ? "bg-stroke" : "bg-mild"} col-span-3 h-12 rounded-md px-3.5 py-2.5`}
+                      onClick={clickSendMailCodeHandler}
                     >
-                      인증번호 전송
+                      {isLoadingEmailCode ? "전송중" : "인증코드 전송"}
                     </button>
                   </>
                 ) : (
@@ -318,7 +399,14 @@ const SignUp = () => {
             )}
           </div>
           {!isValidEmail && (
-            <span className="col-span-12 text-alert">{errors.email}</span>
+            <span className="text-alert col-span-12 px-2.5">
+              {errors.email}
+            </span>
+          )}
+          {isEmailVerified && (
+            <span className="col-span-12 px-2.5 text-green-500">
+              이메일 인증 완료
+            </span>
           )}
           {isValidEmailButton && !isEmailVerified ? (
             <div className="grid w-full grid-cols-12 items-center gap-2.5">
@@ -337,7 +425,7 @@ const SignUp = () => {
               <button
                 disabled={isEmailVerified}
                 type="button"
-                className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
+                className="bg-mild col-span-3 h-12 rounded-md px-3.5 py-2.5"
                 onClick={onClickMailCheckHandler}
               >
                 인증하기
@@ -370,9 +458,17 @@ const SignUp = () => {
             minLength={8}
             maxLength={16}
             autoComplete="new-password"
+            onBlur={confirmPasswordHandler}
           />
           {errors.password && (
-            <span className="col-span-12 text-alert">{errors.password}</span>
+            <span className="text-alert col-span-12 px-2.5">
+              {errors.password}
+            </span>
+          )}
+          {errors.passwordConfirm && (
+            <span className="text-alert col-span-12 px-2.5">
+              {errors.passwordConfirm}
+            </span>
           )}
           {/* 닉네임 입력 창 */}
           <input
@@ -386,52 +482,114 @@ const SignUp = () => {
             onBlur={validateNickname}
           />
           {errors.nickname && (
-            <span className="col-span-12 text-alert">{errors.nickname}</span>
+            <span className="text-alert col-span-12 px-2.5">
+              {errors.nickname}
+            </span>
           )}
+          {isValidNickname ? (
+            <span className="text-green-500">사용 가능한 닉네임입니다.</span>
+          ) : null}
           {/* 전화번호 입력 창 */}
           <div className="grid w-full grid-cols-12 items-center gap-x-2.5">
-            <input
-              value={signUpFormData.phone}
-              onInput={onInputPhone}
-              onChange={changeHandler}
-              type="text"
-              className="col-span-9  my-1 rounded-md border p-2.5"
-              placeholder="휴대전화번호"
-              id="phone"
-              maxLength="11"
-              onBlur={validatePhone}
-            />
-            <button
-              disabled={!isValidPhone}
-              type="button"
-              className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
-              onClick={() => setIsValidPhoneButton(true)}
-            >
-              인증코드 전송
-            </button>
+            {isSendPhoneCodeDisalbed && isValidPhone ? (
+              <>
+                <input
+                  disabled={true}
+                  value={signUpFormData.phone}
+                  type="phone"
+                  className="bg-stroke col-span-9 my-1 rounded-md border p-2.5"
+                  placeholder="휴대전화번호"
+                  id="phone"
+                  maxLength={255}
+                  autoComplete="username"
+                />
+                <button
+                  disabled={true}
+                  type="button"
+                  className="bg-stroke col-span-3 h-12 rounded-md border px-3.5 py-2.5"
+                >
+                  {isPhoneVerified ? (
+                    "인증 완료"
+                  ) : (
+                    <Timer initialMinutes={5} initialSeconds={0} />
+                  )}
+                </button>
+              </>
+            ) : (
+              <>
+                {isValidPhone ? (
+                  <>
+                    <input
+                      value={signUpFormData.phone}
+                      onInput={onInputPhone}
+                      onChange={changeHandler}
+                      type="text"
+                      className="col-span-9  my-1 rounded-md border p-2.5"
+                      placeholder="휴대전화번호"
+                      id="phone"
+                      maxLength="11"
+                      onBlur={validatePhone}
+                    />
+                    <button
+                      disabled={!isValidPhone || isLoadingPhoneCode}
+                      type="button"
+                      className={`${isLoadingPhoneCode ? "bg-stroke" : "bg-mild"}  col-span-3 h-12 rounded-md px-3.5 py-2.5`}
+                      onClick={clickSendPhoneCodeHandler}
+                    >
+                      {isLoadingPhoneCode ? "전송중" : "인증코드 전송"}
+                    </button>
+                  </>
+                ) : (
+                  <input
+                    value={signUpFormData.phone}
+                    onChange={changeHandler}
+                    type="phone"
+                    className="col-span-full  my-1 rounded-md border p-2.5"
+                    placeholder="전화번호"
+                    id="phone"
+                    maxLength={255}
+                    autoComplete="username"
+                    onBlur={validatePhone}
+                  />
+                )}
+              </>
+            )}
           </div>
           {!isValidPhone && (
-            <span className="col-span-12 text-alert">{errors.phone}</span>
+            <span className="text-alert col-span-12 px-2.5">
+              {errors.phone}
+            </span>
           )}
-          {isValidPhoneButton && (
+          {isPhoneVerified && (
+            <span className="col-span-12 px-2.5 text-green-500">
+              전화번호 인증 완료
+            </span>
+          )}
+          {isValidPhoneButton && !isPhoneVerified ? (
             <div className="grid w-full grid-cols-12 items-center gap-2.5">
               <input
+                disabled={isPhoneVerified}
                 value={confirmNumbers.phoneConfirm}
                 onChange={changeConfirmHandler}
                 type="text"
                 className="col-span-9  my-1 rounded-md border p-2.5"
                 placeholder="인증 번호"
                 id="phoneConfirm"
-                maxLength={255}
+                minLength={6}
+                maxLength={6}
                 autoComplete="username"
               />
               <button
+                disabled={isPhoneVerified}
                 type="button"
-                className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
+                className="bg-mild col-span-3 h-12 rounded-md px-3.5 py-2.5"
+                onClick={onClickPhoneCheckHandler}
               >
                 인증하기
               </button>
             </div>
+          ) : (
+            <></>
           )}
           {/* 생년월일 창 */}
           <input
@@ -446,7 +604,9 @@ const SignUp = () => {
             onBlur={validateBirth}
           />
           {errors.birth && (
-            <span className="col-span-12 text-alert">{errors.birth}</span>
+            <span className="text-alert col-span-12 px-2.5">
+              {errors.birth}
+            </span>
           )}
         </div>
 
@@ -455,7 +615,7 @@ const SignUp = () => {
           {isEmailVerified ? (
             <button
               type="submit"
-              className="h-12 rounded-md bg-mild px-3.5 py-2.5"
+              className="bg-mild h-12 rounded-md px-3.5 py-2.5"
             >
               회원가입
             </button>
@@ -463,7 +623,7 @@ const SignUp = () => {
             <button
               disabled={true}
               type="submit"
-              className="h-12 rounded-md bg-stroke px-3.5 py-2.5"
+              className="bg-stroke h-12 rounded-md px-3.5 py-2.5"
             >
               회원가입
             </button>
@@ -473,7 +633,7 @@ const SignUp = () => {
           <Link
             to="/"
             type="button"
-            className="rounded-md bg-mild px-3.5 py-2.5 text-center"
+            className="bg-mild rounded-md px-3.5 py-2.5 text-center"
           >
             가입 취소
           </Link>

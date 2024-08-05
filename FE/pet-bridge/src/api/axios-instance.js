@@ -121,7 +121,7 @@ axiosInstance.interceptors.response.use(
 
     // 기존에 액세스 토큰을 안담아서 보냈다면 에러 반환
     if (!originalRequest.headers.Authorization) {
-      return error
+      return Promise.reject(error)
     }
 
     // 403 응답 에러에 대해, 재요청이 아닌 경우 (액세스 토큰 만료 응답을 받은 경우)

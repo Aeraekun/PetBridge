@@ -38,7 +38,7 @@ const MyPageAnimalsContainer = () => {
 
       if (res.data) {
         console.log("fetch 성공!!!", res)
-        newItems = res.data.response.body.items.item
+        newItems = res.data
         setPage((prevPageNo) => prevPageNo + 1)
         return newItems
       } else {
@@ -66,7 +66,7 @@ const MyPageAnimalsContainer = () => {
     }
 
     // inView 값이 true가 됐을 때,
-    if (inView) {
+    if (inView && !isMoreRemained) {
       setIsLoadingMore(true)
       fetchMoreData()
     }
@@ -83,7 +83,7 @@ const MyPageAnimalsContainer = () => {
       </div>
       {isLoading ? (
         <div className="flex size-full items-center justify-center">
-          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
           <span className="px-5 text-6xl font-bold">Loading...</span>
         </div>
       ) : (
@@ -99,8 +99,8 @@ const MyPageAnimalsContainer = () => {
               <MyPageCard
                 id={item.id}
                 imageSrc={item.popfile}
-                imageAlt={item.careNm}
-                content1={item.noticeNo}
+                imageAlt={item.name}
+                content1={item.name}
                 content2={item.kindCd}
                 content3={item.age}
               />
@@ -108,11 +108,11 @@ const MyPageAnimalsContainer = () => {
           ))}
           {isLoadingMore ? (
             <div className="flex items-center">
-              <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+              <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
               <span>추가 데이터를 로딩중입니다</span>
             </div>
           ) : null}
-          {!isMoreRemained && <p>불러올 데이터가 없습니다.</p>}
+          {!isMoreRemained && <p>추가로 불러올 데이터가 없습니다.</p>}
         </div>
       )}
     </div>

@@ -90,7 +90,7 @@ const UpdateProfileContainer = () => {
 
     let newErrors = {}
 
-    let nicknameError = validateNickname(updateFormData)
+    let nicknameError = await validateNickname(nickname, updateFormData)
     if (nicknameError.new_error) {
       newErrors.nickname = nicknameError.new_error_message
     }
@@ -110,18 +110,30 @@ const UpdateProfileContainer = () => {
     if (Object.values(newErrors).every((value) => value === "")) {
       // 이미지 추가를 위해 FormData 객체 생성 및 이미지 파일 추가
       const formData = new FormData()
-
-      formData.append("nickname", updateFormData.nickname)
-      formData.append("birth", updateFormData.birth)
-      formData.append("phone", updateFormData.phone)
-      if (selectedImageFile) {
-        formData.append("image", selectedImageFile)
+      const formJsonData = {
+        password: updateFormData.password,
+        nickname: updateFormData.nickname,
+        birth: updateFormData.birth,
+        phone: updateFormData.phone,
       }
-      console.log(formData)
+
+      formData.append(
+        "userEditRequestDto",
+        new Blob([JSON.stringify(formJsonData)], {type: "application/json"})
+      )
+      // 이미지 파일 추가
+      if (selectedImageFile) {
+        formData.append("imageFile", selectedImageFile)
+      }
+
+      // FormData의 내용을 출력
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value)
+      }
 
       // patch 비동기 요청
       try {
-        const res = await patchUserInfo(updateFormData)
+        const res = await patchUserInfo(formData)
         navigate(`/users/${userId}`)
         console.log(res)
 
@@ -132,8 +144,6 @@ const UpdateProfileContainer = () => {
         console.log("patch 실패 에러", error)
       }
     }
-
-    return console.log(newErrors)
   }
 
   // 비밀번호 확인 문자 저장을 위한 state
@@ -142,17 +152,19 @@ const UpdateProfileContainer = () => {
   })
 
   // 칸 입력 완료 후 Focus 해제(onBlur)시 해당 입력에 대한Validation 동작
-  const onBlurHandler = (event) => {
+  const onBlurHandler = async (event) => {
     let new_error = ""
     let new_error_message = ""
-
     // 이벤트가 발생한 대상
     const target = event.target
     // 아이디 추출 (입력값)
     const inputType = target.id
     // id 값으로 입력 양식 확인 후 양식 검사
     if (inputType === "nickname") {
-      ;({new_error, new_error_message} = validateNickname(updateFormData))
+      ;({new_error, new_error_message} = await validateNickname(
+        nickname,
+        updateFormData
+      ))
       setError(new_error, new_error_message)
     } else if (inputType === "birth") {
       ;({new_error, new_error_message} = validateBirth(updateFormData))
@@ -217,7 +229,7 @@ const UpdateProfileContainer = () => {
           autoComplete="new-password"
         />
         {errors.password && (
-          <span className="col-span-12 text-alert">{errors.password}</span>
+          <span className="text-alert col-span-12">{errors.password}</span>
         )}
       </div>
 
@@ -234,7 +246,7 @@ const UpdateProfileContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.nickname && (
-          <span className="col-span-12 text-alert">{errors.nickname}</span>
+          <span className="text-alert col-span-12">{errors.nickname}</span>
         )}
       </div>
       {/* 전화번호 입력 창 */}
@@ -251,7 +263,7 @@ const UpdateProfileContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.phone && (
-          <span className="col-span-12 text-alert">{errors.phone}</span>
+          <span className="text-alert col-span-12">{errors.phone}</span>
         )}
       </div>
       {/* 생년월일 창 */}
@@ -268,20 +280,20 @@ const UpdateProfileContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.birth && (
-          <span className="col-span-12 text-alert">{errors.birth}</span>
+          <span className="text-alert col-span-12">{errors.birth}</span>
         )}
       </div>
 
       <div className="grid w-full grid-cols-2 gap-10">
         {/* 수정하기 버튼 */}
-        <button type="submit" className="h-12 rounded-md bg-mild px-3.5 py-2.5">
+        <button type="submit" className="bg-mild h-12 rounded-md px-3.5 py-2.5">
           수정하기
         </button>
         {/* 취소 버튼 */}
         <Link
           to="/"
           type="button"
-          className="rounded-md bg-mild px-3.5 py-2.5 text-center"
+          className="bg-mild rounded-md px-3.5 py-2.5 text-center"
         >
           취소하기
         </Link>
