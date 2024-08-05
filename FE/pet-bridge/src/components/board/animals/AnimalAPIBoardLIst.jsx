@@ -4,9 +4,8 @@ import Button from "components/common/Button"
 
 import {useNavigate, useParams} from "react-router-dom"
 import AnimalSearchForm from "components/board/animals/AnimalSearchForm"
-import {getAnimalList} from "api/animals-api"
+import {getShelterAnimalsAPI} from "api/animals-api"
 
-//임시보호동물게시판
 const Search = () => {
   return (
     <div className="flex w-full justify-between px-10">
@@ -21,7 +20,7 @@ const Search = () => {
     </div>
   )
 }
-const AnimalBoardList = () => {
+const AnimalAPIBoardLIst = () => {
   const {bcode} = useParams()
   const navigate = useNavigate()
   useEffect(() => {}, [bcode])
@@ -32,18 +31,14 @@ const AnimalBoardList = () => {
   }
   const goAnimalDetail = (animal) => {
     console.log(animal)
-    const id = animal.id
+    const id = animal.desertionNo
     let path = `/shelter/details/${id}`
     navigate(path, {state: {animal}})
   }
 
-  ///임시보호
+  ///보호소
   // API 요청을 보내기 위한 파라미터
-  const [searchParams, setSearchParams] = useState({
-    size: 12,
-    page: 0,
-    processstate: "전체",
-  })
+  const [searchParams, setSearchParams] = useState({numOfRows: 12, pageNo: 1})
   const [pageNo, setPageNo] = useState(1)
   const [items, setItems] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -53,7 +48,7 @@ const AnimalBoardList = () => {
     const fetchInitData = async () => {
       setIsLoading(true)
       const newData = await fetchData()
-      const newItems = newData
+      const newItems = newData.response.body.items.item
       // 데이터 로드 성공시 (응답 배열에 데이터가 있다면)
       if (newItems && newItems.length > 0) {
         // 로딩상태 해제, 새로 받아온 값을 배열에 추가
@@ -70,17 +65,17 @@ const AnimalBoardList = () => {
   // 농림축산부 API를 호출해서, 12개씩 페이징된 데이터를 받아온다.
   const fetchData = async () => {
     console.log("search", searchParams)
-    const res = await getAnimalList(searchParams)
+    const res = await getShelterAnimalsAPI(searchParams)
     let newData = []
     let page = 0
     let total = 0
     let numOfRows = 0
-    if (res) {
+    if (res.data) {
       console.log("fetch 성공!!!", res)
-      newData = res
-      numOfRows = 1
-      total = 0
-      page = 0
+      newData = res.data
+      numOfRows = res.data.response.body.numOfRows
+      total = res.data.response.body.totalCount
+      page = res.data.response.body.pageNo
       setPageNo(page)
       setMaxPage(Math.min(10, Math.ceil(total / numOfRows)))
       return newData
@@ -90,15 +85,14 @@ const AnimalBoardList = () => {
   }
 
   useEffect(() => {
-    console.log(pageNo, "pageNo")
-    setSearchParams({...searchParams, page: pageNo})
+    setSearchParams({...searchParams, pageNo: pageNo})
   }, [pageNo])
 
   const handleSearchForm = (data) => {
     const newSearchParam = {
       ...searchParams,
       ...data,
-      page: pageNo,
+      pageNo: pageNo,
       numOfRows: 12,
     }
 
@@ -107,8 +101,7 @@ const AnimalBoardList = () => {
   return (
     <>
       <Search />
-      <AnimalSearchForm searchParams={handleSearchForm} isShelter={false} />
-
+      <AnimalSearchForm searchParams={handleSearchForm} isShelter={true} />
       <Button text={"등록하기"} onClick={goRegist} />
       {isLoading ? (
         <div className="flex items-center">
@@ -120,7 +113,7 @@ const AnimalBoardList = () => {
           <div className="flex space-x-2">
             <button
               onClick={() => setPageNo((prev) => Math.max(prev - 1, 1))}
-              disabled={pageNo === 0}
+              disabled={pageNo === 1}
             >
               ◀이전
             </button>
@@ -142,7 +135,7 @@ const AnimalBoardList = () => {
                   <AnimalItem
                     data={item}
                     onSelectAnimal={() => goAnimalDetail(item)}
-                    isShelter={false}
+                    isShelter={true}
                   />
                 </li>
               ))}
@@ -152,4 +145,4 @@ const AnimalBoardList = () => {
     </>
   )
 }
-export default AnimalBoardList
+export default AnimalAPIBoardLIst

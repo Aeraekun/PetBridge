@@ -22,6 +22,9 @@ const State = ({state}) => {
 }
 
 const TagAnimal = ({data}) => {
+  const handleisFollowing = () => {
+    console.log("")
+  }
   return (
     <div className="flex justify-between p-3">
       <div className="flex space-x-3">
@@ -36,7 +39,7 @@ const TagAnimal = ({data}) => {
       <div className="flex h-full flex-col justify-between">
         <State state={data.processState} />
 
-        <FollowButton ifFollowing={true} />
+        <FollowButton isFollowing={handleisFollowing} />
       </div>
     </div>
   )

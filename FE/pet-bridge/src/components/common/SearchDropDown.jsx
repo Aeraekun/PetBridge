@@ -3,7 +3,7 @@ import {useState, useRef} from "react"
 const SearchDropDown = ({subtitle, placeholder, itemName, onDataChange}) => {
   const [searchValue, setSearchValue] = useState("")
   const [isOpen, setIsOpen] = useState(false)
-  const [position, setPosition] = useState({x: 0, y: 0})
+  const [position] = useState({x: 180, y: 80})
   const buttonRef = useRef(null)
   let id = 1
   let nicknameId = 1
@@ -30,8 +30,8 @@ const SearchDropDown = ({subtitle, placeholder, itemName, onDataChange}) => {
   }
 
   const clickHandler = () => {
-    const rect = buttonRef.current.getBoundingClientRect()
-    setPosition({x: rect.left, y: rect.bottom})
+    // const rect = buttonRef.current.getBoundingClientRect()
+    // setPosition({x: rect.left, y: rect.bottom})
     setIsOpen(!isOpen)
   }
 

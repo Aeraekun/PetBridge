@@ -1,12 +1,13 @@
 import React, {useState, useRef, useEffect, useCallback} from "react"
-import {useInView} from "react-intersection-observer"
-import data from "components/petpick/dummydata"
+// import {useInView} from "react-intersection-observer"
+// import data from "components/petpick/dummydata"
 import PetpickComments from "components/petpick/PetpickComments"
+import {getRandomDetailPetPick} from "api/petpicks-api"
 
 const ScrollableComponent = () => {
   const [index, setIndex] = useState(0)
 
-  const [list, setList] = useState(data) // 초기 데이터 상태
+  const [list, setList] = useState([]) // 초기 데이터 상태
 
   const containerRef = useRef(null)
   const itemRefs = useRef(list.map(() => React.createRef()))
@@ -22,11 +23,43 @@ const ScrollableComponent = () => {
     )
   }, [list])
 
+  // 초기값 로딩
+  useEffect(() => {
+    const fetchInitData = async () => {
+      const newItems = await fetchData()
+      console.log(newItems, "newItems")
+      // 데이터 로드 성공시 (응답 배열에 데이터가 있다면)
+      if (newItems && newItems.length > 0) {
+        // 로딩상태 해제, 새로 받아온 값을 배열에 추가
+        setList((prevItems) => [...prevItems, ...newItems])
+      }
+    }
+
+    fetchInitData()
+  }, [])
+
+  // 펫핏 데이터 받아오기
+  const fetchData = async () => {
+    try {
+      const res = await getRandomDetailPetPick()
+      if (res) {
+        console.log("펫픽가져오기 성공", res)
+        return res
+      } else {
+        alert("추가 데이터 로드에 실패했습니다.")
+      }
+    } catch (error) {
+      console.error("에러 발생:", error)
+      alert("데이터 로드 중 에러가 발생했습니다.")
+    }
+  }
+
   useEffect(() => {
     updateItemRefs()
   }, [list, updateItemRefs])
-  const loadMoreData = () => {
-    const newData = data
+
+  const loadMoreData = async () => {
+    const newData = await fetchData()
     console.log("moredata")
     setList((prevList) => [...prevList, ...newData])
   }
@@ -35,7 +68,7 @@ const ScrollableComponent = () => {
     if (index === list.length - 1) {
       loadMoreData()
     }
-  }, [index, list])
+  }, [list, index])
 
   //화면 중앙에 보이도록 해줌
   useEffect(() => {
@@ -43,23 +76,54 @@ const ScrollableComponent = () => {
     if (container && itemRefs.current[index]?.current) {
       const item = itemRefs.current[index].current
       const containerHeight = container.clientHeight
-      const itemHeight = item.clientHeight
+      const itemHeight = item.clientHeight + 3
       const itemTop = item.offsetTop
 
+      console.log(
+        itemHeight,
+        "top : ",
+        itemTop,
+        "container",
+
+        "height : ",
+        containerHeight
+      )
       // Scroll to center the item in the container
-      container.scrollTo({
-        top: itemTop - containerHeight / 2 + itemHeight / 2,
-        behavior: "smooth",
-      })
+      // container.scrollTo({
+      //   top: itemTop - containerHeight / 2 + itemHeight / 2,
+      //   behavior: "smooth",
+      // })
+      console.log(top)
     }
   }, [index])
 
   return (
-    <div className="h-screen ">
-      <div className="fixed mb-4 text-lg">현재 인덱스: {index}</div>
+    <div className=" h-screen">
+      <div className=" fixed mb-4 text-lg">현재 인덱스: {index}</div>
+
+      <div className="fixed right-8 top-1/2 flex flex-col space-y-8">
+        <button
+          onClick={() => {
+            setIndex((prev) => Math.max(prev - 1, 0))
+            containerRef.current.scrollBy(0, -400)
+          }}
+          disabled={index === 0}
+        >
+          <img src="/icons/icon-up-button.svg" alt="upbutton" />
+        </button>
+        <button
+          onClick={() => {
+            setIndex((prev) => Math.min(prev + 1, list.length - 1))
+            containerRef.current.scrollBy(0, 400)
+          }}
+          disabled={index === list.length - 1}
+        >
+          <img src="/icons/icon-down-button.svg" alt="downbutton" />
+        </button>
+      </div>
       <div
         ref={containerRef}
-        className="h-screen overflow-y-scroll border border-gray-300"
+        className="scrollbar-hide h-full snap-y snap-mandatory overflow-y-scroll border border-gray-300"
       >
         {list.map((item, i) => (
           <PetpickComments
@@ -75,35 +139,35 @@ const ScrollableComponent = () => {
   )
 }
 
-const Item = React.forwardRef(({item, onInView, index}, ref) => {
-  const {ref: observerRef, inView} = useInView({
-    threshold: 0.51, // Trigger when 20% of the item is visible
-  })
+// const Item = React.forwardRef(({item, onInView, index}, ref) => {
+//   const {ref: observerRef, inView} = useInView({
+//     threshold: 0.51, // Trigger when 20% of the item is visible
+//   })
 
-  useEffect(() => {
-    if (inView) {
-      onInView(index)
-    }
-  }, [inView, onInView, index])
+//   useEffect(() => {
+//     if (inView) {
+//       onInView(index)
+//     }
+//   }, [inView, onInView, index])
 
-  return (
-    <div
-      ref={(node) => {
-        ref.current = node
-        observerRef(node)
-      }}
-      className="flex h-[600px] items-center border  border-gray-300 bg-blue-50"
-    >
-      <div
-        className="flex h-[500px] w-full items-center justify-center border-b
-      border-gray-300 bg-gray-50 p-4"
-      >
-        <div className="text-center text-lg">Item {item}</div>
-      </div>
-    </div>
-  )
-})
+//   return (
+//     <div
+//       ref={(node) => {
+//         ref.current = node
+//         observerRef(node)
+//       }}
+//       className="flex h-[600px] items-center border  border-gray-300 bg-blue-50"
+//     >
+//       <div
+//         className="flex h-[500px] w-full items-center justify-center border-b
+//       border-gray-300 bg-gray-50 p-4"
+//       >
+//         <div className="text-center text-lg">Item {item}</div>
+//       </div>
+//     </div>
+//   )
+// })
 
 export default ScrollableComponent
 
-Item.displayName = "Item"
+// Item.displayName = "Item"

@@ -58,7 +58,7 @@ const AnimalProfile = ({data, isSelected, onSelect}) => {
                 alt="animalImage"
               />
             </div>
-            <tr className=" flex flex-col space-y-0 overflow-hidden">
+            <div className=" flex flex-col space-y-0 overflow-hidden">
               <div className=" flex ">
                 <div className="mr-3 w-20">이름</div>
                 <div className="w-full ">{data.name}</div>
@@ -79,7 +79,7 @@ const AnimalProfile = ({data, isSelected, onSelect}) => {
                 <div className="mr-3 w-20">특징</div>
                 <div className="w-full ">{data.notice_comment}</div>
               </div>
-            </tr>
+            </div>
           </div>
         </div>
       </div>

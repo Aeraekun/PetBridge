@@ -57,11 +57,11 @@ const BoardPage = () => {
   // const [selectedCategory, setSelectedCategory] = useState(categories[0].id)
 
   return (
-    <div className="my-10 flex w-[1000px] flex-col space-y-3 sm:w-11/12">
+    <div className="my-10 flex w-[400px] max-w-[1000px] flex-col space-y-3 sm:w-11/12">
       <BoardNavbar />
       <hr className="" />
 
-      <Outlet className="" />
+      <Outlet />
     </div>
   )
 }

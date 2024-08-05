@@ -3,23 +3,11 @@ import Button from "components/common/Button"
 import {useLocation, useNavigate, useParams} from "react-router-dom"
 import AnimalDetailProfile from "./AnimalDetailProfile"
 import {useEffect} from "react"
+import {useSelector} from "react-redux"
+import {selectId} from "features/user/users-slice"
 
-const Profile = ({nickname}) => {
-  return (
-    <div className="mb-4 flex h-8 items-center justify-around space-x-2.5">
-      <img
-        src="https://via.placeholder.com/50"
-        alt="Author Avatar"
-        className="size-12 rounded-full border "
-      />
-      <div className="flex-1">
-        <p className="text-lg font-semibold">{nickname}</p>
-      </div>
-    </div>
-  )
-}
-
-const AnimalDetail = () => {
+const AnimalDetail = ({isShelter}) => {
+  const currentUserId = useSelector(selectId)
   const location = useLocation()
   const animal = location.state.animal || {}
 
@@ -43,18 +31,26 @@ const AnimalDetail = () => {
         돌아가기{" "}
       </button>
       <hr />
-      <Profile nickname={"내이름"} />
       <hr />
 
-      <AnimalDetailProfile animal={animal} isEditing={false} />
+      <AnimalDetailProfile
+        animal={animal}
+        isEditing={false}
+        isShelter={isShelter}
+      />
 
-      <div className="flex justify-end">
-        <SirenIcon />
-      </div>
-      <div className="flex justify-end">
-        <Button text={"수정하기"} onClick={() => goAnimalModify(animal)} />
-        <Button text={"삭제하기"} onClick={goBack} />
-      </div>
+      {!isShelter && Number(currentUserId) === Number(animal.userId) ? (
+        <div className="flex justify-end">
+          <Button text={"수정하기"} onClick={() => goAnimalModify(animal)} />
+          <Button text={"삭제하기"} onClick={goBack} />
+        </div>
+      ) : (
+        <>
+          <div className="flex justify-end">
+            <SirenIcon />
+          </div>
+        </>
+      )}
     </>
   )
 }

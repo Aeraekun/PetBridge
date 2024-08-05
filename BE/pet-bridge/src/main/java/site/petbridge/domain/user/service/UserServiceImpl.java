@@ -265,13 +265,11 @@ public class UserServiceImpl implements UserService {
 		Message message = new Message();
 		message.setFrom(senderNumber);
 		message.setTo(to);
-		message.setText("[PetBridge] 본인 확인 인증번호는 [" + code + "]입니다.");
-		message.setText("5분 이내에 인증을 완료해주세요.");
+		message.setText("[PetBridge] 본인 확인 인증번호는 [" + certificationNumber + "]입니다.\n5분 이내에 인증을 완료해주세요.");
 		messageService.sendOne(new SingleMessageSendingRequest(message));
 
 		// SMS 인증 요청 시 인증 번호 Redis에 저장 ( key = Email / value = AuthCode )
-		redisService.setValues(phoneRequestDto.phone(),
-			String.valueOf(code), Duration.ofMillis(authCodeExpirationMillis));
+		redisService.setValues(phoneRequestDto.phone(), certificationNumber, Duration.ofMillis(authCodeExpirationMillis));
 	}
 
 	@Override
@@ -279,10 +277,8 @@ public class UserServiceImpl implements UserService {
 		String redisAuthCode = redisService.getValues(phoneRequestDto.phone());
 		if (!(redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(
 			String.valueOf(phoneRequestDto.code())))) {
-			System.out.println("인증코드 불일치");
 			return false;
 		}
-		System.out.println("인증코드 일치");
 		redisService.deleteValues(redisAuthCode);
 		return true;
 	}
