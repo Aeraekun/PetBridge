@@ -96,6 +96,7 @@ const MyPagePetPicsContainer = () => {
           펫픽 만들기
         </Link>
       </div>
+      <div className="">클릭하면 수정가능합니다.</div>
       {isLoading ? (
         <div className="flex size-full items-center justify-center">
           <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
@@ -106,7 +107,7 @@ const MyPagePetPicsContainer = () => {
           {items.map((item, index) => (
             <div
               key={index}
-              className="m-2.5 "
+              className="relative m-2.5 "
               // 화면에 들어오는지 확인할 객체를 선택하기 위한 ref 설정 : 배열의 마지막 값
               ref={index === items.length - 1 ? ref : null}
             >
@@ -121,6 +122,20 @@ const MyPagePetPicsContainer = () => {
                   handleClick(item)
                 }}
               />
+              <div className="absolute bottom-16 right-1 flex flex-col">
+                <Button
+                  text={"삭제하기"}
+                  onClick={() => {
+                    goDeletePetpick(item.id)
+                  }}
+                />
+                <Button
+                  text={"수정하기"}
+                  onClick={() => {
+                    handleClick(item.id)
+                  }}
+                />
+              </div>
             </div>
           ))}
 
@@ -130,12 +145,7 @@ const MyPagePetPicsContainer = () => {
               <span>추가 데이터를 로딩중입니다</span>
             </div>
           ) : null}
-          <Button
-            text={"삭제하기"}
-            onClick={() => {
-              goDeletePetpick(10)
-            }}
-          />
+
           {!isMoreRemained && <p>불러올 데이터가 없습니다.</p>}
         </div>
       )}
