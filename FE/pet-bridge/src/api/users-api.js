@@ -155,7 +155,7 @@ export const postPhoneCheck = (phoneConfirmData) => {
     )
     console.log(res)
 
-    return true
+    return res
   } catch (error) {
     if (error.response.status === 401) {
       alert("틀린 인증 번호입니다. 번호를 확인해서 다시 요청해주세요.")

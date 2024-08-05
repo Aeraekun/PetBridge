@@ -1,12 +1,14 @@
 import {useEffect, useState} from "react"
-import {postEmailCheck, signUpUser} from "api/users-api"
+import {postEmailCheck, postPhoneCheck, signUpUser} from "api/users-api"
 import {Link, useNavigate} from "react-router-dom"
 import {useDispatch, useSelector} from "react-redux"
 import {
   getIsDuplicatedNicknameThunk,
   loginUserThunk,
   postEmailVerificationCodeThunk,
+  postPhoneVerificationCodeThunk,
   selectIsLoadingEmailCode,
+  selectIsLoadingPhoneCode,
 } from "features/user/users-slice"
 import Timer from "components/common/Timer"
 import {validateConfirmPassword} from "utils/user-validations"
@@ -43,15 +45,26 @@ const SignUp = () => {
   const [isValidNickname, setIsValidNickname] = useState(false)
   const [isLoadingEmailCode, setIsLoadingEmailCode] = useState(false)
 
+  // 이메일 코드 전송 로딩중
   const isLoadingEmailCodeState = useSelector(selectIsLoadingEmailCode)
+
+  // 전화번호 코드 전송 로딩중
+  const isLoadingPhoneCodeState = useSelector(selectIsLoadingPhoneCode)
 
   useEffect(() => {
     setIsLoadingEmailCode(isLoadingEmailCodeState)
   }, [isLoadingEmailCodeState])
 
+  useEffect(() => {
+    setIsLoadingPhoneCode(isLoadingPhoneCodeState)
+  }, [isLoadingPhoneCodeState])
+
   // 전화번호 유효성 검사
   const [isValidPhone, setIsValidPhone] = useState(false)
   const [isValidPhoneButton, setIsValidPhoneButton] = useState(false)
+  const [isSendPhoneCodeDisalbed, setIsSendPhoneCodeDisalbed] = useState(false)
+  const [isPhoneVerified, setIsPhoneVerified] = useState(false)
+  const [isLoadingPhoneCode, setIsLoadingPhoneCode] = useState(false)
 
   // 유효성 검사 정규표현식
   const emailPattern = /\S+@\S+\.\S+/
@@ -130,6 +143,25 @@ const SignUp = () => {
     }
 
     setOneError("phone", errors.phone)
+  }
+
+  const clickSendPhoneCodeHandler = async () => {
+    const res = await dispatch(
+      postPhoneVerificationCodeThunk({phone: signUpFormData.phone})
+    )
+
+    console.log(res, signUpFormData)
+
+    // Thunk 결과 처리
+    if (postPhoneVerificationCodeThunk.fulfilled.match(res)) {
+      setIsValidPhoneButton(true)
+      setIsSendPhoneCodeDisalbed(true)
+    } else if (postPhoneVerificationCodeThunk.rejected.match(res)) {
+      console.log(res)
+      alert("이미 가입된 번호입니다. 다른 번호를 시도해주세요.")
+    } else {
+      console.log(res)
+    }
   }
 
   // 생일 유효성 검사
@@ -238,8 +270,8 @@ const SignUp = () => {
     }
   }
 
-  // 인증번호 전송
-  const onClickSendMailCodeHandler = async () => {
+  // 이메일 인증번호 전송
+  const clickSendMailCodeHandler = async () => {
     const res = await dispatch(
       postEmailVerificationCodeThunk({
         email: signUpFormData.email,
@@ -251,12 +283,11 @@ const SignUp = () => {
       setIsValidEmailButton(true)
       setIsSendCodeButtonDisalbed(true)
     } else if (postEmailVerificationCodeThunk.rejected.match(res)) {
-      alert("중복된 이메일입니다. 다른 이메일을 시도해주세요.")
+      alert("이미 가입된 이메일입니다. 다른 이메일을 시도해주세요.")
     } else {
       console.log(res)
     }
   }
-  useEffect
 
   // 이메일 인증번호 확인
   const onClickMailCheckHandler = async () => {
@@ -268,6 +299,22 @@ const SignUp = () => {
 
     if (res?.status === 200) {
       setIsEmailVerified(true)
+    } else {
+      console.log(res)
+      alert("잘못된 인증번호입니다. 다시 확인해주세요.")
+    }
+  }
+
+  // 전화번호 인증번호 확인
+  const onClickPhoneCheckHandler = async () => {
+    const phoneConfirmData = {
+      phone: signUpFormData.phone,
+      code: Number(confirmNumbers.phoneConfirm),
+    }
+    const res = await postPhoneCheck(phoneConfirmData)
+    console.log("postPhoneCheck", res)
+    if (res?.status === 200) {
+      setIsPhoneVerified(true)
     } else {
       console.log(res)
       alert("잘못된 인증번호입니다. 다시 확인해주세요.")
@@ -330,7 +377,7 @@ const SignUp = () => {
                       disabled={!isValidEmail || isLoadingEmailCode}
                       type="button"
                       className={`${isLoadingEmailCode ? "bg-stroke" : "bg-mild"} col-span-3 h-12 rounded-md px-3.5 py-2.5`}
-                      onClick={onClickSendMailCodeHandler}
+                      onClick={clickSendMailCodeHandler}
                     >
                       {isLoadingEmailCode ? "전송중" : "인증코드 전송"}
                     </button>
@@ -444,50 +491,105 @@ const SignUp = () => {
           ) : null}
           {/* 전화번호 입력 창 */}
           <div className="grid w-full grid-cols-12 items-center gap-x-2.5">
-            <input
-              value={signUpFormData.phone}
-              onInput={onInputPhone}
-              onChange={changeHandler}
-              type="text"
-              className="col-span-9  my-1 rounded-md border p-2.5"
-              placeholder="휴대전화번호"
-              id="phone"
-              maxLength="11"
-              onBlur={validatePhone}
-            />
-            <button
-              disabled={!isValidPhone}
-              type="button"
-              className="bg-mild col-span-3 h-12 rounded-md px-3.5 py-2.5"
-              onClick={() => setIsValidPhoneButton(true)}
-            >
-              인증코드 전송
-            </button>
+            {isSendPhoneCodeDisalbed && isValidPhone ? (
+              <>
+                <input
+                  disabled={true}
+                  value={signUpFormData.phone}
+                  type="phone"
+                  className="bg-stroke col-span-9 my-1 rounded-md border p-2.5"
+                  placeholder="휴대전화번호"
+                  id="phone"
+                  maxLength={255}
+                  autoComplete="username"
+                />
+                <button
+                  disabled={true}
+                  type="button"
+                  className="bg-stroke col-span-3 h-12 rounded-md border px-3.5 py-2.5"
+                >
+                  {isPhoneVerified ? (
+                    "인증 완료"
+                  ) : (
+                    <Timer initialMinutes={5} initialSeconds={0} />
+                  )}
+                </button>
+              </>
+            ) : (
+              <>
+                {isValidPhone ? (
+                  <>
+                    <input
+                      value={signUpFormData.phone}
+                      onInput={onInputPhone}
+                      onChange={changeHandler}
+                      type="text"
+                      className="col-span-9  my-1 rounded-md border p-2.5"
+                      placeholder="휴대전화번호"
+                      id="phone"
+                      maxLength="11"
+                      onBlur={validatePhone}
+                    />
+                    <button
+                      disabled={!isValidPhone || isLoadingPhoneCode}
+                      type="button"
+                      className={`${isLoadingPhoneCode ? "bg-stroke" : "bg-mild"}  col-span-3 h-12 rounded-md px-3.5 py-2.5`}
+                      onClick={clickSendPhoneCodeHandler}
+                    >
+                      {isLoadingPhoneCode ? "전송중" : "인증코드 전송"}
+                    </button>
+                  </>
+                ) : (
+                  <input
+                    value={signUpFormData.phone}
+                    onChange={changeHandler}
+                    type="phone"
+                    className="col-span-full  my-1 rounded-md border p-2.5"
+                    placeholder="전화번호"
+                    id="phone"
+                    maxLength={255}
+                    autoComplete="username"
+                    onBlur={validatePhone}
+                  />
+                )}
+              </>
+            )}
           </div>
           {!isValidPhone && (
             <span className="text-alert col-span-12 px-2.5">
               {errors.phone}
             </span>
           )}
-          {isValidPhoneButton && (
+          {isPhoneVerified && (
+            <span className="col-span-12 px-2.5 text-green-500">
+              전화번호 인증 완료
+            </span>
+          )}
+          {isValidPhoneButton && !isPhoneVerified ? (
             <div className="grid w-full grid-cols-12 items-center gap-2.5">
               <input
+                disabled={isPhoneVerified}
                 value={confirmNumbers.phoneConfirm}
                 onChange={changeConfirmHandler}
                 type="text"
                 className="col-span-9  my-1 rounded-md border p-2.5"
                 placeholder="인증 번호"
                 id="phoneConfirm"
-                maxLength={255}
+                minLength={6}
+                maxLength={6}
                 autoComplete="username"
               />
               <button
+                disabled={isPhoneVerified}
                 type="button"
                 className="bg-mild col-span-3 h-12 rounded-md px-3.5 py-2.5"
+                onClick={onClickPhoneCheckHandler}
               >
                 인증하기
               </button>
             </div>
+          ) : (
+            <></>
           )}
           {/* 생년월일 창 */}
           <input
