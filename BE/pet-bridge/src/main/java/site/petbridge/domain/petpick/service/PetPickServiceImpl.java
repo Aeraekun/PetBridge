@@ -11,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import site.petbridge.domain.animal.repository.AnimalRepository;
+import site.petbridge.domain.board.repository.BoardRepository;
 import site.petbridge.domain.follow.repository.FollowRepository;
 import site.petbridge.domain.follow.service.FollowService;
 import site.petbridge.domain.petpick.domain.PetPick;
@@ -49,6 +51,8 @@ public class PetPickServiceImpl implements PetPickService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final AuthUtil authUtil;
+    private final BoardRepository boardRepository;
+    private final AnimalRepository animalRepository;
 
     /**
      * 펫픽 등록
@@ -59,6 +63,14 @@ public class PetPickServiceImpl implements PetPickService {
                     MultipartFile thumbnailFile, MultipartFile videoFile) throws Exception {
 
         User user = authUtil.getAuthenticatedUser();
+
+        if (!boardRepository.findById(petPickRegistRequestDto.getBoardId()).isPresent()) {
+            throw new PetBridgeException(ErrorCode.BAD_REQUEST);
+        }
+
+        if (!animalRepository.findById(petPickRegistRequestDto.getAnimalId()).isPresent()) {
+            throw new PetBridgeException(ErrorCode.BAD_REQUEST);
+        }
 
         String savedThumbnailFileName = null;
         String savedVideoFileName = null;

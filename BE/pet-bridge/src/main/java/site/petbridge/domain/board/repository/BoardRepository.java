@@ -11,4 +11,6 @@ import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Board, Long>, CustomBoardRepository {
     Optional<Board> findByIdAndDisabledFalse(int id);
+
+    Optional<Board> findById(int id);
 }
