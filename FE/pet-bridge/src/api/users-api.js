@@ -63,20 +63,32 @@ export const jwtTest = async () => {
 
 // 이메일 인증번호 전송
 export const postEmailVerificationCode = async (emailData) => {
-  const res = await axiosInstance.post("/users/authentication/email", emailData)
+  try {
+    const res = await axiosInstance.post(
+      "/users/authentication/email",
+      emailData
+    )
 
-  return res
+    return res
+  } catch (error) {
+    console.log("이메일 인증번호 전송 API 에러 catch")
+    return Promise.reject(error)
+  }
 }
 
 // 이메일 인증번호 확인
 // 이메일, 인증코드를 인자로 전송
 export const postEmailCheck = async (emailConfirmData) => {
-  const res = await axiosInstance.post(
-    "/users/authentication/email/check",
-    emailConfirmData
-  )
+  try {
+    const res = await axiosInstance.post(
+      "/users/authentication/email/check",
+      emailConfirmData
+    )
 
-  return res
+    return res
+  } catch (error) {
+    return error
+  }
 }
 
 // 회원 삭제

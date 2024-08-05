@@ -94,9 +94,9 @@ export const postEmailVerificationCodeThunk = createAsyncThunk(
     console.log("-----THUNK-----")
     try {
       const res = await postEmailVerificationCode(emailData)
-      return res
+      return res.data
     } catch (error) {
-      return error
+      return Promise.reject(error)
     }
   }
 )

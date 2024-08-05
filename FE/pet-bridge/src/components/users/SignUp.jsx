@@ -246,13 +246,17 @@ const SignUp = () => {
       })
     )
 
-    if (res.type === postEmailVerificationCodeThunk.fulfilled.type) {
+    // Thunk 결과 처리
+    if (postEmailVerificationCodeThunk.fulfilled.match(res)) {
       setIsValidEmailButton(true)
       setIsSendCodeButtonDisalbed(true)
+    } else if (postEmailVerificationCodeThunk.rejected.match(res)) {
+      alert("중복된 이메일입니다. 다른 이메일을 시도해주세요.")
     } else {
       console.log(res)
     }
   }
+  useEffect
 
   // 이메일 인증번호 확인
   const onClickMailCheckHandler = async () => {
@@ -348,7 +352,14 @@ const SignUp = () => {
             )}
           </div>
           {!isValidEmail && (
-            <span className="text-alert col-span-12">{errors.email}</span>
+            <span className="text-alert col-span-12 px-2.5">
+              {errors.email}
+            </span>
+          )}
+          {isEmailVerified && (
+            <span className="col-span-12 px-2.5 text-green-500">
+              이메일 인증 완료
+            </span>
           )}
           {isValidEmailButton && !isEmailVerified ? (
             <div className="grid w-full grid-cols-12 items-center gap-2.5">
@@ -403,10 +414,12 @@ const SignUp = () => {
             onBlur={confirmPasswordHandler}
           />
           {errors.password && (
-            <span className="text-alert col-span-12">{errors.password}</span>
+            <span className="text-alert col-span-12 px-2.5">
+              {errors.password}
+            </span>
           )}
           {errors.passwordConfirm && (
-            <span className="text-alert col-span-12">
+            <span className="text-alert col-span-12 px-2.5">
               {errors.passwordConfirm}
             </span>
           )}
@@ -422,7 +435,9 @@ const SignUp = () => {
             onBlur={validateNickname}
           />
           {errors.nickname && (
-            <span className="text-alert col-span-12">{errors.nickname}</span>
+            <span className="text-alert col-span-12 px-2.5">
+              {errors.nickname}
+            </span>
           )}
           {isValidNickname ? (
             <span className="text-green-500">사용 가능한 닉네임입니다.</span>
@@ -450,7 +465,9 @@ const SignUp = () => {
             </button>
           </div>
           {!isValidPhone && (
-            <span className="text-alert col-span-12">{errors.phone}</span>
+            <span className="text-alert col-span-12 px-2.5">
+              {errors.phone}
+            </span>
           )}
           {isValidPhoneButton && (
             <div className="grid w-full grid-cols-12 items-center gap-2.5">
@@ -485,7 +502,9 @@ const SignUp = () => {
             onBlur={validateBirth}
           />
           {errors.birth && (
-            <span className="text-alert col-span-12">{errors.birth}</span>
+            <span className="text-alert col-span-12 px-2.5">
+              {errors.birth}
+            </span>
           )}
         </div>
 
