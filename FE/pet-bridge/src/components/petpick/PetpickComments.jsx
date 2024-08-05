@@ -15,20 +15,21 @@ import {
 } from "features/petpick/petpick-slice"
 import {useInView} from "react-intersection-observer"
 import Profile from "components/common/Profile"
+import {registPetPickComment} from "api/petpicks-api"
 
-const CommentInput = ({boardId, onCommentAdded}) => {
+const CommentInput = ({petpickId, onCommentAdded}) => {
   const isAuthenticated = useSelector(selectIsAuthenticated)
 
   const [inputComment, setInputComment] = useState("")
   const sendMsg = async () => {
-    console.log({inputComment})
     const newComment = {
-      boardId: boardId,
+      boardId: petpickId,
       content: inputComment,
     }
+    console.log({newComment})
 
     try {
-      // await registPetPick(newComment)
+      await registPetPickComment(newComment)
       setInputComment("")
       onCommentAdded() //댓글 작성하면 콜백함수 호출
       alert("댓글 등록 완료", newComment)
@@ -87,7 +88,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
   const [isVisible, setIsVisible] = useState(false)
 
   const dispatch = useDispatch()
-  const petpick = pet // 상태에서 petpick 데이터 가져오기
+  const petpick = pet // prop에서 petpick 데이터 가져오기
   //댓글리스트 불러올때 필요
 
   // const status = useSelector(selectPetpickStatus)
@@ -127,7 +128,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
         //id
         {
           try {
-            //  await removeBoardComment(id) //댓글 삭제 api
+            //await removePetpickComments(id) //댓글 삭제 api
             setDeleteId(null) // 삭제 후 deleteId 초기화
             fetchComments() // 삭제 후 댓글 목록 다시 가져오기
           } catch (e) {
@@ -167,7 +168,10 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
       {isVisible ? (
         <div className="flex h-full min-w-[400px]  flex-col justify-between bg-gray-50 ">
           <div className=" flex-1">
-            <Profile nickname={"SD"} image={"ddd"} />
+            <Profile
+              nickname={petpick.userNickname}
+              image={petpick.userImage}
+            />
             <hr className="my-1 border-gray-300" />
             <PetpickInfo
               title={petpick.title}
@@ -195,7 +199,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
               isLiking={petpick.isLiking}
             />
             <CommentInput
-              boardId={petpick.boardId}
+              petpickId={petpick.id}
               onCommentAdded={handleCommentAdded}
             />
           </div>
