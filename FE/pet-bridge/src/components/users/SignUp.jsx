@@ -41,6 +41,7 @@ const SignUp = () => {
   const [isSendCodeButtonDisalbed, setIsSendCodeButtonDisalbed] =
     useState(false)
   const [isEmailVerified, setIsEmailVerified] = useState(false)
+  const [isValidNickname, setIsValidNickname] = useState(false)
 
   // 전화번호 유효성 검사
   const [isValidPhone, setIsValidPhone] = useState(false)
@@ -122,18 +123,18 @@ const SignUp = () => {
   const validateNickname = async () => {
     if (!signUpFormData.nickname) {
       errors.nickname = "*닉네임: 필수 정보입니다."
+      setIsValidNickname(false)
     } else {
       const res = await dispatch(
         getIsDuplicatedNicknameThunk(signUpFormData.nickname)
       )
-
-      if (res.status === 200) {
-        errors.nickname =
-          "*닉네임: 중복된 닉네임입니다. 다른 닉네임을 입력해주세요."
-      } else if (res.status === 404) {
+      console.log(res)
+      if (getIsDuplicatedNicknameThunk.fulfilled.match(res)) {
         errors.nickname = ""
-      } else {
-        console.log("오류")
+        setIsValidNickname(true)
+      } else if (getIsDuplicatedNicknameThunk.rejected.match(res)) {
+        errors.nickname = res.payload
+        setIsValidNickname(false)
       }
     }
 
@@ -259,7 +260,7 @@ const SignUp = () => {
                   disabled={true}
                   value={signUpFormData.email}
                   type="email"
-                  className="col-span-9 my-1 rounded-md border bg-stroke p-2.5"
+                  className="bg-stroke col-span-9 my-1 rounded-md border p-2.5"
                   placeholder="이메일 주소"
                   id="email"
                   maxLength={255}
@@ -268,7 +269,7 @@ const SignUp = () => {
                 <button
                   disabled={true}
                   type="button"
-                  className="col-span-3 h-12 rounded-md border bg-stroke px-3.5 py-2.5"
+                  className="bg-stroke col-span-3 h-12 rounded-md border px-3.5 py-2.5"
                 >
                   {isEmailVerified ? (
                     "인증 완료"
@@ -295,7 +296,7 @@ const SignUp = () => {
                     <button
                       disabled={!isValidEmail}
                       type="button"
-                      className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
+                      className="bg-mild col-span-3 h-12 rounded-md px-3.5 py-2.5"
                       onClick={onClickSendMailCodeHandler}
                     >
                       인증번호 전송
@@ -318,7 +319,7 @@ const SignUp = () => {
             )}
           </div>
           {!isValidEmail && (
-            <span className="col-span-12 text-alert">{errors.email}</span>
+            <span className="text-alert col-span-12">{errors.email}</span>
           )}
           {isValidEmailButton && !isEmailVerified ? (
             <div className="grid w-full grid-cols-12 items-center gap-2.5">
@@ -337,7 +338,7 @@ const SignUp = () => {
               <button
                 disabled={isEmailVerified}
                 type="button"
-                className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
+                className="bg-mild col-span-3 h-12 rounded-md px-3.5 py-2.5"
                 onClick={onClickMailCheckHandler}
               >
                 인증하기
@@ -372,7 +373,7 @@ const SignUp = () => {
             autoComplete="new-password"
           />
           {errors.password && (
-            <span className="col-span-12 text-alert">{errors.password}</span>
+            <span className="text-alert col-span-12">{errors.password}</span>
           )}
           {/* 닉네임 입력 창 */}
           <input
@@ -386,8 +387,11 @@ const SignUp = () => {
             onBlur={validateNickname}
           />
           {errors.nickname && (
-            <span className="col-span-12 text-alert">{errors.nickname}</span>
+            <span className="text-alert col-span-12">{errors.nickname}</span>
           )}
+          {isValidNickname ? (
+            <span className="text-green-500">사용 가능한 닉네임입니다.</span>
+          ) : null}
           {/* 전화번호 입력 창 */}
           <div className="grid w-full grid-cols-12 items-center gap-x-2.5">
             <input
@@ -404,14 +408,14 @@ const SignUp = () => {
             <button
               disabled={!isValidPhone}
               type="button"
-              className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
+              className="bg-mild col-span-3 h-12 rounded-md px-3.5 py-2.5"
               onClick={() => setIsValidPhoneButton(true)}
             >
               인증코드 전송
             </button>
           </div>
           {!isValidPhone && (
-            <span className="col-span-12 text-alert">{errors.phone}</span>
+            <span className="text-alert col-span-12">{errors.phone}</span>
           )}
           {isValidPhoneButton && (
             <div className="grid w-full grid-cols-12 items-center gap-2.5">
@@ -427,7 +431,7 @@ const SignUp = () => {
               />
               <button
                 type="button"
-                className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
+                className="bg-mild col-span-3 h-12 rounded-md px-3.5 py-2.5"
               >
                 인증하기
               </button>
@@ -446,7 +450,7 @@ const SignUp = () => {
             onBlur={validateBirth}
           />
           {errors.birth && (
-            <span className="col-span-12 text-alert">{errors.birth}</span>
+            <span className="text-alert col-span-12">{errors.birth}</span>
           )}
         </div>
 
@@ -455,7 +459,7 @@ const SignUp = () => {
           {isEmailVerified ? (
             <button
               type="submit"
-              className="h-12 rounded-md bg-mild px-3.5 py-2.5"
+              className="bg-mild h-12 rounded-md px-3.5 py-2.5"
             >
               회원가입
             </button>
@@ -463,7 +467,7 @@ const SignUp = () => {
             <button
               disabled={true}
               type="submit"
-              className="h-12 rounded-md bg-stroke px-3.5 py-2.5"
+              className="bg-stroke h-12 rounded-md px-3.5 py-2.5"
             >
               회원가입
             </button>
@@ -473,7 +477,7 @@ const SignUp = () => {
           <Link
             to="/"
             type="button"
-            className="rounded-md bg-mild px-3.5 py-2.5 text-center"
+            className="bg-mild rounded-md px-3.5 py-2.5 text-center"
           >
             가입 취소
           </Link>
