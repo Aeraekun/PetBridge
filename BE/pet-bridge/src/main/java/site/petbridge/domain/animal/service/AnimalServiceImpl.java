@@ -126,7 +126,7 @@ public class AnimalServiceImpl implements AnimalService {
 		} else if (careAddr != null) {
 			animals = animalRepository.findByCareAddrContainingAndDisabledFalse(careAddr, Pageable.unpaged());
 		} else {
-			animals = animalRepository.findAll(Pageable.unpaged());
+			animals = animalRepository.findAllByDisabledFalse(Pageable.unpaged());
 		}
 
 		// 동물 id processState 필터링 적용
