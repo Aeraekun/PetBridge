@@ -104,7 +104,7 @@ public class AnimalController {
     /**
      * 내 동물 삭제
      */
-    @PatchMapping("/{id}/delete")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeAnimal(@PathVariable("id") int id) throws Exception {
         animalService.removeAnimal(id);
 

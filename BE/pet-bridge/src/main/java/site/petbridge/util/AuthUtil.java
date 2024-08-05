@@ -20,6 +20,6 @@ public class AuthUtil {
 
         CustomUserDetail userDetails = (CustomUserDetail) authentication.getPrincipal();
         return userRepository.findByIdAndDisabledFalse(userDetails.getId())
-                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+                .orElseThrow(() -> new PetBridgeException(ErrorCode.UNAUTHORIZED));
     }
 }

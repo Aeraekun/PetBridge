@@ -81,7 +81,24 @@ public class PetPickServiceImpl implements PetPickService {
     @Override
     public List<PetPickResponseDto> getRandomListPetPick(HttpServletRequest httpServletRequest,
                                                          int initCommentSize) throws Exception {
-        User user = authUtil.getAuthenticatedUser(userRepository);
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication.getPrincipal() == "anonymousUser") {
+//            throw new PetBridgeException(ErrorCode.UNAUTHORIZED);
+//        }
+//
+//        CustomUserDetail userDetails = (CustomUserDetail) authentication.getPrincipal();
+//        return userRepository.findByIdAndDisabledFalse(userDetails.getId())
+//                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+        User user = null;
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof CustomUserDetail) {
+            CustomUserDetail userDetail = (CustomUserDetail) authentication.getPrincipal();
+            user = userRepository.findByIdAndDisabledFalse(userDetail.getId())
+                    .orElseThrow(() -> new PetBridgeException(ErrorCode.UNAUTHORIZED));
+        }
+
+        final User finalUser = user;
 
         List<PetPick> petPicks = petPickRepository.findRandomPetPicks();
 
@@ -94,8 +111,8 @@ public class PetPickServiceImpl implements PetPickService {
             boolean isLiking = false;
             boolean isFollowing = false;
             // 로그인시
-            if (user != null) {
-                int userId = user.getId();
+            if (finalUser != null) {
+                int userId = finalUser.getId();
                 isLiking = petPickLikeRepository.existsByUserIdAndPetPickId(userId, petPick.getId());
                 isFollowing = followRepository.existsByUserIdAndAnimalId(userId, petPick.getAnimalId());
             }

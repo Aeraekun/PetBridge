@@ -129,6 +129,8 @@ function App() {
             <Route path="eyes" element={<AiEyes />} />
             <Route path="skin" element={<AiSkin />} />
           </Route>
+          <Route path="lost-and-found" element={<LostAndFoundPage />}></Route>
+          <Route path="lost-and-found/report" element={<Report />}></Route>
         </Route>
         <Route path="/users/" element={<UsersLayout />}>
           <Route path="social" element={<SocialPage />}>
@@ -158,9 +160,6 @@ function App() {
             <Route path="admin-users" element={<MyPageUsersContainer />} />
             <Route path="admin-reports" element={<MyPageReportsContainer />} />
           </Route>
-        </Route>
-        <Route path="/lost-and-found" element={<LostAndFoundPage />}>
-          <Route path="/lost-and-found/report" element={<Report />}></Route>
         </Route>
         <Route path="/petpick" element={<ShortsLayout />}>
           <Route path="" element={<PetpickComments />}></Route>

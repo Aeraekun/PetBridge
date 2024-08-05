@@ -99,7 +99,7 @@ public class PetPickController {
     /**
      * 내 펫픽 삭제
      */
-    @PatchMapping("/{id}/delete")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> removePetPick(HttpServletRequest httpServletRequest, @PathVariable("id") Long id) throws Exception {
         petPickService.delete(httpServletRequest, id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

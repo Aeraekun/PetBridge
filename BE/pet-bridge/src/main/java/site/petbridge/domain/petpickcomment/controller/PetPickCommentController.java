@@ -65,7 +65,7 @@ public class PetPickCommentController {
     /**
      * 내가 쓴 펫픽 댓글 삭제(권한)
      */
-    @PatchMapping("/{id}/disable")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> removePetPickComment(HttpServletRequest httpServletRequest, @PathVariable("id") Long id) throws Exception {
         petPickCommentService.removePetPickComment(httpServletRequest, id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
