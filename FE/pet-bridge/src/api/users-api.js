@@ -32,7 +32,7 @@ export const getUserInfo = async () => {
 // 회원 정보 수정
 export const patchUserInfo = async (userInfo) => {
   try {
-    const res = await axiosInstance.patch(`/users/modify`, userInfo, {
+    const res = await axiosInstance.patch(`/users`, userInfo, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -44,6 +44,7 @@ export const patchUserInfo = async (userInfo) => {
     } else {
       alert("요청에 실패했습니다.")
     }
+    return error
   }
 }
 
@@ -165,3 +166,6 @@ export const postPhoneCheck = (phoneConfirmData) => {
     return false
   }
 }
+
+// 회원 전체 조회
+export const getAllUsers = () => {}

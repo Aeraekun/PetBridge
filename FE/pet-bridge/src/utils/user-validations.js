@@ -1,3 +1,5 @@
+import {getIsDuplicatedNickname} from "api/users-api"
+
 // 유효성 검사 정규표현식
 const emailPattern = /\S+@\S+\.\S+/
 const passwordPattern = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,16}$/
@@ -85,14 +87,30 @@ export const validateBirth = (formData) => {
 }
 
 // 닉네임 유효성 검사
-export const validateNickname = (formData) => {
+export const validateNickname = async (nickname, formData) => {
   let new_error = "nickname"
   let new_error_message = ""
+
+  if (nickname === formData.nickname) {
+    return {new_error, new_error_message}
+  }
+
   if (!formData.nickname) {
     new_error_message = "*닉네임: 필수 정보입니다."
   } else {
-    new_error_message = ""
+    try {
+      await getIsDuplicatedNickname(formData.nickname)
+      new_error_message =
+        "*닉네임: 중복된 닉네임입니다. 다른 닉네임을 적어주세요."
+    } catch (error) {
+      if (error?.response?.status === 404) {
+        new_error_message = ""
+      } else {
+        new_error_message = "*닉네임: 닉네임 중복 검사 서버 오류"
+      }
+    }
   }
 
+  console.log({new_error, new_error_message})
   return {new_error, new_error_message}
 }
