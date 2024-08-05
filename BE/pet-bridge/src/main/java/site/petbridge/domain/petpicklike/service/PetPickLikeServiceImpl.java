@@ -35,7 +35,7 @@ public class PetPickLikeServiceImpl implements PetPickLikeService {
     @Override
     public void registPetPickLike(HttpServletRequest httpServletRequest,
                                   PetPickLikeRequestDto petPickLikeRequestDto) throws Exception {
-        User user = authUtil.getAuthenticatedUser(userRepository);
+        User user = authUtil.getAuthenticatedUser();
 
         // 존재하는 PetPick에 대한 요청인지 확인
         boolean exists = petPickRepository.existsById((long) petPickLikeRequestDto.getPetPickId());
@@ -58,7 +58,7 @@ public class PetPickLikeServiceImpl implements PetPickLikeService {
     @Override
     public void deletePetPickLike(HttpServletRequest httpServletRequest,
                                   PetPickLikeRequestDto petPickLikeRequestDto) throws Exception {
-        User user = authUtil.getAuthenticatedUser(userRepository);
+        User user = authUtil.getAuthenticatedUser();
 
         // 존재하는 PetPick에 대한 요청인지 확인
         boolean exists = petPickRepository.existsById((long) petPickLikeRequestDto.getPetPickId());

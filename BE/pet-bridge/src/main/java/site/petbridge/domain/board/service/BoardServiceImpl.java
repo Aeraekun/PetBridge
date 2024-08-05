@@ -1,104 +1,102 @@
 package site.petbridge.domain.board.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import site.petbridge.domain.board.domain.Board;
-import site.petbridge.domain.board.domain.enums.BoardType;
-import site.petbridge.domain.board.dto.request.BoardRegistRequestDto;
 import site.petbridge.domain.board.dto.request.BoardEditRequestDto;
+import site.petbridge.domain.board.dto.request.BoardRegistRequestDto;
 import site.petbridge.domain.board.dto.response.BoardResponseDto;
 import site.petbridge.domain.board.repository.BoardRepository;
+import site.petbridge.domain.user.domain.User;
+import site.petbridge.global.exception.ErrorCode;
+import site.petbridge.global.exception.PetBridgeException;
+import site.petbridge.util.AuthUtil;
 import site.petbridge.util.FileUtil;
 
+import java.util.List;
+
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
-	private final BoardRepository boardRepository;
-	private final FileUtil fileUtil;
+    private final BoardRepository boardRepository;
+    private final AuthUtil authUtil;
+    private final FileUtil fileUtil;
 
-	@Override
-	public void registBoard(BoardRegistRequestDto boardRegistRequestDto, MultipartFile file) throws Exception {
+    /**
+     * 게시글 등록
+     */
+    @Transactional
+    @Override
+    public void registBoard(BoardRegistRequestDto boardRegistRequestDto, MultipartFile thumbnailFile) throws Exception {
+        User user = authUtil.getAuthenticatedUser();
 
-		String thumbnail = null;
+        String savedThumbnailFileName = null;
+        if (thumbnailFile != null) {
+            savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "boards");
+        }
 
-		if (file != null) {
-			String savedFileName = fileUtil.saveFile(file, "board");
-			if (savedFileName != null) {
-				thumbnail = savedFileName;
-			}
-		}
-		Board board = Board.builder()
-			.userId(boardRegistRequestDto.getUserId())
-			.animalId(boardRegistRequestDto.getAnimalId())
-			.type(BoardType.valueOf(boardRegistRequestDto.getType()))
-			.thumbnail(thumbnail)
-			.title(boardRegistRequestDto.getTitle())
-			.content(boardRegistRequestDto.getContent())
-			.lat(boardRegistRequestDto.getLat())
-			.lon(boardRegistRequestDto.getLon())
-			.build();
+        Board entity = boardRegistRequestDto.toEntity(user.getId(),savedThumbnailFileName);
+        boardRepository.save(entity);
+    }
 
-		boardRepository.save(board);
-	}
+//    /**
+//     * 게시글 목록 조회
+//     */
+//    @Override
+//    public List<BoardResponseDto> getListBoard(int page, int size, String userNickname, String title) throws Exception {
+//
+//    }
 
-	@Override
-	public int editBoard(int id, BoardEditRequestDto boardEditRequestDto, MultipartFile file) throws Exception {
-		String thumbnail = boardEditRequestDto.getThumbnail();
+    @Override
+    public List<BoardResponseDto> getListBoard(int page, int size, String userNickname, String title) throws Exception {
+        return List.of();
+    }
 
-		if (boardEditRequestDto.getThumbnailRemoved() && thumbnail != null) {
-			fileUtil.removeFile("board", boardEditRequestDto.getThumbnail());
-			thumbnail = null;
-		}
+    /**
+     * 게시글 수정
+     */
+    @Transactional
+    @Override
+    public void editBoard(int id, BoardEditRequestDto boardEditRequestDto, MultipartFile thumbnailFile) throws Exception {
+        User user = authUtil.getAuthenticatedUser();
 
-		if (file != null) {
-			String savedFileName = fileUtil.saveFile(file, "board");
-			if (savedFileName != null) {
-				thumbnail = savedFileName;
-			}
-		}
-		Board board = boardRepository.findById(id).orElse(null);
+        // 없거나 삭제된 게시판 404
+        Board entity = boardRepository.findByIdAndDisabledFalse(id)
+                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+        // 내 게시판 아님 403
+        if (entity.getUserId() != user.getId()) {
+            throw new PetBridgeException(ErrorCode.FORBIDDEN);
+        }
 
-		if (board != null) {
-			board.setAnimalId(boardEditRequestDto.getAnimalId());
-			board.setThumbnail(thumbnail);
-			board.setTitle(boardEditRequestDto.getTitle());
-			board.setContent(boardEditRequestDto.getContent());
-			board.setLat(boardEditRequestDto.getLat());
-			board.setLon(boardEditRequestDto.getLon());
-			boardRepository.save(board);
-			return 1;
-		}
-		return 0;
+        String savedThumbnailFileName = null;
+        if (thumbnailFile != null) {
+            savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "boards");
+        }
 
-	}
+        entity.update(boardEditRequestDto, savedThumbnailFileName);
+        boardRepository.save(entity);
+    }
 
-	@Override
-	public Optional<List<BoardResponseDto>> getListBoard() {
-		return Optional.ofNullable(boardRepository.findAllBoardResponseDtos());
-	}
+    /**
+     * 게시글 삭제
+     */
+    @Transactional
+    @Override
+    public void removeBoard(int id) throws Exception {
+        User user = authUtil.getAuthenticatedUser();
 
-	@Override
-	public Optional<BoardResponseDto> getDetailBoard(int id) {
-		return Optional.ofNullable(boardRepository.findBoardResponseDtoById(id));
-	}
+        // 없거나 삭제된 게시판 404
+        Board entity = boardRepository.findByIdAndDisabledFalse(id)
+                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+        // 내 게시판 아님 403
+        if (entity.getUserId() != user.getId()) {
+            throw new PetBridgeException(ErrorCode.FORBIDDEN);
+        }
 
-	@Override
-	public int removeBoard(int boardId) {
-		Board board = boardRepository.findById(boardId).orElse(null);
-		if (board != null) {
-			board.setDisabled(true);
-			boardRepository.save(board);
-			return 1;
-		}
-		return 0;
-	}
-
+        entity.disable();
+        boardRepository.delete(entity);
+    }
 }

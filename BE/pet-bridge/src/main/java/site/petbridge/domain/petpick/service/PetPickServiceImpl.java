@@ -58,7 +58,7 @@ public class PetPickServiceImpl implements PetPickService {
     public void registPetPick(HttpServletRequest httpServletRequest, final PetPickRegistRequestDto petPickRegistRequestDto,
                     MultipartFile thumbnailFile, MultipartFile videoFile) throws Exception {
 
-        User user = authUtil.getAuthenticatedUser(userRepository);
+        User user = authUtil.getAuthenticatedUser();
 
         String savedThumbnailFileName = null;
         String savedVideoFileName = null;
@@ -135,7 +135,7 @@ public class PetPickServiceImpl implements PetPickService {
     public List<PetPickResponseDto> getListMyPetPick(HttpServletRequest httpServletRequest, int page, int size,
                                                      int initCommentSize) throws Exception {
 
-        User user = authUtil.getAuthenticatedUser(userRepository);
+        User user = authUtil.getAuthenticatedUser();
 
         Sort sort = Sort.by(Sort.Direction.DESC, "registTime");
         Pageable pageable = PageRequest.of(page, size, sort);
@@ -150,7 +150,7 @@ public class PetPickServiceImpl implements PetPickService {
     @Override
     public List<PetPickResponseDto> getListLikePetPick(HttpServletRequest httpServletRequest, int page, int size, int initCommentSize) throws Exception {
 
-        User user = authUtil.getAuthenticatedUser(userRepository);
+        User user = authUtil.getAuthenticatedUser();
 
         Sort sort = Sort.by(Sort.Direction.DESC, "registTime");
         Pageable pageable = PageRequest.of(page, size, sort);
@@ -202,7 +202,7 @@ public class PetPickServiceImpl implements PetPickService {
     public void editPetPick(HttpServletRequest httpServletRequest, PetPickEditRequestDto petPickEditRequestDto,
                             Long petPickId, MultipartFile thumbnailFile) throws Exception {
 
-        User user = authUtil.getAuthenticatedUser(userRepository);
+        User user = authUtil.getAuthenticatedUser();
         // 펫픽 없을 때
         PetPick entity = petPickRepository.findById(petPickId).orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
         // 내가 작성한 펫픽이 아닐 때
@@ -232,7 +232,7 @@ public class PetPickServiceImpl implements PetPickService {
     @Override
     public void delete(HttpServletRequest httpServletRequest, final Long petPickId) throws Exception {
 
-        User user = authUtil.getAuthenticatedUser(userRepository);
+        User user = authUtil.getAuthenticatedUser();
 
         // 펫픽 없을 때
         PetPick entity = petPickRepository.findById(petPickId).orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));

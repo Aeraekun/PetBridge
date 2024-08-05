@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public List<UserResponseDto> getListUser(int page, int size) throws Exception {
-		User entity = authUtil.getAuthenticatedUser(userRepository);
+		User entity = authUtil.getAuthenticatedUser();
 
 		// ADMIN 아닐 때
 		if (entity.getRole() != Role.ADMIN) {
@@ -125,7 +125,7 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public UserResponseDto getDetailMyUser() throws Exception {
-		User entity = authUtil.getAuthenticatedUser(userRepository);
+		User entity = authUtil.getAuthenticatedUser();
 
 		return new UserResponseDto(entity);
 	}
@@ -147,7 +147,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public void editUser(UserEditRequestDto userEditRequestDto, MultipartFile imageFile) throws Exception {
-		User entity = authUtil.getAuthenticatedUser(userRepository);
+		User entity = authUtil.getAuthenticatedUser();
 
 		// 닉네임 중복시 409 CONFLICT
 		if (userRepository.findByNicknameAndDisabledFalse(userEditRequestDto.getNickname()).isPresent()) {
@@ -170,7 +170,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public void removeUser() throws Exception {
-		User entity = authUtil.getAuthenticatedUser(userRepository);
+		User entity = authUtil.getAuthenticatedUser();
 
 		entity.disable();
 		userRepository.save(entity);
@@ -182,7 +182,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public void removeUserAdmin(int id) throws Exception {
-		User user = authUtil.getAuthenticatedUser(userRepository);
+		User user = authUtil.getAuthenticatedUser();
 
 		// ADMIN 아닐 때 or 나 자신을 삭제하려할 때
 		if (user.getRole() != Role.ADMIN || user.getId() == id) {
