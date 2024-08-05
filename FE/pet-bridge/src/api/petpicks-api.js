@@ -1,8 +1,11 @@
 import axios from "axios"
 
 import axiosInstance from "./axios-instance"
-const PETPICK_API_URL = "http://localhost:8080/api/petpicks"
-const PETPICK_COMMENTS_API_URL = "https://localhost:8080/api/petpick-comments"
+const PETPICK_API_URL = process.env.REACT_APP_API_URL + "/petpicks"
+const PETPICK_COMMENTS_API_URL =
+  process.env.REACT_APP_API_URL + "/petpick-comments"
+const PETPICK_LIKE_API_URL = process.env.REACT_APP_API_URL + "/petpick-likes"
+const PETPICK_FOLLOW_API_URL = process.env.REACT_APP_API_URL + "/follows"
 
 //펫픽 등록
 export const registPetPick = async (formData) => {
@@ -84,22 +87,23 @@ export const editPetPick = async (id, formData) => {
 //펫픽랜덤조회
 export const getRandomDetailPetPick = async () => {
   try {
-    const res = await axios.get(`${PETPICK_API_URL}`, {
+    const res = await axiosInstance.get(`${PETPICK_API_URL}`, {
       params: {initcommentsize: 3},
     })
     console.log("getRandomDetailPetPick", res.data)
     return res.data
   } catch (e) {
     console.error(e)
-    return []
+    return e
   }
 }
 
 //펫픽삭제
 export const removePetPick = async (id) => {
   try {
-    const res = await axiosInstance.post(`${PETPICK_API_URL}/${id}/disable`)
+    const res = await axiosInstance.delete(`${PETPICK_API_URL}/${id}`)
     console.log("removePetPick" + res)
+    alert("삭제완료")
     return res.data
   } catch (e) {
     console.error(e)
@@ -108,11 +112,12 @@ export const removePetPick = async (id) => {
 }
 
 //댓글 조회
-export const getPetpickComments = async ({petpickId, page, size}) => {
+export const getPetpickComments = async (petpickId, page, size) => {
+  const params = {page: page, size: size}
   try {
-    const res = await axios.get(
-      `${PETPICK_COMMENTS_API_URL}/${petpickId}?page=${page}&size=${size}`
-    )
+    const res = await axios.get(`${PETPICK_COMMENTS_API_URL}/${petpickId}`, {
+      params,
+    })
     console.log("getPetpickComments" + res)
     return res.data
   } catch (e) {
@@ -122,7 +127,7 @@ export const getPetpickComments = async ({petpickId, page, size}) => {
 }
 
 //댓글 삭제
-export const removePetpickComments = async ({petpickCommentId}) => {
+export const removePetpickComments = async (petpickCommentId) => {
   try {
     const res = await axiosInstance.delete(
       `${PETPICK_COMMENTS_API_URL}/${petpickCommentId}`
@@ -136,16 +141,84 @@ export const removePetpickComments = async ({petpickCommentId}) => {
 }
 
 //댓글 작성
-export const registPetPickComment = async ({comment}) => {
+export const registPetPickComment = async (comment) => {
   try {
-    const res = await axiosInstance.patch(
-      `${PETPICK_COMMENTS_API_URL}`,
-      comment
-    )
+    const res = await axiosInstance.post(`${PETPICK_COMMENTS_API_URL}`, comment)
     console.log("registPetPickComment" + res)
+    alert("댓글 작성")
     return res.data
   } catch (e) {
     console.error(e)
     return []
+  }
+}
+
+// 공통 에러 처리 함수
+const handleApiError = (error) => {
+  if (error.response) {
+    // 서버가 응답했지만 상태 코드가 2xx 범위가 아닌 경우
+    const {status, data} = error.response
+    console.error(`Error ${status}: `, data)
+    throw new Error(data.message || "An error occurred")
+  } else if (error.request) {
+    // 요청이 이루어졌으나 응답을 받지 못한 경우
+    console.error("No response received: ", error.request)
+    throw new Error("No response received")
+  } else {
+    // 요청을 설정하는 중에 오류가 발생한 경우
+    console.error("Error setting up request: ", error.message)
+    throw new Error("Error setting up request")
+  }
+}
+
+// 좋아요 등록
+export const registPetPickLike = async (petpickId) => {
+  const params = {petPickId: petpickId}
+  try {
+    const res = await axiosInstance.post(`${PETPICK_LIKE_API_URL}`, params)
+    console.log("registPetPickLike", res.data)
+    return res.data
+  } catch (error) {
+    handleApiError(error)
+  }
+}
+
+// 좋아요 삭제
+export const deletePetPickLike = async (petpickId) => {
+  const params = {petPickId: petpickId}
+  try {
+    const res = await axiosInstance.delete(`${PETPICK_LIKE_API_URL}`, {
+      data: params,
+    })
+    console.log("deletePetPickLike", res)
+    return res.data
+  } catch (error) {
+    handleApiError(error)
+  }
+}
+
+// 팔로우 등록
+export const registFollow = async (animalId) => {
+  const params = {animalId: animalId}
+  try {
+    const res = await axiosInstance.post(`${PETPICK_FOLLOW_API_URL}`, params)
+    console.log("registFollow", res.data)
+    return res.data
+  } catch (error) {
+    handleApiError(error)
+  }
+}
+
+// 팔로우 삭제
+export const deleteFollow = async (animalId) => {
+  const params = {animalId: animalId}
+  try {
+    const res = await axiosInstance.delete(`${PETPICK_FOLLOW_API_URL}`, {
+      data: params,
+    })
+    console.log("deleteFollow", res)
+    return res.data
+  } catch (error) {
+    handleApiError(error)
   }
 }
