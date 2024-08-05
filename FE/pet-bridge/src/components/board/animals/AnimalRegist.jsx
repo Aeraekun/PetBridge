@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom"
 // import animaldata from "./animaldata"
 import React, {useState, useEffect} from "react"
 import AnimalDetailProfile from "./AnimalDetailProfile"
+import {registAnimal} from "api/animals-api"
 const Profile = ({nickname}) => {
   return (
     <div className="mb-4 flex h-8 items-center justify-around space-x-2.5">
@@ -21,30 +22,27 @@ const Profile = ({nickname}) => {
 
 const ArticleRegist = () => {
   const navigate = useNavigate()
-  const [animal, setAnimal] = useState(null)
-
+  const [animal, setAnimal] = useState({})
+  const [newA, setNewA] = useState([])
+  const [imageFile, setImageFile] = useState(null)
   useEffect(() => {
     // 실제 데이터를 불러오는 코드로 대체할 수 있습니다.
     const fetchAnimalData = () => {
       const fetchedAnimalData = {
         name: "",
-        happenDt: null,
+        species: "",
         kindCd: "",
         colorCd: "",
-        age: "",
-        weight: "",
-        noticeNo: "",
-        popfile: "",
-        processState: "",
+        age: 0,
+        weight: 0,
         sexCd: "",
         neuterYn: "",
         specialMark: "",
         careAddr: "",
-        noticeComment: "",
       }
 
       setAnimal(fetchedAnimalData)
-      console.log(fetchedAnimalData)
+      console.log("F", fetchedAnimalData)
     }
 
     fetchAnimalData()
@@ -61,14 +59,15 @@ const ArticleRegist = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0]
     if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setAnimal((prevAnimal) => ({
-          ...prevAnimal,
-          filename: reader.result, // Set the file preview URL
-        }))
-      }
-      reader.readAsDataURL(file) // Read the file as a data URL
+      // const reader = new FileReader()
+      // reader.onloadend = () => {
+      //   setAnimal((prevAnimal) => ({
+      //     ...prevAnimal,
+      //     filename: reader.result, // Set the file preview URL
+      //   }))
+      // }
+      // reader.readAsDataURL(file) // Read the file as a data URL
+      setImageFile(file)
     }
   }
 
@@ -80,10 +79,27 @@ const ArticleRegist = () => {
     navigate(-1)
   }
 
-  const registAnimal = () => {
-    console.log(animal)
+  const regist = async () => {
+    setNewA(animal)
+    const newAnimal = newA
 
-    navigate(`/shelter`)
+    //formData로 file이랑 animal 정보 한번에 넘김.
+    const formData = new FormData()
+    formData.append(
+      "animalRegistRequestDto",
+      new Blob([JSON.stringify(newAnimal)], {type: "application/json"})
+    )
+    if (imageFile) {
+      formData.append("imageFile", imageFile)
+    }
+    try {
+      await registAnimal(formData)
+      console.log(animal)
+      // navigate(`/shelter/1`)
+      alert("동물등록성공")
+    } catch (e) {
+      console.error(e)
+    }
   }
   return (
     <>
@@ -98,12 +114,13 @@ const ArticleRegist = () => {
         isEditing={true}
         onInputChange={handleInputChange}
         onFileChange={handleFileChange}
+        isShelter={false}
       />
       <div className="flex justify-end">
         <SirenIcon />
       </div>
       <div className="flex justify-end">
-        <Button text={"등록하기"} onClick={registAnimal} />
+        <Button text={"등록하기"} onClick={regist} />
         <Button text={"삭제하기"} onClick={goBack} />
       </div>
     </>

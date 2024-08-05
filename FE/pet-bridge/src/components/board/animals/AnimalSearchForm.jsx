@@ -6,7 +6,7 @@ import {getBreedAPI, getSidoAPI, getSigunguAPI} from "api/animals-api"
 import DatePicker from "react-datepicker"
 import {format} from "date-fns"
 
-const AnimalSearchForm = ({searchParams}) => {
+const AnimalSearchForm = ({searchParams, isShelter}) => {
   const [sido, setSido] = useState([])
   const [selectedSido, setSelectedSido] = useState("")
   const [sigungu, setSigungu] = useState([])
@@ -144,23 +144,29 @@ const AnimalSearchForm = ({searchParams}) => {
 
   return (
     <div>
-      <h1>보호소 검색</h1>
-      <DatePicker
-        id="bgnde"
-        selected={bgnde}
-        onChange={(date) => setBgnde(date)}
-        dateFormat="yyyy/MM/dd"
-        className="ml-2 rounded-md border border-[#D9D9D9] p-2"
-        placeholderText="검색시작일"
-      />
-      <DatePicker
-        id="endde"
-        selected={endde}
-        onChange={(date) => setEndde(date)}
-        dateFormat="yyyy/MM/dd"
-        className="ml-2 rounded-md border border-[#D9D9D9] p-2"
-        placeholderText="검색종료일"
-      />
+      {isShelter ? (
+        <div>
+          <h1>보호소 동물 검색</h1>
+          <DatePicker
+            id="bgnde"
+            selected={bgnde}
+            onChange={(date) => setBgnde(date)}
+            dateFormat="yyyy/MM/dd"
+            className="ml-2 rounded-md border border-[#D9D9D9] p-2"
+            placeholderText="검색시작일"
+          />
+          <DatePicker
+            id="endde"
+            selected={endde}
+            onChange={(date) => setEndde(date)}
+            dateFormat="yyyy/MM/dd"
+            className="ml-2 rounded-md border border-[#D9D9D9] p-2"
+            placeholderText="검색종료일"
+          />
+        </div>
+      ) : (
+        <div>임시보호동물 검색</div>
+      )}
       <form onSubmit={handleSubmit}>
         <label htmlFor="sido">시도:</label>
         <select
@@ -211,7 +217,7 @@ const AnimalSearchForm = ({searchParams}) => {
           <option value="429900">기타</option>
         </select>
         <br />
-        {selectedUpKindCd > 0 ? (
+        {selectedUpKindCd > 0 && isShelter ? (
           <div>
             <label htmlFor="breed">품종:</label>
             <select

@@ -1,6 +1,4 @@
 // import Image from "./Image"
-import OptionIcon from "../common/OptionIcon"
-import ProfileImage from "assets/image/profile.JPG"
 import Comment from "../common/Comment"
 import React, {forwardRef, useEffect, useState} from "react"
 // import dummydata from "./dummydata"
@@ -16,23 +14,7 @@ import {
   // selectPetpickError,
 } from "features/petpick/petpick-slice"
 import {useInView} from "react-intersection-observer"
-
-const Profile = (data) => {
-  return (
-    <div className="mx-3  flex h-16 items-center space-x-2.5 ">
-      <div className="flex h-fit w-full items-center justify-between text-xl    ">
-        <div className="flex items-center space-x-2.5">
-          <div className="h-fit w-12 text-xl   ">
-            <img src={ProfileImage} alt="profile" />
-            {/* <Image imageName={Siren.png}></Image> */}
-          </div>
-          <div className="text-sm  ">{data.nickname}닉네임</div>
-        </div>
-        <OptionIcon></OptionIcon>
-      </div>
-    </div>
-  )
-}
+import Profile from "components/common/Profile"
 
 const CommentInput = ({boardId, onCommentAdded}) => {
   const isAuthenticated = useSelector(selectIsAuthenticated)
@@ -171,7 +153,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
 
   return (
     <div
-      className=" z-50 mx-auto flex h-screen w-[1000px] flex-row justify-center py-[50px] sm:w-11/12"
+      className=" z-50 mx-auto flex h-screen w-[1000px] snap-center flex-row justify-center py-[50px] sm:w-11/12"
       ref={(node) => {
         if (node) {
           if (ref && typeof ref === "object" && "current" in ref) {
@@ -185,7 +167,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
       {isVisible ? (
         <div className="flex h-full min-w-[400px]  flex-col justify-between bg-gray-50 ">
           <div className=" flex-1">
-            <Profile nickname={"dd"} image={"ddd"} />
+            <Profile nickname={"SD"} image={"ddd"} />
             <hr className="my-1 border-gray-300" />
             <PetpickInfo
               title={petpick.title}
@@ -209,8 +191,8 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
               direct={"row"}
               toggleComment={handleVisible}
               petpickId={petpick.boardId}
-              // isFollowing={comment.isFollowing}
-              // isLiking={comment.isLiking}
+              isFollowing={petpick.isFollowing}
+              isLiking={petpick.isLiking}
             />
             <CommentInput
               boardId={petpick.boardId}
@@ -223,6 +205,8 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
           direct={"col"}
           toggleComment={handleVisible}
           petpickId={petpick.boardId}
+          isFollowing={petpick.isFollowing}
+          isLiking={petpick.isLiking}
         />
       )}
     </div>

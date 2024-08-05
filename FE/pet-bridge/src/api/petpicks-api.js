@@ -1,5 +1,5 @@
 import axios from "axios"
-const PETPICK_API_URL = "https://i11b106.p.ssafy.io/api/shorts"
+const PETPICK_API_URL = "http://localhost:8080/api/petpicks"
 const PETPICK_COMMENTS_API_URL =
   "https://i11b106.p.ssafy.io/api/short-comments/"
 
@@ -7,7 +7,7 @@ const PETPICK_COMMENTS_API_URL =
 export const registPetPick = async (formData) => {
   try {
     const res = await axios.post(`${PETPICK_API_URL}`, formData)
-    console.log("registPetPick" + res)
+    console.log("registPetPick" + res.data)
     return res.data
   } catch (e) {
     console.error(e)
@@ -19,7 +19,7 @@ export const registPetPick = async (formData) => {
 export const editPetPick = async (id, formData) => {
   try {
     const res = await axios.post(`${PETPICK_API_URL}/${id}`, formData)
-    console.log("editPetPick" + res)
+    console.log("editPetPick" + res.data)
     return res.data
   } catch (e) {
     if (e.response) {
@@ -51,8 +51,10 @@ export const editPetPick = async (id, formData) => {
 //펫픽랜덤조회
 export const getRandomDetailPetPick = async () => {
   try {
-    const res = await axios.get(`${PETPICK_API_URL}`)
-    console.log("getRandomDetailPetPick" + res)
+    const res = await axios.get(`${PETPICK_API_URL}`, {
+      params: {initcommentsize: 3},
+    })
+    console.log("getRandomDetailPetPick", res.data)
     return res.data
   } catch (e) {
     console.error(e)
