@@ -70,6 +70,19 @@ public class UserController {
     }
 
     /**
+     * 닉네임 기반 모든 회원 조회
+     */
+    @GetMapping("/list/{nickname}")
+    public ResponseEntity<List<UserResponseDto>> getListUserByNickname(@PathVariable String nickname) throws Exception {
+        List<UserResponseDto> userResponseDtos = userService.getListUserByNickname(nickname);
+
+        return Optional.ofNullable(userResponseDtos)
+                .filter(list -> !list.isEmpty())
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.noContent().build());
+    }
+
+    /**
      * 회원 정보 수정
      */
     @PatchMapping

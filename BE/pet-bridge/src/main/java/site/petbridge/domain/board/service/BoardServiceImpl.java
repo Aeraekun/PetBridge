@@ -2,6 +2,9 @@ package site.petbridge.domain.board.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import site.petbridge.domain.board.domain.Board;
@@ -42,17 +45,14 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.save(entity);
     }
 
-//    /**
-//     * 게시글 목록 조회
-//     */
-//    @Override
-//    public List<BoardResponseDto> getListBoard(int page, int size, String userNickname, String title) throws Exception {
-//
-//    }
-
+    /**
+     * 게시글 목록 조회
+     */
     @Override
     public List<BoardResponseDto> getListBoard(int page, int size, String userNickname, String title) throws Exception {
-        return List.of();
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+
+        return boardRepository.findAllByUserNickNameAndTitleContains(userNickname, title, pageable).getContent();
     }
 
     /**
@@ -97,6 +97,6 @@ public class BoardServiceImpl implements BoardService {
         }
 
         entity.disable();
-        boardRepository.delete(entity);
+        boardRepository.save(entity);
     }
 }

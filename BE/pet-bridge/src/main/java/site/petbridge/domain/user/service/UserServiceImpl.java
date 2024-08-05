@@ -1,6 +1,7 @@
 package site.petbridge.domain.user.service;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -139,6 +140,14 @@ public class UserServiceImpl implements UserService {
 			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
 
 		return new UserResponseDto(entity);
+	}
+
+	@Override
+	public List<UserResponseDto> getListUserByNickname(String nickname) throws Exception {
+		List<User> users = userRepository.findByNicknameContainingAndDisabledFalse(nickname);
+		return users.stream()
+				.map(UserResponseDto::new)
+				.collect(Collectors.toList());
 	}
 
 	/**

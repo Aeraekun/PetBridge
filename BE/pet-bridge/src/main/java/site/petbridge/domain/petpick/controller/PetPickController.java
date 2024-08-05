@@ -73,9 +73,9 @@ public class PetPickController {
      */
     @GetMapping("/like")
     public ResponseEntity<List<PetPickResponseDto>> getListLikePetPick(HttpServletRequest httpServletRequest,
-                                                                     @RequestParam(name = "page") int page,
-                                                                     @RequestParam(name = "size") int size,
-                                                                     @RequestParam(name = "initcommentsize") int initCommentSize) throws Exception {
+                                                                     @RequestParam(name = "page", defaultValue = "0") int page,
+                                                                     @RequestParam(name = "size", defaultValue = "12") int size,
+                                                                     @RequestParam(name = "initcommentsize", defaultValue = "10") int initCommentSize) throws Exception {
         List<PetPickResponseDto> petPickResponseDtos = petPickService.getListLikePetPick(httpServletRequest, page, size, initCommentSize);
 
         return Optional.ofNullable(petPickResponseDtos)

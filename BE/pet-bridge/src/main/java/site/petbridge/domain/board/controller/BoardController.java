@@ -40,10 +40,10 @@ public class BoardController {
      * 게시글 목록 조회 (검색, 페이징)
      */
     @GetMapping
-    public ResponseEntity<List<BoardResponseDto>> getListBoard(@RequestParam(name = "page") int page,
-                                                               @RequestParam(name = "size") int size,
-                                                               @RequestParam(name = "usernickname", required = false) String userNickname,
-                                                               @RequestParam(name = "title", required = false) String title) throws Exception {
+    public ResponseEntity<List<BoardResponseDto>> getListBoard(@RequestParam(name = "page", required = false, defaultValue = "0") int page,
+                                                               @RequestParam(name = "size", required = false, defaultValue = "12") int size,
+                                                               @RequestParam(name = "usernickname", required = false, defaultValue = "") String userNickname,
+                                                               @RequestParam(name = "title", required = false, defaultValue = "") String title) throws Exception {
         List<BoardResponseDto> boardResponseDtos = boardService.getListBoard(page, size, userNickname, title);
 
         return Optional.ofNullable(boardResponseDtos)
@@ -58,7 +58,7 @@ public class BoardController {
     @PatchMapping("/{id}")
     public ResponseEntity<Void> modifyBoard(@PathVariable("id") int id,
                                             @Valid @RequestPart(name = "boardEditRequestDto")BoardEditRequestDto boardEditRequestDto,
-                                            @RequestPart(name =  "thumbnailFile", required = false) MultipartFile thumbnailFile) throws Exception {
+                                            @RequestPart(name =  "thumbnail", required = false) MultipartFile thumbnailFile) throws Exception {
         boardService.editBoard(id, boardEditRequestDto, thumbnailFile);
 
         return new ResponseEntity<>(HttpStatus.OK);
