@@ -6,6 +6,12 @@ import FollowIcon from "../common/FollowIcon"
 import TagIcon from "../common/TagIcon"
 import {useLocation, useNavigate} from "react-router-dom"
 import {useEffect, useState} from "react"
+import {
+  deleteFollow,
+  deletePetPickLike,
+  registFollow,
+  registPetPickLike,
+} from "api/petpicks-api"
 
 const PetpickIconContainer = ({
   direct,
@@ -13,19 +19,16 @@ const PetpickIconContainer = ({
   petpickId,
   isFollowing,
   isLiking,
-  toggleLike,
-  toggleFollow,
 }) => {
   const isVertical = direct === "col"
   const location = useLocation()
   const navigate = useNavigate()
-  const [isFollow, setIsFollow] = useState(false)
-  const [isLike, setIsLike] = useState(false)
+  const [isFollow, setIsFollow] = useState(isFollowing)
+  const [isLike, setIsLike] = useState(isLiking)
 
   useEffect(() => {
-    setIsFollow(isFollowing)
-    setIsLike(isLiking)
-  }, [])
+    console.log(isFollowing, " like", isLiking)
+  }, [isFollow, isLike])
   const goPetpickTagDetail = () => {
     const currentPath = location.pathname
     const tagPath = `/petpick/${petpickId}/tag`
@@ -37,13 +40,39 @@ const PetpickIconContainer = ({
       navigate(tagPath)
     }
   }
-  const handleLike = () => {
-    setIsLike((prev) => !prev)
-    toggleLike
+
+  const handleLike = async () => {
+    const newLikeState = !isLike
+    setIsLike(newLikeState)
+    try {
+      if (newLikeState) {
+        const res = await registPetPickLike(petpickId)
+        console.log(res.data)
+      } else {
+        const res = await deletePetPickLike(petpickId)
+        console.log(res.data)
+      }
+    } catch (e) {
+      console.error(e)
+      setIsLike(!newLikeState) // 실패 시 이전 상태로 되돌림
+    }
   }
-  const handleFollow = () => {
-    setIsFollow((prev) => !prev)
-    toggleFollow
+
+  const handleFollow = async () => {
+    const newFollowState = !isFollow
+    setIsFollow(newFollowState)
+    try {
+      if (newFollowState) {
+        const res = await registFollow(petpickId)
+        console.log(res.data)
+      } else {
+        const res = await deleteFollow(petpickId)
+        console.log(res.data)
+      }
+    } catch (e) {
+      console.error(e)
+      setIsFollow(!newFollowState) // 실패 시 이전 상태로 되돌림
+    }
   }
 
   return (

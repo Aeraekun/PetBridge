@@ -4,7 +4,7 @@ import Button from "components/common/Button"
 import Editor from "components/common/Editor"
 import {useNavigate} from "react-router-dom"
 import AnimalTag from "components/common/AnimalTag"
-import {selectId, selectImage, selectNickname} from "features/user/users-slice"
+import {selectImage, selectNickname} from "features/user/users-slice"
 import {useSelector} from "react-redux"
 import {registArticle} from "api/boards-api"
 
@@ -31,7 +31,6 @@ const ArticleBoardWrite = () => {
   const [selectedAnimalId, setSelectedAnimalId] = useState(null)
   const navigate = useNavigate()
 
-  const currentUserId = useSelector(selectId)
   const currentUserImage = useSelector(selectImage)
   const currentUserNickname = useSelector(selectNickname)
 
@@ -66,7 +65,6 @@ const ArticleBoardWrite = () => {
       return
     }
     const newArticle = {
-      userId: currentUserId,
       animalId: selectedAnimalId,
       type: type,
       title: title,

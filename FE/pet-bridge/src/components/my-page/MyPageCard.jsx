@@ -1,6 +1,23 @@
-const MyPageCard = ({imageSrc, imageAlt, content1, content2, content3}) => {
+const MyPageCard = ({
+  imageSrc,
+  imageAlt,
+  content1,
+  content2,
+  content3,
+  onClick,
+}) => {
   return (
-    <div className="h-[450px] w-[300px] snap-center overflow-hidden rounded-xl border">
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      className="h-[450px] w-[300px] snap-center overflow-hidden rounded-xl border"
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          onClick()
+        }
+      }}
+    >
       <img
         src={imageSrc}
         alt={imageAlt}

@@ -39,7 +39,7 @@ export const getFollowingAnimals = async (searchParams) => {
 // 내가 보호중인 동물 조회
 export const getMyAnimals = async (searchParams) => {
   const params = {
-    page: searchParams.page,
+    page: searchParams.page - 1,
     size: searchParams.size,
   }
   try {
@@ -58,7 +58,7 @@ export const getMyPetPics = async (searchParams) => {
   const params = {
     page: searchParams.page,
     size: searchParams.size,
-    initcommentsize: 0,
+    initcommentsize: 12,
   }
   try {
     const res = await axiosInstance.get("/petpicks/my", {
