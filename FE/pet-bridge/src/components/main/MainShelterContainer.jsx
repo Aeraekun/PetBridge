@@ -1,4 +1,7 @@
 import MainShelterCard from "./MainShelterCard"
+import MainBanner from "./MainBanner"
+import MainPetpickBanner from "./MainPetpickBanner"
+import {Link} from "react-router-dom"
 
 const MainShelterContainer = () => {
   const items = [
@@ -480,10 +483,15 @@ const MainShelterContainer = () => {
 
   return (
     <div>
+      <section className="flex h-[450px] w-[1000px] flex-col flex-wrap">
+        <MainBanner />
+      </section>
       {/* 보호소 동물 */}
       <section className="flex flex-col items-center">
-        <p className="text-4xl font-bold">가족을 기다리고 있어요</p>
-        <ul className="flex h-[450px] w-[1000px] flex-col flex-wrap space-x-5 overflow-y-hidden overflow-x-scroll p-5">
+        <p className="text-4xl font-bold">
+          사지 말고 입양하세요, 지금 가족을 기다리고 있어요
+        </p>
+        <ul className="flex h-[450px] w-[1000px] flex-col flex-wrap space-x-5 overflow-y-hidden overflow-x-scroll py-4">
           {items.map((item) => (
             <MainShelterCard
               key={item.desertionNo}
@@ -495,26 +503,33 @@ const MainShelterContainer = () => {
             />
           ))}
         </ul>
+        <Link
+          to="/shelter"
+          className="inline-flex h-12 items-center justify-center rounded-md border border-stroke bg-mild px-3.5 py-4 text-black"
+        >
+          새 가족 만나러 가기
+        </Link>
       </section>
       {/* 펫픽 */}
-      <section className="flex flex-col items-center">
-        <p className="text-4xl font-bold">펫픽</p>
-        <ul className="flex h-[450px] w-[1000px] flex-col flex-wrap-reverse space-x-5 overflow-y-hidden overflow-x-scroll p-5">
-          {items.map((item) => (
-            <MainShelterCard
-              key={item.desertionNo}
-              noticeNo={item.noticeNo}
-              sexCd={item.sexCd}
-              popfile={item.popfile}
-              kindCd={item.kindCd}
-              cardNm={item.cardNm}
-            />
-          ))}
-        </ul>
+      <section className="flex flex-col items-center py-4">
+        <p className="text-4xl font-bold">
+          펫픽, 유기동물도 당신과 함께라면 행복할 수 있어요
+        </p>
+        <section className="flex h-[600px] w-[1000px] flex-col flex-wrap py-4">
+          <MainPetpickBanner />
+        </section>
+        <Link
+          to="/petpick"
+          className="inline-flex h-12 items-center justify-center rounded-md border border-stroke bg-mild px-3.5 text-black"
+        >
+          펫픽 더보기
+        </Link>
       </section>
       {/* 임시 보호 동물 */}
       <section className="flex flex-col items-center">
-        <p className="text-4xl font-bold">새 가족을 찾고 있어요</p>
+        <p className="text-4xl font-bold">
+          입양, `견우와 직묘`가 함께 한다면 어렵지 않아요
+        </p>
         <ul className="flex h-[450px] w-[1000px] flex-col flex-wrap space-x-5 overflow-y-hidden overflow-x-scroll p-5">
           {shuffledItems.map((item) => (
             <MainShelterCard
@@ -527,6 +542,12 @@ const MainShelterContainer = () => {
             />
           ))}
         </ul>
+        <Link
+          to="/communities"
+          className="inline-flex h-12 items-center justify-center rounded-md border border-stroke bg-mild px-3.5 py-2.5 text-black"
+        >
+          커뮤니티 바로가기
+        </Link>
       </section>
     </div>
   )
