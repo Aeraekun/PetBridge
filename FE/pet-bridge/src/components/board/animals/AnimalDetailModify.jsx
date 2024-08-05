@@ -25,17 +25,12 @@ const ArticleDetailModify = () => {
   const navigate = useNavigate()
   const [animal, setAnimal] = useState(null)
   const location = useLocation()
+
+  const getanimal = location.state.animal || {}
+
+  //초기값으로
   useEffect(() => {
-    // 실제 데이터를 불러오는 코드로 대체할 수 있습니다.
-    const fetchAnimalData = () => {
-      const fetchedAnimalData = location.state.animal
-
-      console.log("now : ", fetchedAnimalData)
-
-      setAnimal(fetchedAnimalData)
-    }
-
-    fetchAnimalData()
+    setAnimal(getanimal)
   }, [])
 
   const handleInputChange = (event) => {
