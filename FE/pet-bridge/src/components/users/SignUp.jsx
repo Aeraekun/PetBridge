@@ -9,6 +9,7 @@ import {
   selectIsLoadingEmailCode,
 } from "features/user/users-slice"
 import Timer from "components/common/Timer"
+import {validateConfirmPassword} from "utils/user-validations"
 
 const SignUp = () => {
   const dispatch = useDispatch()
@@ -96,6 +97,25 @@ const SignUp = () => {
     }
 
     setOneError("password", errors.password)
+  }
+
+  // 비밀번호 확인 유효성 검사
+  const confirmPasswordHandler = () => {
+    if (!confirmNumbers.passwordConfirm) {
+      errors.passwordConfirm = "*비밀번호 확인: 필수 정보입니다."
+    } else if (
+      validateConfirmPassword(
+        signUpFormData.password,
+        confirmNumbers.passwordConfirm
+      )
+    ) {
+      errors.passwordConfirm = ""
+    } else {
+      errors.passwordConfirm =
+        "*비밀번호 확인: 비밀번호와 동일한 값을 입력해주세요."
+    }
+
+    setOneError("passwordConfirm", errors.passwordConfirm)
   }
 
   // 전화번호 유효성 검사
@@ -380,9 +400,15 @@ const SignUp = () => {
             minLength={8}
             maxLength={16}
             autoComplete="new-password"
+            onBlur={confirmPasswordHandler}
           />
           {errors.password && (
             <span className="text-alert col-span-12">{errors.password}</span>
+          )}
+          {errors.passwordConfirm && (
+            <span className="text-alert col-span-12">
+              {errors.passwordConfirm}
+            </span>
           )}
           {/* 닉네임 입력 창 */}
           <input

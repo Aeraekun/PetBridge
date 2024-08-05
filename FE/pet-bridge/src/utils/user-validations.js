@@ -39,6 +39,16 @@ export const validatePassword = (formData) => {
   return {new_error, new_error_message}
 }
 
+// 비밀번호 확인 유효성 검사
+// 비밀번호 & 비밀번호 확인 입력이 동일한지 검사
+export const validateConfirmPassword = (password, passwordConfirm) => {
+  if (password === passwordConfirm) {
+    return true
+  }
+
+  return false
+}
+
 // 전화번호 유효성 검사
 export const validatePhone = (formData) => {
   let new_error = "phone"
