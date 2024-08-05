@@ -9,6 +9,11 @@ const initialState = {
   currentChatId: null,
   chatMessages: {},
   chatRoomInfos: [],
+  opponentInfo: {
+    id: "",
+    img: "",
+    nickname: "",
+  },
 }
 
 export const getChatRoomListThunk = createAsyncThunk(
@@ -45,6 +50,9 @@ export const chatSlice = createSlice({
     setChatRoomList: (state, action) => {
       state.chatRoomInfos = action.payload
     },
+    setOpponentInfo: (state, action) => {
+      state.opponentInfo = action.payload
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -62,10 +70,15 @@ export const selectChatInfo = (state) => state.chat
 export const selectIsChatModalOpen = (state) => state.chat.isChatModalOpen
 export const selectIsChatMinimized = (state) => state.chat.isChatMinimized
 export const selectCurrentChatId = (state) => state.chat.currentChatId
+export const selectOpponentInfo = (state) => state.chat.opponentInfo
 
 // Action
-export const {setIsChatModalOpen, setIsChatMinimized, setCurrentChatId} =
-  chatSlice.actions
+export const {
+  setIsChatModalOpen,
+  setIsChatMinimized,
+  setCurrentChatId,
+  setOpponentInfo,
+} = chatSlice.actions
 
 // Reducer
 export default chatSlice.reducer
