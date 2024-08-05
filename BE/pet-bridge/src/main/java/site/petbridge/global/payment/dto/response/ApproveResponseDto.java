@@ -1,12 +1,6 @@
 package site.petbridge.global.payment.dto.response;
 
-import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import site.petbridge.domain.user.domain.enums.Role;
-import site.petbridge.domain.user.domain.enums.SocialType;
 
 @Data
 public class ApproveResponseDto {

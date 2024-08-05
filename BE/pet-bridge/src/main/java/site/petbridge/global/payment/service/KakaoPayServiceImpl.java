@@ -1,6 +1,5 @@
 package site.petbridge.global.payment.service;
 
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +16,6 @@ import site.petbridge.domain.user.domain.User;
 import site.petbridge.domain.user.repository.UserRepository;
 import site.petbridge.global.payment.dto.response.ApproveResponseDto;
 import site.petbridge.global.payment.dto.response.ReadyResponseDto;
-import site.petbridge.global.redis.service.RedisService;
 import site.petbridge.util.AuthUtil;
 
 @Service
@@ -28,12 +26,8 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 	@Value("${pay.secret-key}")
 	private String SECRET_KEY;
 
-	@Value("${spring.auth-code-expiration-millis}")
-	private int authCodeExpirationMillis;
-
 	private final AuthUtil authUtil;
 	private final UserRepository userRepository;
-	RedisService redisService;
 
 	// 카카오페이 결제창 연결
 	public ReadyResponseDto payReady(String name, int totalPrice) {
