@@ -78,7 +78,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.POST, "/api/users/find/email").permitAll()
 				.requestMatchers("/users/oauth/success").permitAll()
 				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email").permitAll()
-				.requestMatchers(HttpMethod.POST,"/api/users/authentication/emailCheck").permitAll()
+				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email/check").permitAll()
 				.requestMatchers(HttpMethod.POST,"/api/users/authentication/phone").permitAll()
 				.requestMatchers(HttpMethod.POST,"/api/users/authentication/phone/check").permitAll()
 

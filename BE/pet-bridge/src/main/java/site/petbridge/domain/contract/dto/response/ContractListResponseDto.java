@@ -22,9 +22,8 @@ public class ContractListResponseDto {
 	private int payment;
 	private String content;
 	private LocalDate contractDate;
-	private LocalDate  expirationDate;
-	private boolean confirmed;
-	private boolean refunded;
+	private LocalDate expirationDate;
+	private String status;
 
 	private String contractorNickname;
 	private String contracteeNickname;
@@ -32,7 +31,8 @@ public class ContractListResponseDto {
 	private String animalName;
 	private String animalImage;
 
-	public static ContractListResponseDto TransferToContractListResponseDto(Contract contract, User contractor, User contractee, Animal animal){
+	public static ContractListResponseDto TransferToContractListResponseDto(Contract contract, User contractor,
+		User contractee, Animal animal) {
 		return ContractListResponseDto.builder()
 			.id(contract.getId())
 			.contractorId(contract.getContractorId())
@@ -43,8 +43,7 @@ public class ContractListResponseDto {
 			.content(contract.getContent())
 			.contractDate(contract.getContractDate())
 			.expirationDate(contract.getExpirationDate())
-			.confirmed(contract.isConfirmed())
-			.refunded(contract.isRefunded())
+			.status(contract.getStatus())
 			.contractorNickname(contractor.getNickname())
 			.contracteeNickname(contractee.getNickname())
 			.animalName(animal.getName())

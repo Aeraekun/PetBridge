@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import site.petbridge.domain.animal.domain.Animal;
-import site.petbridge.domain.contractcheck.domain.ContractCheck;
 import site.petbridge.domain.contract.domain.Contract;
+import site.petbridge.domain.contractcheck.domain.ContractCheck;
 import site.petbridge.domain.user.domain.User;
 
 @Data
@@ -24,8 +24,7 @@ public class ContractResponseDto {
 	private String content;
 	private LocalDate contractDate;
 	private LocalDate expirationDate;
-	private boolean confirmed;
-	private boolean refunded;
+	private String status;
 
 	private String contractorNickname;
 	private String contractorImage;
@@ -50,8 +49,8 @@ public class ContractResponseDto {
 	private LocalDate month11;
 	private LocalDate month12;
 
-
-	public static ContractResponseDto TransferToContractResponseDto(Contract contract, User contractor, User contractee, Animal animal, ContractCheck contractCheck){
+	public static ContractResponseDto TransferToContractResponseDto(Contract contract, User contractor, User contractee,
+		Animal animal, ContractCheck contractCheck) {
 		return ContractResponseDto.builder()
 			.id(contract.getId())
 			.contractorId(contract.getContractorId())
@@ -62,8 +61,7 @@ public class ContractResponseDto {
 			.content(contract.getContent())
 			.contractDate(contract.getContractDate())
 			.expirationDate(contract.getExpirationDate())
-			.confirmed(contract.isConfirmed())
-			.refunded(contract.isRefunded())
+			.status(contract.getStatus())
 			.contractorNickname(contractor.getNickname())
 			.contractorImage(contractor.getImage())
 			.contracteeNickname(contractee.getNickname())
