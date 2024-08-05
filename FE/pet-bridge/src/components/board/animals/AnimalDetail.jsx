@@ -5,6 +5,7 @@ import AnimalDetailProfile from "./AnimalDetailProfile"
 import {useEffect} from "react"
 import {useSelector} from "react-redux"
 import {selectId} from "features/user/users-slice"
+import {removeAnimal} from "api/animals-api"
 
 const AnimalDetail = ({isShelter}) => {
   const currentUserId = useSelector(selectId)
@@ -21,9 +22,12 @@ const AnimalDetail = ({isShelter}) => {
     navigate(-1)
   }
   const goAnimalModify = (animal) => {
-    const animalId =
-      animal.desertionNo !== "" ? animal.desertionNo : animal.animalId
+    const animalId = animal.desertionNo ? animal.desertionNo : animal.id
     navigate(`/shelter/modify/${animalId}`, {state: {animal}})
+  }
+  const goDeleteAnimal = async () => {
+    await removeAnimal(animal.id)
+    navigate(`/shelter/1`)
   }
   return (
     <>
@@ -42,7 +46,12 @@ const AnimalDetail = ({isShelter}) => {
       {!isShelter && Number(currentUserId) === Number(animal.userId) ? (
         <div className="flex justify-end">
           <Button text={"수정하기"} onClick={() => goAnimalModify(animal)} />
-          <Button text={"삭제하기"} onClick={goBack} />
+          <Button
+            text={"삭제하기"}
+            onClick={() => {
+              goDeleteAnimal(animal.id)
+            }}
+          />
         </div>
       ) : (
         <>

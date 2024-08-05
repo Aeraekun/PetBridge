@@ -53,6 +53,8 @@ export const getAnimalList = async (searchParams) => {
     "noticeComment": "많관부"
     }
 */
+
+//동물 등록
 export const registAnimal = async (formData) => {
   try {
     const res = await axiosInstance.post(`/animals`, formData, {
@@ -71,7 +73,7 @@ export const registAnimal = async (formData) => {
 //동물 수정
 export const editAnimal = async (id, formData) => {
   try {
-    const res = await axios.patch(`${BASE_API_URL}/${id}`, formData, {
+    const res = await axiosInstance.patch(`${BASE_API_URL}/${id}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -85,16 +87,16 @@ export const editAnimal = async (id, formData) => {
 }
 
 //동물 삭제
-// const removeAnimal = async (id) => {
-//   try {
-//     const res = await axios.patch(`${BASE_API_URL}/${id}/disable`)
-//     console.log("removeAnimal" + res)
-//     return res.data
-//   } catch (e) {
-//     console.error(e)
-//     return []
-//   }
-// }
+export const removeAnimal = async (id) => {
+  try {
+    const res = await axiosInstance.delete(`${BASE_API_URL}/${id}`)
+    console.log("removeAnimal" + res)
+    return res.data
+  } catch (e) {
+    console.error(e)
+    return []
+  }
+}
 
 export const getShelterAnimalsAPI = async (searchParams) => {
   const params = {

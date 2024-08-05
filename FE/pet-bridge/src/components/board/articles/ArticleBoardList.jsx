@@ -11,16 +11,35 @@ const categories = [
   {id: 4, name: "notice", title: "공지사항"},
 ]
 
-const Search = () => {
+const Search = ({searchKeyword}) => {
+  const [inputKeyword, setInputKeyword] = useState("")
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault() // 기본 동작 방지
+      searchKeyword(inputKeyword)
+    }
+  }
+
+  const handleButtonClick = () => {
+    searchKeyword(inputKeyword)
+  }
+
   return (
     <div className="flex w-full justify-between px-10">
       <input
         type="text"
         placeholder="검색어를 입력하세요."
+        value={inputKeyword}
         className="border-stroke h-12 w-72 rounded-xl border-2 p-2"
+        onKeyDown={handleKeyDown}
+        onChange={(e) => setInputKeyword(e.target.value)}
       />
-      <button className="flex h-10 w-16 items-center justify-center rounded-xl bg-green-600 text-white ">
-        조회
+      <button
+        className="flex h-10 w-16 items-center justify-center rounded-xl bg-green-600 text-white"
+        onClick={handleButtonClick}
+      >
+        검색
       </button>
     </div>
   )

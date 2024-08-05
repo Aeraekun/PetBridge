@@ -3,6 +3,7 @@ import React, {useState, useRef, useEffect, useCallback} from "react"
 // import data from "components/petpick/dummydata"
 import PetpickComments from "components/petpick/PetpickComments"
 import {getRandomDetailPetPick} from "api/petpicks-api"
+import {useNavigate} from "react-router-dom"
 
 const ScrollableComponent = () => {
   const [index, setIndex] = useState(0)
@@ -14,7 +15,7 @@ const ScrollableComponent = () => {
 
   const handleInView = (visibleIndex) => {
     setIndex(visibleIndex)
-    console.log(list.length)
+    // console.log(list.length)
   }
   // itemRefs의 길이를 데이터 리스트의 길이와 맞추는 함수
   const updateItemRefs = useCallback(() => {
@@ -74,31 +75,34 @@ const ScrollableComponent = () => {
   useEffect(() => {
     const container = containerRef.current
     if (container && itemRefs.current[index]?.current) {
-      const item = itemRefs.current[index].current
-      const containerHeight = container.clientHeight
-      const itemHeight = item.clientHeight + 3
-      const itemTop = item.offsetTop
-
-      console.log(
-        itemHeight,
-        "top : ",
-        itemTop,
-        "container",
-
-        "height : ",
-        containerHeight
-      )
+      // const item = itemRefs.current[index].current
+      // const containerHeight = container.clientHeight
+      // const itemHeight = item.clientHeight + 3
+      // const itemTop = item.offsetTop
+      // console.log(
+      //   itemHeight,
+      //   "top : ",
+      //   itemTop,
+      //   "container",
+      //   "height : ",
+      //   containerHeight
+      // )
       // Scroll to center the item in the container
       // container.scrollTo({
       //   top: itemTop - containerHeight / 2 + itemHeight / 2,
       //   behavior: "smooth",
       // })
-      console.log(top)
     }
   }, [index])
 
+  const navigate = useNavigate()
+  const goPetpickWrite = () => {
+    navigate(`/petpick/write`)
+  }
+
   return (
     <div className=" h-screen">
+      <button onClick={goPetpickWrite}>글쓰기</button>
       <div className=" fixed mb-4 text-lg">현재 인덱스: {index}</div>
 
       <div className="fixed right-8 top-1/2 flex flex-col space-y-8">

@@ -104,7 +104,7 @@ const SocialUpdateContainer = () => {
       onSubmit={onSubmitHandler}
     >
       <div className="my-5 flex justify-center">
-        <span className="text-2xl font-bold"> 회원 필수 정보 입력</span>
+        <span className="text-2xl font-bold"> 회원 추가 정보 입력</span>
       </div>
       {/* 닉네임 입력 창 */}
       <div className="w-full">
@@ -119,7 +119,7 @@ const SocialUpdateContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.nickname && (
-          <span className="col-span-12 text-alert">{errors.nickname}</span>
+          <span className="text-alert col-span-12">{errors.nickname}</span>
         )}
       </div>
       {/* 전화번호 입력 창 */}
@@ -136,7 +136,7 @@ const SocialUpdateContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.phone && (
-          <span className="col-span-12 text-alert">{errors.phone}</span>
+          <span className="text-alert col-span-12">{errors.phone}</span>
         )}
       </div>
       {/* 생일 입력 창 */}
@@ -144,7 +144,7 @@ const SocialUpdateContainer = () => {
         <input
           value={updateFormData.birth}
           onChange={changeHandler}
-          type="text"
+          type="date"
           className=" my-1 w-full rounded-md border p-2.5"
           placeholder="생일"
           id="birth"
@@ -153,21 +153,21 @@ const SocialUpdateContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.birth && (
-          <span className="col-span-12 text-alert">{errors.birth}</span>
+          <span className="text-alert col-span-12">{errors.birth}</span>
         )}
       </div>
       <div className="my-5 grid w-full grid-cols-2 gap-10">
         {/* 회원가입 버튼 */}
-        <button type="submit" className="h-12 rounded-md bg-mild px-3.5 py-2.5">
-          회원 가입
+        <button type="submit" className="bg-mild h-12 rounded-md px-3.5 py-2.5">
+          정보 입력
         </button>
         {/* 가입 취소 버튼 */}
         <Link
           to="/"
           type="button"
-          className="rounded-md bg-mild px-3.5 py-2.5 text-center"
+          className="bg-mild rounded-md px-3.5 py-2.5 text-center"
         >
-          가입 취소
+          입력 취소
         </Link>
       </div>
     </form>

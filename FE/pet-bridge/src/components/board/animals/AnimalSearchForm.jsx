@@ -147,22 +147,24 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
       {isShelter ? (
         <div>
           <h1>보호소 동물 검색</h1>
-          <DatePicker
-            id="bgnde"
-            selected={bgnde}
-            onChange={(date) => setBgnde(date)}
-            dateFormat="yyyy/MM/dd"
-            className="ml-2 rounded-md border border-[#D9D9D9] p-2"
-            placeholderText="검색시작일"
-          />
-          <DatePicker
-            id="endde"
-            selected={endde}
-            onChange={(date) => setEndde(date)}
-            dateFormat="yyyy/MM/dd"
-            className="ml-2 rounded-md border border-[#D9D9D9] p-2"
-            placeholderText="검색종료일"
-          />
+          <div className="flex w-full">
+            <DatePicker
+              id="bgnde"
+              selected={bgnde}
+              onChange={(date) => setBgnde(date)}
+              dateFormat="yyyy/MM/dd"
+              className=""
+              placeholderText="검색시작일"
+            />
+            <DatePicker
+              id="endde"
+              selected={endde}
+              onChange={(date) => setEndde(date)}
+              dateFormat="yyyy/MM/dd"
+              className="ml-2 rounded-md border border-[#D9D9D9] p-2"
+              placeholderText="검색종료일"
+            />
+          </div>
         </div>
       ) : (
         <div>임시보호동물 검색</div>

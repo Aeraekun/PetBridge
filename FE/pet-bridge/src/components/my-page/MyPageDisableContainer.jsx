@@ -1,4 +1,4 @@
-import {patchDeleteUser} from "api/users-api"
+import {deleteSelfUser} from "api/users-api"
 import Siren from "assets/image/Siren-white.png"
 import {logOut} from "features/user/users-slice"
 import {useDispatch} from "react-redux"
@@ -9,15 +9,16 @@ const MyPageDisableContainer = () => {
   const dispatch = useDispatch()
 
   let {userId} = useParams()
-  const onClickHandler = () => {
+  const clickCancelHandler = () => {
     console.log("MyPageDisableContainer > 취소 버튼 클릭")
     navigate(`/users/${userId}`)
   }
   const navigate = useNavigate()
-  const onClickDisableHandler = async () => {
+  const clickDisableHandler = async () => {
     if (confirm("정말 탈퇴하시겠습니까?")) {
       try {
-        const res = await patchDeleteUser()
+        // 내 회원 탈퇴
+        const res = await deleteSelfUser()
         console.log(res)
         dispatch(logOut())
         logOutUser()
@@ -34,7 +35,7 @@ const MyPageDisableContainer = () => {
         <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
           <div className="sm:flex-col sm:items-start ">
             <div className="my-5 flex justify-center sm:w-full">
-              <div className="mx-auto flex size-16 shrink-0 items-center justify-center rounded-full bg-alert sm:mx-0 sm:size-16">
+              <div className="bg-alert mx-auto flex size-16 shrink-0 items-center justify-center rounded-full sm:mx-0 sm:size-16">
                 <img src={Siren} alt="Siren Icon" />
               </div>
             </div>
@@ -64,15 +65,15 @@ const MyPageDisableContainer = () => {
         <div className="justify-center bg-gray-50 px-4 py-3 sm:flex sm:flex-row  sm:px-6">
           <button
             type="button"
-            className="mr-3 inline-flex w-36 justify-center rounded-md bg-alert p-3 text-sm text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-36"
-            onClick={onClickDisableHandler}
+            className="bg-alert mr-3 inline-flex w-36 justify-center rounded-md p-3 text-sm text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-36"
+            onClick={clickDisableHandler}
           >
             탈퇴하기
           </button>
           <button
             type="button"
             className="mt-3 inline-flex w-36 justify-center rounded-md bg-white  py-3 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-36"
-            onClick={onClickHandler}
+            onClick={clickCancelHandler}
           >
             취소
           </button>
