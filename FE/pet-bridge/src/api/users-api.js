@@ -48,8 +48,8 @@ export const patchUserInfo = async (userInfo) => {
 }
 
 // 회원 탈퇴
-export const patchDeleteUser = () => {
-  const res = axiosInstance.patch(`/users/delete`)
+export const deleteSelfUser = () => {
+  const res = axiosInstance.delete(`/users`)
 
   return res
 }
