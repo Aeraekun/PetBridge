@@ -3,6 +3,7 @@ import {
   getUserInfo,
   postLoginUser,
   getIsDuplicatedNickname,
+  postEmailVerificationCode,
 } from "api/users-api"
 import {setUserInfosAtSession} from "utils/user-utils"
 
@@ -17,6 +18,7 @@ const initialState = {
   role: "",
   isAuthenticated: false,
   loading: false,
+  isLoadingEmailCode: false,
   isLoadingDuplication: false,
   error: null,
 }
@@ -66,7 +68,7 @@ export const getUserInfoThunk = createAsyncThunk(
 export const getIsDuplicatedNicknameThunk = createAsyncThunk(
   "user/getIsDuplicatedNickname",
   async (nickname, {rejectWithValue}) => {
-    console.log("------")
+    console.log("-----THUNK-----")
     try {
       const res = await getIsDuplicatedNickname(nickname)
 
@@ -82,6 +84,19 @@ export const getIsDuplicatedNicknameThunk = createAsyncThunk(
         console.log("요청에 실패했습니다.")
         return rejectWithValue("요청에 실패했습니다. 다시 시도해주세요.")
       }
+    }
+  }
+)
+
+export const postEmailVerificationCodeThunk = createAsyncThunk(
+  "user/postEmailVerificationCode",
+  async (emailData) => {
+    console.log("-----THUNK-----")
+    try {
+      const res = await postEmailVerificationCode(emailData)
+      return res
+    } catch (error) {
+      return error
     }
   }
 )
@@ -147,6 +162,15 @@ export const usersSlice = createSlice({
       .addCase(getIsDuplicatedNicknameThunk.rejected, (state) => {
         state.isLoadingDuplication = false
       })
+      .addCase(postEmailVerificationCodeThunk.pending, (state) => {
+        state.isLoadingEmailCode = true
+      })
+      .addCase(postEmailVerificationCodeThunk.fulfilled, (state) => {
+        state.isLoadingEmailCode = false
+      })
+      .addCase(postEmailVerificationCodeThunk.rejected, (state) => {
+        state.isLoadingEmailCode = false
+      })
   },
 })
 
@@ -162,5 +186,6 @@ export const selectIsLoadingDuplication = (state) =>
 export const selectLoading = (state) => state.user.loading
 export const selectError = (state) => state.user.error
 export const selectRole = (state) => state.user.role
+export const selectIsLoadingEmailCode = (state) => state.user.isLoadingEmailCode
 export const {logOut, setAuthenticated, setUserInfos} = usersSlice.actions
 export default usersSlice.reducer

@@ -1,14 +1,12 @@
-import {useState} from "react"
-import {
-  postEmailCheck,
-  postEmailVerificationCode,
-  signUpUser,
-} from "api/users-api"
+import {useEffect, useState} from "react"
+import {postEmailCheck, signUpUser} from "api/users-api"
 import {Link, useNavigate} from "react-router-dom"
-import {useDispatch} from "react-redux"
+import {useDispatch, useSelector} from "react-redux"
 import {
   getIsDuplicatedNicknameThunk,
   loginUserThunk,
+  postEmailVerificationCodeThunk,
+  selectIsLoadingEmailCode,
 } from "features/user/users-slice"
 import Timer from "components/common/Timer"
 
@@ -42,6 +40,13 @@ const SignUp = () => {
     useState(false)
   const [isEmailVerified, setIsEmailVerified] = useState(false)
   const [isValidNickname, setIsValidNickname] = useState(false)
+  const [isLoadingEmailCode, setIsLoadingEmailCode] = useState(false)
+
+  const isLoadingEmailCodeState = useSelector(selectIsLoadingEmailCode)
+
+  useEffect(() => {
+    setIsLoadingEmailCode(isLoadingEmailCodeState)
+  }, [isLoadingEmailCodeState])
 
   // 전화번호 유효성 검사
   const [isValidPhone, setIsValidPhone] = useState(false)
@@ -215,9 +220,13 @@ const SignUp = () => {
 
   // 인증번호 전송
   const onClickSendMailCodeHandler = async () => {
-    const res = await postEmailVerificationCode({email: signUpFormData.email})
+    const res = await dispatch(
+      postEmailVerificationCodeThunk({
+        email: signUpFormData.email,
+      })
+    )
 
-    if (res?.status === 201) {
+    if (res.type === postEmailVerificationCodeThunk.fulfilled.type) {
       setIsValidEmailButton(true)
       setIsSendCodeButtonDisalbed(true)
     } else {
@@ -294,12 +303,12 @@ const SignUp = () => {
                       onBlur={validateEmail}
                     />
                     <button
-                      disabled={!isValidEmail}
+                      disabled={!isValidEmail || isLoadingEmailCode}
                       type="button"
-                      className="bg-mild col-span-3 h-12 rounded-md px-3.5 py-2.5"
+                      className={`${isLoadingEmailCode ? "bg-stroke" : "bg-mild"} col-span-3 h-12 rounded-md px-3.5 py-2.5`}
                       onClick={onClickSendMailCodeHandler}
                     >
-                      인증번호 전송
+                      {isLoadingEmailCode ? "전송중" : "인증코드 전송"}
                     </button>
                   </>
                 ) : (
