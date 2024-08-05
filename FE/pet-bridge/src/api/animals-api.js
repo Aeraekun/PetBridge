@@ -89,7 +89,7 @@ export const editAnimal = async (id, formData) => {
 //동물 삭제
 export const removeAnimal = async (id) => {
   try {
-    const res = await axios.patch(`${BASE_API_URL}/${id}/disable`)
+    const res = await axiosInstance.delete(`${BASE_API_URL}/${id}`)
     console.log("removeAnimal" + res)
     return res.data
   } catch (e) {
