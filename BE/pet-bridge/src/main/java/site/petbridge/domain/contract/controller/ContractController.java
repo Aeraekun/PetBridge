@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import site.petbridge.domain.contract.dto.request.ContractEditRequestDto;
 import site.petbridge.domain.contract.dto.request.ContractRequestDto;
 import site.petbridge.domain.contract.dto.response.ContractListResponseDto;
 import site.petbridge.domain.contract.dto.response.ContractResponseDto;
@@ -27,14 +28,15 @@ public class ContractController {
 	private final ContractService contractService;
 
 	@GetMapping("/user/{userId}")
-	public ResponseEntity<List<ContractListResponseDto>> getListContract(@PathVariable("userId") int userId) {
+	public ResponseEntity<List<ContractListResponseDto>> getListContract(@PathVariable("userId") int userId) throws
+		Exception {
 		return contractService.getListContractByUserId(userId)
 			.map(ResponseEntity::ok)
 			.orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<ContractResponseDto> getDetailContract(@PathVariable("id") int id) {
+	public ResponseEntity<ContractResponseDto> getDetailContract(@PathVariable("id") int id) throws Exception {
 		return contractService.getDetailContract(id)
 			.map(ResponseEntity::ok)
 			.orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
@@ -42,21 +44,22 @@ public class ContractController {
 
 	@PostMapping
 	public ResponseEntity<Void> registContract(
-		@RequestBody ContractRequestDto contractRequestDto) {
+		@RequestBody ContractRequestDto contractRequestDto) throws Exception {
 		contractService.registContract(contractRequestDto);
 		return ResponseEntity.status((HttpStatus.CREATED)).build();
 	}
 
 	@PatchMapping("/{id}")
-	public ResponseEntity<Void> confirmContract(@PathVariable("id") int id) {
-		if(contractService.confirmContract(id) == 0){
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+	public ResponseEntity<Void> editContract(@PathVariable("id") int id,
+		@RequestBody ContractEditRequestDto contractEditRequestDto) throws Exception {
+		if (contractService.editContract(id, contractEditRequestDto) == 0) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 		return ResponseEntity.noContent().build();
 	}
 
 	@DeleteMapping("/{id}/disable")
-	public ResponseEntity<Void> removeContract(@PathVariable("id") int id) {
+	public ResponseEntity<Void> removeContract(@PathVariable("id") int id) throws Exception {
 		contractService.removeContract(id);
 		return ResponseEntity.noContent().build();
 	}
