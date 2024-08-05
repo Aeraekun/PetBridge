@@ -104,58 +104,12 @@ public class AnimalController {
     /**
      * 내 동물 삭제
      */
-    @PatchMapping("/{id}/delete")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeAnimal(@PathVariable("id") int id) throws Exception {
         animalService.removeAnimal(id);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-//    @GetMapping("/user/{userId}")
-//    public ResponseEntity<List<AnimalResponseDto>> getListAnimalByUserId(@PathVariable("userId") int userId) {
-//        return animalService.getListAnimalByUserId(userId)
-//            .map(ResponseEntity::ok)
-//            .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
-//    }
-//
-//    @GetMapping("/{id}")
-//    public ResponseEntity<AnimalResponseDto> getDetailAnimal(@PathVariable("id") int id) {
-//        return animalService.getDetailAnimal(id)
-//            .map(ResponseEntity::ok)
-//            .orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
-//    }
-//
-//    @PostMapping
-//    public ResponseEntity<Void> registAnimal (
-//    @RequestPart(name = "animalRegistRequestDto") AnimalRegistRequestDto animalRegistRequestDto,
-//    @RequestPart(name = "file", required = false) MultipartFile file) throws Exception{
-//        animalService.registAnimal(animalRegistRequestDto, file);
-//        return ResponseEntity.status((HttpStatus.CREATED)).build();
-//    }
-//
-//	@PatchMapping("/{id}")
-//	public ResponseEntity<Void> editAnimal (
-//		@PathVariable("id") int id,
-//		@RequestPart(name = "animalEditRequestDto") AnimalEditRequestDto animalEditRequestDto,
-//		@RequestPart(name = "file", required = false) MultipartFile file) throws Exception{
-//		if(animalService.editAnimal(id, animalEditRequestDto, file) == 0){
-//			ResponseEntity.status((HttpStatus.BAD_REQUEST)).build();
-//		}
-//		return ResponseEntity.status((HttpStatus.OK)).build();
-//	}
-//
-//    @PatchMapping("/{id}/disable")
-//    public ResponseEntity<Void> removeBoard(@PathVariable("id") int id) throws Exception {
-//			if(animalService.removeAnimal(id) == 0){
-//				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//			}
-//        return ResponseEntity.noContent().build();
-//
-//    }
-
-
-
-
 }
 
 

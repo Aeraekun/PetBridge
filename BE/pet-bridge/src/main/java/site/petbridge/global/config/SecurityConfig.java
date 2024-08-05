@@ -72,12 +72,15 @@ public class SecurityConfig {
 
 				// 회원
 				.requestMatchers(HttpMethod.GET, "/users/sign-up", "/users/login").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/users/sign-up").permitAll()
-				.requestMatchers(HttpMethod.GET, "/oauth2/authorization/*").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/oauth2/authorization/**").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/users/find/email").permitAll()
 				.requestMatchers("/users/oauth/success").permitAll()
-				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email/check").permitAll()
 				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email").permitAll()
+				.requestMatchers(HttpMethod.POST,"/api/users/authentication/emailCheck").permitAll()
+				.requestMatchers(HttpMethod.POST,"/api/users/authentication/phone").permitAll()
+				.requestMatchers(HttpMethod.POST,"/api/users/authentication/phone/check").permitAll()
 
 				// 펫픽
 				.requestMatchers(HttpMethod.GET,"/api/petpicks").permitAll()
@@ -109,6 +112,20 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.PATCH, "/api/contracts/{id}").permitAll()
 				.requestMatchers(HttpMethod.DELETE, "/api/contracts/{id}/disable").permitAll()
 				.requestMatchers(HttpMethod.PATCH, "/api/contract-checks/{id}").permitAll()
+
+				// 채팅
+				.requestMatchers(HttpMethod.GET, "/api/chat-rooms/user/{userId}").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/chat-rooms/room/{roomId}").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/chat-rooms").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/chat-messages/{roomId}").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/chat-rooms/{userId}").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/chat-rooms/{userId}").permitAll()
+				.requestMatchers(HttpMethod.GET,"/friendChat").permitAll()
+				.requestMatchers(HttpMethod.GET,"/friendChat/**").permitAll()
+
+				// 결제
+				.requestMatchers(HttpMethod.POST,"/api/payment/ready").permitAll()
+				.requestMatchers(HttpMethod.GET,"/api/payment/completed").permitAll()
 				.anyRequest().authenticated()
 			)
 			// 소셜 로그인

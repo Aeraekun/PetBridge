@@ -1,19 +1,29 @@
 import {Route, Routes} from "react-router-dom"
 import Layout from "./layout/Layout"
+import LostAndFoundPage from "pages/LostAndFoundPage"
+import Report from "./components/map/Report"
+
+//커뮤니티
 import BoardPage from "pages/BoardPage"
-import AnimalPage from "pages/AnimalPage"
 import ArticleBoardList from "components/board/articles/ArticleBoardList"
 import ArticleDetail from "components/board/articles/ArticleDetail"
 import ArticleDetailModify from "components/board/articles/ArticleDetailModify"
 import ArticleBoardWrite from "components/board/articles/ArticleBoardWrite"
+
+//동물게시판
+import AnimalPage from "pages/AnimalPage"
+import AnimalAPIBoardLIst from "components/board/animals/AnimalAPIBoardLIst"
 import AnimalBoardList from "components/board/animals/AnimalBoardList"
 import AnimalDetail from "components/board/animals/AnimalDetail"
 import AnimalRegist from "components/board/animals/AnimalRegist"
 import AnimalDetailModify from "components/board/animals/AnimalDetailModify"
-import LostAndFoundPage from "pages/LostAndFoundPage"
+
+//펫픽
 import PetpickWrite from "components/petpick/PetpickWrite"
 import ShortsLayout from "layout/ShortsLayout"
-import Report from "./components/map/Report"
+import PetpickComments from "components/petpick/PetpickComments"
+import PetpickTagDetail from "components/petpick/PetpickTagDetail"
+import PetpickModify from "components/petpick/PetpickModify"
 
 import {useDispatch, useSelector} from "react-redux"
 import {useEffect, useState} from "react"
@@ -51,8 +61,6 @@ import {
 // 계약서
 import ContractsContainer from "components/contracts/ContractsContainer"
 import ContractsPage from "pages/ContractsPage"
-import PetpickComments from "components/petpick/PetpickComments"
-import PetpickTagDetail from "components/petpick/PetpickTagDetail"
 import ContractsCreateContainer from "components/contracts/ContractsCreateContainer"
 
 // 메인페이지
@@ -61,7 +69,6 @@ import AiPage from "pages/AiPage"
 import AiEyes from "components/ai/AiEyes"
 import AiSkin from "components/ai/AiSkin"
 import ChatModal from "pages/ChatModal"
-import AnimalAPIBoardLIst from "components/board/animals/AnimalAPIBoardLIst"
 
 function App() {
   const dispatch = useDispatch()
@@ -89,16 +96,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<MainPage />} exact />
-          <Route path="/shelter" element={<AnimalPage />}>
-            <Route index element={<AnimalBoardList />} />
-            <Route path="0" element={<AnimalAPIBoardLIst />} />
-            <Route path="1" element={<AnimalBoardList />} />
-            <Route path="details/:id" element={<AnimalDetail />} />
-            <Route path="modify/:id" element={<AnimalDetailModify />} />
-            <Route path="regist" element={<AnimalRegist />} />
-          </Route>
           <Route
-            path="/petpick/write"
+            path="petpick/write"
             element={
               <PrivateRoute
                 component={<PetpickWrite />}
@@ -106,11 +105,52 @@ function App() {
               />
             }
           ></Route>
+          <Route
+            path="petpick/modify/:id"
+            element={
+              <PrivateRoute
+                component={<PetpickModify />}
+                isAuthenticated={isAuthenticated}
+              />
+            }
+          ></Route>
+          <Route path="/shelter" element={<AnimalPage />}>
+            <Route index element={<AnimalBoardList />} />
+            <Route path="0" element={<AnimalAPIBoardLIst />} />
+            <Route path="1" element={<AnimalBoardList />} />
+            <Route path="details/:id" element={<AnimalDetail />} />
+            <Route
+              path="modify/:id"
+              element={
+                <PrivateRoute
+                  component={<AnimalDetailModify />}
+                  isAuthenticated={isAuthenticated}
+                />
+              }
+            />
+            <Route
+              path="regist"
+              element={
+                <PrivateRoute
+                  component={<AnimalRegist />}
+                  isAuthenticated={isAuthenticated}
+                />
+              }
+            />
+          </Route>
           <Route path="/communities" element={<BoardPage />}>
             <Route index element={<ArticleBoardList />} />
             <Route path=":bcode" element={<ArticleBoardList />} />
             <Route path="details/:id" element={<ArticleDetail />} />
-            <Route path="modify/:id" element={<ArticleDetailModify />} />
+            <Route
+              path="modify/:id"
+              element={
+                <PrivateRoute
+                  component={<ArticleDetailModify />}
+                  isAuthenticated={isAuthenticated}
+                />
+              }
+            />
             <Route
               path="write"
               element={
@@ -164,6 +204,7 @@ function App() {
         <Route path="/petpick" element={<ShortsLayout />}>
           <Route path="" element={<PetpickComments />}></Route>
         </Route>
+
         <Route path="/petpick/:id/tag" element={<PetpickTagDetail />}></Route>
 
         <Route path="/contracts" element={<ContractsPage />}>

@@ -58,7 +58,7 @@ export const getMyPetPics = async (searchParams) => {
   const params = {
     page: searchParams.page,
     size: searchParams.size,
-    initcommentsize: 0,
+    initcommentsize: 12,
   }
   try {
     const res = await axiosInstance.get("/petpicks/my", {

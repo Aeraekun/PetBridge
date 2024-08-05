@@ -1,24 +1,18 @@
 package site.petbridge.domain.board.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.web.multipart.MultipartFile;
-
-import site.petbridge.domain.board.dto.request.BoardRegistRequestDto;
 import site.petbridge.domain.board.dto.request.BoardEditRequestDto;
+import site.petbridge.domain.board.dto.request.BoardRegistRequestDto;
 import site.petbridge.domain.board.dto.response.BoardResponseDto;
 
+import java.util.List;
+
 public interface BoardService {
+    void registBoard(BoardRegistRequestDto boardRegistRequestDto, MultipartFile thumbnailFile) throws Exception;
 
-	Optional<List<BoardResponseDto>> getListBoard();
+    List<BoardResponseDto> getListBoard(int page, int size, String userNickname, String title) throws Exception;
 
-	Optional<BoardResponseDto> getDetailBoard(int id);
+    void editBoard(int id, BoardEditRequestDto boardEditRequestDto, MultipartFile thumbnailFile) throws Exception;
 
-	void registBoard(BoardRegistRequestDto boardRegistRequestDto, MultipartFile file) throws Exception;
-
-	int editBoard(int id, BoardEditRequestDto boardEditRequestDto, MultipartFile file) throws Exception;
-
-	int removeBoard(int boardId);
-
+    void removeBoard(int id) throws Exception;
 }

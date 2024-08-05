@@ -5,14 +5,15 @@ import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import site.petbridge.domain.user.domain.enums.Role;
 import site.petbridge.domain.user.domain.enums.SocialType;
-import site.petbridge.domain.user.dto.request.UserModifyRequestDto;
-import site.petbridge.domain.user.dto.response.UserResponseDto;
+import site.petbridge.domain.user.dto.request.UserEditRequestDto;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+import java.time.LocalDate;
+
 @Entity
+@Getter
 @ToString
 @Table(name = "users")
+@NoArgsConstructor(access =  AccessLevel.PROTECTED)
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,12 +21,16 @@ public class User {
     private int id;
 
     private String email;
+
     private String password;
+
     private String nickname;
-    private String birth;
+
+    private LocalDate birth;
+
     private String phone;
+
     private String image;
-    private boolean disabled = false;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -40,72 +45,37 @@ public class User {
     @Column(name = "refresh_token")
     private String refreshToken;
 
+    private boolean disabled = false;
+
     @Builder
-    public User(String email,
-                String nickname,
-                String password,
-                String birth,
-                String phone,
-                String image,
-                boolean disabled,
-                Role role,
-                SocialType socialType,
-                String socialId
-                ) {
+    public User(String email, String password, String nickname, LocalDate birth, String phone, String image,
+                Role role, SocialType socialType, String socialId) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.birth = birth;
         this.phone = phone;
         this.image = image;
-        this.disabled = disabled;
         this.role = role;
         this.socialType = socialType;
         this.socialId = socialId;
     }
 
-    public static User createUser(
-            String email,
-            String nickname,
-            boolean disabled,
-            Role role
-    ){
-        return builder()
-                .email(email)
-                .nickname(nickname)
-                .disabled(disabled)
-                .role(role)
-                .build();
-    }
-
-    public UserResponseDto transferToUserResponseDto(){
-        return UserResponseDto.builder()
-                .id(id)
-                .email(email)
-                .nickname(nickname)
-                .birth(birth)
-                .phone(phone)
-                .image(image)
-                .disabled(disabled)
-                .role(role)
-                .socialType(socialType)
-                .socialId(socialId)
-                .build();
-    }
-
     // 유저 수정 메소드
-    public void updateUserInfo(UserModifyRequestDto userModifyRequestDto) {
-        this.password = userModifyRequestDto.password();
-        this.nickname = userModifyRequestDto.nickname();
-        this.birth = userModifyRequestDto.birth();
-        this.phone = userModifyRequestDto.phone();
+    public void update(UserEditRequestDto userEditRequestDto, String image) {
+        this.password = userEditRequestDto.getPassword();
+        this.nickname = userEditRequestDto.getNickname();
+        this.birth = userEditRequestDto.getBirth();
+        this.phone = userEditRequestDto.getPhone();
+        this.image = image;
     }
 
     // 소셜 유저 수정 메소드
-    public void updateSocialUserInfo(UserModifyRequestDto userModifyRequestDto) {
-        this.nickname = userModifyRequestDto.nickname();
-        this.birth = userModifyRequestDto.birth();
-        this.phone = userModifyRequestDto.phone();
+    public void updateSocialUserInfo(UserEditRequestDto userEditRequestDto) {
+        this.password = userEditRequestDto.getPassword();
+        this.nickname = userEditRequestDto.getNickname();
+        this.birth = userEditRequestDto.getBirth();
+        this.phone = userEditRequestDto.getPhone();
     }
 
     // 유저 권한 설정 메소드
@@ -117,13 +87,8 @@ public class User {
     }
 
     // 회원 탈퇴
-    public void disableUser() {
+    public void disable() {
         this.disabled = true;
-    }
-
-    //== 유저 필드 업데이트 ==//
-    public void updateNickname(String updateNickname) {
-        this.nickname = updateNickname;
     }
 
     public void updatePassword(String updatePassword, PasswordEncoder passwordEncoder) {

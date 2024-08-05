@@ -182,7 +182,7 @@ const AnimalDetailProfile = ({
   const registForm = () => {
     const newErrors = {}
     filteredFields.forEach(({name, value}) => {
-      if (!value || value.trim() === "") {
+      if (!value || (typeof value === "string" && value.trim() === "")) {
         newErrors[name] = `${name} 필드는 필수입니다.`
       }
     })

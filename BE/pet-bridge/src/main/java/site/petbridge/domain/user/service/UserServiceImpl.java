@@ -1,36 +1,55 @@
 package site.petbridge.domain.user.service;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.service.DefaultMessageService;
+
+import jakarta.annotation.PostConstruct;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import site.petbridge.domain.user.domain.User;
 import site.petbridge.domain.user.domain.enums.Role;
 import site.petbridge.domain.user.dto.request.EmailRequestDto;
-import site.petbridge.domain.user.dto.request.UserModifyRequestDto;
+import site.petbridge.domain.user.dto.request.PhoneRequestDto;
+import site.petbridge.domain.user.dto.request.UserEditRequestDto;
 import site.petbridge.domain.user.dto.request.UserSignUpRequestDto;
 import site.petbridge.domain.user.dto.response.UserResponseDto;
 import site.petbridge.domain.user.repository.UserRepository;
 import site.petbridge.global.exception.ErrorCode;
 import site.petbridge.global.exception.PetBridgeException;
 import site.petbridge.global.jwt.service.JwtService;
+import site.petbridge.global.login.userdetail.CustomUserDetail;
 import site.petbridge.global.redis.service.RedisService;
+import site.petbridge.util.AuthUtil;
+import site.petbridge.util.FileUtil;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
-	private final JwtService jwtService;
+	private final FileUtil fileUtil;
+	private final AuthUtil authUtil;
 
 	private final JavaMailSender javaMailSender;
 	private final RedisService redisService;
@@ -41,111 +60,148 @@ public class UserServiceImpl implements UserService {
 	@Value("${spring.auth-code-expiration-millis}")
 	private int authCodeExpirationMillis;
 
-	@Override
-	public Optional<UserResponseDto> isValidTokenUser(HttpServletRequest httpServletRequest) throws Exception {
-		String accessToken = jwtService.extractAccessToken(httpServletRequest).orElse(null);
-		String email = jwtService.extractEmail(accessToken).orElse(null);
+	@Value("${coolsms.senderNumber}")
+	private String senderNumber;
 
-		if (email == null) {
-			throw new PetBridgeException(ErrorCode.UNAUTHORIZED);
-		}
+	@Value("${coolsms.apiKey}")
+	private String apiKey;
 
-		Optional<User> optionalUser = userRepository.findByEmail(email);
-		if (optionalUser.isPresent()) {
-			User user = optionalUser.get();
-			UserResponseDto userResponseDto = new UserResponseDto(user.getId(),
-																	user.getEmail(),
-																	user.getNickname(),
-																	user.getBirth(),
-																	user.getPhone(),
-																	user.getImage(),
-																	user.isDisabled(),
-																	user.getRole(),
-																	user.getSocialType(),
-																	user.getSocialId());
-			return Optional.of(userResponseDto);
-		} else {
-			throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND);
-		}
+	@Value("${coolsms.apiSecret}")
+	private String apiSecret;
+
+	DefaultMessageService messageService;
+
+	@PostConstruct
+	public void init() {
+		this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
 	}
 
+	/**
+	 * 회원가입
+	 */
+	@Transactional
 	@Override
-	public Optional<UserResponseDto> registUser(UserSignUpRequestDto userSignUpRequestDto) throws Exception {
+	public void registUser(UserSignUpRequestDto userSignUpRequestDto) throws Exception {
 
-		if (userRepository.findByEmail(userSignUpRequestDto.email()).isPresent()) {
-			throw new Exception("이미 존재하는 이메일입니다.");
+		// 이메일 중복 검사
+		if (userRepository.findByEmail(userSignUpRequestDto.getEmail()).isPresent()) {
+			throw new PetBridgeException(ErrorCode.CONFLICT);
 		}
 
-		if (userRepository.findByNickname(userSignUpRequestDto.nickname()).isPresent()) {
-			throw new Exception("이미 존재하는 닉네임입니다.");
+		// 닉네임 중복 검사
+		if (userRepository.findByNickname(userSignUpRequestDto.getNickname()).isPresent()) {
+			throw new PetBridgeException(ErrorCode.CONFLICT);
 		}
 
-		User user = User.builder()
-			.email(userSignUpRequestDto.email())
-			.password(userSignUpRequestDto.password())
-			.nickname(userSignUpRequestDto.nickname())
-			.birth(userSignUpRequestDto.birth())
-			.phone(userSignUpRequestDto.phone())
-			.role(Role.USER)
-			.build();
-
+		User user = userSignUpRequestDto.toEntity();
 		user.passwordEncode(passwordEncoder);
-		return Optional.ofNullable(userRepository.save(user).transferToUserResponseDto());
+
+		userRepository.save(user);
 	}
 
+	/**
+	 * 회원 전체 조회
+	 */
 	@Override
-	public Optional<UserResponseDto> getDetailMyUser(HttpServletRequest httpServletRequest) throws Exception {
-		String accessToken = jwtService.extractAccessToken(httpServletRequest).orElse(null);
-		String email = jwtService.extractEmail(accessToken).orElse(null);
+	public List<UserResponseDto> getListUser(int page, int size) throws Exception {
+		User entity = authUtil.getAuthenticatedUser();
 
-		return Optional.ofNullable(userRepository.findByEmail(email).orElseThrow().transferToUserResponseDto());
+		// ADMIN 아닐 때
+		if (entity.getRole() != Role.ADMIN) {
+			throw new PetBridgeException(ErrorCode.FORBIDDEN);
+		}
+
+		Sort sort = Sort.by(Sort.Direction.DESC, "id");
+		Pageable pageable = PageRequest.of(page, size, sort);
+		Page<User> users = userRepository.findAll(pageable);
+
+		return users.stream()
+			.map(UserResponseDto::new)
+			.collect(Collectors.toList());
 	}
 
+	/**
+	 * 내 회원 정보 상세 조회
+	 */
 	@Override
-	public Optional<UserResponseDto> editUser(HttpServletRequest httpServletRequest,
-		UserModifyRequestDto userModifyRequestDto) throws Exception {
-		String accessToken = jwtService.extractAccessToken(httpServletRequest).orElse(null);
-		String email = jwtService.extractEmail(accessToken).orElse(null);
-		if (email == null) {
-			throw new Exception("Invalid token");
-		}
+	public UserResponseDto getDetailMyUser() throws Exception {
+		User entity = authUtil.getAuthenticatedUser();
 
-		Optional<User> optionalUser = userRepository.findByEmail(email);
-		if (optionalUser.isPresent()) {
-			User user = optionalUser.get();
-			if (user.getSocialType() == null) {
-				user.updateUserInfo(userModifyRequestDto);
-				user.passwordEncode(passwordEncoder);
-			} else {
-				user.updateSocialUserInfo(userModifyRequestDto);
-			}
-			return Optional.ofNullable(user.transferToUserResponseDto());
-		} else {
-			throw new Exception("user not found");
-		}
+		return new UserResponseDto(entity);
 	}
 
+	/**
+	 * 닉네임 기반 회원 검색
+	 */
 	@Override
-	public Optional<UserResponseDto> removeUser(HttpServletRequest httpServletRequest) throws Exception {
-		String accessToken = jwtService.extractAccessToken(httpServletRequest).orElse(null);
-		String email = jwtService.extractEmail(accessToken).orElse(null);
-		if (email == null) {
-			throw new Exception("Invalid token");
+	public UserResponseDto getDetailUserByNickname(String nickname) throws Exception {
+		User entity = userRepository.findByNicknameAndDisabledFalse(nickname)
+			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+
+		return new UserResponseDto(entity);
+	}
+
+	/**
+	 * 내 회원정보 수정
+	 */
+	@Transactional
+	@Override
+	public void editUser(UserEditRequestDto userEditRequestDto, MultipartFile imageFile) throws Exception {
+		User entity = authUtil.getAuthenticatedUser();
+
+		// 닉네임 중복시 409 CONFLICT
+		if (userRepository.findByNicknameAndDisabledFalse(userEditRequestDto.getNickname()).isPresent()) {
+			throw new PetBridgeException(ErrorCode.CONFLICT);
 		}
 
-		Optional<User> optionalUser = userRepository.findByEmail(email);
-		if (optionalUser.isPresent()) {
-			User user = optionalUser.get();
-			user.disableUser();
-			return Optional.ofNullable(user.transferToUserResponseDto());
-		} else {
-			throw new Exception("user not found");
+		String savedImageFileName = null;
+		if (imageFile != null) {
+			savedImageFileName = fileUtil.saveFile(imageFile, "users");
 		}
+
+		entity.update(userEditRequestDto, savedImageFileName);
+		entity.passwordEncode(passwordEncoder);
+		userRepository.save(entity);
+	}
+
+	/**
+	 * 회원 탈퇴
+	 */
+	@Transactional
+	@Override
+	public void removeUser() throws Exception {
+		User entity = authUtil.getAuthenticatedUser();
+
+		entity.disable();
+		userRepository.save(entity);
+	}
+
+	/**
+	 * 회원 삭제(관리자)
+	 */
+	@Transactional
+	@Override
+	public void removeUserAdmin(int id) throws Exception {
+		User user = authUtil.getAuthenticatedUser();
+
+		// ADMIN 아닐 때 or 나 자신을 삭제하려할 때
+		if (user.getRole() != Role.ADMIN || user.getId() == id) {
+			throw new PetBridgeException(ErrorCode.FORBIDDEN);
+		}
+
+		// 삭제할 회원
+		User entity = userRepository.findById(id)
+			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+
+		userRepository.delete(entity);
 	}
 
 	@Override
 	public Optional<UserResponseDto> getDetailUserByEmail(String email) throws Exception {
-		return Optional.ofNullable(userRepository.findByEmail(email).orElseThrow().transferToUserResponseDto());
+		User user = userRepository.findByEmail(email)
+			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+
+		return Optional.ofNullable(new UserResponseDto(user));
 	}
 
 	@Override
@@ -196,6 +252,33 @@ public class UserServiceImpl implements UserService {
 			return false;
 		}
 		System.out.println("인증코드 일치");
+		redisService.deleteValues(redisAuthCode);
+		return true;
+	}
+
+	@Override
+	public void sendPhoneAuthenticationCode(PhoneRequestDto phoneRequestDto) throws Exception {
+		String to = phoneRequestDto.phone();
+		int code = (int)(Math.random() * (90000)) + 100000;
+		String certificationNumber = String.valueOf(code);
+
+		Message message = new Message();
+		message.setFrom(senderNumber);
+		message.setTo(to);
+		message.setText("[PetBridge] 본인 확인 인증번호는 [" + certificationNumber + "]입니다.\n5분 이내에 인증을 완료해주세요.");
+		messageService.sendOne(new SingleMessageSendingRequest(message));
+
+		// SMS 인증 요청 시 인증 번호 Redis에 저장 ( key = Email / value = AuthCode )
+		redisService.setValues(phoneRequestDto.phone(), certificationNumber, Duration.ofMillis(authCodeExpirationMillis));
+	}
+
+	@Override
+	public boolean checkPhoneAuthenticationCode(PhoneRequestDto phoneRequestDto) throws Exception {
+		String redisAuthCode = redisService.getValues(phoneRequestDto.phone());
+		if (!(redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(
+			String.valueOf(phoneRequestDto.code())))) {
+			return false;
+		}
 		redisService.deleteValues(redisAuthCode);
 		return true;
 	}

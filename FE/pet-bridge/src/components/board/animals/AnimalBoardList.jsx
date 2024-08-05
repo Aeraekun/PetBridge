@@ -99,7 +99,6 @@ const AnimalBoardList = () => {
       ...searchParams,
       ...data,
       page: pageNo,
-      numOfRows: 12,
     }
 
     setSearchParams(newSearchParam)

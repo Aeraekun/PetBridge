@@ -3,6 +3,7 @@ import React, {useState, useRef, useEffect, useCallback} from "react"
 // import data from "components/petpick/dummydata"
 import PetpickComments from "components/petpick/PetpickComments"
 import {getRandomDetailPetPick} from "api/petpicks-api"
+import {useNavigate} from "react-router-dom"
 
 const ScrollableComponent = () => {
   const [index, setIndex] = useState(0)
@@ -97,8 +98,14 @@ const ScrollableComponent = () => {
     }
   }, [index])
 
+  const navigate = useNavigate()
+  const goPetpickWrite = () => {
+    navigate(`/petpick/write`)
+  }
+
   return (
     <div className=" h-screen">
+      <button onClick={goPetpickWrite}>글쓰기</button>
       <div className=" fixed mb-4 text-lg">현재 인덱스: {index}</div>
 
       <div className="fixed right-8 top-1/2 flex flex-col space-y-8">

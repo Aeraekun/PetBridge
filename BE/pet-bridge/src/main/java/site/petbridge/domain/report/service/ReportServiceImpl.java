@@ -24,6 +24,7 @@ import site.petbridge.domain.user.repository.UserRepository;
 import site.petbridge.global.exception.ErrorCode;
 import site.petbridge.global.exception.PetBridgeException;
 import site.petbridge.global.login.userdetail.CustomUserDetail;
+import site.petbridge.util.AuthUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,14 +37,12 @@ public class ReportServiceImpl implements ReportService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final PetPickRepository petPickRepository;
+    private final AuthUtil authUtil;
 
     @Transactional
     @Override
     public void registReport(ReportRegistRequestDto reportRegistRequestDto) throws Exception {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-        User user = userRepository.findById((long) userId).get();
+        User user = authUtil.getAuthenticatedUser();
 
         if (user.getRole() != Role.USER) {
             throw new PetBridgeException(ErrorCode.FORBIDDEN);
@@ -54,24 +53,21 @@ public class ReportServiceImpl implements ReportService {
             User userToReport = userRepository.findById(reportRegistRequestDto.getReportId()).orElse(null);
             if (userToReport == null) { throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND); }
         } else if (reportRegistRequestDto.getReportType() == ReportType.BOARD) {
-            Board boardToReport = boardRepository.findById(reportRegistRequestDto.getReportId()).orElse(null);
+            Board boardToReport = boardRepository.findById((long) reportRegistRequestDto.getReportId()).orElse(null);
             if (boardToReport == null) { throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND); }
         } else if (reportRegistRequestDto.getReportType() == ReportType.PETPICK) {
             PetPick petPickToReport = petPickRepository.findById((long) reportRegistRequestDto.getReportId()).orElse(null);
             if (petPickToReport == null) { throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND); }
         }
 
-        Report entity = reportRegistRequestDto.toEntity(userId);
+        Report entity = reportRegistRequestDto.toEntity(user.getId());
         reportRepository.save(entity);
     }
 
     @Override
     public List<ReportResponseDto> getListReport(int page, int size, ReportType reportType) throws Exception {
 
-        // 회원 정보
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-        User user = userRepository.findById((long) userId).get();
+        User user = authUtil.getAuthenticatedUser();
         // ADMIN만
         if (user.getRole() != Role.ADMIN) {
             throw new PetBridgeException(ErrorCode.FORBIDDEN);
@@ -95,10 +91,7 @@ public class ReportServiceImpl implements ReportService {
     @Transactional
     @Override
     public void editReportConfirm(int id) throws Exception {
-        // 회원 정보
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = ((CustomUserDetail) authentication.getPrincipal()).getId();
-        User user = userRepository.findById((long) userId).get();
+        User user = authUtil.getAuthenticatedUser();
         // ADMIN만
         if (user.getRole() != Role.ADMIN) {
             throw new PetBridgeException(ErrorCode.FORBIDDEN);

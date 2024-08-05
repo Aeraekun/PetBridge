@@ -62,9 +62,9 @@ export const editArticle = async (id, formData) => {
 }
 
 //게시글 삭제
-export const removeArticle = async (id) => {
+export const removeArticle = async (articleId) => {
   try {
-    const res = await axios.patch(`${BOARD_API_URL}/${id}/disable`)
+    const res = await axios.delete(`${BOARD_API_URL}/${articleId}`)
     console.log("removeBoard" + res)
     alert("삭제 되었습니다.")
     return res.data
