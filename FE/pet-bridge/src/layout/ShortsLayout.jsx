@@ -15,7 +15,7 @@ const ScrollableComponent = () => {
 
   const handleInView = (visibleIndex) => {
     setIndex(visibleIndex)
-    console.log(list.length)
+    // console.log(list.length)
   }
   // itemRefs의 길이를 데이터 리스트의 길이와 맞추는 함수
   const updateItemRefs = useCallback(() => {
@@ -75,26 +75,23 @@ const ScrollableComponent = () => {
   useEffect(() => {
     const container = containerRef.current
     if (container && itemRefs.current[index]?.current) {
-      const item = itemRefs.current[index].current
-      const containerHeight = container.clientHeight
-      const itemHeight = item.clientHeight + 3
-      const itemTop = item.offsetTop
-
-      console.log(
-        itemHeight,
-        "top : ",
-        itemTop,
-        "container",
-
-        "height : ",
-        containerHeight
-      )
+      // const item = itemRefs.current[index].current
+      // const containerHeight = container.clientHeight
+      // const itemHeight = item.clientHeight + 3
+      // const itemTop = item.offsetTop
+      // console.log(
+      //   itemHeight,
+      //   "top : ",
+      //   itemTop,
+      //   "container",
+      //   "height : ",
+      //   containerHeight
+      // )
       // Scroll to center the item in the container
       // container.scrollTo({
       //   top: itemTop - containerHeight / 2 + itemHeight / 2,
       //   behavior: "smooth",
       // })
-      console.log(top)
     }
   }, [index])
 

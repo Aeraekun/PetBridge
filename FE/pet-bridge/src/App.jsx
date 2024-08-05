@@ -118,9 +118,9 @@ function App() {
             <Route index element={<AnimalBoardList />} />
             <Route path="0" element={<AnimalAPIBoardLIst />} />
             <Route path="1" element={<AnimalBoardList />} />
-            <Route path="details/:id" element={<AnimalDetail />} />
+            <Route path="details/:animalId" element={<AnimalDetail />} />
             <Route
-              path="modify/:id"
+              path="modify/:animalId"
               element={
                 <PrivateRoute
                   component={<AnimalDetailModify />}
