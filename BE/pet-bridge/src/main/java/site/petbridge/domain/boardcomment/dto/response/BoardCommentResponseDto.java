@@ -1,39 +1,27 @@
 package site.petbridge.domain.boardcomment.dto.response;
 
-import java.sql.Timestamp;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import site.petbridge.domain.boardcomment.domain.BoardComment;
-import site.petbridge.domain.user.domain.User;
+import java.time.LocalDateTime;
 
-@Data
-@Builder
-@AllArgsConstructor
+@Getter
 public class BoardCommentResponseDto {
-
     private int id;
-    private int boardId;
     private int userId;
+    private int boardId;
     private String content;
-    private Timestamp registTime;
-    private boolean disabled;
-
+    private LocalDateTime registTime;
     private String userNickname;
     private String userImage;
 
-    public static BoardCommentResponseDto TransferToBoardCommentResponseDto(BoardComment boardComment, User user){
-        return BoardCommentResponseDto.builder()
-            .id(boardComment.getId())
-            .boardId(boardComment.getId())
-            .userId(boardComment.getUserId())
-            .content(boardComment.getContent())
-            .registTime(boardComment.getRegistTime())
-            .disabled(boardComment.isDisabled())
-            .userNickname(user.getNickname())
-            .userImage(user.getImage())
-            .build();
-    }
 
+    public BoardCommentResponseDto(BoardComment entity, String userNickname, String image) {
+        this.id = entity.getId();
+        this.userId = entity.getUserId();
+        this.boardId = entity.getBoardId();
+        this.content = entity.getContent();
+        this.registTime = entity.getRegistTime();
+        this.userNickname = userNickname;
+        this.userImage = image;
+    }
 }

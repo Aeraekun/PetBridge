@@ -1,73 +1,98 @@
 package site.petbridge.domain.boardcomment.service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import site.petbridge.domain.board.repository.BoardRepository;
 import site.petbridge.domain.boardcomment.domain.BoardComment;
-import site.petbridge.domain.boardcomment.dto.request.BoardCommentRequestDto;
+import site.petbridge.domain.boardcomment.dto.request.BoardCommentEditRequestDto;
+import site.petbridge.domain.boardcomment.dto.request.BoardCommentRegistRequestDto;
 import site.petbridge.domain.boardcomment.dto.response.BoardCommentResponseDto;
 import site.petbridge.domain.boardcomment.repository.BoardCommentRepository;
-import site.petbridge.domain.user.repository.UserRepository;
+import site.petbridge.domain.user.domain.User;
+import site.petbridge.global.exception.ErrorCode;
+import site.petbridge.global.exception.PetBridgeException;
+import site.petbridge.util.AuthUtil;
+
+import java.util.List;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class BoardCommentServiceImpl implements BoardCommentService {
 
+    private final AuthUtil authUtil;
     private final BoardCommentRepository boardCommentRepository;
-	private final UserRepository userRepository;
+    private final BoardRepository boardRepository;
 
-	@Override
-	public Optional<List<BoardCommentResponseDto>> getListBoardComment(int boardId) {
-		Optional<List<BoardComment>> boardComments = boardCommentRepository.findByBoardId(boardId);
+    /**
+     * 게시글 댓글 등록
+     */
+    @Transactional
+    @Override
+    public void registBoardComment(BoardCommentRegistRequestDto boardCommentRegistRequestDto) throws Exception {
+        User user = authUtil.getAuthenticatedUser();
 
-		return boardComments.map(commentList ->
-			commentList.stream()
-				.map(boardComment ->
-					BoardCommentResponseDto.TransferToBoardCommentResponseDto(
-						boardComment, userRepository.findById(boardComment.getUserId()).get()
-					)
-				)
-				.collect(Collectors.toList())
-		);
-	}
+        // 존재하는 게시글 아니면 404
+        if (!boardRepository.findByIdAndDisabledFalse(boardCommentRegistRequestDto.getBoardId()).isPresent()) {
+            throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND);
+        }
 
-	@Override
-	public void registBoardComment(BoardCommentRequestDto boardCommentRequestDto) {
-		BoardComment boardComment = BoardComment.builder()
-			.boardId(boardCommentRequestDto.getBoardId())
-			.userId(boardCommentRequestDto.getUserId())
-			.content(boardCommentRequestDto.getContent())
-			.build();
+        BoardComment entity = boardCommentRegistRequestDto.toEntity(user.getId());
+        boardCommentRepository.save(entity);
+    }
 
-		boardCommentRepository.save(boardComment);
-	}
+    /**
+     * 게시글 댓글 조회
+     */
+    @Override
+    public List<BoardCommentResponseDto> getListBoardComment(int boardId, int page, int size) throws Exception {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "registTime"));
+        Page<BoardCommentResponseDto> boardComments = boardCommentRepository.findByBoardIdAndDisabledFalse(boardId, pageable);
 
-	@Override
-	public int editBoardComment(int id, BoardCommentRequestDto boardCommentRequestDto) {
-		BoardComment boardComment = boardCommentRepository.findById(id).orElse(null);
-		if(boardComment != null) {
-			boardComment.setUserId(boardCommentRequestDto.getUserId());
-			boardComment.setContent(boardCommentRequestDto.getContent());
-			boardCommentRepository.save(boardComment);
-			return 1;
-		}
-		return 0;
-	}
+        return boardComments.getContent();
+    }
 
-	@Override
-	public int removeBoardComment(int id) {
-		BoardComment boardComment = boardCommentRepository.findById(id).orElse(null);
-		if(boardComment != null) {
-			boardComment.setDisabled(true);
-			boardCommentRepository.save(boardComment);
-			return 1;
-		}
-		return 0;
-	}
+    /**
+     * 게시글 댓글 수정
+     */
+    @Transactional
+    @Override
+    public void editBoardComment(int id, BoardCommentEditRequestDto boardCommentEditRequestDto) throws Exception {
+        User user = authUtil.getAuthenticatedUser();
+
+        // 없거나 삭제된 게시글 댓글 404
+        BoardComment entity = boardCommentRepository.findByIdAndDisabledFalse(id)
+                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+        // 내 게시글 댓글 아님 403
+        if (entity.getUserId() != user.getId()) {
+            throw new PetBridgeException(ErrorCode.FORBIDDEN);
+        }
+
+        entity.update(boardCommentEditRequestDto);
+        boardCommentRepository.save(entity);
+    }
+
+    /**
+     * 게시글 댓글 삭제
+     */
+    @Transactional
+    @Override
+    public void removeBoardComment(int id) throws Exception {
+        User user = authUtil.getAuthenticatedUser();
+
+        // 없거나 삭제된 게시글 댓글 404
+        BoardComment entity = boardCommentRepository.findByIdAndDisabledFalse(id)
+                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+        // 내 게시글 댓글 아님 403
+        if (entity.getUserId() != user.getId()) {
+            throw new PetBridgeException(ErrorCode.FORBIDDEN);
+        }
+
+        entity.disable();
+        boardCommentRepository.save(entity);
+    }
 }

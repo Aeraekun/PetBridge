@@ -42,7 +42,7 @@ public class ReportServiceImpl implements ReportService {
     @Transactional
     @Override
     public void registReport(ReportRegistRequestDto reportRegistRequestDto) throws Exception {
-        User user = authUtil.getAuthenticatedUser(userRepository);
+        User user = authUtil.getAuthenticatedUser();
 
         if (user.getRole() != Role.USER) {
             throw new PetBridgeException(ErrorCode.FORBIDDEN);
@@ -53,7 +53,7 @@ public class ReportServiceImpl implements ReportService {
             User userToReport = userRepository.findById(reportRegistRequestDto.getReportId()).orElse(null);
             if (userToReport == null) { throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND); }
         } else if (reportRegistRequestDto.getReportType() == ReportType.BOARD) {
-            Board boardToReport = boardRepository.findById(reportRegistRequestDto.getReportId()).orElse(null);
+            Board boardToReport = boardRepository.findById((long) reportRegistRequestDto.getReportId()).orElse(null);
             if (boardToReport == null) { throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND); }
         } else if (reportRegistRequestDto.getReportType() == ReportType.PETPICK) {
             PetPick petPickToReport = petPickRepository.findById((long) reportRegistRequestDto.getReportId()).orElse(null);
@@ -67,7 +67,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public List<ReportResponseDto> getListReport(int page, int size, ReportType reportType) throws Exception {
 
-        User user = authUtil.getAuthenticatedUser(userRepository);
+        User user = authUtil.getAuthenticatedUser();
         // ADMIN만
         if (user.getRole() != Role.ADMIN) {
             throw new PetBridgeException(ErrorCode.FORBIDDEN);
@@ -91,7 +91,7 @@ public class ReportServiceImpl implements ReportService {
     @Transactional
     @Override
     public void editReportConfirm(int id) throws Exception {
-        User user = authUtil.getAuthenticatedUser(userRepository);
+        User user = authUtil.getAuthenticatedUser();
         // ADMIN만
         if (user.getRole() != Role.ADMIN) {
             throw new PetBridgeException(ErrorCode.FORBIDDEN);
