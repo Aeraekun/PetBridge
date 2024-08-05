@@ -19,6 +19,8 @@ public interface AnimalService {
 
     List<AnimalResponseDto> getListMyAnimal(int page, int size) throws Exception;
 
+    List<AnimalResponseDto> getListUserAnimal(String userNickname, int page, int size) throws Exception;
+
     List<AnimalResponseDto> getListFollowAnimal(int page, int size) throws Exception;
 
     AnimalResponseDto getDetailAnimal(int id) throws Exception;

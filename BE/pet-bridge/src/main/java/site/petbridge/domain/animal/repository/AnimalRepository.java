@@ -17,4 +17,5 @@ public interface AnimalRepository extends JpaRepository<Animal, Long> {
     Page<Animal> findByCareAddrContainingAndDisabledFalse(String careAddr, Pageable pageable);
 
     Page<Animal> findByUserIdAndDisabledFalse(int userId, Pageable pageable);
+
 }
