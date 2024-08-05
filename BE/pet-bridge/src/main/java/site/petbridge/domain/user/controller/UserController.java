@@ -109,9 +109,8 @@ public class UserController {
     }
 
     @PostMapping("/authentication/email")
-    public ResponseEntity<UserResponseDto> sendEmailAuthenticationCode(
+    public ResponseEntity<Void> sendEmailAuthenticationCode(
         @RequestBody EmailRequestDto emailRequestDto) throws Exception {
-        System.out.println("요청들어왔따");
         if (userService.checkEmailDuplicate(emailRequestDto)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
@@ -121,7 +120,7 @@ public class UserController {
     }
 
     @PostMapping("/authentication/email/check")
-    public ResponseEntity<UserResponseDto> checkEmailAuthenticationCode(
+    public ResponseEntity<Void> checkEmailAuthenticationCode(
         @RequestBody EmailRequestDto emailRequestDto) throws Exception {
         if (userService.checkEmailDuplicate(emailRequestDto)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -134,17 +133,15 @@ public class UserController {
     }
 
 
-    @PostMapping("/api/users/authentication/phone")
+    @PostMapping("authentication/phone")
     public ResponseEntity<Void> sendPhoneAuthenticationCode(
         @RequestBody PhoneRequestDto phoneRequestDto) throws Exception {
-        System.out.println("요청들어왔따");
-
         userService.sendPhoneAuthenticationCode(phoneRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
 
     }
 
-    @PostMapping("/api/users/authentication/phone/check")
+    @PostMapping("authentication/phone/check")
     public ResponseEntity<Void> checkPhoneAuthenticationCode(
         @RequestBody PhoneRequestDto phoneRequestDto) throws Exception {
         if (!userService.checkPhoneAuthenticationCode(phoneRequestDto)) {
