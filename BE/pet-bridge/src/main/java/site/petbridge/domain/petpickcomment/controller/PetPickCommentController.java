@@ -36,7 +36,7 @@ public class PetPickCommentController {
      * 펫픽 id로 펫픽 댓글 목록 조회 (페이징 처리)
      */
     @GetMapping("/{petpick_id}")
-    public ResponseEntity<List<PetPickCommentResponseDto>> getListPetPickComment(@PathVariable("short_id") Long petPickId,
+    public ResponseEntity<List<PetPickCommentResponseDto>> getListPetPickComment(@PathVariable("petpick_id") Long petPickId,
                                                                                  @RequestParam(defaultValue = "0") int page,
                                                                                  @RequestParam(defaultValue = "12") int size) {
         List<PetPickCommentResponseDto> petPickCommentResponseDtos = petPickCommentService.getListPetPickComment(petPickId, page, size);
@@ -70,5 +70,4 @@ public class PetPickCommentController {
         petPickCommentService.removePetPickComment(httpServletRequest, id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }

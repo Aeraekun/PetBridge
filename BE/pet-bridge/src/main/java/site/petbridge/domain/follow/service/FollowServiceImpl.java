@@ -36,7 +36,7 @@ public class FollowServiceImpl implements FollowService {
     @Override
     public void registFollow(HttpServletRequest httpServletRequest, FollowRequestDto followRequestDto) throws Exception {
 
-        User user = authUtil.getAuthenticatedUser(userRepository);
+        User user = authUtil.getAuthenticatedUser();
 
         // 존재하는 animal에 대한 요청인지 확인
         boolean exists = animalRepository.existsById((long) followRequestDto.getAnimalId());
@@ -59,7 +59,7 @@ public class FollowServiceImpl implements FollowService {
     @Override
     public void deleteFollow(HttpServletRequest httpServletRequest, FollowRequestDto followRequestDto) throws Exception {
 
-        User user = authUtil.getAuthenticatedUser(userRepository);
+        User user = authUtil.getAuthenticatedUser();
 
         // 존재하는 animal에 대한 요청인지 확인
         boolean exists = animalRepository.existsById((long) followRequestDto.getAnimalId());

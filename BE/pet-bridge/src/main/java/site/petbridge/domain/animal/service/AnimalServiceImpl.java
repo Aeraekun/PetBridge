@@ -44,7 +44,7 @@ public class AnimalServiceImpl implements AnimalService {
 	@Transactional
 	@Override
 	public void registAnimal(AnimalRegistRequestDto animalRegistRequestDto, MultipartFile imageFile) throws Exception {
-		User user = authUtil.getAuthenticatedUser(userRepository);
+		User user = authUtil.getAuthenticatedUser();
 
 		String savedImageFileName = null;
 		if (imageFile != null) {
@@ -61,7 +61,7 @@ public class AnimalServiceImpl implements AnimalService {
 	@Transactional
 	@Override
 	public void editAnimal(int id, AnimalEditRequestDto animalEditRequestDto, MultipartFile imageFile) throws Exception {
-		User user = authUtil.getAuthenticatedUser(userRepository);
+		User user = authUtil.getAuthenticatedUser();
 
 		// 없거나 삭제된 동물
 		Animal entity = animalRepository.findByIdAndDisabledFalse(id)
@@ -87,7 +87,7 @@ public class AnimalServiceImpl implements AnimalService {
 	@Transactional
 	@Override
 	public void removeAnimal(int id) throws Exception {
-		User user = authUtil.getAuthenticatedUser(userRepository);
+		User user = authUtil.getAuthenticatedUser();
 
 		// 없거나 삭제된 동물
 		Animal entity = animalRepository.findByIdAndDisabledFalse(id)
@@ -146,7 +146,7 @@ public class AnimalServiceImpl implements AnimalService {
 	 */
 	@Override
 	public List<AnimalResponseDto> getListMyAnimal(int page, int size) throws Exception {
-		User user = authUtil.getAuthenticatedUser(userRepository);
+		User user = authUtil.getAuthenticatedUser();
 
 		Sort sort = Sort.by(Sort.Direction.DESC, "id");
 		Pageable pageable = PageRequest.of(page, size, sort);
@@ -163,7 +163,7 @@ public class AnimalServiceImpl implements AnimalService {
 	 */
 	@Override
 	public List<AnimalResponseDto> getListFollowAnimal(int page, int size) throws Exception {
-		User user = authUtil.getAuthenticatedUser(userRepository);
+		User user = authUtil.getAuthenticatedUser();
 
 		// FollowRepository로부터 팔로우한 동물 목록 가져오기
 		List<Animal> animals = followRepository.findFollowedAnimalsByUserId(user.getId());

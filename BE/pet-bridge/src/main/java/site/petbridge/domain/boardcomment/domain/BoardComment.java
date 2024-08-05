@@ -1,44 +1,48 @@
 package site.petbridge.domain.boardcomment.domain;
 
-import java.sql.Timestamp;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import site.petbridge.domain.boardcomment.dto.request.BoardCommentEditRequestDto;
+import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Builder
+@Getter
+@NoArgsConstructor(access =  AccessLevel.PROTECTED)
 @Table(name = "board_comments")
-@AllArgsConstructor
 public class BoardComment {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@Column(name = "board_id")
-	private int boardId;
+    @Column(name = "board_id")
+    private int boardId;
 
-	@Column(name = "user_id")
-	private int userId;
+    @Column(name = "user_id")
+    private int userId;
 
-	private String content;
+    private String content;
 
-	@Column(name = "regist_time", insertable = false, updatable = false)
-	private Timestamp registTime;
+    @Column(name = "regist_time")
+    private LocalDateTime registTime = LocalDateTime.now();
 
-	@Builder.Default
-	private boolean disabled = false;
+    private boolean disabled = false;
+
+    @Builder
+    public BoardComment(int userId, int boardId, String content) {
+        this.userId = userId;
+        this.boardId = boardId;
+        this.content = content;
+    }
+
+    public void update(BoardCommentEditRequestDto boardCommentEditRequestDto) {
+        this.content = boardCommentEditRequestDto.getContent();
+    }
+
+    public void disable() {
+        this.disabled = true;
+    }
 }
