@@ -1,33 +1,48 @@
+import {useNavigate, Routes, Route} from "react-router-dom"
+
 import Kakao from "components/map/Kakao"
-import Report from "components/map/Report"
-import Navbar from "components/header/Navbar"
-import {Routes, Route, Link} from "react-router-dom"
+
+const categories = [
+  {id: 0, title: "실종동물지도", path: "/lost-and-found"},
+  {id: 1, title: "실종동물 제보하기", path: "/lost-and-found/report"},
+]
+
+const CategoryNavbar = () => {
+  const navigate = useNavigate()
+  const handleNavigation = (path) => {
+    navigate(path)
+  }
+
+  return (
+    <ul className="flex h-12 items-center justify-start space-x-6 text-xl">
+      {categories.map((category) => (
+        <li key={category.id} className="flex h-12 items-center">
+          <button
+            onClick={() => handleNavigation(category.path)}
+            className="flex h-12 items-center px-2.5 text-xl hover:text-blue-500"
+          >
+            {category.title}
+          </button>
+        </li>
+      ))}
+    </ul>
+  )
+}
 
 const LostAndFoundPage = () => {
   return (
     <>
-      <Navbar />
-      <header className="border-b bg-yellow py-10 text-center">
-        <div className="flex justify-center space-x-6 text-lg">
-          <button>
-            <Link to="/lost-and-found">실종동물지도</Link>
-          </button>
-          <button>
-            <Link to="/lost-and-found/report">실종동물 제보하기</Link>
-          </button>
-          <button>
-            <Link to="/lost-and-found/1">
-              실종동물 상세페이지[페이지 구현 후 삭제필요]
-            </Link>
-          </button>
-        </div>
-      </header>
-      <section className="grid place-items-center">
-        <Routes>
-          <Route path="/" element={<Kakao />}></Route>
-          <Route path="/report" element={<Report />}></Route>
-        </Routes>
-      </section>
+      <div className="mt-10 flex w-[1000px] flex-col">
+        <CategoryNavbar /> {/* 카테고리 네비게이션 추가 */}
+      </div>
+      <div className="flex w-full flex-col items-center space-y-3">
+        <hr className="w-full max-w-[1000px] border-gray-300" />
+        <section className="flex w-full max-w-[1000px] justify-center">
+          <Routes>
+            <Route path="/" element={<Kakao />} />
+          </Routes>
+        </section>
+      </div>
     </>
   )
 }
