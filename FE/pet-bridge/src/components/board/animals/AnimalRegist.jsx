@@ -1,30 +1,15 @@
-import SirenIcon from "components/common/SirenIcon"
 import Button from "components/common/Button"
 import {useNavigate} from "react-router-dom"
 // import animaldata from "./animaldata"
 import React, {useState, useEffect} from "react"
 import AnimalDetailProfile from "./AnimalDetailProfile"
 import {registAnimal} from "api/animals-api"
-const Profile = ({nickname}) => {
-  return (
-    <div className="mb-4 flex h-8 items-center justify-around space-x-2.5">
-      <img
-        src="https://via.placeholder.com/50"
-        alt="Author Avatar"
-        className="size-12 rounded-full border "
-      />
-      <div className="flex-1">
-        <p className="text-lg font-semibold">{nickname}</p>
-      </div>
-    </div>
-  )
-}
 
-const ArticleRegist = () => {
+const AnimalRegist = () => {
   const navigate = useNavigate()
   const [animal, setAnimal] = useState({})
-  const [newA, setNewA] = useState([])
   const [imageFile, setImageFile] = useState(null)
+  const [errors, setErrors] = useState({})
   useEffect(() => {
     // 실제 데이터를 불러오는 코드로 대체할 수 있습니다.
     const fetchAnimalData = () => {
@@ -78,11 +63,30 @@ const ArticleRegist = () => {
   const goBack = () => {
     navigate(-1)
   }
+  const validateForm = () => {
+    const requiredFields = ["name", "species", "age"]
+    const newErrors = {}
 
+    requiredFields.forEach((field) => {
+      if (!animal[field]) {
+        newErrors[field] = `${field} 필드는 필수입니다.`
+      }
+    })
+
+    if (!imageFile) {
+      newErrors.imageFile = "이미지를 업로드해주세요."
+    }
+
+    setErrors(newErrors)
+    console.log(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
   const regist = async () => {
-    setNewA(animal)
-    const newAnimal = newA
-
+    if (!validateForm()) {
+      return
+    }
+    const newAnimal = animal
+    console.log(newAnimal)
     //formData로 file이랑 animal 정보 한번에 넘김.
     const formData = new FormData()
     formData.append(
@@ -106,7 +110,8 @@ const ArticleRegist = () => {
       <button onClick={goBack} className="flex justify-start">
         돌아가기{" "}
       </button>
-      <Profile nickname={animal.name} />
+      <div className="text-2xl">내 동물 등록하기</div>
+      {/* <Profile nickname={animal.name} /> */}
       <hr />
 
       <AnimalDetailProfile
@@ -115,10 +120,15 @@ const ArticleRegist = () => {
         onInputChange={handleInputChange}
         onFileChange={handleFileChange}
         isShelter={false}
+        errors={errors}
       />
-      <div className="flex justify-end">
-        <SirenIcon />
-      </div>
+      {Object.keys(errors).length > 0 && (
+        <div className="mt-4 text-red-500">
+          {Object.values(errors).map((error, index) => (
+            <div key={index}>{error}</div>
+          ))}
+        </div>
+      )}
       <div className="flex justify-end">
         <Button text={"등록하기"} onClick={regist} />
         <Button text={"삭제하기"} onClick={goBack} />
@@ -127,4 +137,4 @@ const ArticleRegist = () => {
   )
 }
 
-export default ArticleRegist
+export default AnimalRegist
