@@ -21,19 +21,13 @@ const AnimalDetail = ({isShelter}) => {
   const goBack = () => {
     navigate(-1)
   }
-
-  const goAnimalRemove = async (animalId) => {
-    try {
-      await removeAnimal(animalId)
-      alert.apply("동물 삭제")
-    } catch (e) {
-      console.log(e)
-    }
-  }
   const goAnimalModify = (animal) => {
     const animalId = animal.desertionNo ? animal.desertionNo : animal.id
-    console.log(animal)
     navigate(`/shelter/modify/${animalId}`, {state: {animal}})
+  }
+  const goDeleteAnimal = async () => {
+    await removeAnimal(animal.id)
+    navigate(`/shelter/1`)
   }
   return (
     <>
@@ -54,7 +48,9 @@ const AnimalDetail = ({isShelter}) => {
           <Button text={"수정하기"} onClick={() => goAnimalModify(animal)} />
           <Button
             text={"삭제하기"}
-            onClick={() => goAnimalRemove(animal.animalId)}
+            onClick={() => {
+              goDeleteAnimal(animal.id)
+            }}
           />
         </div>
       ) : (
