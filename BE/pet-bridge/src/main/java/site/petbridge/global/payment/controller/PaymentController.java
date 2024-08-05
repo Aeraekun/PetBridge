@@ -49,7 +49,7 @@ public class PaymentController {
 		ReadyResponseDto readyResponseDto = kakaoPayService.payReady(name, totalPrice);
 
 		// SMS 인증 요청 시 인증 번호 Redis에 저장 ( key = userId / value = tid )
-		redisService.setValues(String.valueOf(authUtil.getAuthenticatedUser(userRepository).getId()),
+		redisService.setValues(String.valueOf(authUtil.getAuthenticatedUser().getId()),
 			String.valueOf(readyResponseDto.getTid()), Duration.ofMillis(authCodeExpirationMillis));
 
 		return readyResponseDto;

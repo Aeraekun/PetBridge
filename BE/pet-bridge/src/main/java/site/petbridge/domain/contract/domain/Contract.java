@@ -1,5 +1,7 @@
 package site.petbridge.domain.contract.domain;
 
+import static site.petbridge.domain.contract.domain.enums.Status.*;
+
 import java.time.LocalDate;
 
 import jakarta.persistence.Column;
@@ -50,9 +52,6 @@ public class Contract {
 	private LocalDate  expirationDate;
 
 	@Builder.Default
-	private boolean confirmed = false;
-
-	@Builder.Default
-	private boolean refunded = false;
+	private String status = PRE_CONTRACT.getKey();
 
 }
