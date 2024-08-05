@@ -42,7 +42,7 @@ public class AnimalController {
                                                                  @RequestParam(name = "size") int size,
                                                                  @RequestParam(name = "species", required = false) String species,
                                                                  @RequestParam(name = "careaddr", required = false) String careAddr,
-                                                                 @RequestParam(name = "processstate", required = false) String processState) throws Exception {
+                                                                 @RequestParam(name = "processstate", required = false, defaultValue = "") String processState) throws Exception {
         List<AnimalResponseDto> animalResponseDtos = animalService.getListAnimal(page, size, species, careAddr, processState);
 
         return Optional.ofNullable(animalResponseDtos)
