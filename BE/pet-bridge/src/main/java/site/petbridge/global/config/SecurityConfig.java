@@ -112,6 +112,20 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.PATCH, "/api/contracts/{id}").permitAll()
 				.requestMatchers(HttpMethod.DELETE, "/api/contracts/{id}/disable").permitAll()
 				.requestMatchers(HttpMethod.PATCH, "/api/contract-checks/{id}").permitAll()
+
+				// 채팅
+				.requestMatchers(HttpMethod.GET, "/api/chat-rooms/user/{userId}").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/chat-rooms/room/{roomId}").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/chat-rooms").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/chat-messages/{roomId}").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/chat-rooms/{userId}").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/chat-rooms/{userId}").permitAll()
+				.requestMatchers(HttpMethod.GET,"/friendChat").permitAll()
+				.requestMatchers(HttpMethod.GET,"/friendChat/**").permitAll()
+
+				// 결제
+				.requestMatchers(HttpMethod.POST,"/api/payment/ready").permitAll()
+				.requestMatchers(HttpMethod.GET,"/api/payment/completed").permitAll()
 				.anyRequest().authenticated()
 			)
 			// 소셜 로그인

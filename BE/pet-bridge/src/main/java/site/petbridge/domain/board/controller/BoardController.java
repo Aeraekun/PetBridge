@@ -1,69 +1,76 @@
 package site.petbridge.domain.board.controller;
 
-import java.util.List;
-
+import jakarta.validation.Valid;
+import kotlinx.serialization.Required;
+import lombok.RequiredArgsConstructor;
+import okhttp3.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import lombok.RequiredArgsConstructor;
-import site.petbridge.domain.board.dto.request.BoardRegistRequestDto;
 import site.petbridge.domain.board.dto.request.BoardEditRequestDto;
+import site.petbridge.domain.board.dto.request.BoardRegistRequestDto;
 import site.petbridge.domain.board.dto.response.BoardResponseDto;
 import site.petbridge.domain.board.service.BoardService;
+import site.petbridge.domain.user.dto.response.UserResponseDto;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/boards")
 public class BoardController {
 
-	private final BoardService boardService;
+    private final BoardService boardService;
 
-	@GetMapping
-	public ResponseEntity<List<BoardResponseDto>> getListBoard() {
-		System.out.println("getListBoard");
-		return boardService.getListBoard()
-			.map(ResponseEntity::ok)
-			.orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
-	}
+    /**
+     * 게시글 등록
+     */
+    @PostMapping
+    public ResponseEntity<Void> registBoard(
+            @Valid @RequestPart(name = "boardRegistRequestDto")BoardRegistRequestDto boardRegistRequestDto,
+            @RequestPart(name = "thumbnail")MultipartFile thumbnailFile) throws Exception {
+        boardService.registBoard(boardRegistRequestDto, thumbnailFile);
 
-	@GetMapping("/{id}")
-	public ResponseEntity<BoardResponseDto> getDetailBoard(@PathVariable("id") int id) {
-		return boardService.getDetailBoard(id)
-			.map(ResponseEntity::ok)
-			.orElseGet(() -> ResponseEntity.status(HttpStatus.NO_CONTENT).build());
-	}
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 
-	@PostMapping
-	public ResponseEntity<Void> registBoard(
-		@RequestPart(name = "boardRegistRequestDto") BoardRegistRequestDto boardRegistRequestDto,
-		@RequestPart(name = "file", required = false) MultipartFile file) throws Exception {
-		boardService.registBoard(boardRegistRequestDto, file);
-		return ResponseEntity.status((HttpStatus.CREATED)).build();
-	}
+    /**
+     * 게시글 목록 조회 (검색, 페이징)
+     */
+    @GetMapping
+    public ResponseEntity<List<BoardResponseDto>> getListBoard(@RequestParam(name = "page") int page,
+                                                               @RequestParam(name = "size") int size,
+                                                               @RequestParam(name = "usernickname", required = false) String userNickname,
+                                                               @RequestParam(name = "title", required = false) String title) throws Exception {
+        List<BoardResponseDto> boardResponseDtos = boardService.getListBoard(page, size, userNickname, title);
 
-	@PatchMapping("/{id}")
-	public ResponseEntity<Void> editBoard(
-		@PathVariable("id") int id,
-		@RequestPart(name = "boardEditRequestDto") BoardEditRequestDto boardEditRequestDto,
-		@RequestPart(name = "file", required = false) MultipartFile file) throws Exception {
-		if (boardService.editBoard(id, boardEditRequestDto, file) == 0) {
-			ResponseEntity.status((HttpStatus.BAD_REQUEST)).build();
-		}
-		return ResponseEntity.status((HttpStatus.OK)).build();
-	}
+        return Optional.ofNullable(boardResponseDtos)
+                .filter(list -> !list.isEmpty())
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.noContent().build());
+    }
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> removeBoard(@PathVariable("id") int boardId) {
-		if (boardService.removeBoard(boardId) == 1) {
-			return ResponseEntity.status((HttpStatus.NO_CONTENT)).build();
-		}
-		return ResponseEntity.status((HttpStatus.BAD_REQUEST)).build();
+    /**
+     * 게시글 수정
+     */
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> modifyBoard(@PathVariable("id") int id,
+                                            @Valid @RequestPart(name = "boardEditRequestDto")BoardEditRequestDto boardEditRequestDto,
+                                            @RequestPart(name =  "thumbnailFile", required = false) MultipartFile thumbnailFile) throws Exception {
+        boardService.editBoard(id, boardEditRequestDto, thumbnailFile);
 
-	}
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
+    /**
+     * 게시글 삭제
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> removeBoard(@PathVariable("id") int id) throws Exception {
+        boardService.removeBoard(id);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
-
-
-

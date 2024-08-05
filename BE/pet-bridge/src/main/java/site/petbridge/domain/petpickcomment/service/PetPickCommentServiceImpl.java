@@ -50,7 +50,7 @@ public class PetPickCommentServiceImpl implements PetPickCommentService {
     @Override
     public void registPetPickComment(HttpServletRequest httpServletRequest, PetPickCommentRegistRequestDto petPickCommentRegistRequestDto) throws Exception {
 
-        User user = authUtil.getAuthenticatedUser(userRepository);
+        User user = authUtil.getAuthenticatedUser();
 
         PetPickComment entity = petPickCommentRegistRequestDto.toEntity(user.getId());
 
@@ -82,7 +82,7 @@ public class PetPickCommentServiceImpl implements PetPickCommentService {
     @Override
     public void editPetPickComment(HttpServletRequest httpServletRequest, Long id, PetPickCommentEditRequestDto petPickCommentEditRequestDto) throws Exception {
 
-        User user = authUtil.getAuthenticatedUser(userRepository);
+        User user = authUtil.getAuthenticatedUser();
 
         // 해당 id 펫픽 댓글 없을 때
         PetPickComment entity = petPickCommentRepository.findById(id)
@@ -103,7 +103,7 @@ public class PetPickCommentServiceImpl implements PetPickCommentService {
     @Override
     public void removePetPickComment(HttpServletRequest httpServletRequest, Long id) throws Exception {
 
-        User user = authUtil.getAuthenticatedUser(userRepository);
+        User user = authUtil.getAuthenticatedUser();
 
         // 해당 id 펫픽 댓글 없을 때
         PetPickComment entity = petPickCommentRepository.findById(id)

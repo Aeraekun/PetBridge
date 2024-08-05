@@ -1,58 +1,75 @@
 package site.petbridge.domain.board.domain;
 
-import java.sql.Timestamp;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import site.petbridge.domain.board.domain.enums.BoardType;
+import site.petbridge.domain.board.dto.request.BoardEditRequestDto;
 
-@Getter
-@Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+import java.time.LocalDateTime;
+
 @Entity
-@Builder
+@Getter
 @Table(name = "boards")
-@AllArgsConstructor
+@NoArgsConstructor(access =  AccessLevel.PROTECTED)
 public class Board {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@Column(name = "user_id")
-	private int userId;
+    @Column(name = "user_id")
+    private int userId;
 
-	@Column(name = "animal_id")
-	private int animalId;
+    @Column(name = "animal_id")
+    private int animalId;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "type")
-	private BoardType type; // PROMOTION, REVIEW, FREE, NOTICE
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private BoardType boardType;
 
-	private String thumbnail;
-	private String title;
-	private String content;
+    private String thumbnail;
 
-	@Column(name = "regist_time", insertable = false, updatable = false)
-	private Timestamp registTime;
+    private String title;
 
-	private String lat;
-	private String lon;
+    private String content;
 
-	@Builder.Default
-	private boolean disabled = false;
+    @Column(name = "regist_time")
+    private LocalDateTime registTime;
 
+    private String lat;
+
+    private String lon;
+
+    private boolean disabled = false;
+
+    @Builder
+    public Board(int userId, int animalId, BoardType boardType, String thumbnail, String title, String content,
+                 LocalDateTime registTime, String lat, String lon) {
+        this.userId = userId;
+        this.animalId = animalId;
+        this.boardType = boardType;
+        this.thumbnail = thumbnail;
+        this.title = title;
+        this.content = content;
+        this.registTime = registTime;
+        this.lat = lat;
+        this.lon = lon;
+    }
+
+    public void update(BoardEditRequestDto boardEditRequestDto, String thumbnail) {
+        this.animalId = boardEditRequestDto.getAnimalId();
+        this.boardType = boardEditRequestDto.getBoardType();
+        this.thumbnail = thumbnail;
+        this.title = boardEditRequestDto.getTitle();
+        this.content = boardEditRequestDto.getContent();
+        this.lat = boardEditRequestDto.getLat();
+        this.lon = boardEditRequestDto.getLon();
+    }
+
+    public void disable() {
+        this.disabled = true;
+    }
 }
