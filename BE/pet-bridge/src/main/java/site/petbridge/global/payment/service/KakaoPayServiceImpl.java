@@ -31,7 +31,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 
 	// 카카오페이 결제창 연결
 	public ReadyResponseDto payReady(String name, int totalPrice) {
-		User user = authUtil.getAuthenticatedUser(userRepository);
+		User user = authUtil.getAuthenticatedUser();
 
 		Map<String, String> parameters = new HashMap<>();
 		parameters.put("cid", "TC0ONETIME");                                    // 가맹점 코드(테스트용)
