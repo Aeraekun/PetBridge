@@ -1,8 +1,10 @@
 import MyPageCard from "components/my-page/MyPageCard"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import {useEffect, useState} from "react"
 import {getMyPetPics} from "api/mypage-api"
 import {useInView} from "react-intersection-observer"
+import Button from "components/common/Button"
+import {goDeletePetpick} from "utils/petpick-utils"
 
 const MyPagePetPicsContainer = () => {
   // isLoading true로 설정해두고, 화면 초기 로드 완료시 false로 변경 후 스크롤 페이지 렌더링
@@ -10,10 +12,10 @@ const MyPagePetPicsContainer = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [isMoreRemained, setIsMoreRemaind] = useState(true)
   const [items, setItems] = useState([])
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
 
   // API 요청을 보내기 위한 파라미터
-  const [searchParams, setSearchParams] = useState({size: 12, page: 1})
+  const [searchParams, setSearchParams] = useState({size: 12, page: 0})
 
   // 초기값 로딩
   useEffect(() => {
@@ -24,6 +26,8 @@ const MyPagePetPicsContainer = () => {
         // 로딩상태 해제, 새로 받아온 값을 배열에 추가
         setIsLoading(false)
         setItems((prevItems) => [...prevItems, ...newItems])
+
+        console.log("items!!!", items)
       }
     }
 
@@ -37,8 +41,8 @@ const MyPagePetPicsContainer = () => {
       let newItems = []
 
       if (res.data) {
-        console.log("fetch 성공!!!", res)
-        newItems = res.data.response.body.items.item
+        console.log("데이터 추가!!!", res.data)
+        newItems = res.data
         setPage((prevPageNo) => prevPageNo + 1)
         return newItems
       } else {
@@ -75,13 +79,18 @@ const MyPagePetPicsContainer = () => {
   useEffect(() => {
     setSearchParams({...searchParams, page: page})
   }, [page])
+  const navigate = useNavigate()
 
+  const handleClick = (item) => {
+    console.log(item)
+    navigate(`/petpick/modify/${item.id}`, {state: {item}})
+  }
   return (
     <div className="flex h-full flex-col items-center">
       <div className="flex w-full justify-center p-2.5 ">
         <button className="text-4xl font-bold">내 펫픽</button>
         <Link
-          className=" fixed right-3 top-3 rounded-xl bg-mild p-2.5"
+          className=" bg-mild fixed right-3 top-3 rounded-xl p-2.5"
           to="/petpick/write"
         >
           펫픽 만들기
@@ -89,15 +98,14 @@ const MyPagePetPicsContainer = () => {
       </div>
       {isLoading ? (
         <div className="flex size-full items-center justify-center">
-          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
           <span className="px-5 text-6xl font-bold">Loading...</span>
         </div>
       ) : (
         <div className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
           {items.map((item, index) => (
-            <Link
+            <div
               key={index}
-              to={`/shelter/details/${item.desertionNo}`}
               className="m-2.5 "
               // 화면에 들어오는지 확인할 객체를 선택하기 위한 ref 설정 : 배열의 마지막 값
               ref={index === items.length - 1 ? ref : null}
@@ -107,17 +115,27 @@ const MyPagePetPicsContainer = () => {
                 imageSrc={item.thumbnail}
                 imageAlt={item.title}
                 content1={item.title}
-                content2={item.animalId}
+                content2={item.registTime.split("T")[0]}
                 content3={item.content}
+                onClick={() => {
+                  handleClick(item)
+                }}
               />
-            </Link>
+            </div>
           ))}
+
           {isLoadingMore ? (
             <div className="flex items-center">
-              <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+              <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
               <span>추가 데이터를 로딩중입니다</span>
             </div>
           ) : null}
+          <Button
+            text={"삭제하기"}
+            onClick={() => {
+              goDeletePetpick(10)
+            }}
+          />
           {!isMoreRemained && <p>불러올 데이터가 없습니다.</p>}
         </div>
       )}
