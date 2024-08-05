@@ -2,41 +2,46 @@
 import Comment from "../common/Comment"
 import React, {forwardRef, useEffect, useState} from "react"
 // import dummydata from "./dummydata"
-import {useDispatch, useSelector} from "react-redux"
-import {selectIsAuthenticated} from "features/user/users-slice"
+import {useSelector} from "react-redux"
+import {selectId, selectIsAuthenticated} from "features/user/users-slice"
 import PetpickIconContainer from "components/petpick/PetpickIconContainer"
 import PetpickVideo from "./PetpickVideo"
 
-import {
-  // fetchPetpickList,
-  setNowPetpick,
-  // selectPetpickStatus,
-  // selectPetpickError,
-} from "features/petpick/petpick-slice"
 import {useInView} from "react-intersection-observer"
 import Profile from "components/common/Profile"
-import {registPetPickComment} from "api/petpicks-api"
+import {
+  getPetpickComments,
+  registPetPickComment,
+  removePetpickComments,
+} from "api/petpicks-api"
 
 const CommentInput = ({petpickId, onCommentAdded}) => {
   const isAuthenticated = useSelector(selectIsAuthenticated)
-
   const [inputComment, setInputComment] = useState("")
+
   const sendMsg = async () => {
     const newComment = {
-      boardId: petpickId,
+      petPickId: petpickId,
       content: inputComment,
     }
-    console.log({newComment})
+    console.log(newComment)
 
     try {
       await registPetPickComment(newComment)
       setInputComment("")
       onCommentAdded() //댓글 작성하면 콜백함수 호출
-      alert("댓글 등록 완료", newComment)
     } catch (e) {
       console.error(e)
     }
   }
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault() // 기본 동작 방지
+      sendMsg()
+    }
+  }
+
   return (
     <div className="flex h-16 flex-col justify-between space-x-2.5 ">
       {isAuthenticated ? (
@@ -47,6 +52,7 @@ const CommentInput = ({petpickId, onCommentAdded}) => {
             placeholder="댓글을 남겨보세요"
             value={inputComment}
             onChange={(e) => setInputComment(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <button className="h-10   w-12" onClick={sendMsg}>
             <img src="/icons/icon-send.svg" alt="sendIcon" />
@@ -76,6 +82,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
   const {ref: observerRef, inView} = useInView({
     threshold: 0.51, // Trigger when 20% of the item is visible
   })
+  const currentUserId = useSelector(selectId)
 
   useEffect(() => {
     if (inView) {
@@ -87,7 +94,6 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
   const [commentList, setCommentList] = useState([])
   const [isVisible, setIsVisible] = useState(false)
 
-  const dispatch = useDispatch()
   const petpick = pet // prop에서 petpick 데이터 가져오기
   //댓글리스트 불러올때 필요
 
@@ -98,13 +104,10 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
 
   useEffect(() => {}, [isVisible])
 
-  useEffect(() => {
-    dispatch(setNowPetpick(pet))
-  }, [])
-
   const fetchComments = async () => {
-    const commentList = petpick?.comments || [] // 펫픽 댓글 조회 API
+    const commentList = await getPetpickComments(petpick.id, 0, 12)
     setCommentList(commentList)
+    console.log(currentUserId)
   }
 
   useEffect(() => {
@@ -116,6 +119,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
 
   //댓글 등록하고나서 필요
   const handleCommentAdded = () => {
+    console.log("댓글 다시 받아옴")
     fetchComments() // 댓글 등록 후 댓글 리스트를 다시 가져옴
   }
 
@@ -128,7 +132,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
         //id
         {
           try {
-            //await removePetpickComments(id) //댓글 삭제 api
+            await removePetpickComments(deleteId) //댓글 삭제 api
             setDeleteId(null) // 삭제 후 deleteId 초기화
             fetchComments() // 삭제 후 댓글 목록 다시 가져오기
           } catch (e) {
@@ -183,7 +187,11 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
             {commentList.length > 0 ? (
               commentList.map((comment, index) => (
                 <li key={index}>
-                  <Comment data={comment} onDelete={handleDelete} />
+                  <Comment
+                    data={comment}
+                    onDelete={handleDelete}
+                    currentUserId={currentUserId}
+                  />
                 </li>
               ))
             ) : (
