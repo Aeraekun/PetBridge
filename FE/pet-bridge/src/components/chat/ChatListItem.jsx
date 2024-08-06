@@ -18,7 +18,7 @@ const ChatListItem = ({
   return (
     <button
       onClick={clickButtonHandler}
-      className={`flex h-1/6 w-48 p-2.5 transition-all hover:scale-105 hover:bg-point ${currentChatId === id ? "bg-mild" : null}`}
+      className={`hover:bg-point flex h-1/4 w-60 p-2.5 transition-all ${currentChatId === id ? "bg-mild" : null}`}
     >
       <img
         src={opponentImage}

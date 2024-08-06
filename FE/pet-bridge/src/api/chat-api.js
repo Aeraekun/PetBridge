@@ -34,9 +34,12 @@ export const getChatMessageList = (roomId) => {
 }
 
 // 메시지 전송 - 소켓
-export const postChatMessage = async (messageForm) => {
+export const postChatMessage = async (ChatMessageRequestDto) => {
   try {
-    const res = await axiosInstance.post(`/chat-messages`, messageForm)
+    const res = await axiosInstance.post(
+      `/chat-messages`,
+      ChatMessageRequestDto.roomId
+    )
     return res
   } catch (error) {
     alert("메세지 전송에 실패했습니다.")

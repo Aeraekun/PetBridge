@@ -2,11 +2,11 @@ import {useSelector} from "react-redux"
 import MessageItem from "./MessageItem"
 import {selectId} from "features/user/users-slice"
 import {selectCurrentChatId} from "features/chat/chat-slice"
-import {useEffect, useState} from "react"
+import {useEffect, useRef, useState} from "react"
 import {postChatMessage} from "api/chat-api"
 
 const ChatMain = () => {
-  const [messageForm, setMessageForm] = useState({
+  const [chatMessageRequestDto, setChatMessageRequestDto] = useState({
     roomId: null,
     senderId: null,
     content: "",
@@ -14,7 +14,7 @@ const ChatMain = () => {
 
   const userId = useSelector(selectId)
   const roomId = useSelector(selectCurrentChatId)
-  const messages = [
+  const [messages, setMessages] = useState([
     {
       roomId: 2,
       senderId: 3,
@@ -135,13 +135,16 @@ const ChatMain = () => {
       content: "좋은 하루 되세요!",
       registTime: "2024-08-04T10:19:00",
     },
-  ]
+  ])
+  const [messageInput, setMessageInput] = useState("")
+  const messagesEndRef = useRef(null)
 
+  // 초기 메세지를 로드함
   useEffect(() => {
     const initMessageForm = () => {
-      setMessageForm({
-        ...messageForm,
-        roomId: roomId,
+      setChatMessageRequestDto({
+        ...chatMessageRequestDto,
+        roomId: Number(roomId),
         senderId: userId,
       })
     }
@@ -150,25 +153,40 @@ const ChatMain = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // 채팅이 입력되면 입력된 문자를 메세지 전송을 위한 Form에 갱신시켜줌
   const changeHandler = (event) => {
     const newMessage = event.target.value
+    setMessageInput(newMessage)
     console.log(event.target.value)
-    setMessageForm((prevMessageForm) => ({
-      ...prevMessageForm,
+    setChatMessageRequestDto((chatMessageRequestDto) => ({
+      ...chatMessageRequestDto,
       content: newMessage,
     }))
   }
-
+  postChatMessage
   // 채팅을 전송하고, 전송에 성공해서 메세지 객체를 받아오면 해당 값을 메세지 목록에 추가
   const clickSendHandler = async () => {
-    const res = await postChatMessage(messageForm)
+    // const res = await postChatMessage(chatMessageRequestDto)
+    // const newMessage = res.data
+    // if (newMessage) {
+    //   messages.push(newMessage)
+    // }
+    // 임시로 그냥 push
 
-    const newMessage = res.data
-
-    if (newMessage) {
-      messages.push(newMessage)
-    }
+    const now = new Date()
+    const nowRegistTime = now.toISOString().slice(0, 19)
+    const newMessage = {...chatMessageRequestDto, registTime: nowRegistTime}
+    console.log(newMessage)
+    setMessages((prveMessages) => [...prveMessages, newMessage])
+    setChatMessageRequestDto((prevMessageDto) => ({
+      ...prevMessageDto,
+    }))
+    setMessageInput("")
   }
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({behavior: "smooth"})
+  }, [messages])
 
   return (
     <>
@@ -178,7 +196,7 @@ const ChatMain = () => {
           <span className="font-bold">유저</span>
           <span>님과의 채팅</span>
         </div>
-        <div className="grow overflow-auto p-3">
+        <div className="grow overflow-auto p-3" id="chat-container">
           {messages.map((message, index) => (
             <MessageItem
               key={index}
@@ -188,12 +206,15 @@ const ChatMain = () => {
             />
           ))}
         </div>
+        <div ref={messagesEndRef} />
         <div className="flex space-x-3 p-3">
           <input
+            value={messageInput}
             onChange={changeHandler}
             type="text"
-            className="grow rounded-xl bg-stroke p-2 text-white"
+            className="bg-stroke grow rounded-xl p-2 text-white"
             placeholder="입력하세요"
+            id="message-input"
           />
           <button
             onClick={clickSendHandler}
