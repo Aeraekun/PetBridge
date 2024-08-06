@@ -110,7 +110,7 @@ public class AnimalServiceImpl implements AnimalService {
 	 * 동물 목록 조회 (카테고리, 검색, 페이징)
 	 */
 	@Override
-	public List<AnimalResponseDto> getListAnimal(int page, int size, String species, String careAddr,
+	public Page<AnimalResponseDto> getListAnimal(int page, int size, String species, String careAddr,
 		String processState) throws Exception {
 		Sort sort = Sort.by(Sort.Direction.DESC, "id");
 		Pageable pageable = PageRequest.of(page, size, sort);
@@ -144,7 +144,7 @@ public class AnimalServiceImpl implements AnimalService {
 		Page<Animal> pagedAnimals = new PageImpl<>(filteredAnimals.subList(start, end), pageable,
 			filteredAnimals.size());
 
-		return pagedAnimals.stream()
+		List<AnimalResponseDto> animalResponseDtos =  pagedAnimals.stream()
 			.map(animal -> {
                 try {
                     return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(page, size, animal.getId()));
@@ -153,6 +153,8 @@ public class AnimalServiceImpl implements AnimalService {
                 }
             })
 			.collect(Collectors.toList());
+
+		return new PageImpl<>(animalResponseDtos, pageable, filteredAnimals.size());
 	}
 
 	/**

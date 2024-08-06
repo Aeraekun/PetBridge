@@ -153,7 +153,7 @@ public class CustomBoardRepositoryImpl implements CustomBoardRepository {
                 .leftJoin(animal).on(board.animalId.eq(animal.id))
                 .leftJoin(boardComment).on(board.id.eq(boardComment.boardId).and(boardComment.disabled.isFalse()))
                 .where(
-                        board.disabled.isFalse()
+                        board.animalId.eq(animalId).and(board.disabled.isFalse())
                 )
                 .groupBy(board.id, user.id, animal.id)
                 .fetch();

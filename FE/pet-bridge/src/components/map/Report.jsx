@@ -89,7 +89,7 @@ const Report = () => {
       type: "LOST",
       content: editorContent,
       lat: position.getLat(),
-      lng: position.getLng(),
+      lon: position.getLng(),
     }
 
     const formData = new FormData()

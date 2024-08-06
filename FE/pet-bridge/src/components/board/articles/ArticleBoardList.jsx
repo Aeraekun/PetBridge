@@ -3,6 +3,7 @@ import Button from "components/common/Button"
 import {useNavigate, useParams} from "react-router-dom"
 import {getArticle} from "api/boards-api"
 import React, {useEffect, useState} from "react"
+import Pagination from "components/common/Pagination"
 
 const categories = [
   {id: 0, name: "HOME", title: "홈"},
@@ -11,28 +12,6 @@ const categories = [
   {id: 3, name: "FREE", title: "자유게시판"},
   {id: 4, name: "NOTICE", title: "공지사항"},
 ]
-
-// 페이지 네이션 컴포넌트
-const Pagination = ({currentPage, totalPages, onPageChange}) => {
-  const pages = []
-  for (let i = 0; i < totalPages; i++) {
-    pages.push(i)
-  }
-
-  return (
-    <div className="mt-4 flex justify-center">
-      {pages.map((page) => (
-        <button
-          key={page + 1}
-          className={`mx-1 rounded border px-3 py-1 ${currentPage === page ? "bg-green-600 text-white" : "bg-white text-black"}`}
-          onClick={() => onPageChange(page)}
-        >
-          {page + 1}
-        </button>
-      ))}
-    </div>
-  )
-}
 
 const Search = ({searchform}) => {
   const [inputKeyword, setInputKeyword] = useState("")
@@ -99,6 +78,7 @@ const ArticleBoardList = () => {
   const pageSize = 12 // 페이지당 항목 수
   const [searchParams, setSearchParams] = useState({})
 
+  //게시글 조회 API 호출
   const fetchArticles = async (params) => {
     console.log(params)
     try {
@@ -110,6 +90,12 @@ const ArticleBoardList = () => {
     }
   }
 
+  //searchParmas가 바뀔때마다 새로 받아옴. (검색조건생겼을때, 페이지 넘어갈때)
+  useEffect(() => {
+    fetchArticles(searchParams)
+  }, [searchParams])
+
+  //페이지가 바뀌었을때 searchParmas 업데이트
   useEffect(() => {
     setSearchParams((prevParams) => ({
       ...prevParams,
@@ -126,10 +112,6 @@ const ArticleBoardList = () => {
         "",
     }))
   }, [bcode])
-
-  useEffect(() => {
-    fetchArticles(searchParams)
-  }, [searchParams])
 
   const goDetail = (article) => {
     const id = article.id
@@ -172,7 +154,6 @@ const ArticleBoardList = () => {
         totalPages={totalPages}
         onPageChange={(page) => {
           setCurrentPage(page)
-          console.log(page)
         }}
       />
     </>

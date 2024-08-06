@@ -8,6 +8,7 @@ import {
   getRandomDetailPetPick,
 } from "api/petpicks-api"
 import {useNavigate} from "react-router-dom"
+import iconPawprint from "assets/icons/icon-pawprint.png" // 수정된 파일 이름으로 임포트
 
 const ScrollableComponent = () => {
   const [index, setIndex] = useState(0)
@@ -134,8 +135,19 @@ const ScrollableComponent = () => {
   }
   return (
     <div className=" relative h-screen">
-      <button onClick={goPetpickWrite}>글쓰기</button>
-      <div className=" fixed mb-4 text-lg">현재 인덱스: {index}</div>
+      <button
+        onClick={goPetpickWrite}
+        className="absolute right-20 top-20 flex "
+      >
+        {" "}
+        <img
+          src={iconPawprint}
+          alt="Community Icon"
+          className="mr-2 size-6" // 이미지 크기와 간격 조정
+        />
+        펫픽 올리기
+      </button>
+      {/* <div className=" fixed mb-4 text-lg">현재 인덱스: {index}</div> */}
       <button className="fixed left-20 top-20" onClick={goBack}>
         뒤로가기
       </button>
