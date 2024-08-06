@@ -147,7 +147,7 @@ public class AnimalServiceImpl implements AnimalService {
 		return pagedAnimals.stream()
 			.map(animal -> {
                 try {
-                    return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(animal.getId()));
+                    return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(page, size, animal.getId()));
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -170,7 +170,7 @@ public class AnimalServiceImpl implements AnimalService {
 		return animals.stream()
 			.map(animal -> {
                 try {
-                    return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(animal.getId()));
+                    return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(page, size, animal.getId()));
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -194,7 +194,7 @@ public class AnimalServiceImpl implements AnimalService {
 		return animals.stream()
 				.map(animal -> {
                     try {
-                        return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(animal.getId()));
+                        return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(page, size, animal.getId()));
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -223,7 +223,7 @@ public class AnimalServiceImpl implements AnimalService {
 		return pagedAnimals.stream()
 			.map(animal -> {
                 try {
-                    return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(animal.getId()));
+                    return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(page, size, animal.getId()));
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -235,11 +235,11 @@ public class AnimalServiceImpl implements AnimalService {
 	 * 동물 상세 조회
 	 */
 	@Override
-	public AnimalResponseDto getDetailAnimal(int id) throws Exception {
+	public AnimalResponseDto getDetailAnimal(int id, int page, int size) throws Exception {
 		Animal animal = animalRepository.findByIdAndDisabledFalse(id)
 			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
 
-		return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(animal.getId()));
+		return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(page, size, animal.getId()));
 	}
 
 	private List<Integer> filterByProcessState(String processState) {

@@ -12,5 +12,5 @@ public interface CustomBoardRepository {
 
     BoardResponseDto getDetailBoardById(int id);
 
-    List<BoardResponseDto> findAllByAnimalIdAndDisabledFalse(int animalId);
+    Page<BoardResponseDto> findAllByAnimalIdAndDisabledFalse(int animalId, Pageable pageable);
 }
