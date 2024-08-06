@@ -35,6 +35,7 @@ import site.petbridge.global.login.userdetail.CustomUserDetail;
 import site.petbridge.util.AuthUtil;
 import site.petbridge.util.FileUtil;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -65,11 +66,11 @@ public class PetPickServiceImpl implements PetPickService {
 
         User user = authUtil.getAuthenticatedUser();
 
-        if (!boardRepository.findById(petPickRegistRequestDto.getBoardId()).isPresent()) {
+        if (!boardRepository.findByIdAndDisabledFalse(petPickRegistRequestDto.getBoardId()).isPresent()) {
             throw new PetBridgeException(ErrorCode.BAD_REQUEST);
         }
 
-        if (!animalRepository.findById(petPickRegistRequestDto.getAnimalId()).isPresent()) {
+        if (!animalRepository.findByIdAndDisabledFalse(petPickRegistRequestDto.getAnimalId()).isPresent()) {
             throw new PetBridgeException(ErrorCode.BAD_REQUEST);
         }
 
@@ -218,6 +219,7 @@ public class PetPickServiceImpl implements PetPickService {
                             .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
                     return new PetPickCommentResponseDto(petPickComment, user.getNickname(), user.getImage());
                 })
+                .sorted(Comparator.comparing(PetPickCommentResponseDto::getRegistTime).reversed())
                 .collect(Collectors.toList());
 
         return new PetPickResponseDto(petPick, petPickWriterNickname, petPickWriterImage, likeCnt, false, false, comments);
@@ -229,11 +231,11 @@ public class PetPickServiceImpl implements PetPickService {
     @Override
     @Transactional
     public void editPetPick(HttpServletRequest httpServletRequest, PetPickEditRequestDto petPickEditRequestDto,
-                            Long petPickId, MultipartFile thumbnailFile) throws Exception {
+                            int petPickId, MultipartFile thumbnailFile) throws Exception {
 
         User user = authUtil.getAuthenticatedUser();
         // 펫픽 없을 때
-        PetPick entity = petPickRepository.findById(petPickId).orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+        PetPick entity = petPickRepository.findByIdAndDisabledFalse(petPickId).orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
         // 내가 작성한 펫픽이 아닐 때
         if (user.getId() != entity.getUserId()) {
             throw new PetBridgeException(ErrorCode.FORBIDDEN);
@@ -241,6 +243,14 @@ public class PetPickServiceImpl implements PetPickService {
         // 조회했는데 삭제된 펫픽일 때
         if (entity.isDisabled()) {
             throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND);
+        }
+
+        if (petPickEditRequestDto.getBoardId() != null && !boardRepository.findByIdAndDisabledFalse(petPickEditRequestDto.getBoardId()).isPresent()) {
+            throw new PetBridgeException(ErrorCode.BAD_REQUEST);
+        }
+
+        if (!animalRepository.findByIdAndDisabledFalse(petPickEditRequestDto.getAnimalId()).isPresent()) {
+            throw new PetBridgeException(ErrorCode.BAD_REQUEST);
         }
 
         String savedThumbnailFileName = null;
