@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,17 +39,17 @@ public class AnimalController {
      * 동물 목록 조회
      */
     @GetMapping
-    public ResponseEntity<List<AnimalResponseDto>> getListAnimal(@RequestParam(name = "page") int page,
-                                                                 @RequestParam(name = "size") int size,
+    public ResponseEntity<Page<AnimalResponseDto>> getListAnimal(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                                 @RequestParam(name = "size", defaultValue = "12") int size,
                                                                  @RequestParam(name = "species", required = false) String species,
                                                                  @RequestParam(name = "careaddr", required = false) String careAddr,
                                                                  @RequestParam(name = "processstate", required = false, defaultValue = "") String processState) throws Exception {
-        List<AnimalResponseDto> animalResponseDtos = animalService.getListAnimal(page, size, species, careAddr, processState);
+        Page<AnimalResponseDto> animalResponseDtos = animalService.getListAnimal(page, size, species, careAddr, processState);
 
-        return Optional.ofNullable(animalResponseDtos)
-                .filter(list -> !list.isEmpty())
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.noContent().build());
+        if (animalResponseDtos.hasContent()) {
+            return new ResponseEntity<>(animalResponseDtos, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**

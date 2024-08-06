@@ -49,9 +49,10 @@ public class BoardController {
                                                                @RequestParam(name = "type", required = false) BoardType type) throws Exception {
         Page<BoardResponseDto> boardResponseDtos = boardService.getListBoard(page, size, userNickname, title, type);
 
-        return boardResponseDtos.hasContent()
-                ? ResponseEntity.ok(boardResponseDtos)
-                : ResponseEntity.noContent().build();
+        if (boardResponseDtos.hasContent()) {
+            return new ResponseEntity<>(boardResponseDtos, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**
