@@ -3,7 +3,7 @@ import Button from "components/common/Button"
 import Editor from "components/common/Editor"
 import {useNavigate} from "react-router-dom"
 import {useSelector} from "react-redux"
-import {selectId, selectImage, selectNickname} from "features/user/users-slice"
+import {selectImage, selectNickname} from "features/user/users-slice"
 import {registArticle} from "api/boards-api"
 import markerImg from "../../assets/image/marker.png"
 
@@ -32,7 +32,6 @@ const Report = () => {
   const [position, setPosition] = useState(null)
   const navigate = useNavigate()
 
-  const currentUserId = useSelector(selectId)
   const currentUserImage = useSelector(selectImage)
   const currentUserNickname = useSelector(selectNickname)
 
@@ -86,12 +85,13 @@ const Report = () => {
       return
     }
     const newArticle = {
-      userId: currentUserId,
       title: title,
       content: editorContent,
       lat: position.getLat(),
-      lng: position.getLng(),
+      lon: position.getLng(),
+      type: "5",
     }
+    console.dir(newArticle)
 
     const formData = new FormData()
     formData.append(
@@ -101,6 +101,8 @@ const Report = () => {
     if (imageFile) {
       formData.append("file", imageFile)
     }
+    console.log("formdata는")
+    console.dir(formData)
 
     try {
       await registArticle(formData)

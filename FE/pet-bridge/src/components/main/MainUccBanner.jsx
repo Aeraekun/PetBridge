@@ -20,7 +20,9 @@ const MainUccBanner = () => {
 
   return (
     <>
-      <p className="p-4 text-4xl font-bold">UCC가 담겨질 공간입니다.</p>
+      <p className="mb-4 text-4xl font-bold">
+        Team 오작교가 `견우와 직묘` 프로젝트를 소개합니다.
+      </p>
       <div className="relative mx-auto flex w-[1000px] items-center justify-center gap-2 overflow-hidden">
         <video
           ref={videoRef}
