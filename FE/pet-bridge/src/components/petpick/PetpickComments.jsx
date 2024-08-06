@@ -75,10 +75,11 @@ const CommentInput = ({petpickId, onCommentAdded}) => {
   )
 }
 
-const PetpickInfo = ({title, content}) => {
+const PetpickInfo = ({title, content, registTime}) => {
   return (
     <div className=" flex w-full flex-1 flex-col justify-between space-y-1 p-3 text-base    ">
       <div> {title}</div>
+      <div className="text-sm"> {registTime.split("T")[0]}</div>
       <div className="text-sm"> {content}</div>
     </div>
   )
@@ -268,7 +269,8 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
             <hr className="my-1 border-gray-300" />
             <PetpickInfo
               title={petpick.title}
-              content={"data.content"}
+              content={petpick.content}
+              registTime={petpick.registTime}
             ></PetpickInfo>
           </div>
 
