@@ -118,24 +118,31 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
       const animaldata = await getDetailAnimal(animalId)
       if (animaldata) {
         setPetpickAnimalData(animaldata)
-        setArticleList(animaldata.articles)
+        setArticleList(animaldata.boards)
+        console.log(articleList)
+        console.log(animaldata.id)
       }
     }
     if (isDetail) {
       fetchAnimalDetail(petpick.animalId)
     }
+    console.log(isDetail, "isDetail")
   }, [isDetail])
 
   const fetchComments = async () => {
     const commentList = await getPetpickComments(petpick.id, 0, 12)
     setCommentList(commentList)
-    console.log(currentUserId)
+    // console.log(currentUserId)
   }
 
   useEffect(() => {
     if (isVisible) {
       fetchComments()
-      setIsDetail(false)
+      if (isDetail) {
+        setIsVisible(false)
+      } else {
+        setIsDetail(false)
+      }
     }
     if (isDetail) {
       setIsVisible(false)
@@ -177,6 +184,13 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
     return <div>Loading...</div>
   }
 
+  const goAnimalDetail = (animal) => {
+    console.log(animal)
+    const id = animal.desertionNo
+    let path = `/shelter/details/${id}`
+    navigate(path, {state: {animal}})
+  }
+
   const handleVisible = () => {
     console.log("visible", isVisible)
     setIsVisible((prev) => !prev)
@@ -189,7 +203,11 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
     let path = `/petpick/write`
     navigate(path)
   }
-
+  const goDetail = (article) => {
+    const id = article.id
+    let path = `/communities/details/${id}`
+    navigate(path)
+  }
   return (
     <div
       className=" z-50 mx-auto flex h-screen w-[1000px] snap-center flex-row justify-center py-[50px] sm:w-11/12"
@@ -205,7 +223,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
       <PetpickVideo videoURL={petpick.video} />
       {isDetail && (
         <>
-          <div className="relative flex flex-col justify-between">
+          <div className="flex h-full min-w-[400px]  flex-col justify-between bg-gray-50 ">
             <div className=" flex h-full flex-col justify-start bg-gray-50 ">
               <div className=" ">
                 <Profile
@@ -214,22 +232,27 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
                 />
                 <hr className="my-1 border-gray-300" />
               </div>
-              <Button onClick={goWritePetpick}>새팻픽 </Button>
-
+              <Button onClick={goWritePetpick} text={"새팻픽만들기"}>
+                {" "}
+              </Button>
               <TaggedAnimalItem
                 animal={petpickAnimalData}
                 isFollowing={petpick.isFollowing}
                 isLogin={isAuthenticated}
+                onClick={goAnimalDetail}
               />
-              {articleList?.length > 0 ? (
-                articleList.map((article, index) => (
-                  <li key={index}>
-                    <TaggedArticleItem data={article} />
-                  </li>
-                ))
-              ) : (
-                <li>댓글이 없습니다</li>
-              )}
+              관련 글
+              <div className="overflow-auto">
+                {articleList?.length > 0 ? (
+                  articleList.map((article, index) => (
+                    <li key={index}>
+                      <TaggedArticleItem data={article} onClick={goDetail} />
+                    </li>
+                  ))
+                ) : (
+                  <li>게시글이 없습니다</li>
+                )}
+              </div>
             </div>
             <TagIcon data={petpick} onClick={handleDetail} />
           </div>
@@ -249,7 +272,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
             ></PetpickInfo>
           </div>
 
-          <ul className="flex-auto overflow-auto ">
+          <ul className="flex flex-auto flex-col-reverse overflow-auto">
             {commentList.length > 0 ? (
               commentList.map((comment, index) => (
                 <li key={index}>

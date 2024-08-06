@@ -32,7 +32,7 @@ const PetpickIconContainer = ({
   const [isLike, setIsLike] = useState(isLiking)
 
   useEffect(() => {
-    console.log("Id: ", petpickId, "  follow", isFollowing, " like", isLiking)
+    // console.log("Id: ", petpickId, "  follow", isFollowing, " like", isLiking)
   }, [isFollow, isLike])
   // const goPetpickTagDetail = () => {
   //   const currentPath = location.pathname
@@ -91,7 +91,7 @@ const PetpickIconContainer = ({
   }
 
   const handleCopyUrl = () => {
-    const url = window.location.href
+    const url = window.location.href + `/${petpickId}`
 
     navigator.clipboard
       .writeText(url)
