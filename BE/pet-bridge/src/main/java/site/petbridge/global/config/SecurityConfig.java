@@ -50,13 +50,6 @@ public class SecurityConfig {
 	private final CustomOAuth2UserService customOAuth2UserService;
 
 	@Bean
-	public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
-		return web -> web.ignoring()
-			// error endpoint를 열어줘야 함, favicon.ico 추가!
-			.requestMatchers("/error", "/favicon.ico");
-	}
-
-	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
 			.formLogin(AbstractHttpConfigurer::disable) // FormLogin 사용 X
@@ -68,39 +61,37 @@ public class SecurityConfig {
 				.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 
 				// 기본 파일
-				.requestMatchers(HttpMethod.GET, "/", "/css/**", "/images/**", "/js/**", "/favicon.ico").permitAll()
+				.requestMatchers(HttpMethod.GET, "/error", "/favicon.ico").permitAll()
 
 				// 회원
 				.requestMatchers(HttpMethod.GET, "/users/sign-up", "/users/login").permitAll()
-				.requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/users/{nickname}").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/users/list/{nickname}").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/users/sign-up").permitAll()
-				.requestMatchers(HttpMethod.GET, "/api/oauth2/authorization/**").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/users/find/email").permitAll()
-				.requestMatchers("/users/oauth/success").permitAll()
+
+				// 소셜 로그인
+				.requestMatchers(HttpMethod.GET, "/users/social/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/oauth2/authorization/**").permitAll()
+
+				// 인증
 				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email").permitAll()
 				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email/check").permitAll()
 				.requestMatchers(HttpMethod.POST,"/api/users/authentication/phone").permitAll()
 				.requestMatchers(HttpMethod.POST,"/api/users/authentication/phone/check").permitAll()
 
 				// 펫픽
-				.requestMatchers(HttpMethod.GET,"/api/petpicks").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/petpicks/**").permitAll()
 
 				// 펫픽 댓글
 				.requestMatchers(HttpMethod.GET,"/api/petpick-comments/**").permitAll()
 
 				// 게시글
-				.requestMatchers(HttpMethod.GET, "/api/boards").permitAll()
-				.requestMatchers(HttpMethod.GET, "/api/boards/{id}").permitAll()
-				.requestMatchers(HttpMethod.POST, "/api/boards").permitAll()
-				.requestMatchers(HttpMethod.PATCH, "/api/boards/{id}").permitAll()
-				.requestMatchers(HttpMethod.PATCH, "/api/boards/{id}/disable", "/*").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/boards/**").permitAll()
 
 				// 게시글 댓글
-				.requestMatchers(HttpMethod.GET, "/api/board-comments/{boardId}", "/*").permitAll()
-				.requestMatchers(HttpMethod.POST, "/api/board-comments").permitAll()
-				.requestMatchers(HttpMethod.PATCH, "/api/board-comments/{id}", "/*").permitAll()
-				.requestMatchers(HttpMethod.PATCH, "/api/board-comments/{id}/disable", "/*").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/board-comments/**").permitAll()
 
 				// 동물
 				.requestMatchers(HttpMethod.GET, "/api/animals/**").permitAll()

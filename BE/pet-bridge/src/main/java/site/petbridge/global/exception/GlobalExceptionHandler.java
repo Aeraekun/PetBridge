@@ -1,5 +1,6 @@
 package site.petbridge.global.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class GlobalExceptionHandler {
     /*
      * HTTP 400 Exception
      */
-    @ExceptionHandler({BadRequestException.class, IllegalArgumentException.class, MethodArgumentNotValidException.class})
+    @ExceptionHandler({BadRequestException.class, IllegalArgumentException.class, MethodArgumentNotValidException.class, InvalidFormatException.class})
     protected ResponseEntity<ErrorResponse> handleBadRequestException(final Exception e) {
         log.error("handleBadRequestException: {}", e.getMessage());
         return ResponseEntity

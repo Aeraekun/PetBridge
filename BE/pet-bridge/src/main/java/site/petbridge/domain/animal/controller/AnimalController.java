@@ -28,7 +28,7 @@ public class AnimalController {
      */
     @PostMapping
     public ResponseEntity<Void> registAnimal(
-            @Valid @RequestPart(name = "animalRegistRequestDto") AnimalRegistRequestDto animalRegistRequestDto,
+            @Valid @RequestPart AnimalRegistRequestDto animalRegistRequestDto,
             @RequestPart(name = "imageFile") MultipartFile imageFile) throws Exception {
         animalService.registAnimal(animalRegistRequestDto, imageFile);
 
@@ -116,7 +116,7 @@ public class AnimalController {
                                            @RequestPart(name = "imageFile", required = false) MultipartFile imageFile) throws Exception {
         animalService.editAnimal(id, animalEditRequestDto, imageFile);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**

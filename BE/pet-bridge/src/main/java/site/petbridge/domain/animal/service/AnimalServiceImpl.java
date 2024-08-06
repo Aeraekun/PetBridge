@@ -141,6 +141,9 @@ public class AnimalServiceImpl implements AnimalService {
 		// 최종 paging 처리
 		int start = (int) pageable.getOffset();
 		int end = Math.min((start + pageable.getPageSize()), filteredAnimals.size());
+		if (start > end) {
+			throw new IllegalArgumentException("Invalid page request");
+		}
 		Page<Animal> pagedAnimals = new PageImpl<>(filteredAnimals.subList(start, end), pageable,
 			filteredAnimals.size());
 
@@ -219,6 +222,9 @@ public class AnimalServiceImpl implements AnimalService {
 		Pageable pageable = PageRequest.of(page, size, sort);
 		int start = (int)pageable.getOffset();
 		int end = Math.min((start + pageable.getPageSize()), animals.size());
+		if (start > end) {
+			throw new IllegalArgumentException("Invalid page request");
+		}
 		Page<Animal> pagedAnimals = new PageImpl<>(animals.subList(start, end), pageable, animals.size());
 
 		// AnimalResponseDto로 변환 및 반환
@@ -254,6 +260,7 @@ public class AnimalServiceImpl implements AnimalService {
 					.collect(Collectors.toList());
 				break;
 			case "입양완료":
+				System.out.println("입양완료 들어옴");
 				animalIds = contractRepository.findAllByStatusNot("계약전").stream()
 					.map(Contract::getAnimalId)
 					.collect(Collectors.toList());

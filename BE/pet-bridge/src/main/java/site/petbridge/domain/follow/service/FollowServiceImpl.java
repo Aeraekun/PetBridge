@@ -40,7 +40,7 @@ public class FollowServiceImpl implements FollowService {
         User user = authUtil.getAuthenticatedUser();
 
         // 존재하는 animal에 대한 요청인지 확인
-        boolean exists = animalRepository.existsById((long) followRequestDto.getAnimalId());
+        boolean exists = animalRepository.existsByIdAndDisabledFalse(followRequestDto.getAnimalId());
         if (!exists) {
             throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND);
         }
@@ -63,7 +63,7 @@ public class FollowServiceImpl implements FollowService {
         User user = authUtil.getAuthenticatedUser();
 
         // 존재하는 animal에 대한 요청인지 확인
-        boolean exists = animalRepository.existsById((long) followRequestDto.getAnimalId());
+        boolean exists = animalRepository.existsByIdAndDisabledFalse(followRequestDto.getAnimalId());
         if (!exists) {
             throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND);
         }
