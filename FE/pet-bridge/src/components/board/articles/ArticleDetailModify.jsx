@@ -83,7 +83,6 @@ const ArticleDetailModify = () => {
         thumbnail: thumbnail,
         title: title,
         content: editorContent,
-        thumbnailRemoved: true,
       }
       const formData = new FormData()
       formData.append(
