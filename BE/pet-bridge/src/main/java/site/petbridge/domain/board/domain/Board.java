@@ -60,7 +60,7 @@ public class Board {
 
     public void update(BoardEditRequestDto boardEditRequestDto, String thumbnail) {
         this.animalId = boardEditRequestDto.getAnimalId();
-        this.boardType = boardEditRequestDto.getBoardType();
+        this.boardType = boardEditRequestDto.getType();
         this.thumbnail = thumbnail;
         this.title = boardEditRequestDto.getTitle();
         this.content = boardEditRequestDto.getContent();
