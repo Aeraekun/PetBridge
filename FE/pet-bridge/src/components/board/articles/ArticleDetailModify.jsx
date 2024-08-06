@@ -18,7 +18,7 @@ const ArticleDetailModify = () => {
   const [selectedAnimalId, setSelectedAnimalId] = useState(null)
   const [imageSrc, setImageSrc] = useState("")
   const [imageFile, setImageFile] = useState(null)
-  const [thumbnail, setUserTumbnail] = useState(null)
+  const [thumbnail, setTumbnail] = useState(null)
   // const [type, setType] = useState(null)
 
   // 파일 선택 시 호출되는 함수
@@ -40,7 +40,7 @@ const ArticleDetailModify = () => {
       setEditorContent(fetchedArticle.content || "")
       setImageSrc(fetchedArticle.thumbnail || "")
       setSelectedAnimalId(fetchedArticle.animalId)
-      setUserTumbnail(fetchedArticle.thumbnail)
+      setTumbnail(fetchedArticle.thumbnail || "")
       // setType(fetchedArticle.type)
     }
   }

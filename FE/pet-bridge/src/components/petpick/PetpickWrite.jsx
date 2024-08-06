@@ -1,3 +1,4 @@
+import {registPetPick} from "api/petpicks-api"
 import AnimalTag from "components/common/AnimalTag"
 import Button from "components/common/Button"
 import Profile from "components/common/Profile"
@@ -62,13 +63,14 @@ const PetpickWrite = () => {
   }
 
   //펫픽작성
-  const goWritepetPick = () => {
+  const goWritepetPick = async () => {
     const newPetpick = {
       boardId: selectedArticleId,
       animalId: selectedAnimalId,
       title: title,
       content: content,
     }
+    console.log(newPetpick, imageFile, videoFile)
 
     const formData = new FormData()
     formData.append(
@@ -81,7 +83,14 @@ const PetpickWrite = () => {
     if (videoFile) {
       formData.append("video", videoFile)
     }
-    alert("펫픽작성")
+
+    console.log(formData)
+    try {
+      await registPetPick(formData)
+      alert("펫픽작성")
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   return (

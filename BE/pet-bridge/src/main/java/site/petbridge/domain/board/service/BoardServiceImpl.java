@@ -56,6 +56,19 @@ public class BoardServiceImpl implements BoardService {
     }
 
     /**
+     * 게시글 상세 조회
+     */
+    @Override
+    public BoardResponseDto getDetailBoard(int id) throws Exception {
+        BoardResponseDto boardResponseDto = boardRepository.getDetailBoardById(id);
+        if (boardResponseDto == null) {
+            throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND);
+        }
+
+        return boardResponseDto;
+    }
+
+    /**
      * 게시글 수정
      */
     @Transactional

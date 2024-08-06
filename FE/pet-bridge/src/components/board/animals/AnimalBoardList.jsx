@@ -3,20 +3,48 @@ import AnimalItem from "./AnimalItem"
 import Button from "components/common/Button"
 
 import {useNavigate, useParams} from "react-router-dom"
-import AnimalSearchForm from "components/board/animals/AnimalSearchForm"
+// import AnimalSearchForm from "components/board/animals/AnimalSearchForm"
 import {getAnimalList} from "api/animals-api"
 
 //임시보호동물게시판
-const Search = () => {
+const Search = ({searchParams}) => {
+  const [careaddr, setCareaddr] = useState()
+  const [processstate, setProcessstate] = useState("전체")
+  const handleClick = () => {
+    const params = {
+      careaddr: careaddr,
+      processstate: processstate,
+    }
+    searchParams(params)
+  }
+
   return (
     <div className="flex w-full justify-between px-10">
       <input
         type="text"
-        placeholder="검색어를 입력하세요."
+        placeholder="보호 장소를 입력하세요."
         className="border-stroke h-12 w-72 rounded-xl border-2 p-2"
+        value={careaddr}
+        onChange={(e) => setCareaddr(e.target.value)}
       />
-      <button className="flex h-10 w-16 items-center justify-center rounded-xl bg-green-600 text-white ">
-        조회
+
+      <select
+        id="kind"
+        value={processstate}
+        onChange={(e) => setProcessstate(e.target.value)}
+      >
+        <option value="전체">전체</option>
+        <option value="임시보호">임시보호</option>
+        <option value="입양대기">입양대기</option>
+        <option value="입양완료">입양완료</option>
+      </select>
+      <button
+        onClick={() => {
+          handleClick()
+        }}
+        className="flex h-10 w-16 items-center justify-center rounded-xl bg-green-600 text-white "
+      >
+        검색
       </button>
     </div>
   )
@@ -99,15 +127,16 @@ const AnimalBoardList = () => {
       ...searchParams,
       ...data,
       page: pageNo,
-      numOfRows: 12,
     }
 
     setSearchParams(newSearchParam)
+    console.log(searchParams)
   }
+
   return (
     <>
-      <Search />
-      <AnimalSearchForm searchParams={handleSearchForm} isShelter={false} />
+      <Search searchParams={handleSearchForm} />
+      {/* <AnimalSearchForm searchParams={handleSearchForm2} isShelter={false} /> */}
 
       <Button text={"등록하기"} onClick={goRegist} />
       {isLoading ? (
@@ -119,7 +148,7 @@ const AnimalBoardList = () => {
         <>
           <div className="flex space-x-2">
             <button
-              onClick={() => setPageNo((prev) => Math.max(prev - 1, 1))}
+              onClick={() => setPageNo((prev) => Math.max(prev - 1, 0))}
               disabled={pageNo === 0}
             >
               ◀이전

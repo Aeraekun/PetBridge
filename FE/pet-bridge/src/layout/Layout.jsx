@@ -5,8 +5,8 @@ const Layout = () => {
   return (
     <>
       <Navbar />
-      <main className="flex flex-col items-center">
-        <Outlet className="w-[1000px]"></Outlet>
+      <main className="mx-auto flex w-[400px] flex-col items-center sm:w-11/12">
+        <Outlet></Outlet>
       </main>
     </>
   )

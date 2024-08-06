@@ -1,27 +1,88 @@
+import {setOpponentInfo} from "features/chat/chat-slice"
 import {useState, useRef} from "react"
+import {useDispatch} from "react-redux"
 
 const SearchDropDown = ({subtitle, placeholder, itemName, onDataChange}) => {
   const [searchValue, setSearchValue] = useState("")
   const [isOpen, setIsOpen] = useState(false)
-  const [position] = useState({x: 180, y: 80})
+  const [position, setPosition] = useState({x: 180, y: 80})
+  const dispatch = useDispatch()
+
   const buttonRef = useRef(null)
   let id = 1
   let nicknameId = 1
+  let imageId = 1
   const userDatas = [
-    {id: id++, nickname: `유저 닉네임${nicknameId++}`},
-    {id: id++, nickname: `유저 닉네임${nicknameId++}`},
-    {id: id++, nickname: `유저 닉네임${nicknameId++}`},
-    {id: id++, nickname: `유저 닉네임${nicknameId++}`},
-    {id: id++, nickname: `유저 닉네임${nicknameId++}`},
-    {id: id++, nickname: `유저 닉네임${nicknameId++}`},
-    {id: id++, nickname: `유저 닉네임${nicknameId++}`},
-    {id: id++, nickname: `유저 닉네임${nicknameId++}`},
-    {id: id++, nickname: `유저 닉네임${nicknameId++}`},
-    {id: id++, nickname: `유저 닉네임${nicknameId++}`},
-    {id: id++, nickname: `유저 닉네임${nicknameId++}`},
-    {id: id++, nickname: `유저 닉네임${nicknameId++}`},
-    {id: id++, nickname: `유저 닉네임${nicknameId++}`},
-    {id: id++, nickname: `유저 닉네임${nicknameId++}`},
+    {
+      id: id++,
+      nickname: `유저 닉네임${nicknameId++}`,
+      image: `유저 프로필${imageId++}`,
+    },
+    {
+      id: id++,
+      nickname: `유저 닉네임${nicknameId++}`,
+      image: `유저 프로필${imageId++}`,
+    },
+    {
+      id: id++,
+      nickname: `유저 닉네임${nicknameId++}`,
+      image: `유저 프로필${imageId++}`,
+    },
+    {
+      id: id++,
+      nickname: `유저 닉네임${nicknameId++}`,
+      image: `유저 프로필${imageId++}`,
+    },
+    {
+      id: id++,
+      nickname: `유저 닉네임${nicknameId++}`,
+      image: `유저 프로필${imageId++}`,
+    },
+    {
+      id: id++,
+      nickname: `유저 닉네임${nicknameId++}`,
+      image: `유저 프로필${imageId++}`,
+    },
+    {
+      id: id++,
+      nickname: `유저 닉네임${nicknameId++}`,
+      image: `유저 프로필${imageId++}`,
+    },
+    {
+      id: id++,
+      nickname: `유저 닉네임${nicknameId++}`,
+      image: `유저 프로필${imageId++}`,
+    },
+    {
+      id: id++,
+      nickname: `유저 닉네임${nicknameId++}`,
+      image: `유저 프로필${imageId++}`,
+    },
+    {
+      id: id++,
+      nickname: `유저 닉네임${nicknameId++}`,
+      image: `유저 프로필${imageId++}`,
+    },
+    {
+      id: id++,
+      nickname: `유저 닉네임${nicknameId++}`,
+      image: `유저 프로필${imageId++}`,
+    },
+    {
+      id: id++,
+      nickname: `유저 닉네임${nicknameId++}`,
+      image: `유저 프로필${imageId++}`,
+    },
+    {
+      id: id++,
+      nickname: `유저 닉네임${nicknameId++}`,
+      image: `유저 프로필${imageId++}`,
+    },
+    {
+      id: id++,
+      nickname: `유저 닉네임${nicknameId++}`,
+      image: `유저 프로필${imageId++}`,
+    },
   ]
 
   const onChangeHandler = (event) => {
@@ -30,21 +91,30 @@ const SearchDropDown = ({subtitle, placeholder, itemName, onDataChange}) => {
   }
 
   const clickHandler = () => {
-    // const rect = buttonRef.current.getBoundingClientRect()
-    // setPosition({x: rect.left, y: rect.bottom})
+    const rect = buttonRef.current.getBoundingClientRect()
+    setPosition({x: rect.left, y: rect.bottom})
     setIsOpen(!isOpen)
   }
 
   const onClickHandler = (event) => {
+    // 특정 유저를 클릭했을 때, 해당 유저 아이디를 기준으로 배열에서 찾아 정보를 상태에 저장
     const selectedSearchId = event.target.id
+    const selectedInfo = userDatas.find(
+      (data) => Number(data.id) === Number(selectedSearchId)
+    )
     onDataChange(selectedSearchId)
-  }
 
-  position
+    // const selectedInfo = userDatas[event.target.key]
+    dispatch(setOpponentInfo(selectedInfo))
+  }
 
   return (
     <>
-      <button onClick={clickHandler} ref={buttonRef}>
+      <button
+        onClick={clickHandler}
+        className="flex h-10 w-full justify-between rounded-xl border p-3 text-sm"
+        ref={buttonRef}
+      >
         {subtitle}
       </button>
       {isOpen && (
@@ -76,10 +146,11 @@ const SearchDropDown = ({subtitle, placeholder, itemName, onDataChange}) => {
               </span>
             </div>
             <ul>
-              {userDatas.map((user) => (
+              {userDatas.map((user, index) => (
                 <li key={user.id} className="flex items-center">
                   <span className="w-5"></span>
                   <button
+                    key={index}
                     id={user.id}
                     onClick={onClickHandler}
                     className="me-3 inline-flex h-10 grow items-center rounded-xl p-3 hover:bg-stroke hover:text-white"

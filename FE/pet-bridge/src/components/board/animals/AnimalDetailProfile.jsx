@@ -6,6 +6,7 @@ const AnimalDetailProfile = ({
   onInputChange,
   onFileChange,
   isShelter,
+  errors,
 }) => {
   const [imageSrc, setImageSrc] = useState(null)
 
@@ -22,6 +23,11 @@ const AnimalDetailProfile = ({
       onFileChange(event)
     }
   }
+
+  const handleInputChange = (event) => {
+    onInputChange(event)
+  }
+
   const getFilteredFields = () => {
     const fields = [
       {
@@ -128,7 +134,7 @@ const AnimalDetailProfile = ({
         label: "보호장소",
         name: "careAddr",
         value: animal.careAddr,
-        showIf: isShelter,
+        showIf: true,
       },
       {
         label: "관할기관",
@@ -176,26 +182,6 @@ const AnimalDetailProfile = ({
   }
 
   const filteredFields = getFilteredFields()
-  const [errors, setErrors] = useState({})
-  const [isRegist, setIsRegist] = useState(false)
-
-  const registForm = () => {
-    const newErrors = {}
-    filteredFields.forEach(({name, value}) => {
-      if (!value || value.trim() === "") {
-        newErrors[name] = `${name} 필드는 필수입니다.`
-      }
-    })
-    setErrors(newErrors)
-    setIsRegist(true)
-    // 에러가 없으면 저장 로직을 실행 (여기서는 그냥 콘솔에 출력)
-    if (Object.keys(newErrors).length === 0) {
-      console.log(animal)
-    }
-  }
-  const handleInputChange = (event) => {
-    onInputChange(event)
-  }
 
   return (
     <div className="flex w-full flex-wrap justify-center p-4">
@@ -264,7 +250,7 @@ const AnimalDetailProfile = ({
                     id={name}
                     name={name}
                     value={value}
-                    onChange={onInputChange}
+                    onChange={handleInputChange}
                     className="bg-mild w-full rounded border p-2"
                   >
                     <option key={"none"} value={""}>
@@ -286,7 +272,7 @@ const AnimalDetailProfile = ({
                     className="bg-mild w-full rounded border p-2"
                   />
                 )}
-                {errors[name] && isRegist && (
+                {errors[name] && (
                   <div className="mt-1 text-sm text-red-500">
                     {errors[name]}
                   </div>
@@ -304,11 +290,6 @@ const AnimalDetailProfile = ({
           </div>
         ))}
       </div>
-      {isEditing && (
-        <>
-          <button onClick={registForm}> 제출하기</button>
-        </>
-      )}
     </div>
   )
 }

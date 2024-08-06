@@ -12,6 +12,8 @@ public interface BoardService {
 
     List<BoardResponseDto> getListBoard(int page, int size, String userNickname, String title) throws Exception;
 
+    BoardResponseDto getDetailBoard(int id) throws Exception;
+
     void editBoard(int id, BoardEditRequestDto boardEditRequestDto, MultipartFile thumbnailFile) throws Exception;
 
     void removeBoard(int id) throws Exception;
