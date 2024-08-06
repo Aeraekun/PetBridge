@@ -78,11 +78,10 @@ public class PetPickLikeServiceImpl implements PetPickLikeService {
     }
 
     @Override
-    public PetPickLikeResponseDto getDetailPetPickLike(PetPickLikeRequestDto petPickLikeRequestDto) throws Exception {
+    public PetPickLikeResponseDto getDetailPetPickLike(int id) throws Exception {
         User user = authUtil.getAuthenticatedUser();
-        int petPickId = petPickLikeRequestDto.getPetPickId();
 
-        PetPickLike petPickLike = petPickLikeRepository.findByUserIdAndPetPickId(user.getId(), petPickId)
+        PetPickLike petPickLike = petPickLikeRepository.findByUserIdAndPetPickId(user.getId(), id)
                 .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
 
         return new PetPickLikeResponseDto(petPickLike);

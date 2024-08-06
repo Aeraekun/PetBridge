@@ -57,6 +57,15 @@ public class BoardServiceImpl implements BoardService {
     }
 
     /**
+     * 동물 id 에 따른 게시글 목록 조회
+     */
+    @Override
+    public List<BoardResponseDto> getListBoardByAnimalId(int animalId) throws Exception {
+
+        return boardRepository.findAllByAnimalIdAndDisabledFalse(animalId);
+    }
+
+    /**
      * 게시글 상세 조회
      */
     @Override

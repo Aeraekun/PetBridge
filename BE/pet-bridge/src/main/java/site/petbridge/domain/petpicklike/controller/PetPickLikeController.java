@@ -43,10 +43,10 @@ public class PetPickLikeController {
     /**
      * 펫핏 좋아요 조회
      */
-    @GetMapping
+    @GetMapping("/{id}")
     public ResponseEntity<PetPickLikeResponseDto> getDetailPetPickLike(
-            @RequestBody PetPickLikeRequestDto petPickLikeRequestDto) throws Exception {
-        PetPickLikeResponseDto petPickLikeResponseDto = petPickLikeService.getDetailPetPickLike(petPickLikeRequestDto);
+            @PathVariable(name = "id") int id) throws Exception {
+        PetPickLikeResponseDto petPickLikeResponseDto = petPickLikeService.getDetailPetPickLike(id);
 
         return new ResponseEntity<>(petPickLikeResponseDto, HttpStatus.OK);
     }
