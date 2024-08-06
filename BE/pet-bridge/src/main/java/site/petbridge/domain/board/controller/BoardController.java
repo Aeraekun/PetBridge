@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import site.petbridge.domain.board.domain.enums.BoardType;
 import site.petbridge.domain.board.dto.request.BoardEditRequestDto;
 import site.petbridge.domain.board.dto.request.BoardRegistRequestDto;
 import site.petbridge.domain.board.dto.response.BoardResponseDto;
@@ -43,8 +44,9 @@ public class BoardController {
     public ResponseEntity<List<BoardResponseDto>> getListBoard(@RequestParam(name = "page", required = false, defaultValue = "0") int page,
                                                                @RequestParam(name = "size", required = false, defaultValue = "12") int size,
                                                                @RequestParam(name = "usernickname", required = false) String userNickname,
-                                                               @RequestParam(name = "title", required = false) String title) throws Exception {
-        List<BoardResponseDto> boardResponseDtos = boardService.getListBoard(page, size, userNickname, title);
+                                                               @RequestParam(name = "title", required = false) String title,
+                                                               @RequestParam(name = "type", required = false) BoardType type) throws Exception {
+        List<BoardResponseDto> boardResponseDtos = boardService.getListBoard(page, size, userNickname, title, type);
 
         return Optional.ofNullable(boardResponseDtos)
                 .filter(list -> !list.isEmpty())
