@@ -222,3 +222,5 @@ export const deleteFollow = async (animalId) => {
     handleApiError(error)
   }
 }
+
+export const 
