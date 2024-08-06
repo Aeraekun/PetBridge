@@ -42,8 +42,8 @@ public class BoardController {
     @GetMapping
     public ResponseEntity<List<BoardResponseDto>> getListBoard(@RequestParam(name = "page", required = false, defaultValue = "0") int page,
                                                                @RequestParam(name = "size", required = false, defaultValue = "12") int size,
-                                                               @RequestParam(name = "usernickname", required = false, defaultValue = "") String userNickname,
-                                                               @RequestParam(name = "title", required = false, defaultValue = "") String title) throws Exception {
+                                                               @RequestParam(name = "usernickname", required = false) String userNickname,
+                                                               @RequestParam(name = "title", required = false) String title) throws Exception {
         List<BoardResponseDto> boardResponseDtos = boardService.getListBoard(page, size, userNickname, title);
 
         return Optional.ofNullable(boardResponseDtos)
