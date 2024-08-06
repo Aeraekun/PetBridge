@@ -88,3 +88,19 @@ export const getMyLikes = async (searchParams) => {
     return error
   }
 }
+
+// 내 계약서 조회
+export const getMyContracts = async (userId, page) => {
+  const params = {
+    page: page,
+  }
+  try {
+    const res = await axiosInstance.get(`/animals/${userId}`, {
+      params: params,
+    })
+    return res
+  } catch (error) {
+    console.log(error)
+    return error
+  }
+}
