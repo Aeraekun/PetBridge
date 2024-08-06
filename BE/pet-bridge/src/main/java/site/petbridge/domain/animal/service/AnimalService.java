@@ -1,5 +1,6 @@
 package site.petbridge.domain.animal.service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 import site.petbridge.domain.animal.dto.request.AnimalEditRequestDto;
 import site.petbridge.domain.animal.dto.request.AnimalRegistRequestDto;
@@ -15,7 +16,7 @@ public interface AnimalService {
 
     void removeAnimal(int id) throws Exception;
 
-    List<AnimalResponseDto> getListAnimal(int page, int size, String species, String careAddr, String processState) throws Exception;
+    Page<AnimalResponseDto> getListAnimal(int page, int size, String species, String careAddr, String processState) throws Exception;
 
     List<AnimalResponseDto> getListMyAnimal(int page, int size) throws Exception;
 

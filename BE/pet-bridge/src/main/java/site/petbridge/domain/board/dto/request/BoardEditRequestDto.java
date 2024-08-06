@@ -12,9 +12,9 @@ import site.petbridge.domain.board.domain.enums.BoardType;
 public class BoardEditRequestDto {
 
     private Integer animalId;
-    
+
     @NotNull
-    private BoardType boardType;
+    private BoardType type;
     @NotNull
     private String title;
     @NotNull
@@ -27,7 +27,7 @@ public class BoardEditRequestDto {
         return Board.builder()
                 .thumbnail(thumbnail)
                 .animalId(animalId)
-                .boardType(boardType)
+                .boardType(type)
                 .title(title)
                 .content(content)
                 .lat(lat)
