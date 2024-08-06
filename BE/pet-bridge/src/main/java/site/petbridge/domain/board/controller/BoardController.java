@@ -53,6 +53,17 @@ public class BoardController {
     }
 
     /**
+     * 게시글 상세 조회
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<BoardResponseDto> getDetailBoard(@PathVariable("id") int id) throws Exception {
+        BoardResponseDto boardResponseDto = boardService.getDetailBoard(id);
+
+        return new ResponseEntity<>(boardResponseDto, HttpStatus.OK);
+    }
+
+
+    /**
      * 게시글 수정
      */
     @PatchMapping("/{id}")

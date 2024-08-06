@@ -1,6 +1,6 @@
 package site.petbridge.domain.board.dto.response;
 
-import jakarta.persistence.*;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import site.petbridge.domain.animal.domain.Animal;
 import site.petbridge.domain.board.domain.Board;
@@ -53,6 +53,7 @@ public class BoardResponseDto {
         this.commentCount = commentCount;
     }
 
+    @QueryProjection
     public BoardResponseDto(int id, int userId, int animalId, BoardType boardType, String thumbnail, String title,
                             String content, LocalDateTime registTime, String lat, String lon, boolean disabled,
                             String userNickname, String userImage, String animalName, String animalFilename, long commentCount) {
