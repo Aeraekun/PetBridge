@@ -10,12 +10,15 @@ import site.petbridge.domain.petpick.domain.PetPick;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PetPickEditRequestDto {
 
-    private int boardId;
+    private Integer boardId;
 
+    @NotNull
     private int animalId;
 
+    @NotNull
     private String title;
 
+    @NotNull
     private String content;
 
     public PetPick toEntity(String thumbnailFile) {

@@ -43,7 +43,7 @@ public interface PetPickService {
      * 내 펫픽 수정
      */
     void editPetPick(HttpServletRequest httpServletRequest, PetPickEditRequestDto petPickEditRequestDto,
-                     Long petPickId, MultipartFile thumbnailFile) throws Exception;
+                     int petPickId, MultipartFile thumbnailFile) throws Exception;
 
     /**
      * 내 펫픽 삭제

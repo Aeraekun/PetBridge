@@ -34,8 +34,8 @@ public class ReportController {
      * 신고 목록 조회(ADMIN만)
      */
     @GetMapping
-    public ResponseEntity<List<ReportResponseDto>> getListReport(@RequestParam(name = "page") int page,
-                                                                 @RequestParam(name = "size") int size,
+    public ResponseEntity<List<ReportResponseDto>> getListReport(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                                 @RequestParam(name = "size", defaultValue = "12") int size,
                                                                  @RequestParam(name = "reporttype", required = false)
                                                                      ReportType reportType) throws Exception {
         List<ReportResponseDto> reportResponseDtos = reportService.getListReport(page,size,reportType);
