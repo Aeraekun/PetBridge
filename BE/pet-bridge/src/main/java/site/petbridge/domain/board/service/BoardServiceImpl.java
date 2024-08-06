@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import site.petbridge.domain.board.domain.Board;
+import site.petbridge.domain.board.domain.enums.BoardType;
 import site.petbridge.domain.board.dto.request.BoardEditRequestDto;
 import site.petbridge.domain.board.dto.request.BoardRegistRequestDto;
 import site.petbridge.domain.board.dto.response.BoardResponseDto;
@@ -49,10 +50,10 @@ public class BoardServiceImpl implements BoardService {
      * 게시글 목록 조회
      */
     @Override
-    public List<BoardResponseDto> getListBoard(int page, int size, String userNickname, String title) throws Exception {
+    public List<BoardResponseDto> getListBoard(int page, int size, String userNickname, String title, BoardType type) throws Exception {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
 
-        return boardRepository.findAllByUserNickNameAndTitleContains(userNickname, title, pageable).getContent();
+        return boardRepository.findAllByUserNickNameAndTitleContains(userNickname, title, type, pageable).getContent();
     }
 
     /**

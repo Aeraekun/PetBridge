@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import site.petbridge.domain.animal.domain.QAnimal;
 import site.petbridge.domain.board.domain.QBoard;
+import site.petbridge.domain.board.domain.enums.BoardType;
 import site.petbridge.domain.board.dto.response.BoardResponseDto;
 import site.petbridge.domain.boardcomment.domain.QBoardComment;
 import site.petbridge.domain.user.domain.QUser;
@@ -60,7 +61,7 @@ public class CustomBoardRepositoryImpl implements CustomBoardRepository {
     }
 
     @Override
-    public Page<BoardResponseDto> findAllByUserNickNameAndTitleContains(String userNickname, String title, Pageable pageable) {
+    public Page<BoardResponseDto> findAllByUserNickNameAndTitleContains(String userNickname, String title, BoardType type, Pageable pageable) {
 
         QBoard board = QBoard.board;
         QUser user = QUser.user;
@@ -96,7 +97,8 @@ public class CustomBoardRepositoryImpl implements CustomBoardRepository {
                 .where(
                         board.disabled.isFalse(),
                         userNicknameEq(userNickname,user),
-                        titleContains(title, board)
+                        titleContains(title, board),
+                        boardTypeEq(type, board)
                 )
                 .groupBy(board.id, user.id, animal.id)
                 .offset(pageable.getOffset())
@@ -123,5 +125,9 @@ public class CustomBoardRepositoryImpl implements CustomBoardRepository {
 
     private BooleanExpression titleContains(String title, QBoard board) {
         return title != null ? board.title.contains(title) : null;
+    }
+
+    private BooleanExpression boardTypeEq(BoardType type, QBoard board) {
+        return type != null ? board.boardType.eq(type) : null;
     }
 }
