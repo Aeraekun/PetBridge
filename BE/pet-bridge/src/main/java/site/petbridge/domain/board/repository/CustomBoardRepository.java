@@ -6,4 +6,6 @@ import site.petbridge.domain.board.dto.response.BoardResponseDto;
 
 public interface CustomBoardRepository {
     Page<BoardResponseDto> findAllByUserNickNameAndTitleContains(String userNickName, String title, Pageable pageable);
+
+    BoardResponseDto getDetailBoardById(int id);
 }

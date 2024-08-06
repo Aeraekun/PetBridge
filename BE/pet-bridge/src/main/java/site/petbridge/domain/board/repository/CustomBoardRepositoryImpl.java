@@ -12,7 +12,6 @@ import site.petbridge.domain.board.domain.QBoard;
 import site.petbridge.domain.board.dto.response.BoardResponseDto;
 import site.petbridge.domain.boardcomment.domain.QBoardComment;
 import site.petbridge.domain.user.domain.QUser;
-
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -21,7 +20,48 @@ public class CustomBoardRepositoryImpl implements CustomBoardRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
+    public BoardResponseDto getDetailBoardById(int id) {
+        QBoard board = QBoard.board;
+        QUser user = QUser.user;
+        QAnimal animal = QAnimal.animal;
+        QBoardComment comment = QBoardComment.boardComment;
+
+        BoardResponseDto boardResponseDto = queryFactory
+                .select(Projections.constructor(BoardResponseDto.class,
+                        board.id,
+                        user.id,
+                        animal.id,
+                        board.boardType,
+                        board.thumbnail,
+                        board.title,
+                        board.content,
+                        board.registTime,
+                        board.lat,
+                        board.lon,
+                        board.disabled,
+
+                        user.nickname,
+                        user.image,
+
+                        animal.name,
+                        animal.filename,
+
+                        comment.count()
+                ))
+                .from(board)
+                .join(user).on(board.userId.eq(user.id))
+                .leftJoin(animal).on(board.animalId.eq(animal.id))
+                .leftJoin(comment).on(board.id.eq(comment.boardId).and(comment.disabled.isFalse()))
+                .where(board.id.eq(id).and(board.disabled.isFalse()))
+                .groupBy(board.id, user.id, animal.id)
+                .fetchOne();
+
+        return boardResponseDto;
+    }
+
+    @Override
     public Page<BoardResponseDto> findAllByUserNickNameAndTitleContains(String userNickname, String title, Pageable pageable) {
+
         QBoard board = QBoard.board;
         QUser user = QUser.user;
         QAnimal animal = QAnimal.animal;
