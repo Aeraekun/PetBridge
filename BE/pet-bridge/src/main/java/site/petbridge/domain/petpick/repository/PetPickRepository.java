@@ -22,4 +22,6 @@ public interface PetPickRepository extends JpaRepository<PetPick, Long> {
     @Query(value = "SELECT p FROM PetPick p JOIN PetPickLike pl ON p.id = pl.petPickId " +
             "WHERE pl.userId = :userId AND p.disabled = false")
     Page<PetPick> findLikedPetPicksByUserId(int userId, Pageable pageable);
+
+    Optional<PetPick> findByIdAndDisabledFalse(int id);
 }
