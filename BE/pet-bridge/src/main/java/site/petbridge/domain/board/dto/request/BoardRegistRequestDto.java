@@ -14,7 +14,7 @@ public class BoardRegistRequestDto {
     @NotNull
     private int animalId;
     @NotNull
-    private BoardType boardType;
+    private BoardType type;
     @NotNull
     private String title;
     @NotNull
@@ -29,7 +29,7 @@ public class BoardRegistRequestDto {
                 .userId(userId)
                 .thumbnail(thumbnail)
                 .animalId(animalId)
-                .boardType(boardType)
+                .boardType(type)
                 .title(title)
                 .content(content)
                 .lat(lat)
