@@ -43,7 +43,7 @@ public class PetPickController {
      */
     @GetMapping
     public ResponseEntity<List<PetPickResponseDto>> getRandomListPetPick(HttpServletRequest httpServletRequest,
-                                                                         @RequestParam(name = "initcommentsize") int initCommentSize) throws Exception {
+                                                                         @RequestParam(name = "initcommentsize", defaultValue = "10") int initCommentSize) throws Exception {
         List<PetPickResponseDto> petPickResponseDtos = petPickService.getRandomListPetPick(httpServletRequest, initCommentSize);
 
         return Optional.ofNullable(petPickResponseDtos)
@@ -57,8 +57,8 @@ public class PetPickController {
      */
     @GetMapping("/my")
     public ResponseEntity<List<PetPickResponseDto>> getListMyPetPick(HttpServletRequest httpServletRequest,
-                                                                     @RequestParam(name = "page") int page,
-                                                                     @RequestParam(name = "size") int size,
+                                                                     @RequestParam(name = "page", defaultValue = "0") int page,
+                                                                     @RequestParam(name = "size", defaultValue = "12") int size,
                                                                      @RequestParam(name = "initcommentsize") int initCommentSize) throws Exception {
         List<PetPickResponseDto> petPickResponseDtos = petPickService.getListMyPetPick(httpServletRequest, page, size, initCommentSize);
 
@@ -99,8 +99,8 @@ public class PetPickController {
      */
     @PatchMapping("/{id}")
     public ResponseEntity<Void> editPetPick(HttpServletRequest httpServletRequest, Authentication authentication,
-                            @PathVariable("id") Long id,
-                            @RequestPart(name = "petPickEditRequestDto") PetPickEditRequestDto petPickEditRequestDto,
+                            @PathVariable("id") int id,
+                            @Valid @RequestPart(name = "petPickEditRequestDto") PetPickEditRequestDto petPickEditRequestDto,
                             @RequestPart(name = "thumbnail", required = false) MultipartFile thumbnailFile) throws Exception {
         petPickService.editPetPick(httpServletRequest, petPickEditRequestDto, id, thumbnailFile);
         return new ResponseEntity<>(HttpStatus.OK);
