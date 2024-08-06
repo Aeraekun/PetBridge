@@ -40,8 +40,8 @@ const MyPageContractsContainer = () => {
 
       if (res.data) {
         console.log("fetch 성공!!!", res)
-        newItems = res.data.response.body.items.item
-        setPage((prevPageNo) => prevPageNo + 1)
+        newItems = res.data
+        setPage((prevPage) => prevPage + 1)
         return newItems
       } else {
         setIsLoading(false)
