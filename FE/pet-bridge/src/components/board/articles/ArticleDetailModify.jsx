@@ -65,7 +65,7 @@ const ArticleDetailModify = () => {
     //게시글 삭제 api 함수 호출
     try {
       await removeArticle(id)
-      navigate(-1)
+      navigate("/communities")
     } catch (e) {
       console.error(e)
     }
@@ -113,7 +113,7 @@ const ArticleDetailModify = () => {
         돌아가기
       </button>
       <input
-        className="border-stroke h-16 rounded-xl border text-center text-4xl font-bold"
+        className="h-16 rounded-xl border border-stroke text-center text-4xl font-bold"
         placeholder="제목을 입력하세요"
         onChange={(e) => setTitle(e.target.value)}
         value={title}
