@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import kotlinx.serialization.Required;
 import lombok.RequiredArgsConstructor;
 import okhttp3.Response;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,17 +42,16 @@ public class BoardController {
      * 게시글 목록 조회 (검색, 페이징)
      */
     @GetMapping
-    public ResponseEntity<List<BoardResponseDto>> getListBoard(@RequestParam(name = "page", required = false, defaultValue = "0") int page,
+    public ResponseEntity<Page<BoardResponseDto>> getListBoard(@RequestParam(name = "page", required = false, defaultValue = "0") int page,
                                                                @RequestParam(name = "size", required = false, defaultValue = "12") int size,
                                                                @RequestParam(name = "usernickname", required = false) String userNickname,
                                                                @RequestParam(name = "title", required = false) String title,
                                                                @RequestParam(name = "type", required = false) BoardType type) throws Exception {
-        List<BoardResponseDto> boardResponseDtos = boardService.getListBoard(page, size, userNickname, title, type);
+        Page<BoardResponseDto> boardResponseDtos = boardService.getListBoard(page, size, userNickname, title, type);
 
-        return Optional.ofNullable(boardResponseDtos)
-                .filter(list -> !list.isEmpty())
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.noContent().build());
+        return boardResponseDtos.hasContent()
+                ? ResponseEntity.ok(boardResponseDtos)
+                : ResponseEntity.noContent().build();
     }
 
     /**

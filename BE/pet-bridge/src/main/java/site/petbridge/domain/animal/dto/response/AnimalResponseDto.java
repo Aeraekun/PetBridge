@@ -1,6 +1,7 @@
 package site.petbridge.domain.animal.dto.response;
 
 import lombok.Getter;
+import org.springframework.data.domain.Page;
 import site.petbridge.domain.animal.domain.Animal;
 import site.petbridge.domain.board.dto.response.BoardResponseDto;
 
@@ -26,9 +27,9 @@ public class AnimalResponseDto {
 
     private String processState;
 
-    private List<BoardResponseDto> boards; // 여길 추가했음
+    private Page<BoardResponseDto> boards;
 
-    public AnimalResponseDto(Animal entity, String processState, List<BoardResponseDto> boards) {
+    public AnimalResponseDto(Animal entity, String processState, Page<BoardResponseDto> boards) {
         this.id = entity.getId();
         this.userId = entity.getUserId();
         this.name = entity.getName();
