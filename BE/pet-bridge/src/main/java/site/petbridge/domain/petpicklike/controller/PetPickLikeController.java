@@ -38,4 +38,8 @@ public class PetPickLikeController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    /**
+     * 펫핏 좋아요 조회
+     */
 }
