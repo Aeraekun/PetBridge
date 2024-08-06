@@ -30,14 +30,35 @@ export const postContract = async (contractFormData) => {
 
 // 계약서 상태 변경 요청
 // 계약자가 서명 후 계약 완전 체결을 위한 요청
-export const patchContract = (contractId) => {
-  const res = axiosInstance.patch(`/contracts/${contractId}`)
-  return res
+export const patchContract = (contractEditRequestDto) => {
+  try {
+    const res = axiosInstance.patch(
+      `/contracts/${contractEditRequestDto.id}`,
+      contractEditRequestDto
+    )
+    return res
+  } catch (error) {
+    return error
+  }
 }
 
 // 계약서 삭제 요청
 export const disalbeContract = async (contractId) => {
-  const res = await axiosInstance.delete(`/contracts/${contractId}/disable`)
+  const res = await axiosInstance.delete(`/contracts/${contractId}`)
 
   return res
+}
+
+// 계약서 결제 요청
+export const postPayment = async (name, totalPrice) => {
+  try {
+    const res = await axiosInstance.post(`/payment/ready`, {
+      name: name,
+      totalPrice: totalPrice,
+    })
+
+    return res
+  } catch (error) {
+    return error
+  }
 }

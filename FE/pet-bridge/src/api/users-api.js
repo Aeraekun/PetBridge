@@ -167,5 +167,12 @@ export const postPhoneCheck = (phoneConfirmData) => {
   }
 }
 
-// 회원 전체 조회
-export const getAllUsers = () => {}
+// 닉네임으로 회원 조회
+export const getUsersByNickname = (nickname) => {
+  try {
+    const res = axiosInstance.get(`/users/list/${nickname}`)
+    return res
+  } catch (error) {
+    return error
+  }
+}

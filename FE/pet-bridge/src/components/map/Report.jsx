@@ -89,9 +89,9 @@ const Report = () => {
       type: "LOST",
       content: editorContent,
       lat: position.getLat(),
-      lng: position.getLng(),
+      lon: position.getLng(),
     }
-    console.log(newArticle)
+
     const formData = new FormData()
     formData.append(
       "boardRegistRequestDto",
@@ -100,6 +100,8 @@ const Report = () => {
     if (imageFile) {
       formData.append("thumbnail", imageFile)
     }
+    console.log("formdata는")
+    console.dir(formData)
 
     try {
       await registArticle(formData)
