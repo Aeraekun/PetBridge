@@ -22,7 +22,7 @@ import AnimalDetailModify from "components/board/animals/AnimalDetailModify"
 import PetpickWrite from "components/petpick/PetpickWrite"
 import ShortsLayout from "layout/ShortsLayout"
 import PetpickComments from "components/petpick/PetpickComments"
-import PetpickTagDetail from "components/petpick/PetpickTagDetail"
+import PetpickDetail from "components/petpick/PetpickDetail"
 import PetpickModify from "components/petpick/PetpickModify"
 
 import {useDispatch, useSelector} from "react-redux"
@@ -105,6 +105,7 @@ function App() {
               />
             }
           ></Route>
+          <Route path="petpick/:petpickId" element={<PetpickDetail />}></Route>
           <Route
             path="petpick/modify/:id"
             element={
@@ -204,8 +205,6 @@ function App() {
         <Route path="/petpick" element={<ShortsLayout />}>
           <Route path="" element={<PetpickComments />}></Route>
         </Route>
-
-        <Route path="/petpick/:id/tag" element={<PetpickTagDetail />}></Route>
 
         <Route path="/contracts" element={<ContractsPage />}>
           <Route path=":id" element={<ContractsContainer />}></Route>

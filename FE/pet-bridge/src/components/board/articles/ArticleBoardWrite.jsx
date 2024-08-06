@@ -83,6 +83,7 @@ const ArticleBoardWrite = () => {
 
     try {
       await registArticle(formData)
+      alert("글 등록 완료")
       navigate(`/communities`)
     } catch (e) {
       console.error(e)

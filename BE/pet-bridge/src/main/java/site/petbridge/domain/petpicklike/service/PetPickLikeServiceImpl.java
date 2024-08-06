@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import site.petbridge.domain.petpick.repository.PetPickRepository;
 import site.petbridge.domain.petpicklike.domain.PetPickLike;
 import site.petbridge.domain.petpicklike.dto.request.PetPickLikeRequestDto;
+import site.petbridge.domain.petpicklike.dto.response.PetPickLikeResponseDto;
 import site.petbridge.domain.petpicklike.repository.PetPickLikeRepository;
 import site.petbridge.domain.user.domain.User;
 import site.petbridge.domain.user.dto.response.UserResponseDto;
@@ -75,4 +76,16 @@ public class PetPickLikeServiceImpl implements PetPickLikeService {
 
         petPickLikeRepository.delete(existingPetPickLike.get());
     }
+
+    @Override
+    public PetPickLikeResponseDto getDetailPetPickLike(int id) throws Exception {
+        User user = authUtil.getAuthenticatedUser();
+
+        PetPickLike petPickLike = petPickLikeRepository.findByUserIdAndPetPickId(user.getId(), id)
+                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+
+        return new PetPickLikeResponseDto(petPickLike);
+    }
+
+
 }
