@@ -15,9 +15,19 @@ const AnimalInfo = ({animal}) => {
   )
 }
 
-const TaggedAnimalItem = ({animal, isFollowing, isLogin}) => {
+const TaggedAnimalItem = ({animal, isFollowing, isLogin, onClick}) => {
   return (
-    <div className="flex justify-between p-3">
+    <div
+      className="flex justify-between p-3"
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          onClick()
+        }
+      }}
+    >
       <div className="flex space-x-3">
         <img
           src={DogImage}

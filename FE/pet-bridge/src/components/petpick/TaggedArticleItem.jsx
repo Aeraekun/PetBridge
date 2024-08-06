@@ -22,9 +22,19 @@ const ArticleState = ({state}) => {
   )
 }
 
-const TaggedArticleItem = ({data}) => {
+const TaggedArticleItem = ({data, onClick}) => {
   return (
-    <div className="flex h-24 w-full justify-between space-x-2 p-3">
+    <div
+      className="flex h-24 w-full justify-between space-x-2 p-3"
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          onClick()
+        }
+      }}
+    >
       <div className="flex w-full space-x-3">
         <div className="flex flex-col justify-center">
           <img
