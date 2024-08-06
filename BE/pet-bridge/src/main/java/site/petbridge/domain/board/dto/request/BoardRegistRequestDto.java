@@ -11,7 +11,7 @@ import site.petbridge.domain.board.domain.enums.BoardType;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardRegistRequestDto {
 
-    private int animalId;
+    private Integer animalId;
 
     @NotNull
     private BoardType type;
