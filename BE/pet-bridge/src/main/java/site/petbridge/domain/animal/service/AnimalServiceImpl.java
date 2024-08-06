@@ -18,6 +18,7 @@ import site.petbridge.domain.animal.dto.request.AnimalEditRequestDto;
 import site.petbridge.domain.animal.dto.request.AnimalRegistRequestDto;
 import site.petbridge.domain.animal.dto.response.AnimalResponseDto;
 import site.petbridge.domain.animal.repository.AnimalRepository;
+import site.petbridge.domain.board.service.BoardService;
 import site.petbridge.domain.contract.domain.Contract;
 import site.petbridge.domain.contract.repository.ContractRepository;
 import site.petbridge.domain.follow.repository.FollowRepository;
@@ -32,12 +33,13 @@ import site.petbridge.util.FileUtil;
 @RequiredArgsConstructor
 public class AnimalServiceImpl implements AnimalService {
 
+	private final BoardService boardService;
 	private final AnimalRepository animalRepository;
 	private final UserRepository userRepository;
-	private final FileUtil fileUtil;
 	private final ContractRepository contractRepository;
 	private final FollowRepository followRepository;
 	private final AuthUtil authUtil;
+	private final FileUtil fileUtil;
 
 	/**
 	 * 동물 등록
@@ -143,7 +145,13 @@ public class AnimalServiceImpl implements AnimalService {
 			filteredAnimals.size());
 
 		return pagedAnimals.stream()
-			.map(animal -> new AnimalResponseDto(animal, determineProcessState(animal)))
+			.map(animal -> {
+                try {
+                    return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(animal.getId()));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            })
 			.collect(Collectors.toList());
 	}
 
@@ -160,7 +168,13 @@ public class AnimalServiceImpl implements AnimalService {
 		Page<Animal> animals = animalRepository.findByUserIdAndDisabledFalse(user.getId(), pageable);
 
 		return animals.stream()
-			.map(animal -> new AnimalResponseDto(animal, determineProcessState(animal)))
+			.map(animal -> {
+                try {
+                    return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(animal.getId()));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            })
 			.collect(Collectors.toList());
 	}
 
@@ -178,7 +192,13 @@ public class AnimalServiceImpl implements AnimalService {
 		Page<Animal> animals = animalRepository.findByUserIdAndDisabledFalse(user.getId(), pageable);
 
 		return animals.stream()
-				.map(animal -> new AnimalResponseDto(animal, determineProcessState(animal)))
+				.map(animal -> {
+                    try {
+                        return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(animal.getId()));
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
 				.collect(Collectors.toList());
 	}
 
@@ -201,7 +221,13 @@ public class AnimalServiceImpl implements AnimalService {
 
 		// AnimalResponseDto로 변환 및 반환
 		return pagedAnimals.stream()
-			.map(animal -> new AnimalResponseDto(animal, determineProcessState(animal)))
+			.map(animal -> {
+                try {
+                    return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(animal.getId()));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            })
 			.collect(Collectors.toList());
 	}
 
@@ -213,7 +239,7 @@ public class AnimalServiceImpl implements AnimalService {
 		Animal animal = animalRepository.findByIdAndDisabledFalse(id)
 			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
 
-		return new AnimalResponseDto(animal, determineProcessState(animal));
+		return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(animal.getId()));
 	}
 
 	private List<Integer> filterByProcessState(String processState) {

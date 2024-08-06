@@ -13,5 +13,5 @@ public interface FollowService {
     void deleteFollow(HttpServletRequest httpServletRequest,
                            FollowRequestDto followRequestDto) throws Exception;
 
-    FollowResponseDto getDetailFollow(FollowRequestDto followRequestDto) throws Exception;
+    FollowResponseDto getDetailFollow(int id) throws Exception;
 }

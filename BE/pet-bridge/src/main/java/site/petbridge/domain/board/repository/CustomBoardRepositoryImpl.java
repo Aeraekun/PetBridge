@@ -119,6 +119,46 @@ public class CustomBoardRepositoryImpl implements CustomBoardRepository {
         return new PageImpl<>(results, pageable, total);
     }
 
+    @Override
+    public List<BoardResponseDto> findAllByAnimalIdAndDisabledFalse(int animalId) {
+        QBoard board = QBoard.board;
+        QUser user = QUser.user;
+        QAnimal animal = QAnimal.animal;
+        QBoardComment boardComment = QBoardComment.boardComment;
+
+        return queryFactory
+                .select(Projections.constructor(BoardResponseDto.class,
+                        board.id,
+                        board.userId,
+                        board.animalId,
+                        board.boardType,
+                        board.thumbnail,
+                        board.title,
+                        board.content,
+                        board.registTime,
+                        board.lat,
+                        board.lon,
+                        board.disabled,
+
+                        user.nickname,
+                        user.image,
+
+                        animal.name,
+                        animal.filename,
+
+                        boardComment.id.count().as("commentCount")
+                ))
+                .from(board)
+                .join(user).on(board.userId.eq(user.id))
+                .leftJoin(animal).on(board.animalId.eq(animal.id))
+                .leftJoin(boardComment).on(board.id.eq(boardComment.boardId).and(boardComment.disabled.isFalse()))
+                .where(
+                        board.animalId.eq(animalId).and(board.disabled.isFalse())
+                )
+                .groupBy(board.id, user.id, animal.id)
+                .fetch();
+    }
+
     private BooleanExpression userNicknameEq(String userNickname, QUser user) {
         return userNickname != null ? user.nickname.eq(userNickname) : null;
     }

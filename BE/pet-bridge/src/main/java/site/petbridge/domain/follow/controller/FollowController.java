@@ -45,10 +45,10 @@ public class FollowController {
     /**
      * 팔로우 조회
      */
-    @GetMapping
+    @GetMapping("/{id}")
     public ResponseEntity<FollowResponseDto> getDetailFollow(
-            @RequestBody FollowRequestDto followRequestDto) throws Exception {
-        FollowResponseDto followResponseDto = followService.getDetailFollow(followRequestDto);
+            @PathVariable(name = "id") int id) throws Exception {
+        FollowResponseDto followResponseDto = followService.getDetailFollow(id);
 
         return new ResponseEntity<>(followResponseDto, HttpStatus.OK);
     }

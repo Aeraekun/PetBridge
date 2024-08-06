@@ -79,11 +79,10 @@ public class FollowServiceImpl implements FollowService {
     }
 
     @Override
-    public FollowResponseDto getDetailFollow(FollowRequestDto followRequestDto) throws Exception {
+    public FollowResponseDto getDetailFollow(int id) throws Exception {
         User user = authUtil.getAuthenticatedUser();
-        int animalId = followRequestDto.getAnimalId();
 
-        Follow follow = followRepository.findByUserIdAndAnimalId(user.getId(), animalId)
+        Follow follow = followRepository.findByUserIdAndAnimalId(user.getId(), id)
                 .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
 
         return new FollowResponseDto(follow);

@@ -12,5 +12,5 @@ public interface PetPickLikeService {
     void deletePetPickLike(HttpServletRequest httpServletRequest,
                            PetPickLikeRequestDto petPickLikeRequestDto) throws Exception;
 
-    PetPickLikeResponseDto getDetailPetPickLike(PetPickLikeRequestDto petPickLikeRequestDto) throws Exception;
+    PetPickLikeResponseDto getDetailPetPickLike(int id) throws Exception;
 }
