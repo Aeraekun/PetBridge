@@ -18,13 +18,13 @@ public class PetPickCommentResponseDto {
     private String userImage;
 
 
-    public PetPickCommentResponseDto(PetPickComment entity, String userNickname, String image) {
+    public PetPickCommentResponseDto(PetPickComment entity, String userNickname, String userImage) {
         this.id = entity.getId();
         this.userId = entity.getUserId();
         this.petPickId = entity.getPetPickId();
         this.content = entity.getContent();
         this.registTime = entity.getRegistTime();
         this.userNickname = userNickname;
-        this.userImage = image;
+        this.userImage = userImage;
     }
 }
