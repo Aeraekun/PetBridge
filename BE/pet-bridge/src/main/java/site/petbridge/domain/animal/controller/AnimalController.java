@@ -98,8 +98,10 @@ public class AnimalController {
      * 동물 상세 조회
      */
     @GetMapping("/{id}")
-    public ResponseEntity<AnimalResponseDto> getDetailAnimal(@PathVariable("id") int id) throws Exception {
-        AnimalResponseDto animalResponseDto = animalService.getDetailAnimal(id);
+    public ResponseEntity<AnimalResponseDto> getDetailAnimal(@PathVariable("id") int id,
+                                                             @RequestParam(name = "page", defaultValue = "0") int page,
+                                                             @RequestParam(name = "size", defaultValue = "12") int size) throws Exception {
+        AnimalResponseDto animalResponseDto = animalService.getDetailAnimal(id, page, size);
 
         return new ResponseEntity<>(animalResponseDto, HttpStatus.OK);
     }

@@ -2,6 +2,7 @@ package site.petbridge.domain.board.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -50,19 +51,20 @@ public class BoardServiceImpl implements BoardService {
      * 게시글 목록 조회
      */
     @Override
-    public List<BoardResponseDto> getListBoard(int page, int size, String userNickname, String title, BoardType type) throws Exception {
+    public Page<BoardResponseDto> getListBoard(int page, int size, String userNickname, String title, BoardType type) throws Exception {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
 
-        return boardRepository.findAllByUserNickNameAndTitleContains(userNickname, title, type, pageable).getContent();
+        return boardRepository.findAllByUserNickNameAndTitleContains(userNickname, title, type, pageable);
     }
 
     /**
      * 동물 id 에 따른 게시글 목록 조회
      */
     @Override
-    public List<BoardResponseDto> getListBoardByAnimalId(int animalId) throws Exception {
+    public Page<BoardResponseDto> getListBoardByAnimalId(int page, int size, int animalId) throws Exception {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
 
-        return boardRepository.findAllByAnimalIdAndDisabledFalse(animalId);
+        return boardRepository.findAllByAnimalIdAndDisabledFalse(animalId, pageable);
     }
 
     /**
