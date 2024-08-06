@@ -2,6 +2,7 @@ import {getUsersByNickname} from "api/users-api"
 import {setOpponentInfo} from "features/chat/chat-slice"
 import {useState, useRef, useEffect} from "react"
 import {useDispatch} from "react-redux"
+import DefaultUser150 from "assets/icons/icon-default-user-150.svg"
 
 const SearchDropDown = ({subtitle, placeholder, itemName, onDataChange}) => {
   const [searchValue, setSearchValue] = useState("")
@@ -101,15 +102,22 @@ const SearchDropDown = ({subtitle, placeholder, itemName, onDataChange}) => {
             </div>
             <ul>
               {userDatas.map((user, index) => (
-                <li key={user.id} className="flex items-center">
-                  <span className="w-5"></span>
+                <li
+                  key={user.id}
+                  className="flex w-full items-center overflow-x-hidden"
+                >
                   <button
                     key={index}
                     id={user.id}
                     onClick={onClickHandler}
-                    className="hover:bg-stroke me-3 inline-flex h-10 grow items-center rounded-xl p-3 hover:text-white"
+                    className="hover:bg-stroke me-3 flex h-10 grow items-center gap-2 rounded-xl p-3 hover:text-white"
                   >
-                    {user.nickname}
+                    <img
+                      src={user.image ? user.image : DefaultUser150}
+                      alt={user.nickname}
+                      className="size-8 rounded-full"
+                    />
+                    <span className="whitespace-nowrap">{user.nickname}</span>
                   </button>
                 </li>
               ))}
