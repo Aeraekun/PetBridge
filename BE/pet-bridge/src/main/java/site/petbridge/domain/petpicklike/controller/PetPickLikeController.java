@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import site.petbridge.domain.petpicklike.dto.request.PetPickLikeRequestDto;
+import site.petbridge.domain.petpicklike.dto.response.PetPickLikeResponseDto;
 import site.petbridge.domain.petpicklike.service.PetPickLikeService;
 
 @RestController
@@ -42,4 +43,11 @@ public class PetPickLikeController {
     /**
      * 펫핏 좋아요 조회
      */
+    @GetMapping
+    public ResponseEntity<PetPickLikeResponseDto> getDetailPetPickLike(
+            @RequestBody PetPickLikeRequestDto petPickLikeRequestDto) throws Exception {
+        PetPickLikeResponseDto petPickLikeResponseDto = petPickLikeService.getDetailPetPickLike(petPickLikeRequestDto);
+
+        return new ResponseEntity<>(petPickLikeResponseDto, HttpStatus.OK);
+    }
 }
