@@ -11,17 +11,18 @@ import site.petbridge.domain.board.domain.enums.BoardType;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardRegistRequestDto {
 
-    @NotNull
-    private int animalId;
+    private Integer animalId;
+
     @NotNull
     private BoardType type;
+
     @NotNull
     private String title;
+
     @NotNull
     private String content;
-    @NotNull
+
     private String lat;
-    @NotNull
     private String lon;
 
     public Board toEntity(int userId, String thumbnail) {

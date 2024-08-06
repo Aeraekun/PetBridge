@@ -51,19 +51,23 @@ const Search = ({searchform}) => {
 
   const handleSearch = () => {
     let params = {}
-    if (type === "") {
+    if (type === "전체") {
       params = {title: inputKeyword, usernickname: inputKeyword}
-    } else {
+    } else if (inputKeyword !== "") {
       params[type] = inputKeyword
+    } else {
+      params = {}
     }
     console.log(params, "params")
     searchform(params) // 새로운 검색 조건을 부모로 전달
+    setInputKeyword("")
+    setType("")
   }
 
   return (
     <div className="flex w-full justify-between px-10">
       <select id="type" value={type} onChange={(e) => setType(e.target.value)}>
-        <option value="">전체</option>
+        <option value="전체">전체</option>
         <option value="title">제목</option>
         <option value="usernickname">닉네임</option>
       </select>
@@ -91,31 +95,26 @@ const ArticleBoardList = () => {
 
   const [articles, setArticles] = useState([])
   const [currentPage, setCurrentPage] = useState(0)
-  const [totalSize, setTotalSize] = useState(20) // 총 페이지 수를 20으로 설정
-  const [pageSize] = useState(12) // 페이지당 항목 수
+  const [totalPages, setTotalPages] = useState(0)
+  const pageSize = 12 // 페이지당 항목 수
   const [searchParams, setSearchParams] = useState({})
 
   const fetchArticles = async (params) => {
     console.log(params)
     try {
       const data = await getArticle(params)
-      let total = 20
-      console.log(data)
-      setArticles(data)
-      setTotalSize(total) // 총 항목 수 업데이트
+      setTotalPages(data.totalPages)
+      setArticles(data.content)
     } catch (error) {
       console.error("게시글 가져오기 오류:", error)
     }
   }
 
   useEffect(() => {
-    fetchArticles(searchParams)
-  }, [searchParams])
-
-  useEffect(() => {
     setSearchParams((prevParams) => ({
       ...prevParams,
       page: currentPage,
+      size: pageSize,
     }))
   }, [currentPage])
 
@@ -127,6 +126,10 @@ const ArticleBoardList = () => {
         "",
     }))
   }, [bcode])
+
+  useEffect(() => {
+    fetchArticles(searchParams)
+  }, [searchParams])
 
   const goDetail = (article) => {
     const id = article.id
@@ -150,8 +153,6 @@ const ArticleBoardList = () => {
       page: 0,
     }))
   }
-
-  const totalPages = Math.ceil(totalSize / pageSize) // 총 페이지 수 계산
 
   return (
     <>

@@ -1,5 +1,6 @@
 package site.petbridge.domain.board.service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 import site.petbridge.domain.board.domain.enums.BoardType;
 import site.petbridge.domain.board.dto.request.BoardEditRequestDto;
@@ -11,9 +12,9 @@ import java.util.List;
 public interface BoardService {
     void registBoard(BoardRegistRequestDto boardRegistRequestDto, MultipartFile thumbnailFile) throws Exception;
 
-    List<BoardResponseDto> getListBoard(int page, int size, String userNickname, String title, BoardType type) throws Exception;
+    Page<BoardResponseDto> getListBoard(int page, int size, String userNickname, String title, BoardType type) throws Exception;
 
-    List<BoardResponseDto> getListBoardByAnimalId(int animalId) throws Exception;
+    Page<BoardResponseDto> getListBoardByAnimalId(int page, int size, int animalId) throws Exception;
 
     BoardResponseDto getDetailBoard(int id) throws Exception;
 

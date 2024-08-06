@@ -24,7 +24,7 @@ public class Board {
     private int userId;
 
     @Column(name = "animal_id")
-    private int animalId;
+    private Integer animalId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
@@ -46,7 +46,7 @@ public class Board {
     private boolean disabled = false;
 
     @Builder
-    public Board(int userId, int animalId, BoardType boardType, String thumbnail, String title,
+    public Board(int userId, Integer animalId, BoardType boardType, String thumbnail, String title,
                  String content, String lat, String lon) {
         this.userId = userId;
         this.animalId = animalId;
