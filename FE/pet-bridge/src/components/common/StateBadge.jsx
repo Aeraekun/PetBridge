@@ -1,13 +1,16 @@
 const StateBadge = ({state}) => {
-  //색 수정 필요
   const stateColors = {
     입양중: "bg-cyan-100",
     입양대기: "bg-yellow-100",
     입양완료: "bg-green-100",
     임시보호: "bg-gray-100",
-    //보호소
-    보호중: "bg-green-100",
-    "종료(반환)": "bg-green-400",
+    // 보호소
+    보호중: "bg-green-200",
+    "종료(반환)": "bg-blue-100",
+    "종료(입양)": "bg-purple-100",
+    "종료(안락사)": "bg-black",
+    "종료(자연사)": "bg-yellow",
+    "종료(기타)": "bg-gray-100",
 
     REVIEW: "bg-purple-100",
     NOTICE: "bg-blue-100",
