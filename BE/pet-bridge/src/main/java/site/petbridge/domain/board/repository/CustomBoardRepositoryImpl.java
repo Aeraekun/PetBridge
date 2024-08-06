@@ -9,10 +9,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import site.petbridge.domain.animal.domain.QAnimal;
 import site.petbridge.domain.board.domain.QBoard;
+import site.petbridge.domain.board.domain.enums.BoardType;
 import site.petbridge.domain.board.dto.response.BoardResponseDto;
 import site.petbridge.domain.boardcomment.domain.QBoardComment;
 import site.petbridge.domain.user.domain.QUser;
-
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -21,7 +21,48 @@ public class CustomBoardRepositoryImpl implements CustomBoardRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<BoardResponseDto> findAllByUserNickNameAndTitleContains(String userNickname, String title, Pageable pageable) {
+    public BoardResponseDto getDetailBoardById(int id) {
+        QBoard board = QBoard.board;
+        QUser user = QUser.user;
+        QAnimal animal = QAnimal.animal;
+        QBoardComment comment = QBoardComment.boardComment;
+
+        BoardResponseDto boardResponseDto = queryFactory
+                .select(Projections.constructor(BoardResponseDto.class,
+                        board.id,
+                        user.id,
+                        animal.id,
+                        board.boardType,
+                        board.thumbnail,
+                        board.title,
+                        board.content,
+                        board.registTime,
+                        board.lat,
+                        board.lon,
+                        board.disabled,
+
+                        user.nickname,
+                        user.image,
+
+                        animal.name,
+                        animal.filename,
+
+                        comment.count()
+                ))
+                .from(board)
+                .join(user).on(board.userId.eq(user.id))
+                .leftJoin(animal).on(board.animalId.eq(animal.id))
+                .leftJoin(comment).on(board.id.eq(comment.boardId).and(comment.disabled.isFalse()))
+                .where(board.id.eq(id).and(board.disabled.isFalse()))
+                .groupBy(board.id, user.id, animal.id)
+                .fetchOne();
+
+        return boardResponseDto;
+    }
+
+    @Override
+    public Page<BoardResponseDto> findAllByUserNickNameAndTitleContains(String userNickname, String title, BoardType type, Pageable pageable) {
+
         QBoard board = QBoard.board;
         QUser user = QUser.user;
         QAnimal animal = QAnimal.animal;
@@ -56,7 +97,8 @@ public class CustomBoardRepositoryImpl implements CustomBoardRepository {
                 .where(
                         board.disabled.isFalse(),
                         userNicknameEq(userNickname,user),
-                        titleContains(title, board)
+                        titleContains(title, board),
+                        boardTypeEq(type, board)
                 )
                 .groupBy(board.id, user.id, animal.id)
                 .offset(pageable.getOffset())
@@ -83,5 +125,9 @@ public class CustomBoardRepositoryImpl implements CustomBoardRepository {
 
     private BooleanExpression titleContains(String title, QBoard board) {
         return title != null ? board.title.contains(title) : null;
+    }
+
+    private BooleanExpression boardTypeEq(BoardType type, QBoard board) {
+        return type != null ? board.boardType.eq(type) : null;
     }
 }

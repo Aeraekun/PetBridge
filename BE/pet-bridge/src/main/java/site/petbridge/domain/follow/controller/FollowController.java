@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import site.petbridge.domain.follow.dto.request.FollowRequestDto;
+import site.petbridge.domain.follow.dto.response.FollowResponseDto;
 import site.petbridge.domain.follow.service.FollowService;
 import site.petbridge.domain.petpicklike.dto.request.PetPickLikeRequestDto;
 import site.petbridge.domain.petpicklike.service.PetPickLikeService;
@@ -39,5 +40,16 @@ public class FollowController {
         followService.deleteFollow(httpServletRequest, followRequestDto);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     * 팔로우 조회
+     */
+    @GetMapping
+    public ResponseEntity<FollowResponseDto> getDetailFollow(
+            @RequestBody FollowRequestDto followRequestDto) throws Exception {
+        FollowResponseDto followResponseDto = followService.getDetailFollow(followRequestDto);
+
+        return new ResponseEntity<>(followResponseDto, HttpStatus.OK);
     }
 }
