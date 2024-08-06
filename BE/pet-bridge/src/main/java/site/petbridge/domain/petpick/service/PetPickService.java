@@ -35,6 +35,11 @@ public interface PetPickService {
                                               int initCommentSize) throws Exception;
 
     /**
+     * 펫픽 상세 조회
+     */
+    PetPickResponseDto getDetailPetPick(int id) throws Exception;
+
+    /**
      * 내 펫픽 수정
      */
     void editPetPick(HttpServletRequest httpServletRequest, PetPickEditRequestDto petPickEditRequestDto,

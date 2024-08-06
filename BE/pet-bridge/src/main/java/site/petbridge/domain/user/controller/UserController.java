@@ -38,8 +38,8 @@ public class UserController {
      * 회원 전체 목록 조회(관리자)
      */
     @GetMapping
-    public ResponseEntity<List<UserResponseDto>> getListUser(@RequestParam(name = "page") int page,
-                                                       @RequestParam(name = "size") int size) throws Exception {
+    public ResponseEntity<List<UserResponseDto>> getListUser(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                       @RequestParam(name = "size", defaultValue = "12") int size) throws Exception {
         List<UserResponseDto> userResponseDtos = userService.getListUser(page, size);
 
         return Optional.ofNullable(userResponseDtos)

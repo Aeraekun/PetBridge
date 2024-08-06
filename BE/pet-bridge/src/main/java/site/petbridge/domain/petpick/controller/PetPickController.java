@@ -69,6 +69,16 @@ public class PetPickController {
     }
 
     /**
+     * 펫픽 상세 조회
+     */
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<PetPickResponseDto> getDetailPetPick(@PathVariable("id") int id) throws Exception {
+        PetPickResponseDto petPickResponseDto = petPickService.getDetailPetPick(id);
+
+        return new ResponseEntity<>(petPickResponseDto, HttpStatus.OK);
+    }
+
+    /**
      * 내가 좋아요 한 펫픽 목록 조회
      */
     @GetMapping("/like")

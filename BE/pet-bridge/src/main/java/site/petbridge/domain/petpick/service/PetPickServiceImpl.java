@@ -20,6 +20,7 @@ import site.petbridge.domain.petpick.dto.request.PetPickEditRequestDto;
 import site.petbridge.domain.petpick.dto.request.PetPickRegistRequestDto;
 import site.petbridge.domain.petpick.dto.response.PetPickResponseDto;
 import site.petbridge.domain.petpick.repository.PetPickRepository;
+import site.petbridge.domain.petpickcomment.domain.PetPickComment;
 import site.petbridge.domain.petpickcomment.dto.response.PetPickCommentResponseDto;
 import site.petbridge.domain.petpickcomment.repository.PetPickCommentRepository;
 import site.petbridge.domain.petpicklike.repository.PetPickLikeRepository;
@@ -93,23 +94,13 @@ public class PetPickServiceImpl implements PetPickService {
     @Override
     public List<PetPickResponseDto> getRandomListPetPick(HttpServletRequest httpServletRequest,
                                                          int initCommentSize) throws Exception {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication.getPrincipal() == "anonymousUser") {
-//            throw new PetBridgeException(ErrorCode.UNAUTHORIZED);
-//        }
-//
-//        CustomUserDetail userDetails = (CustomUserDetail) authentication.getPrincipal();
-//        return userRepository.findByIdAndDisabledFalse(userDetails.getId())
-//                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
         User user = null;
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof CustomUserDetail) {
             CustomUserDetail userDetail = (CustomUserDetail) authentication.getPrincipal();
             user = userRepository.findByIdAndDisabledFalse(userDetail.getId())
                     .orElseThrow(() -> new PetBridgeException(ErrorCode.UNAUTHORIZED));
         }
-
         final User finalUser = user;
 
         List<PetPick> petPicks = petPickRepository.findRandomPetPicks();
@@ -204,6 +195,32 @@ public class PetPickServiceImpl implements PetPickService {
         }).collect(Collectors.toList());
 
         return result;
+    }
+
+    /**
+     * 펫픽 상세 조회
+     */
+    public PetPickResponseDto getDetailPetPick(int id) throws Exception {
+
+        // 해당 id 펫픽
+        PetPick petPick = petPickRepository.findByIdAndDisabledFalse(id)
+                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+
+        User petPickWriter = userRepository.findById(petPick.getUserId()).orElse(null);
+        String petPickWriterNickname = petPickWriter.getNickname();
+        String petPickWriterImage = petPickWriter.getImage();
+
+        int likeCnt = petPickLikeRepository.countByPetPickId(id);
+
+        List<PetPickCommentResponseDto> comments = petPickCommentRepository.findByPetPickIdAndDisabledFalse(id).stream()
+                .map(petPickComment -> {
+                    User user = userRepository.findByIdAndDisabledFalse(petPickComment.getUserId())
+                            .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+                    return new PetPickCommentResponseDto(petPickComment, user.getNickname(), user.getImage());
+                })
+                .collect(Collectors.toList());
+
+        return new PetPickResponseDto(petPick, petPickWriterNickname, petPickWriterImage, likeCnt, false, false, comments);
     }
 
     /**
