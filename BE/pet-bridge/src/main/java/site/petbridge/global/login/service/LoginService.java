@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import site.petbridge.domain.user.domain.User;
 import site.petbridge.domain.user.repository.UserRepository;
+import site.petbridge.global.exception.ErrorCode;
+import site.petbridge.global.exception.PetBridgeException;
 import site.petbridge.global.login.userdetail.CustomUserDetail;
 
 @Service
@@ -17,7 +19,8 @@ public class LoginService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) {
-        User user = userRepository.findByEmail(email).orElse(null);
+        User user = userRepository.findByEmailAndDisabledFalse(email).orElse(null);
+        if (user == null) { throw new PetBridgeException(ErrorCode.BAD_REQUEST); }
         return new CustomUserDetail(user);
     }
 
