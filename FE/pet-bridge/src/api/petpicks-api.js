@@ -98,6 +98,21 @@ export const getRandomDetailPetPick = async () => {
   }
 }
 
+export const getDetailPetPick = async (petpickId) => {
+  try {
+    const res = await axiosInstance.get(
+      `${PETPICK_API_URL}/detail/${petpickId}`,
+      {
+        params: {initcommentsize: 3},
+      }
+    )
+    console.log("getDetailPetPick", res.data)
+    return res.data
+  } catch (e) {
+    console.error(e)
+    return e
+  }
+}
 //펫픽삭제
 export const removePetPick = async (id) => {
   try {
@@ -118,7 +133,7 @@ export const getPetpickComments = async (petpickId, page, size) => {
     const res = await axios.get(`${PETPICK_COMMENTS_API_URL}/${petpickId}`, {
       params,
     })
-    console.log("getPetpickComments" + res)
+    console.log("getPetpickComments", res.data)
     return res.data
   } catch (e) {
     console.error(e)
@@ -234,7 +249,6 @@ export const getDetailPetPickLike = async (petPickId) => {
     }
     return res
   } catch (error) {
-    // console.log(error)
     return []
   }
 }
