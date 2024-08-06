@@ -2,7 +2,11 @@ import React, {useState, useRef, useEffect, useCallback} from "react"
 // import {useInView} from "react-intersection-observer"
 // import data from "components/petpick/dummydata"
 import PetpickComments from "components/petpick/PetpickComments"
-import {getRandomDetailPetPick} from "api/petpicks-api"
+import {
+  getDetailFollow,
+  getDetailPetPickLike,
+  getRandomDetailPetPick,
+} from "api/petpicks-api"
 import {useNavigate} from "react-router-dom"
 
 const ScrollableComponent = () => {
@@ -44,7 +48,8 @@ const ScrollableComponent = () => {
     try {
       const res = await getRandomDetailPetPick()
       if (res) {
-        console.log("펫픽가져오기 성공", res)
+        // console.log("펫픽가져오기 성공", res)
+
         return res
       } else {
         alert("추가 데이터 로드에 실패했습니다.")
@@ -66,8 +71,33 @@ const ScrollableComponent = () => {
   }
   // Index가 리스트의 마지막에서 두 번째인 경우 데이터를 추가
   useEffect(() => {
+    const fetchLikeFollow = async () => {
+      try {
+        const nowLike = await getDetailPetPickLike(list[index].id)
+        const nowFollow = await getDetailFollow(list[index].animalId)
+        console.log(nowLike)
+        console.log(nowFollow)
+        if (nowLike) {
+          list[index].isLiking = true
+        } else {
+          list[index].isLiking = false
+        }
+        if (nowFollow) {
+          list[index].isFollowing = true
+        } else {
+          list[index].isFollowing = false
+        }
+        setList(list)
+        // console.log(nowLike, nowFollow)
+      } catch {
+        console.log("catch")
+      }
+    }
     if (index === list.length - 1) {
       loadMoreData()
+    }
+    if (list.length > 0) {
+      fetchLikeFollow()
     }
   }, [list, index])
 
@@ -103,10 +133,12 @@ const ScrollableComponent = () => {
     navigate(-1)
   }
   return (
-    <div className=" h-screen">
+    <div className=" relative h-screen">
       <button onClick={goPetpickWrite}>글쓰기</button>
       <div className=" fixed mb-4 text-lg">현재 인덱스: {index}</div>
-      <button onClick={goBack}>뒤로가기</button>
+      <button className="fixed left-20 top-20" onClick={goBack}>
+        뒤로가기
+      </button>
       <div className="fixed right-8 top-1/2 flex flex-col space-y-8">
         <button
           onClick={() => {

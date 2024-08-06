@@ -223,4 +223,37 @@ export const deleteFollow = async (animalId) => {
   }
 }
 
-export const 
+//펫핏좋아요 조회
+export const getDetailPetPickLike = async (petPickId) => {
+  try {
+    const res = await axiosInstance.get(`${PETPICK_LIKE_API_URL}/${petPickId}`)
+
+    console.log("res" + res.data)
+    if (res.status === 404) {
+      // console.log("종아요 안누름")
+    }
+    return res
+  } catch (error) {
+    // console.log(error)
+    return []
+  }
+}
+
+//동물 팔로우 조회
+
+export const getDetailFollow = async (animalId) => {
+  try {
+    const res = await axiosInstance.get(`${PETPICK_FOLLOW_API_URL}/${animalId}`)
+    if (res.status === 404) {
+      // console.log("팔로우 안누름")
+    }
+    return res
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      // console.log("팔로우 안누름")
+      return false // 404 상태에서는 false 반환
+    }
+    console.error("Request failed:", error)
+    return [] // 그 외의 오류에서는 빈 배열 반환
+  }
+}
