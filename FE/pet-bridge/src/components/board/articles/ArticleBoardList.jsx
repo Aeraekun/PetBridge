@@ -31,7 +31,7 @@ const Search = ({searchKeyword}) => {
         type="text"
         placeholder="검색어를 입력하세요."
         value={inputKeyword}
-        className="border-stroke h-12 w-72 rounded-xl border-2 p-2"
+        className="h-12 w-72 rounded-xl border-2 border-stroke p-2"
         onKeyDown={handleKeyDown}
         onChange={(e) => setInputKeyword(e.target.value)}
       />
@@ -54,6 +54,7 @@ const ArticleBoardList = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       const data = await getArticle()
+      console.log(data)
       setArticles(data)
     }
 
@@ -79,20 +80,21 @@ const ArticleBoardList = () => {
       {matchingCategory ? <h2>{matchingCategory.title}</h2> : <p>홈</p>}
       <Button text={"글쓰기"} onClick={goWrite} />
       <ul className="flex w-full flex-wrap justify-between">
-        {articles
-          //bcode가 없는경우 (홈) 일때는 모두 보여줌
-          // category와 bcode가 일치하는것만 필터링
-          .filter((article) => {
-            if (bcode === undefined || bcode === "home") {
-              return true
-            }
-            return article.category === Number(bcode)
-          })
-          .map((article) => (
-            <li key={article.id}>
-              <ArticleItem data={article} onSelectArticle={goDetail} />
-            </li>
-          ))}
+        {articles &&
+          articles
+            //bcode가 없는경우 (홈) 일때는 모두 보여줌
+            // category와 bcode가 일치하는것만 필터링
+            // .filter((article) => {
+            //   if (bcode === undefined || bcode === "home") {
+            //     return true
+            //   }
+            //   return article.category === Number(bcode)
+            // })
+            .map((article) => (
+              <li key={article.id}>
+                <ArticleItem data={article} onSelectArticle={goDetail} />
+              </li>
+            ))}
       </ul>
     </>
   )

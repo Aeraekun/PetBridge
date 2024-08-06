@@ -99,12 +99,14 @@ const ScrollableComponent = () => {
   const goPetpickWrite = () => {
     navigate(`/petpick/write`)
   }
-
+  const goBack = () => {
+    navigate(-1)
+  }
   return (
     <div className=" h-screen">
       <button onClick={goPetpickWrite}>글쓰기</button>
       <div className=" fixed mb-4 text-lg">현재 인덱스: {index}</div>
-
+      <button onClick={goBack}>뒤로가기</button>
       <div className="fixed right-8 top-1/2 flex flex-col space-y-8">
         <button
           onClick={() => {
@@ -127,7 +129,7 @@ const ScrollableComponent = () => {
       </div>
       <div
         ref={containerRef}
-        className="scrollbar-hide h-full snap-y snap-mandatory overflow-y-scroll border border-gray-300"
+        className="h-full snap-y snap-mandatory overflow-y-scroll border border-gray-300 scrollbar-hide"
       >
         {list.map((item, i) => (
           <PetpickComments
