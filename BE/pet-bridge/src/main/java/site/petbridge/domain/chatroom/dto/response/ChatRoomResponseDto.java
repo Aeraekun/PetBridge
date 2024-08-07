@@ -1,7 +1,6 @@
 package site.petbridge.domain.chatroom.dto.response;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +20,7 @@ public class ChatRoomResponseDto {
 	private String opponentImage;
 	private String opponentNickname;
 	private String recentMessage;
-	private LocalDateTime recentTime;
+	private Timestamp recentTime;
 
 	public static ChatRoomResponseDto TransferToChatRoomResponseDto(ChatRoom chatRoom, Optional<User> opponent, Optional<ChatMessage> chatMessage){
 		return ChatRoomResponseDto.builder()

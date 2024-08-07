@@ -70,10 +70,6 @@ import AiEyes from "components/ai/AiEyes"
 import AiSkin from "components/ai/AiSkin"
 import ChatModal from "pages/ChatModal"
 
-// 채팅페이지
-import ChatListPage from "pages/ChatListPageTest"
-import ChatMessagePage from "pages/ChatMessagePageTest2"
-
 function App() {
   const dispatch = useDispatch()
   const isAuthenticated = useSelector(selectIsAuthenticated)
@@ -174,8 +170,6 @@ function App() {
             <Route path="eyes" element={<AiEyes />} />
             <Route path="skin" element={<AiSkin />} />
           </Route>
-          <Route path="/chat/room" element={<ChatListPage />}></Route>
-          <Route path="/chat/message" element={<ChatMessagePage />}></Route>
           <Route path="lost-and-found" element={<LostAndFoundPage />}></Route>
           <Route path="lost-and-found/report" element={<Report />}></Route>
         </Route>
