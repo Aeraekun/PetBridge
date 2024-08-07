@@ -224,7 +224,7 @@ const CallPage = () => {
             className="flex items-center justify-between bg-white p-4 shadow-md"
           >
             <h1 id="session-title" className="text-xl font-bold">
-              {mySessionId}
+              {myUserName}
             </h1>
             <div className="flex space-x-4">
               <button
@@ -271,6 +271,8 @@ const CallPage = () => {
                 <UserVideoComponent streamManager={sub} />
               </div>
             ))}
+
+            {myUserName}
           </div>
         </div>
       ) : null}
