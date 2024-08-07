@@ -1,32 +1,33 @@
+import StateBadge from "components/common/StateBadge"
 import DogImage from "../../assets/image/dog.png"
-import FollowButton from "../common/FollowButton"
+import PetpickIconContainer from "./PetpickIconContainer"
 // import React, {useState} from "react"
 
-const AnimalInfo = ({data}) => {
-  console.log(data)
+const AnimalInfo = ({animal}) => {
   return (
     <>
       <div className="flex flex-col space-y-1">
-        <div className="text-base">{data.name} </div>
-        <div className="text-base">{data.kindCd}</div>
+        <div className="text-base">{animal.name} </div>
+        <div className="text-base">{animal.age} 년생</div>
+        <div className="text-base">{animal.kindCd}</div>
       </div>
     </>
   )
 }
-const State = ({state}) => {
-  return (
-    <div className="flex h-8 items-center justify-center rounded border border-black bg-cyan-100">
-      {state}
-    </div>
-  )
-}
 
-const TagAnimal = ({data}) => {
-  const handleisFollowing = () => {
-    console.log("")
-  }
+const TaggedAnimalItem = ({animal, isFollowing, isLogin, onClick}) => {
   return (
-    <div className="flex justify-between p-3">
+    <div
+      className="flex justify-between p-3"
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          onClick()
+        }
+      }}
+    >
       <div className="flex space-x-3">
         <img
           src={DogImage}
@@ -34,15 +35,20 @@ const TagAnimal = ({data}) => {
           alt="animalImage"
         />
 
-        <AnimalInfo data={data}></AnimalInfo>
+        <AnimalInfo animal={animal}></AnimalInfo>
       </div>
       <div className="flex h-full flex-col justify-between">
-        <State state={data.processState} />
+        <StateBadge state={animal.processState} />
 
-        <FollowButton isFollowing={handleisFollowing} />
+        <PetpickIconContainer
+          isFollowButton={true}
+          isFollowing={isFollowing}
+          animalId={animal.id}
+          isLogin={isLogin}
+        />
       </div>
     </div>
   )
 }
 
-export default TagAnimal
+export default TaggedAnimalItem

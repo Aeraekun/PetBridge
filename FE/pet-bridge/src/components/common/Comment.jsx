@@ -3,7 +3,6 @@ import OptionIcon from "./OptionIcon"
 
 const Comment = ({data, currentUserId, onDelete}) => {
   const [isFixedSize, setIsFixedSize] = useState(true)
-  const [isWriter, setIsWriter] = useState(false)
   // console.log(isFixedSize)
   const handleToggleSize = () => {
     setIsFixedSize(!isFixedSize)
@@ -17,13 +16,13 @@ const Comment = ({data, currentUserId, onDelete}) => {
   const contentRef = useRef(null)
 
   useEffect(() => {
+    console.log("currentId", currentUserId)
+    console.log("commentid", data.userId)
+    console.log(Number(data.userId) === Number(currentUserId))
+
     // 댓글이 지정된 높이를 초과할 때 "더보기" 버튼을 표시
     if (contentRef.current) {
       setShowReadMore(contentRef.current.scrollHeight > 64)
-    }
-    //댓글의 작성자와 현재 로그인한 유저의 아이디가 같을 경우 isWriter : true
-    if (Number(currentUserId) === Number(data.userId)) {
-      setIsWriter(true)
     }
   }, [])
 
@@ -40,7 +39,7 @@ const Comment = ({data, currentUserId, onDelete}) => {
               <div className="  text-base  ">{data.userNickname}</div>
               <div className="  text-sm  ">{data.registTime.split("T")[0]}</div>
             </div>
-            {isWriter && (
+            {Number(data.userId) === Number(currentUserId) && (
               <button
                 className=""
                 onClick={() => {
@@ -61,7 +60,7 @@ const Comment = ({data, currentUserId, onDelete}) => {
             </div>
             {showReadMore && (
               <button
-                className="text-stroke mr-3 mt-1 flex justify-end rounded text-base hover:text-black"
+                className="mr-3 mt-1 flex justify-end rounded text-base text-stroke hover:text-black"
                 onClick={handleToggleSize}
               >
                 {isFixedSize ? "더보기" : "닫기"}

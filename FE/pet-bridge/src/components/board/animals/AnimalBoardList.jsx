@@ -2,47 +2,68 @@ import {useEffect, useState} from "react"
 import AnimalItem from "./AnimalItem"
 import Button from "components/common/Button"
 
-import {useNavigate, useParams} from "react-router-dom"
+import {useNavigate} from "react-router-dom"
 // import AnimalSearchForm from "components/board/animals/AnimalSearchForm"
 import {getAnimalList} from "api/animals-api"
+import Pagination from "components/common/Pagination"
 
 //임시보호동물게시판
 const Search = ({searchParams}) => {
   const [careaddr, setCareaddr] = useState()
-  const [processstate, setProcessstate] = useState("전체")
-  const handleClick = () => {
+  const [processstate, setProcessstate] = useState("")
+
+  //엔터키 이벤트
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault()
+      handleSearch()
+    }
+  }
+  const handleButtonClick = () => {
+    handleSearch()
+  }
+
+  const handleSearch = () => {
     const params = {
-      careaddr: careaddr,
+      careaddr: careaddr ? careaddr : "",
       processstate: processstate,
     }
+
+    console.log(params, "params")
     searchParams(params)
+    setCareaddr("")
+    setProcessstate("")
   }
 
   return (
-    <div className="flex w-full justify-between px-10">
-      <input
-        type="text"
-        placeholder="보호 장소를 입력하세요."
-        className="border-stroke h-12 w-72 rounded-xl border-2 p-2"
-        value={careaddr}
-        onChange={(e) => setCareaddr(e.target.value)}
-      />
-
+    <div className="flex w-full items-center justify-between px-10">
       <select
         id="kind"
         value={processstate}
         onChange={(e) => setProcessstate(e.target.value)}
+        className="h-12 w-48 rounded-xl border-2 border-stroke p-2"
       >
         <option value="전체">전체</option>
         <option value="임시보호">임시보호</option>
         <option value="입양대기">입양대기</option>
         <option value="입양완료">입양완료</option>
-      </select>
+      </select>{" "}
+      <div className=" mr-6 flex  h-12 w-36 items-center justify-end text-lg">
+        보호장소
+      </div>
+      <input
+        type="text"
+        placeholder="보호 장소를 입력하세요."
+        className="mr-12 h-12 w-full rounded-xl border-2 border-stroke p-2"
+        onKeyDown={handleKeyDown}
+        value={careaddr}
+        onChange={(e) => setCareaddr(e.target.value)}
+      />
       <button
         onClick={() => {
-          handleClick()
+          handleButtonClick()
         }}
-        className="flex h-10 w-16 items-center justify-center rounded-xl bg-green-600 text-white "
+        className="flex h-10 w-36 items-center justify-center rounded-xl bg-green-600 text-white "
       >
         검색
       </button>
@@ -50,14 +71,20 @@ const Search = ({searchParams}) => {
   )
 }
 const AnimalBoardList = () => {
-  const {bcode} = useParams()
   const navigate = useNavigate()
-  useEffect(() => {}, [bcode])
 
+  const [currentPage, setCurrentPage] = useState(0) //페이지는 0 부터
+  const [animals, setAnimals] = useState([]) //동물 리스트 받아올 변수
+  const [totalPages, setTotalPages] = useState(0) //전체 페이지 수
+  const pageSize = 12 // 페이지당 항목 수
+
+  //동물 등록 페이지로 이동
   const goRegist = () => {
     let path = `/shelter/regist`
     navigate(path)
   }
+
+  //동물 상세 페이지로 이동 state:animal 담아서 보냄.
   const goAnimalDetail = (animal) => {
     console.log(animal)
     const id = animal.id
@@ -66,71 +93,35 @@ const AnimalBoardList = () => {
   }
 
   ///임시보호
-  // API 요청을 보내기 위한 파라미터
-  const [searchParams, setSearchParams] = useState({
-    size: 12,
-    page: 0,
-    processstate: "전체",
-  })
-  const [pageNo, setPageNo] = useState(1)
-  const [items, setItems] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [maxPage, setMaxPage] = useState([])
+
+  const [searchParams, setSearchParams] = useState({}) // API 요청을 보내기 위한 파라미터
+
   // 초기값 로딩
   useEffect(() => {
     const fetchInitData = async () => {
-      setIsLoading(true)
-      const newData = await fetchData()
-      const newItems = newData
-      // 데이터 로드 성공시 (응답 배열에 데이터가 있다면)
-      if (newItems && newItems.length > 0) {
-        // 로딩상태 해제, 새로 받아온 값을 배열에 추가
-        setIsLoading(false)
-        setItems(newItems)
-      } else if (newData) {
-        setIsLoading(false)
-        setItems([])
-      }
+      const data = await getAnimalList(searchParams)
+      console.log(data.content)
+      setTotalPages(data.totalPages)
+      setAnimals(data.content)
     }
     fetchInitData()
   }, [searchParams])
 
-  // 농림축산부 API를 호출해서, 12개씩 페이징된 데이터를 받아온다.
-  const fetchData = async () => {
-    console.log("search", searchParams)
-    const res = await getAnimalList(searchParams)
-    let newData = []
-    let page = 0
-    let total = 0
-    let numOfRows = 0
-    if (res) {
-      console.log("fetch 성공!!!", res)
-      newData = res
-      numOfRows = 1
-      total = 0
-      page = 0
-      setPageNo(page)
-      setMaxPage(Math.min(10, Math.ceil(total / numOfRows)))
-      return newData
-    } else {
-      alert("추가 데이터 로드에 실패했습니다.")
-    }
-  }
-
+  //페이지가 바뀌었을때 searchParmas 업데이트
   useEffect(() => {
-    console.log(pageNo, "pageNo")
-    setSearchParams({...searchParams, page: pageNo})
-  }, [pageNo])
+    setSearchParams((prevParams) => ({
+      ...prevParams,
+      page: currentPage,
+      size: pageSize,
+    }))
+  }, [currentPage])
 
+  //검색버튼이 눌린경우
   const handleSearchForm = (data) => {
-    const newSearchParam = {
-      ...searchParams,
+    setSearchParams(() => ({
       ...data,
-      page: pageNo,
-    }
-
-    setSearchParams(newSearchParam)
-    console.log(searchParams)
+      page: 0,
+    }))
   }
 
   return (
@@ -139,45 +130,42 @@ const AnimalBoardList = () => {
       {/* <AnimalSearchForm searchParams={handleSearchForm2} isShelter={false} /> */}
 
       <Button text={"등록하기"} onClick={goRegist} />
-      {isLoading ? (
-        <div className="flex items-center">
-          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
-          <span>로딩중입니다</span>
-        </div>
-      ) : (
-        <>
-          <div className="flex space-x-2">
-            <button
-              onClick={() => setPageNo((prev) => Math.max(prev - 1, 0))}
-              disabled={pageNo === 0}
-            >
-              ◀이전
-            </button>
-            <div>
-              현재페이지{pageNo}/{maxPage}
-            </div>
-            <button
-              onClick={() => setPageNo((prev) => Math.min(prev + 1, maxPage))}
-              disabled={pageNo === maxPage}
-            >
-              다음▶{" "}
-            </button>
-          </div>
-          <ul className="flex w-full flex-wrap justify-between">
-            {items
-              // category와 bcode가 일치하는것만 필터링
-              .map((item, index) => (
-                <li key={index}>
-                  <AnimalItem
-                    data={item}
-                    onSelectAnimal={() => goAnimalDetail(item)}
-                    isShelter={false}
-                  />
-                </li>
-              ))}
-          </ul>
-        </>
-      )}
+
+      <div className="flex space-x-5">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
+          disabled={currentPage === 0}
+        >
+          ◀이전
+        </button>
+
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          disabled={currentPage === totalPages - 1}
+        >
+          다음▶{" "}
+        </button>
+      </div>
+      <ul className="flex w-full flex-wrap justify-between">
+        {animals.map((item, index) => (
+          <li key={index}>
+            <AnimalItem
+              data={item}
+              onSelectAnimal={() => goAnimalDetail(item)}
+              isShelter={false}
+            />
+          </li>
+        ))}
+      </ul>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={(page) => {
+          setCurrentPage(page)
+        }}
+      />
     </>
   )
 }

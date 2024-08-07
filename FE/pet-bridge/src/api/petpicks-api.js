@@ -98,6 +98,21 @@ export const getRandomDetailPetPick = async () => {
   }
 }
 
+export const getDetailPetPick = async (petpickId) => {
+  try {
+    const res = await axiosInstance.get(
+      `${PETPICK_API_URL}/detail/${petpickId}`,
+      {
+        params: {initcommentsize: 3},
+      }
+    )
+    console.log("getDetailPetPick", res.data)
+    return res.data
+  } catch (e) {
+    console.error(e)
+    return e
+  }
+}
 //펫픽삭제
 export const removePetPick = async (id) => {
   try {
@@ -118,7 +133,7 @@ export const getPetpickComments = async (petpickId, page, size) => {
     const res = await axios.get(`${PETPICK_COMMENTS_API_URL}/${petpickId}`, {
       params,
     })
-    console.log("getPetpickComments" + res)
+    console.log("getPetpickComments", res.data)
     return res.data
   } catch (e) {
     console.error(e)
@@ -220,5 +235,39 @@ export const deleteFollow = async (animalId) => {
     return res.data
   } catch (error) {
     handleApiError(error)
+  }
+}
+
+//펫핏좋아요 조회
+export const getDetailPetPickLike = async (petPickId) => {
+  try {
+    const res = await axiosInstance.get(`${PETPICK_LIKE_API_URL}/${petPickId}`)
+
+    console.log("res" + res.data)
+    if (res.status === 404) {
+      // console.log("종아요 안누름")
+    }
+    return res
+  } catch (error) {
+    return []
+  }
+}
+
+//동물 팔로우 조회
+
+export const getDetailFollow = async (animalId) => {
+  try {
+    const res = await axiosInstance.get(`${PETPICK_FOLLOW_API_URL}/${animalId}`)
+    if (res.status === 404) {
+      // console.log("팔로우 안누름")
+    }
+    return res
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      // console.log("팔로우 안누름")
+      return false // 404 상태에서는 false 반환
+    }
+    console.error("Request failed:", error)
+    return [] // 그 외의 오류에서는 빈 배열 반환
   }
 }

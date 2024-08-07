@@ -1,12 +1,16 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 
+import StateBadge from "components/common/StateBadge"
+
 const AnimalItem = ({data, onSelectAnimal, isShelter}) => {
   return (
     <div
-      className="border-stroke mx-auto my-4 h-[425px] w-72 overflow-hidden rounded-xl border"
+      className="relative mx-auto my-4 h-[425px] w-72 overflow-hidden rounded-xl border border-stroke"
       onClick={onSelectAnimal}
     >
+      <StateBadge state={data.processState} />
+
       <img
         src={data.popfile}
         alt="imag"

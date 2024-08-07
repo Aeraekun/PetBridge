@@ -42,3 +42,34 @@ body {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
+
+/* For Firefox */
+.scrollable-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #fcd5ce #f1f1f1; /* For Firefox */
+}
+
+/* For WebKit browsers (Chrome, Safari, Edge) */
+.scrollable-container::-webkit-scrollbar {
+  height: 12px; /* Height of the horizontal scrollbar */
+}
+
+.scrollable-container::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Background color of the track */
+}
+
+.scrollable-container::-webkit-scrollbar-thumb {
+  background: #fcd5ce; /* Color of the thumb */
+  border-radius: 8px; /* Rounded corners of the thumb */
+  border: 3px solid #f1f1f1; /* Border color to create spacing effect */
+}
+
+.scrollable-container::-webkit-scrollbar-thumb:hover {
+  background: #f9a8b1; /* Color of the thumb on hover */
+}
+
+.scrollable-container::-webkit-scrollbar-corner {
+  background: #f1f1f1; /* Background color of the scrollbar corner */
+}

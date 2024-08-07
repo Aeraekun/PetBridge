@@ -14,6 +14,12 @@ import {
   registPetPickComment,
   removePetpickComments,
 } from "api/petpicks-api"
+import Button from "components/common/Button"
+import {getDetailAnimal} from "api/animals-api"
+import {useNavigate} from "react-router-dom"
+import TagIcon from "components/common/TagIcon"
+import TaggedAnimalItem from "./TaggedAnimalItem"
+import TaggedArticleItem from "./TaggedArticleItem"
 
 const CommentInput = ({petpickId, onCommentAdded}) => {
   const isAuthenticated = useSelector(selectIsAuthenticated)
@@ -48,7 +54,7 @@ const CommentInput = ({petpickId, onCommentAdded}) => {
         <div className="flex items-center space-x-2.5">
           <input
             type="text"
-            className="outline-stroke mx-2 h-10 w-full rounded-md  text-sm outline outline-1"
+            className="mx-2 h-10 w-full rounded-md text-sm  outline outline-1 outline-stroke"
             placeholder="댓글을 남겨보세요"
             value={inputComment}
             onChange={(e) => setInputComment(e.target.value)}
@@ -60,7 +66,7 @@ const CommentInput = ({petpickId, onCommentAdded}) => {
         </div>
       ) : (
         <div className="flex items-center space-x-2.5">
-          <div className="text-stroke outline-stroke mx-2 h-10 w-full  content-center rounded-md text-sm outline outline-1">
+          <div className="mx-2 h-10 w-full content-center rounded-md  text-sm text-stroke outline outline-1 outline-stroke">
             좋아요와 댓글을 남기려면 로그인하세요{" "}
           </div>
         </div>
@@ -69,10 +75,11 @@ const CommentInput = ({petpickId, onCommentAdded}) => {
   )
 }
 
-const PetpickInfo = ({title, content}) => {
+const PetpickInfo = ({title, content, registTime}) => {
   return (
     <div className=" flex w-full flex-1 flex-col justify-between space-y-1 p-3 text-base    ">
       <div> {title}</div>
+      <div className="text-sm"> {registTime.split("T")[0]}</div>
       <div className="text-sm"> {content}</div>
     </div>
   )
@@ -84,6 +91,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
   })
   const currentUserId = useSelector(selectId)
 
+  const isAuthenticated = useSelector(selectIsAuthenticated)
   useEffect(() => {
     if (inView) {
       onInView(nowindex)
@@ -92,9 +100,13 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
   // const [petpick, setPetpick] = useState([])
   // const petpick = []
   const [commentList, setCommentList] = useState([])
+  const [articleList, setArticleList] = useState([])
   const [isVisible, setIsVisible] = useState(false)
-
+  const [isDetail, setIsDetail] = useState(false)
+  const [petpickAnimalData, setPetpickAnimalData] = useState([])
   const petpick = pet // prop에서 petpick 데이터 가져오기
+  const navigate = useNavigate()
+
   //댓글리스트 불러올때 필요
 
   // const status = useSelector(selectPetpickStatus)
@@ -102,20 +114,42 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
 
   // const [petpickId, setPetpickId] = useState(0)
 
-  useEffect(() => {}, [isVisible])
+  useEffect(() => {
+    const fetchAnimalDetail = async (animalId) => {
+      const animaldata = await getDetailAnimal(animalId)
+      if (animaldata) {
+        setPetpickAnimalData(animaldata)
+        setArticleList(animaldata.boards)
+        console.log(articleList)
+        console.log(animaldata.id)
+      }
+    }
+    if (isDetail) {
+      fetchAnimalDetail(petpick.animalId)
+    }
+    console.log(isDetail, "isDetail")
+  }, [isDetail])
 
   const fetchComments = async () => {
     const commentList = await getPetpickComments(petpick.id, 0, 12)
     setCommentList(commentList)
-    console.log(currentUserId)
+    // console.log(currentUserId)
   }
 
   useEffect(() => {
-    if (petpick) {
+    if (isVisible) {
       fetchComments()
+      if (isDetail) {
+        setIsVisible(false)
+      } else {
+        setIsDetail(false)
+      }
+    }
+    if (isDetail) {
+      setIsVisible(false)
     }
     // console.log(petpick?.comments)
-  }, [petpick])
+  }, [isVisible, isDetail])
 
   //댓글 등록하고나서 필요
   const handleCommentAdded = () => {
@@ -151,11 +185,30 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
     return <div>Loading...</div>
   }
 
+  const goAnimalDetail = (animal) => {
+    console.log(animal)
+    const id = animal.desertionNo
+    let path = `/shelter/details/${id}`
+    navigate(path, {state: {animal}})
+  }
+
   const handleVisible = () => {
     console.log("visible", isVisible)
     setIsVisible((prev) => !prev)
   }
-
+  const handleDetail = () => {
+    console.log("handleDetail", isDetail)
+    setIsDetail((prev) => !prev)
+  }
+  const goWritePetpick = () => {
+    let path = `/petpick/write`
+    navigate(path)
+  }
+  const goDetail = (article) => {
+    const id = article.id
+    let path = `/communities/details/${id}`
+    navigate(path)
+  }
   return (
     <div
       className=" z-50 mx-auto flex h-screen w-[1000px] snap-center flex-row justify-center py-[50px] sm:w-11/12"
@@ -169,9 +222,46 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
       }}
     >
       <PetpickVideo videoURL={petpick.video} />
-      {isVisible ? (
+      {isDetail && (
+        <>
+          <div className="flex h-full min-w-[400px]  flex-col justify-between bg-gray-50 ">
+            <div className=" flex h-full flex-col justify-start bg-gray-50 ">
+              <div className=" ">
+                <Profile
+                  nickname={petpick.userNickname}
+                  image={petpick.userImage}
+                />
+                <hr className="my-1 border-gray-300" />
+              </div>
+              <Button onClick={goWritePetpick} text={"새팻픽만들기"}>
+                {" "}
+              </Button>
+              <TaggedAnimalItem
+                animal={petpickAnimalData}
+                isFollowing={petpick.isFollowing}
+                isLogin={isAuthenticated}
+                onClick={goAnimalDetail}
+              />
+              관련 글
+              <div className="overflow-auto">
+                {articleList?.length > 0 ? (
+                  articleList.map((article, index) => (
+                    <li key={index}>
+                      <TaggedArticleItem data={article} onClick={goDetail} />
+                    </li>
+                  ))
+                ) : (
+                  <li>게시글이 없습니다</li>
+                )}
+              </div>
+            </div>
+            <TagIcon data={petpick} onClick={handleDetail} />
+          </div>
+        </>
+      )}
+      {isVisible && (
         <div className="flex h-full min-w-[400px]  flex-col justify-between bg-gray-50 ">
-          <div className=" flex-1">
+          <div className=" ">
             <Profile
               nickname={petpick.userNickname}
               image={petpick.userImage}
@@ -179,11 +269,12 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
             <hr className="my-1 border-gray-300" />
             <PetpickInfo
               title={petpick.title}
-              content={"data.content"}
+              content={petpick.content}
+              registTime={petpick.registTime}
             ></PetpickInfo>
           </div>
 
-          <ul className="flex-auto overflow-auto ">
+          <ul className="flex flex-auto flex-col-reverse overflow-auto">
             {commentList.length > 0 ? (
               commentList.map((comment, index) => (
                 <li key={index}>
@@ -198,13 +289,16 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
               <li>댓글이 없습니다</li>
             )}
           </ul>
-          <div className="flex flex-1 flex-col space-y-2.5">
+          <div className="flex  flex-col space-y-2.5">
             <PetpickIconContainer
               direct={"row"}
               toggleComment={handleVisible}
+              toggleDetail={handleDetail}
               petpickId={petpick.boardId}
               isFollowing={petpick.isFollowing}
               isLiking={petpick.isLiking}
+              isLogin={isAuthenticated}
+              animalId={petpick.animalId}
             />
             <CommentInput
               petpickId={petpick.id}
@@ -212,14 +306,20 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
             />
           </div>
         </div>
-      ) : (
+      )}
+      {!isVisible && !isDetail ? (
         <PetpickIconContainer
           direct={"col"}
           toggleComment={handleVisible}
-          petpickId={petpick.boardId}
+          toggleDetail={handleDetail}
+          petpickId={petpick.id}
+          animalId={petpick.animalId}
           isFollowing={petpick.isFollowing}
           isLiking={petpick.isLiking}
+          isLogin={isAuthenticated}
         />
+      ) : (
+        <></>
       )}
     </div>
   )

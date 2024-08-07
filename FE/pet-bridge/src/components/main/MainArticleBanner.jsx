@@ -1,6 +1,7 @@
 import React from "react"
 import {Link} from "react-router-dom"
 import logoImage from "../../assets/image/logo.png"
+import iconPawprint from "../../assets/icons/icon-pawprint.png"
 
 const MainArticleBanner = () => {
   return (
@@ -18,9 +19,11 @@ const MainArticleBanner = () => {
         </div>
         <div className="flex flex-1 flex-col justify-center text-center">
           <p className="mb-4 text-2xl">
+            `All life deserves respect`
+            <br />
             견우와직묘의 시작은 이 한 줄에서 출발했습니다. <br />
             종, 성별, 나이 등 그 어떤 것이라도 관계없이 <br />
-            생명체라면 무조건적으로 존중받아야 한다. <br />
+            생명체라면 무조건 존중받아야 한다. <br />
             지금, 생명존중의 가치 실현에 동참해 주세요!
           </p>
           <div className="flex justify-center gap-4">
@@ -28,12 +31,22 @@ const MainArticleBanner = () => {
               to="/users/login"
               className="inline-flex h-12 items-center justify-center rounded-md border border-stroke bg-mild px-3.5 py-4 text-black"
             >
+              <img
+                src={iconPawprint}
+                alt="Community Icon"
+                className="mr-2 size-6" // 이미지 크기와 간격 조정
+              />
               로그인 하기
             </Link>
             <Link
               to="/users/sign-up"
               className="inline-flex h-12 items-center justify-center rounded-md border border-stroke bg-mild px-3.5 py-4 text-black"
             >
+              <img
+                src={iconPawprint}
+                alt="Community Icon"
+                className="mr-2 size-6" // 이미지 크기와 간격 조정
+              />
               회원가입 하기
             </Link>
           </div>

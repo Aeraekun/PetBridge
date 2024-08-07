@@ -9,7 +9,7 @@ import {selectIsAuthenticated} from "features/user/users-slice"
 import {useEffect, useState} from "react"
 import {useSelector} from "react-redux"
 
-const CommentInput = ({articleId, currentUserId, onCommentAdded}) => {
+const CommentInput = ({articleId, onCommentAdded}) => {
   const isAuthenticated = useSelector(selectIsAuthenticated)
 
   const [inputComment, setInputComment] = useState("")
@@ -17,7 +17,6 @@ const CommentInput = ({articleId, currentUserId, onCommentAdded}) => {
     console.log({inputComment})
     const newComment = {
       boardId: articleId,
-      userId: currentUserId,
       content: inputComment,
     }
 
@@ -25,9 +24,14 @@ const CommentInput = ({articleId, currentUserId, onCommentAdded}) => {
       await registBoardComment(newComment)
       setInputComment("")
       onCommentAdded() //댓글 작성하면 콜백함수 호출
-      alert("댓글 등록 완료")
     } catch (e) {
       console.error(e)
+    }
+  }
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault() // 기본 동작 방지
+      sendMsg()
     }
   }
 
@@ -37,10 +41,11 @@ const CommentInput = ({articleId, currentUserId, onCommentAdded}) => {
         <div className="flex items-center space-x-2.5">
           <input
             type="text"
-            className="outline-stroke mx-2 h-10 w-full rounded-md  text-sm outline outline-1"
+            className="mx-2 h-10 w-full rounded-md text-sm  outline outline-1 outline-stroke"
             placeholder="댓글을 남겨보세요"
             value={inputComment}
             onChange={(e) => setInputComment(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <button className="h-10   w-12" onClick={sendMsg}>
             <img src="/icons/icon-send.svg" alt="sendIcon" />
@@ -48,7 +53,7 @@ const CommentInput = ({articleId, currentUserId, onCommentAdded}) => {
         </div>
       ) : (
         <div className="flex items-center space-x-2.5">
-          <div className="outline-stroke text-stroke mx-2 h-10 w-full  content-center rounded-md text-sm outline outline-1">
+          <div className="mx-2 h-10 w-full content-center rounded-md  text-sm text-stroke outline outline-1 outline-stroke">
             좋아요와 댓글을 남기려면 로그인하세요{" "}
           </div>
         </div>
@@ -123,16 +128,20 @@ const ArticleComments = ({articleId, currentUserId}) => {
   return (
     <>
       <ul className="flex w-full flex-col justify-between">
-        {commentList.map((comment, index) => (
-          <li key={index}>
-            <Comment
-              data={comment}
-              currentUserId={currentUserId}
-              onDelete={handleDelete}
-              // onModify={handleModify}
-            />
-          </li>
-        ))}
+        {commentList ? (
+          commentList.map((comment, index) => (
+            <li key={index}>
+              <Comment
+                data={comment}
+                currentUserId={currentUserId}
+                onDelete={handleDelete}
+                // onModify={handleModify}
+              />
+            </li>
+          ))
+        ) : (
+          <div className="m-12 h-24">댓글이 없습니다.</div>
+        )}
       </ul>
       <CommentInput
         articleId={articleId}

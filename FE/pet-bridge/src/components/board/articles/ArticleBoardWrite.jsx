@@ -78,11 +78,12 @@ const ArticleBoardWrite = () => {
       new Blob([JSON.stringify(newArticle)], {type: "application/json"})
     )
     if (imageFile) {
-      formData.append("file", imageFile)
+      formData.append("thumbnail", imageFile)
     }
 
     try {
       await registArticle(formData)
+      alert("글 등록 완료")
       navigate(`/communities`)
     } catch (e) {
       console.error(e)
@@ -101,7 +102,7 @@ const ArticleBoardWrite = () => {
         돌아가기
       </button>
       <input
-        className=" border-stroke h-16 rounded-xl border text-center text-4xl font-bold"
+        className=" h-16 rounded-xl border border-stroke text-center text-4xl font-bold"
         placeholder="제목을 입력하세요"
         onChange={(e) => setTitle(e.target.value)}
         value={title}
@@ -151,14 +152,21 @@ const ArticleBoardWrite = () => {
           <>대표사진을 입력해주세요.</>
         </div>
       )}
-      <div className="flex">
+      <div className="relative flex">
         <input
           type="file"
           accept="image/*"
           onChange={handleFileChange}
           className="cursor-pointer items-center"
         />
-        {imageSrc && <button onClick={resetImage}> ✖ </button>}
+        {imageSrc && (
+          <button
+            onClick={resetImage}
+            className="absolute right-2 top-2 rounded-full border bg-white p-1 shadow-lg hover:bg-gray-100"
+          >
+            ✖
+          </button>
+        )}
       </div>
 
       <div className="min-h-72 w-full justify-center">
