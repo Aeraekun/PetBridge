@@ -13,7 +13,7 @@ public class PetPickResponseDto {
 
     private int id;
     private int userId;
-    private int boardId;
+    private Integer boardId;
     private int animalId;
     private String title;
     private String content;

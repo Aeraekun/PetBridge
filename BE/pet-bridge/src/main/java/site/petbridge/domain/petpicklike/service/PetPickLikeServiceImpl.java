@@ -39,7 +39,7 @@ public class PetPickLikeServiceImpl implements PetPickLikeService {
         User user = authUtil.getAuthenticatedUser();
 
         // 존재하는 PetPick에 대한 요청인지 확인
-        boolean exists = petPickRepository.existsById((long) petPickLikeRequestDto.getPetPickId());
+        boolean exists = petPickRepository.existsByIdAndDisabledFalse(petPickLikeRequestDto.getPetPickId());
         if (!exists) {
             throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND);
         }
@@ -62,7 +62,7 @@ public class PetPickLikeServiceImpl implements PetPickLikeService {
         User user = authUtil.getAuthenticatedUser();
 
         // 존재하는 PetPick에 대한 요청인지 확인
-        boolean exists = petPickRepository.existsById((long) petPickLikeRequestDto.getPetPickId());
+        boolean exists = petPickRepository.existsByIdAndDisabledFalse(petPickLikeRequestDto.getPetPickId());
         if (!exists) {
             throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND);
         }

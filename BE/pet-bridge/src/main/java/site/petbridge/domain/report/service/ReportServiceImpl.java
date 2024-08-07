@@ -50,13 +50,13 @@ public class ReportServiceImpl implements ReportService {
 
         // 해당 reportType, reportId 신고 대상 존재하지 않는 경우
         if (reportRegistRequestDto.getReportType() == ReportType.USER) {
-            User userToReport = userRepository.findById(reportRegistRequestDto.getReportId()).orElse(null);
+            User userToReport = userRepository.findByIdAndDisabledFalse(reportRegistRequestDto.getReportId()).orElse(null);
             if (userToReport == null) { throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND); }
         } else if (reportRegistRequestDto.getReportType() == ReportType.BOARD) {
-            Board boardToReport = boardRepository.findById((long) reportRegistRequestDto.getReportId()).orElse(null);
+            Board boardToReport = boardRepository.findByIdAndDisabledFalse(reportRegistRequestDto.getReportId()).orElse(null);
             if (boardToReport == null) { throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND); }
         } else if (reportRegistRequestDto.getReportType() == ReportType.PETPICK) {
-            PetPick petPickToReport = petPickRepository.findById((long) reportRegistRequestDto.getReportId()).orElse(null);
+            PetPick petPickToReport = petPickRepository.findByIdAndDisabledFalse(reportRegistRequestDto.getReportId()).orElse(null);
             if (petPickToReport == null) { throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND); }
         }
 

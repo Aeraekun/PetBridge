@@ -23,7 +23,7 @@ public class PetPick {
     private int userId;
 
     @Column(name = "board_id")
-    private int boardId;
+    private Integer boardId;
 
     @Column(name = "animal_id")
     private int animalId;
@@ -42,7 +42,7 @@ public class PetPick {
     private boolean disabled = false;
 
     @Builder
-    public PetPick(int userId, int boardId, int animalId, String title, String thumbnail, String content, String video) {
+    public PetPick(int userId, Integer boardId, int animalId, String title, String thumbnail, String content, String video) {
         this.userId = userId;
         this.boardId = boardId;
         this.animalId = animalId;
@@ -52,7 +52,7 @@ public class PetPick {
         this.video = video;
     }
 
-    public void update(int boardId, String title, String thumbnail, String content) {
+    public void update(Integer boardId, String title, String thumbnail, String content) {
         this.boardId = boardId;
         this.title = title;
         this.thumbnail = thumbnail;

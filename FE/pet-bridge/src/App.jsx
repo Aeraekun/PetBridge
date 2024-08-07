@@ -70,6 +70,8 @@ import AiEyes from "components/ai/AiEyes"
 import AiSkin from "components/ai/AiSkin"
 import ChatModal from "pages/ChatModal"
 
+import CallPage from "components/chat/CallPage"
+
 function App() {
   const dispatch = useDispatch()
   const isAuthenticated = useSelector(selectIsAuthenticated)
@@ -96,6 +98,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<MainPage />} exact />
+          <Route path="/call" element={<CallPage />} exact />
           <Route
             path="petpick/write"
             element={

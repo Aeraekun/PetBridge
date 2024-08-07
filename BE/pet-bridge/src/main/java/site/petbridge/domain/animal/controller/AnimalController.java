@@ -28,7 +28,7 @@ public class AnimalController {
      */
     @PostMapping
     public ResponseEntity<Void> registAnimal(
-            @Valid @RequestPart(name = "animalRegistRequestDto") AnimalRegistRequestDto animalRegistRequestDto,
+            @Valid @RequestPart AnimalRegistRequestDto animalRegistRequestDto,
             @RequestPart(name = "imageFile") MultipartFile imageFile) throws Exception {
         animalService.registAnimal(animalRegistRequestDto, imageFile);
 
@@ -56,8 +56,8 @@ public class AnimalController {
      * 내가 등록한(보호중인) 동물 목록 조회
      */
     @GetMapping("/my")
-    public ResponseEntity<List<AnimalResponseDto>> getListMyAnimal(@RequestParam(name = "page") int page,
-                                                                   @RequestParam(name = "size") int size) throws Exception {
+    public ResponseEntity<List<AnimalResponseDto>> getListMyAnimal(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                                   @RequestParam(name = "size", defaultValue = "12") int size) throws Exception {
         List<AnimalResponseDto> animalResponseDtos = animalService.getListMyAnimal(page, size);
 
         return Optional.ofNullable(animalResponseDtos)
@@ -85,8 +85,8 @@ public class AnimalController {
      * 내가 팔로우 중인 동물 목록 조회
      */
     @GetMapping("/follow")
-    public ResponseEntity<List<AnimalResponseDto>> getListFollowAnimal(@RequestParam(name = "page") int page,
-                                                                   @RequestParam(name = "size") int size) throws Exception {
+    public ResponseEntity<List<AnimalResponseDto>> getListFollowAnimal(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                                   @RequestParam(name = "size", defaultValue = "12") int size) throws Exception {
         List<AnimalResponseDto> animalResponseDtos = animalService.getListFollowAnimal(page, size);
 
         return Optional.ofNullable(animalResponseDtos)
@@ -116,7 +116,7 @@ public class AnimalController {
                                            @RequestPart(name = "imageFile", required = false) MultipartFile imageFile) throws Exception {
         animalService.editAnimal(id, animalEditRequestDto, imageFile);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**

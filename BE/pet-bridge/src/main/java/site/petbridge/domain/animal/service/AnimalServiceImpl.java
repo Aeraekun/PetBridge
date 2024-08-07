@@ -1,5 +1,6 @@
 package site.petbridge.domain.animal.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -141,6 +142,9 @@ public class AnimalServiceImpl implements AnimalService {
 		// 최종 paging 처리
 		int start = (int) pageable.getOffset();
 		int end = Math.min((start + pageable.getPageSize()), filteredAnimals.size());
+		if (start > end) {
+			throw new IllegalArgumentException("Invalid page request");
+		}
 		Page<Animal> pagedAnimals = new PageImpl<>(filteredAnimals.subList(start, end), pageable,
 			filteredAnimals.size());
 
@@ -219,6 +223,9 @@ public class AnimalServiceImpl implements AnimalService {
 		Pageable pageable = PageRequest.of(page, size, sort);
 		int start = (int)pageable.getOffset();
 		int end = Math.min((start + pageable.getPageSize()), animals.size());
+		if (start > end) {
+			throw new IllegalArgumentException("Invalid page request");
+		}
 		Page<Animal> pagedAnimals = new PageImpl<>(animals.subList(start, end), pageable, animals.size());
 
 		// AnimalResponseDto로 변환 및 반환
@@ -245,37 +252,34 @@ public class AnimalServiceImpl implements AnimalService {
 	}
 
 	private List<Integer> filterByProcessState(String processState) {
-		List<Integer> animalIds;
+		List<Integer> animalIds = new ArrayList<>();
+
+		List<Integer> waitingAnimalIds = contractRepository.findByStatus("계약전").stream()
+				.map(Contract::getAnimalId)
+				.collect(Collectors.toList());
+		List<Integer> confirmedAnimalIds = contractRepository.findByStatusNot("계약전").stream()
+				.map(Contract::getAnimalId)
+				.collect(Collectors.toList());
+		System.out.println(waitingAnimalIds);
+		System.out.println(confirmedAnimalIds);
+
 		switch (processState) {
-			case "입양대기":
-				System.out.println("입양대기 들어음");
-				animalIds = contractRepository.findAllByStatus("계약전").stream()
-					.map(Contract::getAnimalId)
-					.collect(Collectors.toList());
+			case "입양대기" :
+				animalIds = waitingAnimalIds;
 				break;
-			case "입양완료":
-				animalIds = contractRepository.findAllByStatusNot("계약전").stream()
-					.map(Contract::getAnimalId)
-					.collect(Collectors.toList());
+			case "입양완료" :
+				animalIds = confirmedAnimalIds;
 				break;
-			case "임시보호":
-				List<Integer> waitingAnimalIds = contractRepository.findAllByStatus("계약전")
-					.stream()
-					.map(Contract::getAnimalId)
-					.collect(Collectors.toList());
-				List<Integer> confirmedAnimalIds = contractRepository.findAllByStatusNot("계약전")
-					.stream()
-					.map(Contract::getAnimalId)
-					.collect(Collectors.toList());
+			case "임시보호" :
 				animalIds = animalRepository.findAll().stream()
-					.map(Animal::getId)
-					.filter(id -> !confirmedAnimalIds.contains(id) && !waitingAnimalIds.contains(id))
-					.collect(Collectors.toList());
+						.map(Animal::getId)
+						.filter(id -> !waitingAnimalIds.contains(id) && !confirmedAnimalIds.contains(id))
+						.collect(Collectors.toList());
 				break;
-			default:
+			default :
 				animalIds = animalRepository.findAll().stream()
-					.map(Animal::getId)
-					.collect(Collectors.toList());
+						.map(Animal::getId)
+						.collect(Collectors.toList());
 		}
 
 		return animalIds;
