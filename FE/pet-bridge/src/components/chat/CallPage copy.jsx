@@ -6,8 +6,6 @@ import React, {useState, useEffect, useCallback, useRef} from "react"
 import {OpenVidu} from "openvidu-browser"
 import axios from "axios"
 import UserVideoComponent from "./UserVideoComponent"
-import {useSelector} from "react-redux"
-import {selectNickname} from "features/user/users-slice"
 
 // 애플리케이션 서버 URL 설정
 const APPLICATION_SERVER_URL =
@@ -15,7 +13,7 @@ const APPLICATION_SERVER_URL =
 
 const CallPage = () => {
   // 상태 변수 선언
-  const [mySessionId, setMySessionId] = useState("session") // 세션 ID
+  const [mySessionId, setMySessionId] = useState("SessionA") // 세션 ID
   const [myUserName, setMyUserName] = useState(
     "Participant" + Math.floor(Math.random() * 100)
   ) // 사용자 이름
@@ -27,7 +25,6 @@ const CallPage = () => {
 
   const OV = useRef(null) // OpenVidu 객체를 위한 참조
 
-  const nickname = useSelector(selectNickname)
   useEffect(() => {
     // 컴포넌트가 언마운트 될 때 세션을 종료
 
@@ -38,10 +35,6 @@ const CallPage = () => {
 
   // 세션에 조인하는 함수
   const joinSession = useCallback(async () => {
-    // 사용자 이름 변경 . 현재 로그인한 유저 닉네임으로 입장
-    setMyUserName(nickname)
-    //세션 Id
-    setMySessionId("0")
     OV.current = new OpenVidu()
     const mySession = OV.current.initSession()
     setSession(mySession)
@@ -72,10 +65,10 @@ const CallPage = () => {
         videoSource: undefined, // 비디오 소스
         publishAudio: true, // 오디오 게시 여부
         publishVideo: true, // 비디오 게시 여부
-        resolution: "1280x720", // 비디오 해상도
+        resolution: "640x480", // 비디오 해상도
         frameRate: 30, // 비디오 프레임 속도
         insertMode: "APPEND", // 비디오 삽입 모드
-        mirror: true, // 비디오 미러링 여부
+        mirror: false, // 비디오 미러링 여부
       })
 
       await mySession.publish(publisher) // 퍼블리셔 스트림 게시
@@ -153,6 +146,16 @@ const CallPage = () => {
     }
   }
 
+  // 세션 ID 변경 핸들러
+  const handleChangeSessionId = (e) => {
+    setMySessionId(e.target.value)
+  }
+
+  // 사용자 이름 변경 핸들러
+  const handleChangeUserName = (e) => {
+    setMyUserName(e.target.value)
+  }
+
   // 메인 비디오 스트림 설정 핸들러
   const handleMainVideoStream = (stream) => {
     if (mainStreamManager !== stream) {
@@ -204,15 +207,51 @@ const CallPage = () => {
           id="join"
           className="flex flex-1 flex-col items-center justify-center"
         >
+          <div id="img-div" className="mb-4">
+            <img
+              src="resources/images/openvidu_grey_bg_transp_cropped.png"
+              alt="OpenVidu 로고"
+              className="w-48"
+            />
+          </div>
           <div id="join-dialog" className="rounded-lg bg-white p-8 shadow-lg">
             <h1 className="mb-4 text-2xl font-bold">비디오 세션에 참여하기</h1>
-            <button
-              className="btn btn-lg btn-success mt-4 rounded-lg bg-green-500 px-4 py-2 text-white hover:bg-green-600"
-              type="submit"
-              onClick={joinSession}
+            <form
+              className="flex flex-col"
+              onSubmit={(e) => {
+                e.preventDefault()
+                joinSession()
+              }}
             >
-              JOIN
-            </button>
+              <label className="mb-2">
+                <span className="block text-sm font-medium">참여자:</span>
+                <input
+                  className="form-input mt-1 block w-full"
+                  type="text"
+                  id="userName"
+                  value={myUserName}
+                  onChange={handleChangeUserName}
+                  required
+                />
+              </label>
+              <label className="mb-4">
+                <span className="block text-sm font-medium">세션:</span>
+                <input
+                  className="form-input mt-1 block w-full"
+                  type="text"
+                  id="sessionId"
+                  value={mySessionId}
+                  onChange={handleChangeSessionId}
+                  required
+                />
+              </label>
+              <button
+                className="btn btn-lg btn-success mt-4 rounded-lg bg-green-500 px-4 py-2 text-white hover:bg-green-600"
+                type="submit"
+              >
+                JOIN
+              </button>
+            </form>
           </div>
         </div>
       ) : null}
@@ -245,8 +284,7 @@ const CallPage = () => {
           </div>
 
           {mainStreamManager !== undefined ? (
-            <div id="main-video" className="flex-1 border p-4">
-              <div> 메인스트리머</div>
+            <div id="main-video" className="flex-1 p-4">
               <UserVideoComponent streamManager={mainStreamManager} />
             </div>
           ) : null}
@@ -254,10 +292,9 @@ const CallPage = () => {
           <div id="video-container" className="flex flex-wrap p-4">
             {publisher !== undefined ? (
               <div
-                className="stream-container flex-1 cursor-pointer border p-2"
+                className="stream-container flex-1 cursor-pointer p-2"
                 onClick={() => handleMainVideoStream(publisher)}
               >
-                <div> 구독</div>
                 <UserVideoComponent streamManager={publisher} />
               </div>
             ) : null}
@@ -267,7 +304,6 @@ const CallPage = () => {
                 className="stream-container flex-1 cursor-pointer p-2"
                 onClick={() => handleMainVideoStream(sub)}
               >
-                <div> 서브</div>
                 <UserVideoComponent streamManager={sub} />
               </div>
             ))}
