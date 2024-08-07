@@ -36,6 +36,11 @@ const NavItemList = () => {
       category: "동물 건강 진단",
       to: "/ai",
     },
+    {
+      id: itemId++,
+      category: "채팅 테스트",
+      to: "/chat",
+    },
   ]
   return (
     <nav className="flex h-12 items-center">

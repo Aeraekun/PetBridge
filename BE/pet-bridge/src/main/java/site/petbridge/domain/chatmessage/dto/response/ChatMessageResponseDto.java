@@ -1,6 +1,7 @@
 package site.petbridge.domain.chatmessage.dto.response;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +16,7 @@ public class ChatMessageResponseDto {
     private int roomId;
     private int senderId;
     private String content;
-    private Timestamp registTime;
+    private LocalDateTime registTime;
 
     public static ChatMessageResponseDto transferToChatMessageResponseDto(ChatMessage chatMessage) {
         return ChatMessageResponseDto.builder()
