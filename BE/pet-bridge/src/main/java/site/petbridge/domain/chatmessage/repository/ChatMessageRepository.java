@@ -12,7 +12,6 @@ import site.petbridge.domain.chatmessage.domain.ChatMessage;
 
 public interface ChatMessageRepository extends MongoRepository<ChatMessage, String> {
 
-	@Query(value = "{ 'roomId': ?0 }", sort = "{ 'registTime': -1 }")
 	Optional<ChatMessage> findFirstByRoomIdOrderByRegistTimeDesc(int roomId);
 
 	// roomId로 필터링하고, registTime으로 정렬하여 슬라이스된 결과를 반환
@@ -20,6 +19,8 @@ public interface ChatMessageRepository extends MongoRepository<ChatMessage, Stri
 
 	Optional<List<ChatMessage>> findByRoomId(int roomId, Pageable pageable);
 	Optional<List<ChatMessage>> findByRoomId(int roomId);
+
+	List<ChatMessage> findAll();
 
 
 }

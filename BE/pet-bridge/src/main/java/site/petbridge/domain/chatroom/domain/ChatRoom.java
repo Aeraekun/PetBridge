@@ -33,3 +33,4 @@ public class ChatRoom {
 	private int receiverId;
 
 }
+

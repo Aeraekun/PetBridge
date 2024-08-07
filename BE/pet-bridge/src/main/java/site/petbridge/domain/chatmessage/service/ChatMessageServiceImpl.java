@@ -1,5 +1,6 @@
 package site.petbridge.domain.chatmessage.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,33 +28,17 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 			.roomId(chatMessageRequestDto.getRoomId())
 			.senderId(chatMessageRequestDto.getSenderId())
 			.content(chatMessageRequestDto.getContent())
+			.registTime(LocalDateTime.now())
 			.build());
 
-		return ChatMessageResponseDto.builder()
-			.roomId(chatMessage.getRoomId())
-			.senderId(chatMessage.getSenderId())
-			.content(chatMessage.getContent())
-			.registTime(chatMessage.getRegistTime())
-			.build();
+		return ChatMessageResponseDto.transferToChatMessageResponseDto(chatMessage);
 	}
 
-	// @Override
-	// public Optional<List<ChatMessageResponseDto>> getListChatMessage(int roomId, Pageable pageable) {
-	// 	Optional<List<ChatMessage>> chatMessages = chatMessageRepository.findByRoomIdOrderByRegistTimeDesc(roomId, pageable);
-	//
-	// 	return chatMessages.map(chatMessageList ->
-	// 		chatMessageList.stream()
-	// 			.map(ChatMessageResponseDto::transferToChatMessageResponseDto
-	// 			)
-	// 			.collect(Collectors.toList())
-	// 	);
-	// }
-
 	@Override
-	public Optional<List<ChatMessageResponseDto>> getListChatMessageByRoomId(int roomId) {
-		// PageRequest pageable = PageRequest.of(pageIndex, pageSize);
-		// Optional<List<ChatMessage>> chatMessageResponseDtos = chatMessageRepository.findByRoomId(roomId, pageable);
-		Optional<List<ChatMessage>> chatMessageResponseDtos = chatMessageRepository.findByRoomId(roomId);
+	public Optional<List<ChatMessageResponseDto>> getListChatMessageByRoomId(int roomId, int page, int size) {
+		PageRequest pageable = PageRequest.of(page, size);
+		Optional<List<ChatMessage>> chatMessageResponseDtos = chatMessageRepository.findByRoomId(roomId, pageable);
+		// Optional<List<ChatMessage>> chatMessageResponseDtos = chatMessageRepository.findByRoomId(roomId);
 		System.out.println("chatMessageResponseDtos: " + chatMessageResponseDtos);
 		return chatMessageResponseDtos.map(chatMessageList ->
 			chatMessageList.stream()
@@ -69,4 +54,20 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 				.collect(Collectors.toList())
 		);
 	}
+
+	@Override
+	public List<ChatMessageResponseDto> getListChatMessage() {
+		List<ChatMessage> chatMessages = chatMessageRepository.findAll();
+
+		return chatMessages.stream()
+			.map(chatMessage -> ChatMessageResponseDto.builder()
+				.roomId(chatMessage.getRoomId())
+				.senderId(chatMessage.getSenderId())
+				.content(chatMessage.getContent())
+				.registTime(chatMessage.getRegistTime())
+				.build()
+			)
+			.collect(Collectors.toList());
+	}
 }
+

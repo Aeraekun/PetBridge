@@ -12,5 +12,8 @@ public interface ChatMessageService {
 
 	// Optional<List<ChatMessageResponseDto>> getListChatMessage(int roomId, Pageable pageable);
 
-	Optional<List<ChatMessageResponseDto>> getListChatMessageByRoomId(int roomId);
+	Optional<List<ChatMessageResponseDto>> getListChatMessageByRoomId(int roomId, int page, int size);
+
+	List<ChatMessageResponseDto> getListChatMessage();
+
 }

@@ -63,6 +63,7 @@ public class SecurityConfig {
 				// 기본 파일
 				.requestMatchers(HttpMethod.GET, "/error", "/favicon.ico").permitAll()
 
+
 				// 회원
 				.requestMatchers(HttpMethod.GET, "/users/sign-up", "/users/login").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/users/{nickname}").permitAll()
@@ -105,14 +106,22 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.PATCH, "/api/contract-checks/{id}").permitAll()
 
 				// 채팅
-				.requestMatchers(HttpMethod.GET, "/api/chat-rooms/user/{userId}").permitAll()
-				.requestMatchers(HttpMethod.GET, "/api/chat-rooms/room/{roomId}").permitAll()
-				.requestMatchers(HttpMethod.POST, "/api/chat-rooms").permitAll()
+				.requestMatchers(HttpMethod.GET,"/ws/**").permitAll()
+				.requestMatchers(HttpMethod.GET,"/ws/chat/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/chat/rooms/user/{userId}").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/chat/rooms/{roomId}").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/chat/rooms").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/chat-messages/{roomId}").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/chat-rooms/{userId}").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/chat-rooms/{userId}").permitAll()
 				.requestMatchers(HttpMethod.GET,"/friendChat").permitAll()
 				.requestMatchers(HttpMethod.GET,"/friendChat/**").permitAll()
+				.requestMatchers(HttpMethod.GET,"/chat/{id}").permitAll()
+				.requestMatchers(HttpMethod.GET,"/chat/room/user/{userId}").permitAll()
+				.requestMatchers(HttpMethod.POST,"/chat/room").permitAll()
+				.requestMatchers(HttpMethod.GET,"/chat/room/{userId}").permitAll()
+				.requestMatchers("/api/chat/messages").permitAll()
+
 
 				// 결제
 				.requestMatchers(HttpMethod.POST,"/api/payment/ready").permitAll()
