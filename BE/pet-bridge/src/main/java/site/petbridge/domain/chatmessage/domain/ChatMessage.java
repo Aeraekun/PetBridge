@@ -28,7 +28,7 @@ public class ChatMessage {
 	private int roomId;
 	private int senderId;
 	private String content;
-	private LocalDateTime registTime;
+	private Timestamp registTime;
 
 
 }
