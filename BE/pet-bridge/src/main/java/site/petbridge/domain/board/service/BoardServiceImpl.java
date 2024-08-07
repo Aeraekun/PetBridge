@@ -1,13 +1,14 @@
 package site.petbridge.domain.board.service;
 
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import site.petbridge.domain.board.domain.Board;
 import site.petbridge.domain.board.domain.enums.BoardType;
 import site.petbridge.domain.board.dto.request.BoardEditRequestDto;
@@ -19,8 +20,6 @@ import site.petbridge.global.exception.ErrorCode;
 import site.petbridge.global.exception.PetBridgeException;
 import site.petbridge.util.AuthUtil;
 import site.petbridge.util.FileUtil;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +40,7 @@ public class BoardServiceImpl implements BoardService {
         String savedThumbnailFileName = null;
         if (thumbnailFile != null) {
             savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "boards");
+            savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "images");
         }
 
         Board entity = boardRegistRequestDto.toEntity(user.getId(),savedThumbnailFileName);
@@ -90,7 +90,7 @@ public class BoardServiceImpl implements BoardService {
 
         // 없거나 삭제된 게시판 404
         Board entity = boardRepository.findByIdAndDisabledFalse(id)
-                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+            .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
         // 내 게시판 아님 403
         if (entity.getUserId() != user.getId()) {
             throw new PetBridgeException(ErrorCode.FORBIDDEN);
@@ -115,11 +115,15 @@ public class BoardServiceImpl implements BoardService {
 
         // 없거나 삭제된 게시판 404
         Board entity = boardRepository.findByIdAndDisabledFalse(id)
-                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+            .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
         // 내 게시판 아님 403
         if (entity.getUserId() != user.getId()) {
             throw new PetBridgeException(ErrorCode.FORBIDDEN);
         }
+        // 파일 삭제는 현재 보류
+        // if(entity.getThumbnail() != null && !entity.getThumbnail().isEmpty()){
+        //     fileUtil.removeFile("images", entity.getThumbnail());
+        // }
 
         entity.disable();
         boardRepository.save(entity);
