@@ -163,6 +163,15 @@ const ChatMain = () => {
       content: newMessage,
     }))
   }
+
+  // 엔터시 clickSendHandler를 동작시킴
+
+  const keyDownHandler = (event) => {
+    if (event.key === "Enter") {
+      clickSendHandler()
+    }
+  }
+
   postChatMessage
   // 채팅을 전송하고, 전송에 성공해서 메세지 객체를 받아오면 해당 값을 메세지 목록에 추가
   const clickSendHandler = async () => {
@@ -211,8 +220,9 @@ const ChatMain = () => {
           <input
             value={messageInput}
             onChange={changeHandler}
+            onKeyDown={keyDownHandler}
             type="text"
-            className="bg-stroke grow rounded-xl p-2 text-white"
+            className="grow rounded-xl bg-stroke p-2 text-white"
             placeholder="입력하세요"
             id="message-input"
           />

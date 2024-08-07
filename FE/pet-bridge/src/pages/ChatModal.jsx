@@ -95,6 +95,8 @@ const ChatModal = () => {
     },
   ])
 
+  // 처음 컴포넌트 로드시, 유저의 방번호로 채팅 소켓을 연결함
+
   // 채팅 종료 X 버튼 클릭시 동작
   const onClickXHandler = () => {
     dispatch(setIsChatModalOpen())
@@ -148,6 +150,8 @@ const ChatModal = () => {
     }
   }
 
+  // 유저 아이디로 채팅방 목록을 받아오기
+
   return (
     <div>
       {isOpen ? (
@@ -168,9 +172,9 @@ const ChatModal = () => {
                   alt=""
                   className="pointer-events-none size-8"
                 />
-                <span className="bg-alert fixed bottom-0 right-0 flex size-5 items-center justify-center rounded-full text-xs">
+                <span className="fixed bottom-0 right-0 flex size-5 items-center justify-center rounded-full bg-alert text-xs">
                   <span className="text-white">{newChats.length}</span>
-                  <span className="bg-alert fixed size-4 animate-ping rounded-full"></span>
+                  <span className="fixed size-4 animate-ping rounded-full bg-alert"></span>
                 </span>
               </button>
             </Draggable>
