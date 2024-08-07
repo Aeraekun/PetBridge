@@ -5,7 +5,7 @@ import {
   selectId,
 } from "features/user/users-slice"
 import {useSelector, useDispatch} from "react-redux"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import {logOutUser} from "utils/user-utils"
 import NavChat from "./NavChat"
 import {setIsChatModalOpen} from "features/chat/chat-slice"
@@ -23,6 +23,11 @@ const NavAction = () => {
   const onClickChatHandler = () => {
     dispatch(setIsChatModalOpen())
   }
+  const navigate = useNavigate()
+
+  const onClickCallHandler = () => {
+    navigate(`/call`)
+  }
 
   return (
     <ul className="flex h-12 items-center text-xl">
@@ -33,6 +38,11 @@ const NavAction = () => {
           </li>
           <li className="mx-2.5 flex h-full cursor-pointer items-center text-xl">
             <NavChat onClick={onClickChatHandler} />
+          </li>
+          <li className="mx-2.5 flex h-full cursor-pointer items-center text-xl">
+            <button onClick={onClickCallHandler}>
+              <img src="icons/icon-call.svg" alt="" className="size-8" />
+            </button>
           </li>
           <li className="mx-2.5 flex h-full cursor-pointer items-center text-xl">
             <Link to={`/users/${id}`}>
