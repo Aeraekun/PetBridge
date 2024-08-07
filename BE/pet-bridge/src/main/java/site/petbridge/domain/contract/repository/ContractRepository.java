@@ -32,9 +32,7 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
 	@Query("SELECT CASE WHEN COUNT(c) > 0 THEN TRUE ELSE FALSE END FROM Contract c WHERE c.animalId = :animalId")
 	boolean existsByAnimalIdInContract(@Param("animalId") int animalId);
 
-	// findAllByConfirmedTrue: status가 "계약전"이 아닌 모든 행을 반환
-	List<Contract> findAllByStatusNot(String status);
+	List<Contract> findByStatus(String status);
 
-	// findAllByConfirmedFalse: status가 "계약전"인 모든 Contract를 반환
-	List<Contract> findAllByStatus(String status);
+	List<Contract> findByStatusNot(String status);
 }
