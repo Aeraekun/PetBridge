@@ -27,7 +27,7 @@ function ChatRoom({roomId}) {
 
   const findRoom = (roomId) => {
     axios
-      .get(`http://localhost:8080/api/chat/rooms/${roomId}`)
+      .get(`http://localhost:8080/api/chat/rooms/${roomId}?page=0&size=12`)
       .then((response) => {
         setRoom(response.data)
         setMessages(response.data)
