@@ -4,12 +4,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.data.domain.PageRequest;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import site.petbridge.domain.chatmessage.domain.ChatMessage;
 import site.petbridge.domain.chatmessage.dto.response.ChatMessageResponseDto;
 import site.petbridge.domain.chatmessage.repository.ChatMessageRepository;
 import site.petbridge.domain.chatroom.domain.ChatRoom;
@@ -26,6 +25,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 	private final ChatRoomRepository chatRoomRepository;
 	private final UserRepository userRepository;
 	private final ChatMessageRepository chatMessageRepository;
+	private final SimpMessageSendingOperations sendingOperations;
 
 	@Override
 	public Optional<List<ChatRoomResponseDto>> getListChatRoomByUserId(int userId) {
@@ -34,7 +34,11 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 		return chatRooms.map(chatRoomList ->
 			chatRoomList.stream()
 				.map(chatRoom -> {
-						int opponentId = (userId != chatRoom.getSenderId()) ? userId : chatRoom.getReceiverId();
+						System.out.println(userId);
+						System.out.println("senderId: " + chatRoom.getSenderId());
+						System.out.println("receiverId: " + chatRoom.getReceiverId());
+						int opponentId =
+							(userId != chatRoom.getSenderId()) ? chatRoom.getSenderId() : chatRoom.getReceiverId();
 						return ChatRoomResponseDto.TransferToChatRoomResponseDto(
 							chatRoom, userRepository.findById(opponentId),
 							chatMessageRepository.findFirstByRoomIdOrderByRegistTimeDesc(chatRoom.getId())
@@ -53,11 +57,51 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 		if (chatRoom.isPresent()) {
 			return chatRoom.get().getId();
 		}
+
 		ChatRoom chatRoomEntity = ChatRoom.builder()
 			.senderId(senderId)
 			.receiverId(receiverId)
 			.build();
-		return chatRoomRepository.save(chatRoomEntity).getId();
+
+		chatRoomEntity = chatRoomRepository.save(chatRoomEntity);
+
+		ChatRoomResponseDto newRoomToSender = ChatRoomResponseDto.TransferToChatRoomResponseDto(
+			chatRoomEntity, userRepository.findById(receiverId));
+
+		ChatRoomResponseDto newRoomToReceiver = ChatRoomResponseDto.TransferToChatRoomResponseDto(
+			chatRoomEntity, userRepository.findById(senderId));
+
+		System.out.println("작성자 전송: " + "/topic/chat/users/" + senderId);
+		sendingOperations.convertAndSend("/topic/chat/users/" + senderId,
+			newRoomToSender);
+
+		System.out.println("수신자 전송: " + "/topic/chat/users/" + receiverId);
+		sendingOperations.convertAndSend("/topic/chat/users/" + receiverId,
+			newRoomToReceiver);
+
+		return chatRoomEntity.getId();
+	}
+
+	@Override
+	public void sendNewChatRoomInfo(int roomId, ChatMessageResponseDto chatMessageResponseDto) {
+		ChatRoom chatRoom = chatRoomRepository.findById(roomId);
+		int senderId = chatRoom.getSenderId();
+		int receiverId = chatRoom.getReceiverId();
+
+		ChatRoomResponseDto newRoomToSender = ChatRoomResponseDto.TransferToChatRoomResponseDto(
+			chatRoom, userRepository.findById(receiverId), chatMessageResponseDto);
+
+		ChatRoomResponseDto newRoomToReceiver = ChatRoomResponseDto.TransferToChatRoomResponseDto(
+			chatRoom, userRepository.findById(senderId), chatMessageResponseDto);
+
+		System.out.println("작성자 전송: " + "/topic/chat/users/" + senderId);
+		sendingOperations.convertAndSend("/topic/chat/users/" + senderId,
+			newRoomToSender);
+
+		System.out.println("수신자 전송: " + "/topic/chat/users/" + receiverId);
+		sendingOperations.convertAndSend("/topic/chat/users/" + receiverId,
+			newRoomToReceiver);
+
 	}
 
 }

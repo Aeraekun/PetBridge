@@ -15,4 +15,5 @@ public interface ChatMessageService {
 	Optional<List<ChatMessageResponseDto>> getListChatMessageByRoomId(int roomId, int page, int size);
 
 	List<ChatMessageResponseDto> getListChatMessage();
+
 }

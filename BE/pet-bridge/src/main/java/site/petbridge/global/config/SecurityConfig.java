@@ -63,6 +63,7 @@ public class SecurityConfig {
 				// 기본 파일
 				.requestMatchers(HttpMethod.GET, "/error", "/favicon.ico").permitAll()
 
+
 				// 회원
 				.requestMatchers(HttpMethod.GET, "/users/sign-up", "/users/login").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/users/{nickname}").permitAll()
@@ -105,6 +106,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.PATCH, "/api/contract-checks/{id}").permitAll()
 
 				// 채팅
+				.requestMatchers(HttpMethod.GET,"/ws/**").permitAll()
 				.requestMatchers(HttpMethod.GET,"/ws/chat/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/chat/rooms/user/{userId}").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/chat/rooms/{roomId}").permitAll()
@@ -119,6 +121,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.POST,"/chat/room").permitAll()
 				.requestMatchers(HttpMethod.GET,"/chat/room/{userId}").permitAll()
 				.requestMatchers("/api/chat/messages").permitAll()
+
 
 				// 결제
 				.requestMatchers(HttpMethod.POST,"/api/payment/ready").permitAll()

@@ -71,8 +71,11 @@ import AiSkin from "components/ai/AiSkin"
 import ChatModal from "pages/ChatModal"
 
 // 채팅페이지
-import ChatListPage from "pages/ChatListPageTest"
+import ChatListPage from "pages/ChatListPageTest2"
 import ChatMessagePage from "pages/ChatMessagePageTest2"
+import ChatTotalPage from "pages/ChatTotalPageTest"
+
+import CallPage from "components/chat/CallPage"
 
 function App() {
   const dispatch = useDispatch()
@@ -100,6 +103,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<MainPage />} exact />
+          <Route path="/call" element={<CallPage />} exact />
           <Route
             path="petpick/write"
             element={
@@ -176,6 +180,7 @@ function App() {
           </Route>
           <Route path="/chat/room" element={<ChatListPage />}></Route>
           <Route path="/chat/message" element={<ChatMessagePage />}></Route>
+          <Route path="/chat/total" element={<ChatTotalPage />}></Route>
           <Route path="lost-and-found" element={<LostAndFoundPage />}></Route>
           <Route path="lost-and-found/report" element={<Report />}></Route>
         </Route>

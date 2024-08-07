@@ -1,6 +1,7 @@
 package site.petbridge.domain.chatmessage.service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,18 +32,13 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 			.registTime(LocalDateTime.now())
 			.build());
 
-		return ChatMessageResponseDto.builder()
-			.roomId(chatMessage.getRoomId())
-			.senderId(chatMessage.getSenderId())
-			.content(chatMessage.getContent())
-			.registTime(chatMessage.getRegistTime())
-			.build();
+		return ChatMessageResponseDto.transferToChatMessageResponseDto(chatMessage);
 	}
 
 	@Override
 	public Optional<List<ChatMessageResponseDto>> getListChatMessageByRoomId(int roomId, int page, int size) {
 		PageRequest pageable = PageRequest.of(page, size);
-		Optional<List<ChatMessage>> chatMessageResponseDtos = chatMessageRepository.findByRoomId(roomId, pageable);
+		Optional<List<ChatMessage>> chatMessageResponseDtos = chatMessageRepository.findByRoomIdOrderByRegistTimeDesc(roomId, pageable);
 		// Optional<List<ChatMessage>> chatMessageResponseDtos = chatMessageRepository.findByRoomId(roomId);
 		System.out.println("chatMessageResponseDtos: " + chatMessageResponseDtos);
 		return chatMessageResponseDtos.map(chatMessageList ->
@@ -56,8 +52,10 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 						.build()
 
 				)
-				.collect(Collectors.toList())
-		);
+				.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+					Collections.reverse(list); // Reverse the list
+					return list;
+				})));
 	}
 
 	@Override
@@ -75,3 +73,4 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 			.collect(Collectors.toList());
 	}
 }
+

@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +31,7 @@ public class ChatRoomController {
 
 	@GetMapping("/rooms/user/{userId}")
 	public ResponseEntity<Optional<List<ChatRoomResponseDto>>> getListChatRoomByUserId(@PathVariable int userId) {
+
 		System.out.println("getListChatRoomByUserId: " + userId);
 		Optional<List<ChatRoomResponseDto>> chatRoomResponseDtos = chatRoomService.getListChatRoomByUserId(userId);
 		return ResponseEntity.status(HttpStatus.OK).body(chatRoomResponseDtos);
@@ -52,5 +52,3 @@ public class ChatRoomController {
 	}
 
 }
-
-
