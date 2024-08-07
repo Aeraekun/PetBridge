@@ -85,18 +85,15 @@ const ContractsCreateContainer = () => {
   }
 
   // 계약서 작성하기 클릭시 동작
-  const onSubmitHandler = async (event) => {
-    event.preventDefault()
+  const onSubmitHandler = async () => {
     console.log(contractFormData)
     // 폼의 유효성 검사
     try {
       // 비동기 요청 (계약서 작성)
       const res = await postContract(contractFormData)
       console.log(res)
-      if (res.data) {
-        // 비동기 요청 결과로, 성공시 마이페이지 계약서 목록으로 라우팅
-        navigate(`/users/${contractFormData.contractorId}`)
-      }
+      alert("계약서가 작성되었습니다.")
+      navigate(`/users/${contractFormData.contractorId}`)
     } catch (error) {
       console.log(error)
     }
@@ -250,7 +247,7 @@ const ContractsCreateContainer = () => {
         ></textarea>
       </section>
       {/* 계약서 미리보기란 */}
-      <div className="flex h-[600px] w-full flex-col items-center rounded-2xl bg-stroke p-5">
+      <div className="bg-stroke flex h-[600px] w-full flex-col items-center rounded-2xl p-5">
         <p className="my-10 text-4xl font-bold">계약서 미리보기</p>
         <ContractDetail
           contractorNickname={nickname}
@@ -285,7 +282,7 @@ const ContractsCreateContainer = () => {
                   />
                   <button
                     onClick={clickPhoneCodeCheckHandler}
-                    className="grow rounded-2xl border px-2 hover:bg-mild"
+                    className="hover:bg-mild grow rounded-2xl border px-2"
                   >
                     확인
                   </button>
@@ -308,12 +305,12 @@ const ContractsCreateContainer = () => {
               title="계약자"
               nickname={contracteeInfo.nickname}
             />
-            <div className="flex gap-4 p-2.5">
+            {/* <div className="flex gap-4 p-2.5">
               <p className="my-3 font-bold">서명</p>
               <button className={`rounded-2xl border p-2.5 ${isPhoneCodeSent}`}>
-                {isPhoneCodeChecked ? "서명 완료" : "서명 하기"}
+                서명 하기
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
@@ -323,7 +320,14 @@ const ContractsCreateContainer = () => {
         disabled={!isPhoneCodeChecked}
         type="button"
         onClick={onSubmitHandler}
-        className="h-10 w-40 rounded-xl border-2 bg-mild"
+        className="bg-mild h-10 w-40 rounded-xl border-2"
+      >
+        계약서 작성하기
+      </button>
+      <button
+        type="button"
+        onClick={onSubmitHandler}
+        className="bg-mild h-10 w-40 rounded-xl border-2"
       >
         계약서 작성하기
       </button>

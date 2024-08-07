@@ -3,35 +3,58 @@ import Button from "components/common/Button"
 import {useNavigate, useParams} from "react-router-dom"
 import {getArticle} from "api/boards-api"
 import React, {useEffect, useState} from "react"
+import Pagination from "components/common/Pagination"
+
 const categories = [
-  {id: 0, name: "home", title: "홈"},
-  {id: 1, name: "promotion", title: "입양홍보"},
-  {id: 2, name: "review", title: "입양후기"},
-  {id: 3, name: "free", title: "자유게시판"},
-  {id: 4, name: "notice", title: "공지사항"},
+  {id: 0, name: "HOME", title: "홈"},
+  {id: 1, name: "PROMOTION", title: "입양홍보"},
+  {id: 2, name: "REVIEW", title: "입양후기"},
+  {id: 3, name: "FREE", title: "자유게시판"},
+  {id: 4, name: "NOTICE", title: "공지사항"},
 ]
 
-const Search = ({searchKeyword}) => {
+const Search = ({searchform}) => {
   const [inputKeyword, setInputKeyword] = useState("")
+  const [type, setType] = useState("")
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      e.preventDefault() // 기본 동작 방지
-      searchKeyword(inputKeyword)
+      e.preventDefault()
+      handleSearch()
     }
   }
 
   const handleButtonClick = () => {
-    searchKeyword(inputKeyword)
+    handleSearch()
+  }
+
+  const handleSearch = () => {
+    let params = {}
+    if (type === "전체") {
+      params = {title: inputKeyword, usernickname: inputKeyword}
+    } else if (inputKeyword !== "") {
+      params[type] = inputKeyword
+    } else {
+      params = {}
+    }
+    console.log(params, "params")
+    searchform(params) // 새로운 검색 조건을 부모로 전달
+    setInputKeyword("")
+    setType("")
   }
 
   return (
     <div className="flex w-full justify-between px-10">
+      <select id="type" value={type} onChange={(e) => setType(e.target.value)}>
+        <option value="전체">전체</option>
+        <option value="title">제목</option>
+        <option value="usernickname">닉네임</option>
+      </select>
       <input
         type="text"
         placeholder="검색어를 입력하세요."
         value={inputKeyword}
-        className="border-stroke h-12 w-72 rounded-xl border-2 p-2"
+        className="h-12 w-72 rounded-xl border-2 border-stroke p-2"
         onKeyDown={handleKeyDown}
         onChange={(e) => setInputKeyword(e.target.value)}
       />
@@ -50,51 +73,91 @@ const ArticleBoardList = () => {
   const navigate = useNavigate()
 
   const [articles, setArticles] = useState([])
+  const [currentPage, setCurrentPage] = useState(0)
+  const [totalPages, setTotalPages] = useState(0)
+  const pageSize = 12 // 페이지당 항목 수
+  const [searchParams, setSearchParams] = useState({})
+
+  //게시글 조회 API 호출
+  const fetchArticles = async (params) => {
+    console.log(params)
+    try {
+      const data = await getArticle(params)
+      setTotalPages(data.totalPages)
+      setArticles(data.content)
+    } catch (error) {
+      console.error("게시글 가져오기 오류:", error)
+    }
+  }
+
+  //searchParmas가 바뀔때마다 새로 받아옴. (검색조건생겼을때, 페이지 넘어갈때)
+  useEffect(() => {
+    fetchArticles(searchParams)
+  }, [searchParams])
+
+  //페이지가 바뀌었을때 searchParmas 업데이트
+  useEffect(() => {
+    setSearchParams((prevParams) => ({
+      ...prevParams,
+      page: currentPage,
+      size: pageSize,
+    }))
+  }, [currentPage])
 
   useEffect(() => {
-    const fetchArticles = async () => {
-      const data = await getArticle()
-      setArticles(data)
-    }
-
-    fetchArticles()
-  }, []) // 빈 배열을 두 번째 인자로 전달하여 마운트 시 한 번만 실행
+    setSearchParams((prevParams) => ({
+      ...prevParams,
+      type:
+        categories.find((category) => category.id === Number(bcode))?.name ||
+        "",
+    }))
+  }, [bcode])
 
   const goDetail = (article) => {
     const id = article.id
     let path = `/communities/details/${id}`
     navigate(path)
   }
+
   const matchingCategory = categories.find(
     (category) => category.id === Number(bcode)
   )
+
   const goWrite = () => {
+    setCurrentPage(0) // 페이지 번호를 초기화
     let path = `/communities/write`
     navigate(path)
   }
 
+  const handleSearchForm = (data) => {
+    setSearchParams(() => ({
+      ...data,
+      page: 0,
+    }))
+  }
+
   return (
     <>
-      <Search />
+      <Search searchform={handleSearchForm} />
       {matchingCategory ? <h2>{matchingCategory.title}</h2> : <p>홈</p>}
       <Button text={"글쓰기"} onClick={goWrite} />
       <ul className="flex w-full flex-wrap justify-between">
-        {articles
-          //bcode가 없는경우 (홈) 일때는 모두 보여줌
-          // category와 bcode가 일치하는것만 필터링
-          .filter((article) => {
-            if (bcode === undefined || bcode === "home") {
-              return true
-            }
-            return article.category === Number(bcode)
-          })
-          .map((article) => (
+        {articles &&
+          articles.map((article) => (
             <li key={article.id}>
               <ArticleItem data={article} onSelectArticle={goDetail} />
             </li>
           ))}
       </ul>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={(page) => {
+          setCurrentPage(page)
+        }}
+      />
     </>
   )
 }
+
 export default ArticleBoardList

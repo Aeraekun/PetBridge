@@ -22,7 +22,7 @@ import AnimalDetailModify from "components/board/animals/AnimalDetailModify"
 import PetpickWrite from "components/petpick/PetpickWrite"
 import ShortsLayout from "layout/ShortsLayout"
 import PetpickComments from "components/petpick/PetpickComments"
-import PetpickTagDetail from "components/petpick/PetpickTagDetail"
+import PetpickDetail from "components/petpick/PetpickDetail"
 import PetpickModify from "components/petpick/PetpickModify"
 
 import {useDispatch, useSelector} from "react-redux"
@@ -70,10 +70,6 @@ import AiEyes from "components/ai/AiEyes"
 import AiSkin from "components/ai/AiSkin"
 import ChatModal from "pages/ChatModal"
 
-// 채팅페이지
-import ChatListPage from "pages/ChatListPageTest"
-import ChatMessagePage from "pages/ChatMessagePageTest2"
-
 function App() {
   const dispatch = useDispatch()
   const isAuthenticated = useSelector(selectIsAuthenticated)
@@ -109,6 +105,7 @@ function App() {
               />
             }
           ></Route>
+          <Route path="petpick/:petpickId" element={<PetpickDetail />}></Route>
           <Route
             path="petpick/modify/:id"
             element={
@@ -173,8 +170,6 @@ function App() {
             <Route path="eyes" element={<AiEyes />} />
             <Route path="skin" element={<AiSkin />} />
           </Route>
-          <Route path="/chat/room" element={<ChatListPage />}></Route>
-          <Route path="/chat/message" element={<ChatMessagePage />}></Route>
           <Route path="lost-and-found" element={<LostAndFoundPage />}></Route>
           <Route path="lost-and-found/report" element={<Report />}></Route>
         </Route>
@@ -210,8 +205,6 @@ function App() {
         <Route path="/petpick" element={<ShortsLayout />}>
           <Route path="" element={<PetpickComments />}></Route>
         </Route>
-
-        <Route path="/petpick/:id/tag" element={<PetpickTagDetail />}></Route>
 
         <Route path="/contracts" element={<ContractsPage />}>
           <Route path=":id" element={<ContractsContainer />}></Route>

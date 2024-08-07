@@ -69,7 +69,7 @@ axiosInstance.interceptors.request.use(
 
     // 액세스 토큰은 만료됐고 리프레시 토큰은 있는 경우 - 헤더에 리프레시 토큰 추가
     if (!isAccessTokenValid && refreshToken) {
-      config.headers["Authorization-refresh"] = `Bearer 0${refreshToken}`
+      config.headers["Authorization-refresh"] = `Bearer ${refreshToken}`
     }
 
     return config

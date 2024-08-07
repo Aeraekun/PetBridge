@@ -3,7 +3,7 @@ import Button from "components/common/Button"
 import Editor from "components/common/Editor"
 import {useNavigate} from "react-router-dom"
 import {useSelector} from "react-redux"
-import {selectId, selectImage, selectNickname} from "features/user/users-slice"
+import {selectImage, selectNickname} from "features/user/users-slice"
 import {registArticle} from "api/boards-api"
 import markerImg from "../../assets/image/marker.png"
 
@@ -32,7 +32,6 @@ const Report = () => {
   const [position, setPosition] = useState(null)
   const navigate = useNavigate()
 
-  const currentUserId = useSelector(selectId)
   const currentUserImage = useSelector(selectImage)
   const currentUserNickname = useSelector(selectNickname)
 
@@ -86,11 +85,11 @@ const Report = () => {
       return
     }
     const newArticle = {
-      userId: currentUserId,
       title: title,
+      type: "LOST",
       content: editorContent,
       lat: position.getLat(),
-      lng: position.getLng(),
+      lon: position.getLng(),
     }
 
     const formData = new FormData()
@@ -99,12 +98,14 @@ const Report = () => {
       new Blob([JSON.stringify(newArticle)], {type: "application/json"})
     )
     if (imageFile) {
-      formData.append("file", imageFile)
+      formData.append("thumbnail", imageFile)
     }
+    console.log("formdata는")
+    console.dir(formData)
 
     try {
       await registArticle(formData)
-      navigate(`/lost-and-found`)
+      // navigate(`/lost-and-found`)
     } catch (e) {
       console.error(e)
     }
@@ -139,7 +140,7 @@ const Report = () => {
             <img
               src={imageSrc}
               alt="Uploaded Preview"
-              className="max-h-96 w-full rounded border object-cover"
+              className="max-h-96 w-full rounded border object-contain"
             />
             <button
               onClick={resetImage}

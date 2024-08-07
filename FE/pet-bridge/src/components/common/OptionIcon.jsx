@@ -1,16 +1,13 @@
 import React from "react"
-import {useNavigate} from "react-router-dom"
+import openPopover from "./OpenPopover"
 
 const SelectIcon = () => {
-  const navigate = useNavigate()
-
-  function goCommentPage() {
-    navigate("/petpick/comments")
+  const goMoreOption = () => {
+    openPopover()
   }
-
   return (
     <>
-      <button onClick={goCommentPage} className=" ">
+      <button onClick={goMoreOption} className=" ">
         <img src="/icons/icon-option.svg" alt="more option" />
       </button>
     </>

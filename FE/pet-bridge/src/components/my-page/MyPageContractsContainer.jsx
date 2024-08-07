@@ -1,94 +1,125 @@
-import {getUserContracts} from "api/contracts-api"
-import {useEffect, useRef, useState} from "react"
+import {getMyContracts} from "api/mypage-api"
+import {useEffect, useState} from "react"
 import {useInView} from "react-intersection-observer"
 import {Link, useParams} from "react-router-dom"
+import MyPageCard from "./MyPageCard"
 
 const MyPageContractsContainer = () => {
   const {userId} = useParams()
 
-  // 초기에 api 요청이 완료되기 전 로딩 현황
+  // isLoading true로 설정해두고, 화면 초기 로드 완료시 false로 변경 후 스크롤 페이지 렌더링
   const [isLoading, setIsLoading] = useState(true)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const [isMoreRemained, setIsMoreRemaind] = useState(true)
+  const [items, setItems] = useState([])
+  const [page, setPage] = useState(1)
 
-  // 게시글 초기값 선언
-  const [allItems, setAllItems] = useState([])
-  const [viewItems, setViewItems] = useState([])
-  const rootRef = useRef(null)
+  // API 요청을 보내기 위한 파라미터
+  const [searchParams, setSearchParams] = useState({numOfRows: 12, pageNo: 1})
 
-  // inView 사용
-  // ref: observer가 지켜 볼 객체를 선정
-  // inView: view 상태 (Boolean)
-  const {ref, inView} = useInView({
-    root: rootRef.current,
-    rootMargin: "0px 0px",
-  })
-
-  // 컴포넌트 처음 마운트시, 백엔드에 API 요청을 보내서 유저 관련 모든 정보를 받아와서 페이지 상태에 저장한다.
+  // 초기값 로딩
   useEffect(() => {
-    const loadInitialItems = async () => {
-      const res = await getUserContracts(userId)
-
-      setAllItems(res.data)
-      setViewItems(res.data.slice(0, 10))
-      setIsLoading(false)
+    const fetchInitData = async () => {
+      const newItems = await fetchData()
+      // 데이터 로드 성공시 (응답 배열에 데이터가 있다면)
+      if (newItems && newItems.length > 0) {
+        // 로딩상태 해제, 새로 받아온 값을 배열에 추가
+        setIsLoading(false)
+        setItems((prevItems) => [...prevItems, ...newItems])
+      }
     }
-    loadInitialItems()
+
+    fetchInitData()
   }, [])
 
-  // ref 객체를 화면에서 감지했을 때, inView 값이 true로 변경된다.
-  // 해당 이벤트 발생시 allArticles에 남아 있는 게시글들을 viewItems에 추가 (10개씩)
-  useEffect(() => {
-    if (inView && viewItems.length < allItems.length) {
-      const nextItems = allItems.slice(viewItems.length, viewItems.length + 10)
-      setViewItems((prevItems) => [...prevItems, ...nextItems])
+  // 내가 좋아한 펫픽을 받아오는 api 호출
+  const fetchData = async () => {
+    try {
+      const res = await getMyContracts(userId, page)
+      let newItems = []
+
+      if (res.data) {
+        console.log("fetch 성공!!!", res)
+        newItems = res.data
+        setPage((prevPage) => prevPage + 1)
+        return newItems
+      } else {
+        setIsLoading(false)
+        setIsMoreRemaind(false)
+      }
+    } catch (error) {
+      alert("추가 데이터 로드에 실패했습니다.")
+      console.log(error)
     }
-  }, [inView, allItems, viewItems.length])
+  }
+  // 현재 화면에서 ref 객체를 탐지하기 위한 inView 사용
+  const {ref, inView} = useInView({})
+
+  // inView 값이 변함을 탐지
+  useEffect(() => {
+    const fetchMoreData = async () => {
+      const newItems = await fetchData()
+      // 데이터 로드 성공시 (응답 배열에 데이터가 있다면)
+      if (newItems && newItems.length > 0) {
+        setIsLoadingMore(false)
+        setItems((prevItems) => [...prevItems, ...newItems])
+      }
+    }
+
+    // inView 값이 true가 됐을 때,
+    if (inView) {
+      setIsLoadingMore(true)
+      fetchMoreData()
+    }
+  }, [inView])
+
+  useEffect(() => {
+    setSearchParams({...searchParams, page: page})
+  }, [page])
 
   return (
     <div className="flex h-full flex-col items-center">
       <div className="flex w-full justify-between p-2.5 ">
         <div></div>
         <button className="text-4xl font-bold">내 입양기록</button>
-        <Link className="rounded-xl bg-mild p-2.5" to="/contracts/create">
+        <Link className="bg-mild rounded-xl p-2.5" to="/contracts/create">
           입양 보내기
         </Link>
       </div>
-      <div
-        ref={rootRef}
-        className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth"
-      >
-        {isLoading ? (
-          <div>로딩중입니다</div>
-        ) : (
-          // 이미지 기준으로 반복
-          viewItems.map((item, index) => (
-            <>
-              <Link
-                to={`/contracts/${item.id}`}
-                key={index}
-                // ref 값이 화면에 들어왔을 때 api가 요청됨
-                ref={index === viewItems.length - 1 ? ref : null}
-                className="m-2.5 h-[450px] w-[300px] snap-center rounded-xl border"
-              >
-                <img
-                  src={`/data/petBridge/uploads/animal/${item.animalImage}`}
-                  alt={item.animalName}
-                  className="h-[300px] rounded-t-xl"
-                />
-                <div className="space-y-2.5 p-2.5">
-                  <p>{item.animalName}</p>
-                  <p>계약일 : {item.contractDate}</p>
-                  {item.contractorId === Number(userId) ? (
-                    <span>입양자 : </span>
-                  ) : (
-                    <span>보호자 : </span>
-                  )}
-                  <span>{item.contracteeNickname}</span>
-                </div>
-              </Link>
-            </>
-          ))
-        )}
-      </div>
+      {isLoading ? (
+        <div className="flex size-full items-center justify-center">
+          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
+          <span className="px-5 text-6xl font-bold">Loading...</span>
+        </div>
+      ) : (
+        <div className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
+          {items.map((item, index) => (
+            <Link
+              key={index}
+              to={`/contracts/${item.id}`}
+              className="m-2.5 "
+              // 화면에 들어오는지 확인할 객체를 선택하기 위한 ref 설정 : 배열의 마지막 값
+              ref={index === items.length - 1 ? ref : null}
+            >
+              <MyPageCard
+                id={item.id}
+                imageSrc={item.thumbnail}
+                imageAlt={item.title}
+                content1={item.title}
+                content2={item.animalId}
+                content3={item.content}
+              />
+            </Link>
+          ))}
+          {isLoadingMore ? (
+            <div className="flex items-center">
+              <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
+              <span>추가 데이터를 로딩중입니다</span>
+            </div>
+          ) : null}
+          {!isMoreRemained && <p>불러올 데이터가 없습니다.</p>}
+        </div>
+      )}
     </div>
   )
 }

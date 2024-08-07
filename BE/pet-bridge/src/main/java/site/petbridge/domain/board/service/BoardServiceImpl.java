@@ -39,6 +39,7 @@ public class BoardServiceImpl implements BoardService {
 
         String savedThumbnailFileName = null;
         if (thumbnailFile != null) {
+            savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "boards");
             savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "images");
         }
 
@@ -89,7 +90,7 @@ public class BoardServiceImpl implements BoardService {
 
         // 없거나 삭제된 게시판 404
         Board entity = boardRepository.findByIdAndDisabledFalse(id)
-                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+            .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
         // 내 게시판 아님 403
         if (entity.getUserId() != user.getId()) {
             throw new PetBridgeException(ErrorCode.FORBIDDEN);
@@ -114,7 +115,7 @@ public class BoardServiceImpl implements BoardService {
 
         // 없거나 삭제된 게시판 404
         Board entity = boardRepository.findByIdAndDisabledFalse(id)
-                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+            .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
         // 내 게시판 아님 403
         if (entity.getUserId() != user.getId()) {
             throw new PetBridgeException(ErrorCode.FORBIDDEN);

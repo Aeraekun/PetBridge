@@ -2,8 +2,13 @@ import React, {useState, useRef, useEffect, useCallback} from "react"
 // import {useInView} from "react-intersection-observer"
 // import data from "components/petpick/dummydata"
 import PetpickComments from "components/petpick/PetpickComments"
-import {getRandomDetailPetPick} from "api/petpicks-api"
+import {
+  getDetailFollow,
+  getDetailPetPickLike,
+  getRandomDetailPetPick,
+} from "api/petpicks-api"
 import {useNavigate} from "react-router-dom"
+import iconPawprint from "assets/icons/icon-pawprint.png" // 수정된 파일 이름으로 임포트
 
 const ScrollableComponent = () => {
   const [index, setIndex] = useState(0)
@@ -44,7 +49,8 @@ const ScrollableComponent = () => {
     try {
       const res = await getRandomDetailPetPick()
       if (res) {
-        console.log("펫픽가져오기 성공", res)
+        // console.log("펫픽가져오기 성공", res)
+
         return res
       } else {
         alert("추가 데이터 로드에 실패했습니다.")
@@ -66,8 +72,33 @@ const ScrollableComponent = () => {
   }
   // Index가 리스트의 마지막에서 두 번째인 경우 데이터를 추가
   useEffect(() => {
+    const fetchLikeFollow = async () => {
+      try {
+        const nowLike = await getDetailPetPickLike(list[index].id)
+        const nowFollow = await getDetailFollow(list[index].animalId)
+        console.log(nowLike)
+        console.log(nowFollow)
+        if (nowLike) {
+          list[index].isLiking = true
+        } else {
+          list[index].isLiking = false
+        }
+        if (nowFollow) {
+          list[index].isFollowing = true
+        } else {
+          list[index].isFollowing = false
+        }
+        setList(list)
+        // console.log(nowLike, nowFollow)
+      } catch {
+        console.log("catch")
+      }
+    }
     if (index === list.length - 1) {
       loadMoreData()
+    }
+    if (list.length > 0) {
+      fetchLikeFollow()
     }
   }, [list, index])
 
@@ -99,12 +130,27 @@ const ScrollableComponent = () => {
   const goPetpickWrite = () => {
     navigate(`/petpick/write`)
   }
-
+  const goBack = () => {
+    navigate(-1)
+  }
   return (
-    <div className=" h-screen">
-      <button onClick={goPetpickWrite}>글쓰기</button>
-      <div className=" fixed mb-4 text-lg">현재 인덱스: {index}</div>
-
+    <div className=" relative h-screen">
+      <button
+        onClick={goPetpickWrite}
+        className="absolute right-20 top-20 flex "
+      >
+        {" "}
+        <img
+          src={iconPawprint}
+          alt="Community Icon"
+          className="mr-2 size-6" // 이미지 크기와 간격 조정
+        />
+        펫픽 올리기
+      </button>
+      {/* <div className=" fixed mb-4 text-lg">현재 인덱스: {index}</div> */}
+      <button className="fixed left-20 top-20" onClick={goBack}>
+        뒤로가기
+      </button>
       <div className="fixed right-8 top-1/2 flex flex-col space-y-8">
         <button
           onClick={() => {
@@ -127,7 +173,7 @@ const ScrollableComponent = () => {
       </div>
       <div
         ref={containerRef}
-        className="scrollbar-hide h-full snap-y snap-mandatory overflow-y-scroll border border-gray-300"
+        className="h-full snap-y snap-mandatory overflow-y-scroll border border-gray-300 scrollbar-hide"
       >
         {list.map((item, i) => (
           <PetpickComments
