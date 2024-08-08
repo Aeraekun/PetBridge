@@ -1,7 +1,7 @@
 import {useSelector} from "react-redux"
 import MessageItem from "./MessageItem"
 import DefaultUserImage from "assets/image/default_user_150.png"
-import {selectId, selectImage} from "features/user/users-slice"
+import {selectId} from "features/user/users-slice"
 import {selectCurrentChatId, selectOpponentInfo} from "features/chat/chat-slice"
 import {useEffect, useRef, useState} from "react"
 import SockJS from "sockjs-client"
@@ -22,7 +22,6 @@ const ChatMainContainer = () => {
   const opponentInfo = useSelector(selectOpponentInfo)
 
   const userId = useSelector(selectId)
-  const userImage = useSelector(selectImage)
   const roomId = useSelector(selectCurrentChatId)
   const stompClient = useRef(null)
   const messagesEndRef = useRef(null)
@@ -197,7 +196,7 @@ const ChatMainContainer = () => {
       <div className="flex size-full flex-col divide-y">
         <div className="flex items-center space-x-2 px-3 py-1">
           <img
-            src={userImage ? userImage : DefaultUserImage}
+            src={opponentInfo.image ? opponentInfo.image : DefaultUserImage}
             alt=""
             className="size-12 rounded-full border-2"
           />
@@ -223,7 +222,7 @@ const ChatMainContainer = () => {
             onChange={changeHandler}
             onKeyDown={keyDownHandler}
             type="text"
-            className="bg-stroke grow rounded-xl p-2 text-white"
+            className="grow rounded-xl bg-stroke p-2 text-white"
             placeholder="입력하세요"
             id="message-input"
           />
