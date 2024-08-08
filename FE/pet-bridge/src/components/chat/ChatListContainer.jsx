@@ -49,15 +49,16 @@ const ChatListContainer = () => {
       try {
         // API로 채팅 리스트 받아오기
         const res = await getChatRoomList(userId)
+        if (res.data) {
+          // 받아온 채팅 리스트를 최근 메세지 시간순으로 정렬
+          const sortedChatList = res.data.sort((a, b) => {
+            if (!a.recentTime) return -1 // a의 recentTime이 없으면 a를 앞으로
+            if (!b.recentTime) return 1 // b의 recentTime이 없으면 b를 앞으로
+            return Date(a.recentTime) - Date(b.recentTime)
+          })
 
-        // 받아온 채팅 리스트를 최근 메세지 시간순으로 정렬
-        const sortedChatList = res.data.sort((a, b) => {
-          if (!a.recentTime) return -1 // a의 recentTime이 없으면 a를 앞으로
-          if (!b.recentTime) return 1 // b의 recentTime이 없으면 b를 앞으로
-          return Date(a.recentTime) - Date(b.recentTime)
-        })
-
-        setChatList(sortedChatList)
+          setChatList(sortedChatList)
+        }
       } catch (error) {
         console.log("----- FetchRooms 실패 -----", error)
         alert("채팅 목록을 불러오는 데에 실패했습니다.")
