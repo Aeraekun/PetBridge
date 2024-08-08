@@ -33,22 +33,21 @@ export const loginUserThunk = createAsyncThunk(
   // async - await 문법으로 프로미스 객체 활용
   async (loginData, {rejectWithValue, dispatch}) => {
     console.log("usersApi.ks => loginUser => console.log(loginData)", loginData)
+    try {
+      const res = await postLoginUser(loginData)
 
-    const res = await postLoginUser(loginData)
-
-    // 응답을 200번으로 받지 못한다면, 에러 반환
-    if (res.status !== 200) {
+      // 로그인에 성공하며 바로 유저 정보를 받아온다.
+      console.log("loginUserThunk fulfilled")
+      dispatch(getUserInfoThunk())
+      return res.data
+    } catch (error) {
+      // 응답을 200번으로 받지 못한다면, 에러 반환
       console.log(
         "usersApi.ks => loginUser => catch => console.log(error)",
-        res
+        error
       )
       return rejectWithValue("로그인 실패. 아이디와 비밀번호를 확인해주세요.")
     }
-
-    // 로그인에 성공하며 바로 유저 정보를 받아온다.
-    console.log("loginUserThunk fulfilled")
-    dispatch(getUserInfoThunk())
-    return res.data
   }
 )
 
