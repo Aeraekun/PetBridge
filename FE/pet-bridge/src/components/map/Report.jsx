@@ -76,14 +76,23 @@ const Report = () => {
   }
 
   const writeArticle = async () => {
-    if (editorContent.trim() === "" || !imageSrc) {
-      alert("제목과 대표사진을 모두 입력하세요.")
+    if (editorContent.trim() === "") {
+      alert("내용을 입력해주세요.")
+      return
+    }
+    if (title.trim() === "") {
+      alert("제목을 입력해주세요.")
+      return
+    }
+    if (!imageSrc) {
+      alert("대표사진을 입력하세요.")
       return
     }
     if (!position) {
       alert("지도를 클릭하여 위치를 선택하세요.")
       return
     }
+
     const newArticle = {
       title: title,
       type: "LOST",
@@ -100,19 +109,20 @@ const Report = () => {
     if (imageFile) {
       formData.append("thumbnail", imageFile)
     }
-    console.log("formdata는")
-    console.dir(formData)
 
     try {
       await registArticle(formData)
-      // navigate(`/lost-and-found`)
+      alert("글이 작성되었습니다.")
+      navigate(`/lost-and-found`)
     } catch (e) {
       console.error(e)
+      alert("글 작성에 실패했습니다.")
     }
   }
 
   const resetImage = () => {
     setImageSrc(null)
+    setImageFile(null)
   }
 
   return (

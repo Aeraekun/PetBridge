@@ -1,8 +1,8 @@
 import axios from "axios"
 import axiosInstance from "./axios-instance"
 const BASE_API_URL = process.env.REACT_APP_API_URL + "/animals"
-const SERVICE_KEY = process.env.API_SERVICE_KEY
-const PUBLIC_API_URL = process.env.API_URL
+const SERVICE_KEY = process.env.REACT_APP_API_SERVICE_KEY
+const BASE_PUB_API = process.env.REACT_APP_BASE_PUB_API
 
 export const getListAnimalByUserId = async (userId) => {
   try {
@@ -26,6 +26,7 @@ export const getDetailAnimal = async (id) => {
   }
 }
 export const getAnimalList = async (searchParams) => {
+  console.log(process.env.BASE_PUB_API)
   try {
     const res = await axios.get(`${BASE_API_URL}`, {params: searchParams})
     console.log("getAnimalList" + res.data)
@@ -89,26 +90,43 @@ export const editAnimal = async (id, formData) => {
 }
 
 //동물 삭제
+// export const removeAnimal = async (id) => {
+//   try {
+//     const res = await axiosInstance.delete(`${BASE_API_URL}/${id}`)
+//     console.log("removeAnimal" + res)
+//     return res.data
+//   } catch (e) {
+//     console.error(e)
+//     return []
+//   }
+// }
+
 export const removeAnimal = async (id) => {
-  try {
-    const res = await axiosInstance.delete(`${BASE_API_URL}/${id}`)
-    console.log("removeAnimal" + res)
-    return res.data
-  } catch (e) {
-    console.error(e)
-    return []
+  if (confirm("정말 삭제하시겠습니까?")) {
+    try {
+      const res = await axiosInstance.delete(`${BASE_API_URL}/${id}`)
+      console.log("removeAnimal" + res)
+      return res.data
+    } catch (e) {
+      console.error(e)
+      return []
+    }
   }
 }
 
 export const getShelterAnimalsAPI = async (searchParams) => {
+  console.log(BASE_PUB_API)
+  console.log(SERVICE_KEY)
   const params = {
-    serviceKey: {SERVICE_KEY},
+    serviceKey: SERVICE_KEY,
     pageNo: searchParams.pageNo,
     numOfRows: searchParams.numOfRows,
     _type: "json",
     ...searchParams,
   }
-  const res = await axios.get(`${PUBLIC_API_URL}/abandonmentPublic`, {
+
+  const res = await axios.get(`${BASE_PUB_API}/abandonmentPublic`, {
+    // const res = await axios.get(`${process.env.BASE_PUB_API}/abandonmentPublic`, {
     params: params,
   })
   return res
@@ -116,31 +134,31 @@ export const getShelterAnimalsAPI = async (searchParams) => {
 
 export const getSidoAPI = async () => {
   const params = {
-    serviceKey: {SERVICE_KEY},
+    serviceKey: SERVICE_KEY,
     _type: "json",
     numOfRows: 100,
   }
-  const res = await axios.get(`${PUBLIC_API_URL}/sido`, {params: params})
+  const res = await axios.get(`${BASE_PUB_API}/sido`, {params: params})
   return res
 }
 
 export const getSigunguAPI = async (selectedSido) => {
   const params = {
-    serviceKey: {SERVICE_KEY},
+    serviceKey: SERVICE_KEY,
     _type: "json",
     upr_cd: selectedSido,
     numOfRows: 100,
   }
-  const res = await axios.get(`${PUBLIC_API_URL}/sigungu`, {params: params})
+  const res = await axios.get(`${BASE_PUB_API}/sigungu`, {params: params})
   return res
 }
 
 export const getBreedAPI = async (selectedKindCd) => {
   const params = {
-    serviceKey: {SERVICE_KEY},
+    serviceKey: SERVICE_KEY,
     _type: "json",
     up_kind_cd: selectedKindCd,
   }
-  const res = await axios.get(`${PUBLIC_API_URL}/kind`, {params: params})
+  const res = await axios.get(`${BASE_PUB_API}/kind`, {params: params})
   return res
 }
