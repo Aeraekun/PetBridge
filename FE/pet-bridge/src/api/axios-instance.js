@@ -61,10 +61,10 @@ axiosInstance.interceptors.request.use(
 
     // 액세스 토큰이 유효한 경우 - 헤더에 액세스 토큰 추가
     if (isAccessTokenValid) {
-      config.headers.Authorization = `Bearer ${accessToken}`
+      config.headers["Authorization-petbridge"] = `Bearer ${accessToken}`
       config.headers["Authorization-refresh"] = ""
     } else {
-      config.headers.Authorization = ""
+      config.headers["Authorization-petbridge"] = ""
     }
 
     // 액세스 토큰은 만료됐고 리프레시 토큰은 있는 경우 - 헤더에 리프레시 토큰 추가
@@ -90,8 +90,8 @@ axiosInstance.interceptors.response.use(
     const {headers} = res
 
     // headers에서 액세스 토큰과 리프레시 토큰을 따르 빼서 정리
-    const accessToken = headers.authorization
-    const refreshToken = headers["authorization-refresh"]
+    const accessToken = headers["Authorization-petbridge"]
+    const refreshToken = headers["Authorization-refresh"]
 
     console.groupCollapsed("JWT fetched")
     console.log(
@@ -120,7 +120,7 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config
 
     // 기존에 액세스 토큰을 안담아서 보냈다면 에러 반환
-    if (!originalRequest.headers.Authorization) {
+    if (!originalRequest.headers["Authorization-petbridge"]) {
       return Promise.reject(error)
     }
 
