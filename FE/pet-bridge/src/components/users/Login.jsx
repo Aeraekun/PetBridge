@@ -11,6 +11,7 @@ import {
 import NaverIcon from "assets/icons/icon-login-naver.png"
 import KakaoIcon from "assets/icons/icon-login-kakao.png"
 import GoogleIcon from "assets/icons/icon-login-google.svg"
+import logoImage from "assets/image/logo.png"
 
 const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL
 
@@ -43,7 +44,13 @@ const LoginForm = () => {
   }
 
   return (
-    <form className="space-y-2.5" onSubmit={handleLoginSubmit}>
+    <form
+      className="flex flex-col items-center space-y-2.5"
+      onSubmit={handleLoginSubmit}
+    >
+      <Link to="/">
+        <img src={logoImage} alt="로고" className="size-24" />
+      </Link>
       {/* 이메일 입력창 */}
       <input
         value={loginForm.email}
@@ -75,17 +82,22 @@ const LoginForm = () => {
         id="password-input"
         minLength={8}
       />
-
-      {/* 로그인 버튼 */}
-      <button
-        className="bg-yellow h-12 w-full rounded-md px-3.5 py-2.5"
-        disabled={loading}
-      >
-        {loading ? "로그인 중..." : "로그인"}
-      </button>
+      <div className="flex w-full gap-4">
+        {/* 로그인 버튼 */}
+        <button
+          className="h-12 grow rounded-md bg-yellow px-3.5 py-2.5"
+          disabled={loading}
+        >
+          {loading ? "로그인 중..." : "로그인"}
+        </button>
+        {/* 회원가입 버튼 */}
+        <Link to="/users/sign-up">
+          <Button text="회원가입" />
+        </Link>
+      </div>
 
       {/* 에러 메시지 */}
-      {!error && <p className="text-alert">{error}</p>}
+      {error && <p className="text-alert">{error}</p>}
     </form>
   )
 }
@@ -108,21 +120,9 @@ const Login = () => {
 
   return (
     <div className="flex size-[600px] flex-col place-content-center items-center rounded-lg border">
-      <div className="flex h-[385px] w-[400px] flex-col space-y-2.5">
+      <div className="flex w-[400px] flex-col space-y-2.5">
         {/* 로그인 폼 */}
         <LoginForm></LoginForm>
-        {/* ID찾기, PW찾기, 회원가입 */}
-        <div className="flex justify-between">
-          <Link to="/">
-            <Button text="ID 찾기" />
-          </Link>
-          <Link to="/">
-            <Button text="PW 찾기" />
-          </Link>
-          <Link to="/users/sign-up">
-            <Button text="회원가입" />
-          </Link>
-        </div>
 
         {/* 구분선 */}
         <div className="flex h-7 w-full flex-row items-center">
