@@ -8,7 +8,7 @@ const StateBadge = ({state}) => {
     보호중: "bg-green-200",
     "종료(반환)": "bg-blue-100",
     "종료(입양)": "bg-purple-100",
-    "종료(안락사)": "bg-black",
+    "종료(안락사)": "bg-black text-white",
     "종료(자연사)": "bg-yellow",
     "종료(기타)": "bg-gray-100",
 
@@ -32,7 +32,7 @@ const StateBadge = ({state}) => {
   const displayName = stateNames[state] || state
   return (
     <div
-      className={`absolute right-2 top-2 flex h-8 items-center justify-center rounded border border-black ${color}`}
+      className={`absolute right-2 top-2 flex h-8 items-center justify-center rounded  ${color}`}
     >
       {displayName}
     </div>
