@@ -8,6 +8,9 @@ import {
   selectIsAuthenticated,
   loginUserThunk,
 } from "features/user/users-slice"
+import NaverIcon from "assets/icons/icon-login-naver.png"
+import KakaoIcon from "assets/icons/icon-login-kakao.png"
+import GoogleIcon from "assets/icons/icon-login-google.svg"
 
 const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL
 
@@ -82,7 +85,7 @@ const LoginForm = () => {
       </button>
 
       {/* 에러 메시지 */}
-      {error && <p className="text-alert">{error}</p>}
+      {!error && <p className="text-alert">{error}</p>}
     </form>
   )
 }
@@ -129,22 +132,16 @@ const Login = () => {
         </div>
 
         {/* 소셜 로그인 */}
-        <div className="flex w-full flex-row justify-between">
-          <button
-            className="size-12 rounded-full bg-[#fee500]"
-            onClick={handleSocialLogin}
-            id="kakao"
-          >
-            카카오
+        <div className="flex w-full flex-col items-center gap-4">
+          <button onClick={handleSocialLogin} id="google">
+            <img src={GoogleIcon} alt="구글 로그인" className="w-60" />
           </button>
-          <button
-            className="size-12 rounded-full bg-[#03C75A]"
-            onClick={handleSocialLogin}
-            id="naver"
-          >
-            네이버
+          <button onClick={handleSocialLogin} id="kakao">
+            <img src={KakaoIcon} alt="카카오 로그인" className="w-60" />
           </button>
-          <div className="size-12 rounded-full bg-[#4285F4]"></div>
+          <button onClick={handleSocialLogin} id="naver">
+            <img src={NaverIcon} alt="네이버 로그인" className="w-60" />
+          </button>
         </div>
       </div>
     </div>

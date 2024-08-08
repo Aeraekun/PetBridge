@@ -15,7 +15,7 @@ const initialState = {
   email: "",
   birth: "",
   phone: "",
-  img: "",
+  image: "",
   role: "",
   isAuthenticated: false,
   loading: false,
@@ -127,7 +127,7 @@ export const usersSlice = createSlice({
       state.email = ""
       state.birth = ""
       state.phone = ""
-      state.img = ""
+      state.image = ""
       state.role = ""
       state.isAuthenticated = false
     },
@@ -140,7 +140,7 @@ export const usersSlice = createSlice({
       state.email = action.payload.email
       state.birth = action.payload.birth
       state.phone = action.payload.phone
-      state.img = action.payload.img
+      state.image = action.payload.image
       state.role = action.payload.role
       state.isAuthenticated = true
     },
@@ -165,7 +165,7 @@ export const usersSlice = createSlice({
         state.email = action.payload.email
         state.birth = action.payload.birth
         state.phone = action.payload.phone
-        state.img = action.payload.img
+        state.image = action.payload.image
         state.role = action.payload.role
         state.isAuthenticated = true
       })
@@ -204,7 +204,7 @@ export const selectNickname = (state) => state.user.nickname
 export const selectId = (state) => state.user.id
 export const selectBirth = (state) => state.user.birth
 export const selectPhone = (state) => state.user.phone
-export const selectImage = (state) => state.user.img
+export const selectImage = (state) => state.user.image
 export const selectIsAuthenticated = (state) => state.user.isAuthenticated
 export const selectIsLoadingDuplication = (state) =>
   state.user.isLoadingDuplication
