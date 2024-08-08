@@ -16,7 +16,8 @@ const APPLICATION_SERVER_URL =
 const CallPage = () => {
   // 상태 변수 선언
   const nickname = useSelector(selectNickname)
-  const [mySessionId, setMySessionId] = useState("session") // 세션 ID
+  const sessionId = "petbridge"
+  const [mySessionId, setMySessionId] = useState(sessionId) // 세션 ID
   const [myUserName, setMyUserName] = useState(nickname) // 사용자 이름
   const [session, setSession] = useState(undefined) // OpenVidu 세션
   const [mainStreamManager, setMainStreamManager] = useState(undefined) // 메인 비디오 스트림 매니저
@@ -39,7 +40,7 @@ const CallPage = () => {
   // 세션에 조인하는 함수 (페이지에 들어가자마자 세션 요청해서 들어감.)
   const InitSession = useCallback(async () => {
     setMyUserName(nickname) // 사용자 이름. 현재 로그인한 유저 닉네임으로 입장
-    setMySessionId("0") //세션 Id
+    setMySessionId(sessionId) //세션 Id
 
     OV.current = new OpenVidu() //OpenVidu 객체 생성
     OV.setLogLevel("OFF")
@@ -74,7 +75,7 @@ const CallPage = () => {
         videoSource: undefined, // 비디오 소스
         publishAudio: false, // 오디오 게시 여부
         publishVideo: false, // 비디오 게시 여부
-        resolution: "1280x720", // 비디오 해상도
+        resolution: "640x480", // 비디오 해상도
         frameRate: 30, // 비디오 프레임 속도
         insertMode: "APPEND", // 비디오 삽입 모드
         mirror: true, // 비디오 미러링 여부
@@ -116,8 +117,8 @@ const CallPage = () => {
     OV.current = null
     setSession(undefined)
     setSubscribers([])
-    setMySessionId("SessionA")
-    setMyUserName("Participant" + Math.floor(Math.random() * 100))
+    setMySessionId("null")
+    setMyUserName(nickname)
     setMainStreamManager(undefined)
     setPublisher(undefined)
   }
@@ -262,7 +263,6 @@ const CallPage = () => {
             </button>
           </div>
         </div>
-
         {mainStreamManager !== undefined ? (
           <div
             id="main-video"
