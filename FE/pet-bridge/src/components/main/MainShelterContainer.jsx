@@ -41,7 +41,7 @@ const getShelterAnimalsAPI = async (searchParams) => {
   const SERVICE_KEY = process.env.REACT_APP_API_SERVICE_KEY
   const BASE_PUB_API = process.env.REACT_APP_BASE_PUB_API
   const params = {
-    serviceKey: {SERVICE_KEY},
+    serviceKey: SERVICE_KEY,
     pageNo: searchParams.pageNo || 1,
     numOfRows: searchParams.numOfRows || 10,
     _type: "json",
