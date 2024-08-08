@@ -8,12 +8,8 @@ import site.petbridge.domain.chatmessage.dto.response.ChatMessageResponseDto;
 
 public interface ChatMessageService {
 
-	ChatMessageResponseDto registChatMessage(ChatMessageRequestDto chatMessageRequestDto);
-
-	// Optional<List<ChatMessageResponseDto>> getListChatMessage(int roomId, Pageable pageable);
+	ChatMessageResponseDto registChatMessage(ChatMessageRequestDto chatMessageRequestDto) throws Exception;
 
 	Optional<List<ChatMessageResponseDto>> getListChatMessageByRoomId(int roomId, int page, int size);
-
-	List<ChatMessageResponseDto> getListChatMessage();
 
 }
