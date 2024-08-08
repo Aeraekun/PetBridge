@@ -20,6 +20,7 @@ import site.petbridge.global.exception.ErrorCode;
 import site.petbridge.global.exception.PetBridgeException;
 import site.petbridge.util.AuthUtil;
 import site.petbridge.util.FileUtil;
+import site.petbridge.util.S3FileUtil;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final AuthUtil authUtil;
-    private final FileUtil fileUtil;
+    private final S3FileUtil fileUtil;
 
     /**
      * 게시글 등록
@@ -39,7 +40,6 @@ public class BoardServiceImpl implements BoardService {
 
         String savedThumbnailFileName = null;
         if (thumbnailFile != null) {
-            savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "boards");
             savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "images");
         }
 
@@ -98,7 +98,7 @@ public class BoardServiceImpl implements BoardService {
 
         String savedThumbnailFileName = null;
         if (thumbnailFile != null) {
-            savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "boards");
+            savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "images");
         }
 
         entity.update(boardEditRequestDto, savedThumbnailFileName);

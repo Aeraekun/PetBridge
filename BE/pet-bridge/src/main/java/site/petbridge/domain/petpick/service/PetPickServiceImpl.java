@@ -1,8 +1,9 @@
 package site.petbridge.domain.petpick.service;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,47 +12,40 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import site.petbridge.domain.animal.repository.AnimalRepository;
 import site.petbridge.domain.board.repository.BoardRepository;
 import site.petbridge.domain.follow.repository.FollowRepository;
-import site.petbridge.domain.follow.service.FollowService;
 import site.petbridge.domain.petpick.domain.PetPick;
 import site.petbridge.domain.petpick.dto.request.PetPickEditRequestDto;
 import site.petbridge.domain.petpick.dto.request.PetPickRegistRequestDto;
 import site.petbridge.domain.petpick.dto.response.PetPickResponseDto;
 import site.petbridge.domain.petpick.repository.PetPickRepository;
-import site.petbridge.domain.petpickcomment.domain.PetPickComment;
 import site.petbridge.domain.petpickcomment.dto.response.PetPickCommentResponseDto;
 import site.petbridge.domain.petpickcomment.repository.PetPickCommentRepository;
 import site.petbridge.domain.petpicklike.repository.PetPickLikeRepository;
 import site.petbridge.domain.user.domain.User;
 import site.petbridge.domain.user.dto.response.UserResponseDto;
 import site.petbridge.domain.user.repository.UserRepository;
-import site.petbridge.domain.user.service.UserService;
 import site.petbridge.global.exception.ErrorCode;
 import site.petbridge.global.exception.PetBridgeException;
-import site.petbridge.global.jwt.service.JwtService;
 import site.petbridge.global.login.userdetail.CustomUserDetail;
 import site.petbridge.util.AuthUtil;
-import site.petbridge.util.FileUtil;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import site.petbridge.util.S3FileUtil;
 
 @Service
 @RequiredArgsConstructor
 public class PetPickServiceImpl implements PetPickService {
 
     private final PetPickRepository petPickRepository;
-    private final FileUtil fileUtil;
-    private final UserService userService;
+    private final S3FileUtil fileUtil;
     private final PetPickLikeRepository petPickLikeRepository;
     private final PetPickCommentRepository petPickCommentRepository;
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
-    private final JwtService jwtService;
     private final AuthUtil authUtil;
     private final BoardRepository boardRepository;
     private final AnimalRepository animalRepository;
@@ -78,11 +72,11 @@ public class PetPickServiceImpl implements PetPickService {
         String savedVideoFileName = null;
 
         if (thumbnailFile != null) {
-            savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "petpick");
+            savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "images");
         }
 
         if (videoFile != null) {
-            savedVideoFileName = fileUtil.saveFile(videoFile, "petpick");
+            savedVideoFileName = fileUtil.saveFile(videoFile, "videos");
         }
 
         PetPick entity = petPickRegistRequestDto.toEntity(user.getId(), savedThumbnailFileName, savedVideoFileName);
@@ -255,7 +249,7 @@ public class PetPickServiceImpl implements PetPickService {
 
         String savedThumbnailFileName = null;
         if (thumbnailFile != null) {
-            savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "petpick");
+            savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "images");
         }
 
         entity.update(petPickEditRequestDto.getBoardId(),
