@@ -140,7 +140,6 @@ export const removePetPick = async (id) => {
   }
 }
 
-
 //댓글 조회
 export const getPetpickComments = async (petpickId, page, size) => {
   const params = {page: page, size: size}
