@@ -11,19 +11,21 @@ const AdminUser = ({user}) => {
   }
 
   return (
-    <tr>
-      <td>{user.email}</td>
+    <tr className="border-2">
+      <td className="h-12">{user.email}</td>
       <td>{user.nickname}</td>
       <td>{user.disabled ? <span>활성</span> : <span>비활성</span>}</td>
       <td>{user.role}</td>
-      <button
-        onClick={() =>
-          onClickDisableHandler({id: user.id, nickname: user.nickname})
-        }
-        className="bg-alertrounded-xl"
-      >
-        회원 삭제
-      </button>
+      <td>
+        <button
+          onClick={() =>
+            onClickDisableHandler({id: user.id, nickname: user.nickname})
+          }
+          className="rounded-lg p-1 outline outline-alert hover:bg-alert"
+        >
+          회원 삭제
+        </button>
+      </td>
     </tr>
   )
 }
