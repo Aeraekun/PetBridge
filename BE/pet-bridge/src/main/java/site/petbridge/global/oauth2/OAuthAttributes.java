@@ -5,6 +5,7 @@ import lombok.Getter;
 import site.petbridge.domain.user.domain.enums.Role;
 import site.petbridge.domain.user.domain.enums.SocialType;
 import site.petbridge.domain.user.domain.User;
+import site.petbridge.global.oauth2.userinfo.GoogleOAuth2UserInfo;
 import site.petbridge.global.oauth2.userinfo.KakaoOAuth2UserInfo;
 import site.petbridge.global.oauth2.userinfo.NaverOAuth2UserInfo;
 import site.petbridge.global.oauth2.userinfo.OAuth2UserInfo;
@@ -42,8 +43,15 @@ public class OAuthAttributes {
             return ofNaver(userNameAttributeName, attributes);
         }
 
-        System.out.println("카카오");
-        return ofKakao(userNameAttributeName, attributes);
+        if (socialType == SocialType.KAKAO) {
+            return ofKakao(userNameAttributeName, attributes);
+        }
+
+        if (socialType == SocialType.GOOGLE) {
+            return ofGoogle(userNameAttributeName, attributes);
+        }
+
+        return null;
     }
 
     private static OAuthAttributes ofKakao(String userNameAttributeName, Map<String, Object> attributes) {
@@ -53,17 +61,17 @@ public class OAuthAttributes {
                 .build();
     }
 
-//    public static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
-//        return OAuthAttributes.builder()
-//                .nameAttributeKey(userNameAttributeName)
-//                .oauth2UserInfo(new GoogleOAuth2UserInfo(attributes))
-//                .build();
-//    }
-
     public static OAuthAttributes ofNaver(String userNameAttributeName, Map<String, Object> attributes) {
         return OAuthAttributes.builder()
                 .nameAttributeKey(userNameAttributeName)
                 .oauth2UserInfo(new NaverOAuth2UserInfo(attributes))
+                .build();
+    }
+
+        public static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
+        return OAuthAttributes.builder()
+                .nameAttributeKey(userNameAttributeName)
+                .oauth2UserInfo(new GoogleOAuth2UserInfo(attributes))
                 .build();
     }
 

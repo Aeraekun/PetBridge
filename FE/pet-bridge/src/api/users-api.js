@@ -18,8 +18,12 @@ export const signUpUser = async (signUpData) => {
 
 // 로그인
 export const postLoginUser = (loginData) => {
-  const res = axiosInstance.post("/users/login", loginData)
-  return res
+  try {
+    const res = axiosInstance.post("/users/login", loginData)
+    return res
+  } catch (error) {
+    return error
+  }
 }
 
 // 회원 조회
