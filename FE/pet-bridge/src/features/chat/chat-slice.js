@@ -45,7 +45,7 @@ export const chatSlice = createSlice({
       state.isChatMinimized = !state.isChatMinimized
     },
     setCurrentChatId: (state, action) => {
-      state.currentChatId = action.payload
+      state.currentChatId = Number(action.payload)
     },
     setChatRoomList: (state, action) => {
       state.chatRoomInfos = action.payload
