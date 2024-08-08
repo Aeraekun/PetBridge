@@ -9,10 +9,10 @@ import site.petbridge.domain.chatroom.dto.response.ChatRoomResponseDto;
 
 public interface ChatRoomService {
 
-	Optional<List<ChatRoomResponseDto>> getListChatRoomByUserId(int userId);
+	Optional<List<ChatRoomResponseDto>> getListChatRoomByUserId(int userId) throws Exception;
 
-	int RegistOrEnterChatRoom(ChatRoomRequestDto chatRoomRequestDto);
+	int RegistOrEnterChatRoom(ChatRoomRequestDto chatRoomRequestDto) throws Exception;
 
-	void sendNewChatRoomInfo(int roomId, ChatMessageResponseDto chatMessageResponseDto);
+	void sendNewChatRoomInfo(int roomId, ChatMessageResponseDto chatMessageResponseDto) throws Exception;
 
 }

@@ -38,7 +38,7 @@ const MyPageContractsContainer = () => {
       const res = await getMyContracts(userId, page)
       let newItems = []
 
-      if (res.data) {
+      if (res.data.length > 0) {
         console.log("fetch 성공!!!", res)
         newItems = res.data
         setPage((prevPage) => prevPage + 1)
@@ -82,13 +82,13 @@ const MyPageContractsContainer = () => {
       <div className="flex w-full justify-between p-2.5 ">
         <div></div>
         <button className="text-4xl font-bold">내 입양기록</button>
-        <Link className="bg-mild rounded-xl p-2.5" to="/contracts/create">
+        <Link className="rounded-xl bg-mild p-2.5" to="/contracts/create">
           입양 보내기
         </Link>
       </div>
       {isLoading ? (
         <div className="flex size-full items-center justify-center">
-          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
+          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
           <span className="px-5 text-6xl font-bold">Loading...</span>
         </div>
       ) : (
@@ -113,7 +113,7 @@ const MyPageContractsContainer = () => {
           ))}
           {isLoadingMore ? (
             <div className="flex items-center">
-              <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
+              <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
               <span>추가 데이터를 로딩중입니다</span>
             </div>
           ) : null}

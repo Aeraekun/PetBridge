@@ -7,7 +7,7 @@ import site.petbridge.global.payment.dto.response.ReadyResponseDto;
 
 public interface KakaoPayService {
 
-    ReadyResponseDto payReady(String name, int totalPrice);
+    ReadyResponseDto payReady(int contractId, String name, int totalPrice);
 
     ApproveResponseDto payApprove(String tid, String pgToken);
 

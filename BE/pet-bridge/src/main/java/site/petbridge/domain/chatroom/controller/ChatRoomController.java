@@ -30,7 +30,7 @@ public class ChatRoomController {
 	private final ChatMessageService chatMessageService;
 
 	@GetMapping("/rooms/user/{userId}")
-	public ResponseEntity<Optional<List<ChatRoomResponseDto>>> getListChatRoomByUserId(@PathVariable int userId) {
+	public ResponseEntity<Optional<List<ChatRoomResponseDto>>> getListChatRoomByUserId(@PathVariable int userId) throws Exception {
 
 		System.out.println("getListChatRoomByUserId: " + userId);
 		Optional<List<ChatRoomResponseDto>> chatRoomResponseDtos = chatRoomService.getListChatRoomByUserId(userId);
@@ -39,7 +39,7 @@ public class ChatRoomController {
 
 	@PostMapping("/rooms")
 	public ResponseEntity<Integer> RegistOrEnterChatRoom(
-		@RequestBody ChatRoomRequestDto chatRoomRequestDto) {
+		@RequestBody ChatRoomRequestDto chatRoomRequestDto) throws Exception {
 		return ResponseEntity.status(HttpStatus.OK).body(chatRoomService.RegistOrEnterChatRoom(chatRoomRequestDto));
 	}
 

@@ -83,7 +83,7 @@ const MyPageAnimalsContainer = () => {
       </div>
       {isLoading ? (
         <div className="flex size-full items-center justify-center">
-          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
+          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
           <span className="px-5 text-6xl font-bold">Loading...</span>
         </div>
       ) : (
@@ -108,11 +108,11 @@ const MyPageAnimalsContainer = () => {
           ))}
           {isLoadingMore ? (
             <div className="flex items-center">
-              <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
+              <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
               <span>추가 데이터를 로딩중입니다</span>
             </div>
           ) : null}
-          {!isMoreRemained && <p>추가로 불러올 데이터가 없습니다.</p>}
+          {!isMoreRemained && <p>불러올 데이터가 없습니다.</p>}
         </div>
       )}
     </div>

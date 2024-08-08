@@ -15,6 +15,10 @@ import site.petbridge.domain.chatmessage.domain.ChatMessage;
 import site.petbridge.domain.chatmessage.dto.request.ChatMessageRequestDto;
 import site.petbridge.domain.chatmessage.dto.response.ChatMessageResponseDto;
 import site.petbridge.domain.chatmessage.repository.ChatMessageRepository;
+import site.petbridge.domain.user.domain.User;
+import site.petbridge.global.exception.ErrorCode;
+import site.petbridge.global.exception.PetBridgeException;
+import site.petbridge.util.AuthUtil;
 
 @Service
 @Transactional
@@ -22,9 +26,15 @@ import site.petbridge.domain.chatmessage.repository.ChatMessageRepository;
 public class ChatMessageServiceImpl implements ChatMessageService {
 
 	private final ChatMessageRepository chatMessageRepository;
+	private final AuthUtil authUtil;
 
 	@Override
-	public ChatMessageResponseDto registChatMessage(ChatMessageRequestDto chatMessageRequestDto) {
+	public ChatMessageResponseDto registChatMessage(ChatMessageRequestDto chatMessageRequestDto) throws Exception{
+		User user = authUtil.getAuthenticatedUser();
+		if(user.getId()!= chatMessageRequestDto.getSenderId()){
+			throw new PetBridgeException(ErrorCode.UNAUTHORIZED);
+		}
+
 		ChatMessage chatMessage = chatMessageRepository.save(ChatMessage.builder()
 			.roomId(chatMessageRequestDto.getRoomId())
 			.senderId(chatMessageRequestDto.getSenderId())
@@ -58,19 +68,5 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 				})));
 	}
 
-	@Override
-	public List<ChatMessageResponseDto> getListChatMessage() {
-		List<ChatMessage> chatMessages = chatMessageRepository.findAll();
-
-		return chatMessages.stream()
-			.map(chatMessage -> ChatMessageResponseDto.builder()
-				.roomId(chatMessage.getRoomId())
-				.senderId(chatMessage.getSenderId())
-				.content(chatMessage.getContent())
-				.registTime(chatMessage.getRegistTime())
-				.build()
-			)
-			.collect(Collectors.toList());
-	}
 }
 

@@ -33,7 +33,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 	private final UserRepository userRepository;
 
 	// 카카오페이 결제창 연결
-	public ReadyResponseDto payReady(String name, int totalPrice) {
+	public ReadyResponseDto payReady(int contractId, String name, int totalPrice) {
 		User user = authUtil.getAuthenticatedUser();
 
 		Map<String, String> parameters = new HashMap<>();
@@ -44,7 +44,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		parameters.put("quantity", "1");                                        // 상품 수량
 		parameters.put("total_amount", String.valueOf(totalPrice));             // 상품 총액
 		parameters.put("tax_free_amount", "0");                                 // 상품 비과세 금액
-		parameters.put("approval_url", REDIRECT_URL + "/api/payment/completed?user_id=" + user.getId()); // 결제 성공 시 URL
+		parameters.put("approval_url", REDIRECT_URL + "/api/payment/completed?contractId=" + contractId); // 결제 성공 시 URL
 		parameters.put("cancel_url", REDIRECT_URL + "/api/payment/cancel");      // 결제 취소 시 URL
 		parameters.put("fail_url", REDIRECT_URL + "/api/payment/fail");          // 결제 실패 시 URL
 
