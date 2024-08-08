@@ -1,16 +1,22 @@
 import {getUsersByNickname} from "api/users-api"
 import {setOpponentInfo} from "features/chat/chat-slice"
-import {useState, useRef, useEffect} from "react"
+import {useState, useEffect} from "react"
 import {useDispatch} from "react-redux"
 import DefaultUser150 from "assets/icons/icon-default-user-150.svg"
 
-const SearchDropDown = ({subtitle, placeholder, itemName, onDataChange}) => {
+const SearchDropDownChat = ({
+  subtitle,
+  placeholder,
+  itemName,
+  onDataChange,
+  isOpen,
+  setIsOpen,
+}) => {
   const [searchValue, setSearchValue] = useState("")
-  const [isOpen, setIsOpen] = useState(false)
-  const [position, setPosition] = useState({x: 180, y: 80})
+  const [position] = useState({x: 180, y: 80})
   const dispatch = useDispatch()
 
-  const buttonRef = useRef(null)
+  // const buttonRef = useRef(null)
   const [userDatas, setUserDatas] = useState([])
   const [userCount, setUserCounts] = useState(0)
 
@@ -46,18 +52,19 @@ const SearchDropDown = ({subtitle, placeholder, itemName, onDataChange}) => {
   }
 
   const clickHandler = () => {
-    const rect = buttonRef.current.getBoundingClientRect()
-    setPosition({x: rect.left, y: rect.bottom})
+    // const rect = buttonRef.current.getBoundingClientRect()
+    // setPosition({x: rect.left, y: rect.bottom})
     setIsOpen(!isOpen)
   }
 
   const onClickHandler = (event) => {
     // 특정 유저를 클릭했을 때, 해당 유저 아이디를 기준으로 배열에서 찾아 정보를 상태에 저장
-    const selectedSearchId = event.target.id
+    const selectedSearchId = event.currentTarget.id
     const selectedInfo = userDatas.find(
       (data) => Number(data.id) === Number(selectedSearchId)
     )
-    onDataChange(selectedSearchId)
+
+    onDataChange(selectedInfo)
 
     // const selectedInfo = userDatas[event.target.key]
     dispatch(setOpponentInfo(selectedInfo))
@@ -122,4 +129,4 @@ const SearchDropDown = ({subtitle, placeholder, itemName, onDataChange}) => {
   )
 }
 
-export default SearchDropDown
+export default SearchDropDownChat

@@ -2,35 +2,24 @@ import axiosInstance from "api/axios-instance"
 
 // 채팅방 목록 조회
 export const getChatRoomList = (userId) => {
-  const res = axiosInstance.get(`/chat/${userId}`)
-
-  // ChatRoomResponseDto
-  const example = {
-    id: "int",
-    opponentId: "int",
-    opponentImage: "string",
-    opponentNickname: "string",
-    recentMessage: "string",
-    recentTime: "datetime",
+  try {
+    const res = axiosInstance.get(`/chat/rooms/user/${userId}`)
+    return res
+  } catch (error) {
+    return error
   }
-  example
-  return res
 }
 
-// 채팅방 대화 내역 조회 - 각 채팅방
-export const getChatMessageList = (roomId) => {
-  const res = axiosInstance.get(`/chat-rooms/${roomId}`)
-
-  //   ChatMessageResponseDto
-  const example = {
-    roomId: "int",
-    senderId: "int",
-    content: "string",
-    registTime: "datetime",
+// 채팅방 대화 내역 조회 - 각 채팅방 페이징 & 사이즈
+export const getChatMessageList = async (roomId, searchParams) => {
+  try {
+    const res = await axiosInstance.get(`/chat/rooms/${roomId}`, {
+      params: searchParams,
+    })
+    return res
+  } catch (error) {
+    return error
   }
-  example
-
-  return res
 }
 
 // 메시지 전송 - 소켓
@@ -50,9 +39,13 @@ export const postChatMessage = async (ChatMessageRequestDto) => {
 
 // 채팅방 생성
 export const createChatRoom = (myId, opponentId) => {
-  const res = axiosInstance.post(`/chat-rooms`, {
-    myId: myId,
-    opponentId: opponentId,
-  })
-  return res
+  try {
+    const res = axiosInstance.post(`/chat/rooms`, {
+      myId: myId,
+      opponentId: opponentId,
+    })
+    return res
+  } catch (error) {
+    return error
+  }
 }
