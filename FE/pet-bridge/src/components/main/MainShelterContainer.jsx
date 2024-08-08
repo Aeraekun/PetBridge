@@ -38,9 +38,11 @@ ItemCard.propTypes = {
 }
 
 const getShelterAnimalsAPI = async (searchParams) => {
+  const PUBLIC_API_URL = process.env.API_URL
+  const SERVICE_KEY = process.env.API_SERVICE_KEY
+
   const params = {
-    serviceKey:
-      "w2SoV2W8SJI41W31IkRtQyPg9X2RLZ0QXU0ZQAPtwQ5Fy8ubzMDUFzzCbm4NRbK+2EKs3Fc+g/3oiBW0ftcCDw==",
+    serviceKey: {SERVICE_KEY},
     pageNo: searchParams.pageNo || 1,
     numOfRows: searchParams.numOfRows || 10,
     _type: "json",
@@ -48,10 +50,9 @@ const getShelterAnimalsAPI = async (searchParams) => {
   }
 
   try {
-    const res = await axios.get(
-      "http://apis.data.go.kr/1543061/abandonmentPublicSrvc/abandonmentPublic",
-      {params: params}
-    )
+    const res = await axios.get(`${PUBLIC_API_URL}/abandonmentPublic`, {
+      params: params,
+    })
 
     return res.data.response.body.items.item || []
   } catch (error) {
