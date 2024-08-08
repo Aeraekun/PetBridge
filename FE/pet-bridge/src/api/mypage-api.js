@@ -43,7 +43,7 @@ export const getMyAnimals = async (searchParams) => {
     size: searchParams.size,
   }
   try {
-    const res = await axiosInstance.get("/animals/user", {
+    const res = await axiosInstance.get("/animals/my", {
       params: params,
     })
     return res
