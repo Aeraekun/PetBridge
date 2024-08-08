@@ -2,6 +2,7 @@ import {useDispatch, useSelector} from "react-redux"
 import {
   getUserInfoThunk,
   logOut,
+  selectImage,
   selectNickname,
   selectRole,
 } from "features/user/users-slice"
@@ -67,6 +68,7 @@ const MyPageNavList = () => {
 const MyPageNavContainer = () => {
   // 유저 이름 초기화
   const userName = useSelector(selectNickname)
+  const userImage = useSelector(selectImage)
   const role = useSelector(selectRole)
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -94,7 +96,7 @@ const MyPageNavContainer = () => {
     <div className="flex h-full w-[300px] flex-col  items-center justify-center space-y-4 py-2.5 text-center">
       {/* 1. 유저 프로필 이미지 */}
       <img
-        src={DefaulUser150}
+        src={userImage ? userImage : DefaulUser150}
         alt="유저 이미지"
         className="size-[150px] rounded-full"
       />
