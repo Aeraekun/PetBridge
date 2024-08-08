@@ -1,8 +1,8 @@
 import axios from "axios"
 import axiosInstance from "./axios-instance"
 const BASE_API_URL = process.env.REACT_APP_API_URL + "/animals"
-const SERVICE_KEY = process.env.API_SERVICE_KEY
-const PUBLIC_API_URL = process.env.API_URL
+const SERVICE_KEY = process.env.REACT_APP_API_SERVICE_KEY
+const BASE_PUB_API = process.env.REACT_APP_BASE_PUB_API
 
 export const getListAnimalByUserId = async (userId) => {
   try {
@@ -26,6 +26,7 @@ export const getDetailAnimal = async (id) => {
   }
 }
 export const getAnimalList = async (searchParams) => {
+  console.log(process.env.BASE_PUB_API)
   try {
     const res = await axios.get(`${BASE_API_URL}`, {params: searchParams})
     console.log("getAnimalList" + res.data)
@@ -101,6 +102,7 @@ export const removeAnimal = async (id) => {
 }
 
 export const getShelterAnimalsAPI = async (searchParams) => {
+  console.log(BASE_PUB_API)
   const params = {
     serviceKey: {SERVICE_KEY},
     pageNo: searchParams.pageNo,
@@ -108,7 +110,9 @@ export const getShelterAnimalsAPI = async (searchParams) => {
     _type: "json",
     ...searchParams,
   }
-  const res = await axios.get(`${PUBLIC_API_URL}/abandonmentPublic`, {
+
+  const res = await axios.get(`${BASE_PUB_API}/abandonmentPublic`, {
+    // const res = await axios.get(`${process.env.BASE_PUB_API}/abandonmentPublic`, {
     params: params,
   })
   return res
@@ -120,7 +124,7 @@ export const getSidoAPI = async () => {
     _type: "json",
     numOfRows: 100,
   }
-  const res = await axios.get(`${PUBLIC_API_URL}/sido`, {params: params})
+  const res = await axios.get(`${BASE_PUB_API}/sido`, {params: params})
   return res
 }
 
@@ -131,7 +135,7 @@ export const getSigunguAPI = async (selectedSido) => {
     upr_cd: selectedSido,
     numOfRows: 100,
   }
-  const res = await axios.get(`${PUBLIC_API_URL}/sigungu`, {params: params})
+  const res = await axios.get(`${BASE_PUB_API}/sigungu`, {params: params})
   return res
 }
 
@@ -141,6 +145,6 @@ export const getBreedAPI = async (selectedKindCd) => {
     _type: "json",
     up_kind_cd: selectedKindCd,
   }
-  const res = await axios.get(`${PUBLIC_API_URL}/kind`, {params: params})
+  const res = await axios.get(`${BASE_PUB_API}/kind`, {params: params})
   return res
 }
