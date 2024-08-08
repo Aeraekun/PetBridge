@@ -10,7 +10,8 @@ import {selectNickname} from "features/user/users-slice"
 import axiosInstance from "api/axios-instance"
 
 // 애플리케이션 서버 URL 설정
-const APPLICATION_SERVER_URL = "http://localhost:8080/"
+const BASE_API_URL = process.env.REACT_APP_API_URL
+const APPLICATION_SERVER_URL = BASE_API_URL
 // process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/"
 
 const CallPage = () => {
@@ -29,7 +30,7 @@ const CallPage = () => {
 
   useEffect(() => {
     //페이지 접속하자마자 세션 요청
-    InitSession()
+    JoinSession()
 
     // 컴포넌트가 언마운트 될 때 세션을 종료
     return () => {
@@ -38,7 +39,7 @@ const CallPage = () => {
   }, [])
 
   // 세션에 조인하는 함수 (페이지에 들어가자마자 세션 요청해서 들어감.)
-  const InitSession = useCallback(async () => {
+  const JoinSession = useCallback(async () => {
     setMyUserName(nickname) // 사용자 이름. 현재 로그인한 유저 닉네임으로 입장
     setMySessionId(sessionId) //세션 Id
 
@@ -72,8 +73,8 @@ const CallPage = () => {
       const publisher = await OV.current.initPublisherAsync(undefined, {
         audioSource: undefined, // 오디오 소스
         videoSource: undefined, // 비디오 소스
-        publishAudio: false, // 오디오 게시 여부
-        publishVideo: false, // 비디오 게시 여부
+        publishAudio: true, // 오디오 게시 여부
+        publishVideo: true, // 비디오 게시 여부
         resolution: "640x480", // 비디오 해상도
         frameRate: 30, // 비디오 프레임 속도
         insertMode: "APPEND", // 비디오 삽입 모드
@@ -181,7 +182,7 @@ const CallPage = () => {
   // 세션 생성
   const createSession = async (sessionId) => {
     const response = await axiosInstance.post(
-      `${APPLICATION_SERVER_URL}api/sessions`,
+      `${APPLICATION_SERVER_URL}/sessions`,
       {customSessionId: sessionId},
       {
         headers: {"Content-Type": "application/json"},
@@ -193,7 +194,7 @@ const CallPage = () => {
   // 토큰 생성
   const createToken = async (sessionId) => {
     const response = await axiosInstance.post(
-      `${APPLICATION_SERVER_URL}api/sessions/${sessionId}/connections`,
+      `${APPLICATION_SERVER_URL}/sessions/${sessionId}/connections`,
       {},
       {
         headers: {"Content-Type": "application/json"},
@@ -203,7 +204,7 @@ const CallPage = () => {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-gray-100 p-4">
+    <div className="flex flex-col bg-gray-100 p-4">
       {session === undefined ? (
         <div
           id="join"
@@ -211,9 +212,9 @@ const CallPage = () => {
         >
           <div id="join-dialog" className="rounded-lg bg-white p-8 shadow-lg">
             <button
-              className="mt-4 rounded-lg bg-green-500 px-4 py-2 text-white "
+              className="mt-4 rounded-lg bg-green-500  text-white "
               type="submit"
-              onClick={InitSession}
+              onClick={JoinSession}
             >
               JOIN
             </button>
@@ -224,8 +225,8 @@ const CallPage = () => {
           id="join"
           className="flex flex-1 flex-col items-center justify-center"
         >
-          <div id="join-dialog" className="rounded-lg bg-white p-8 shadow-lg">
-            <div className=" mt-4 rounded-lg px-4 py-2">참여중</div>
+          <div id="join-dialog" className="rounded-lg bg-white shadow-lg">
+            <div className=" mt-4 rounded-lg">참여중</div>
           </div>
         </div>
       )}
