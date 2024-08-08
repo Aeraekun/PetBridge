@@ -20,7 +20,7 @@ public class ChatMessageController {
 
 	@MessageMapping("/api/chat/messages")
 	public void registChatMessage(
-		ChatMessageRequestDto chatMessageRequestDto) {
+		ChatMessageRequestDto chatMessageRequestDto) throws Exception {
 
 		int roomId = chatMessageRequestDto.getRoomId();
 		chatMessageRequestDto.setRoomId(roomId);
