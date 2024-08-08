@@ -4,14 +4,14 @@
 
 import React, {useState, useEffect, useCallback, useRef} from "react"
 import {OpenVidu} from "openvidu-browser"
-import axios from "axios"
 import UserVideoComponent from "./UserVideoComponent"
 import {useSelector} from "react-redux"
 import {selectNickname} from "features/user/users-slice"
+import axiosInstance from "api/axios-instance"
 
 // 애플리케이션 서버 URL 설정
-const APPLICATION_SERVER_URL =
-  process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/"
+const APPLICATION_SERVER_URL = "http://localhost:8080/"
+// process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/"
 
 const CallPage = () => {
   // 상태 변수 선언
@@ -43,7 +43,6 @@ const CallPage = () => {
     setMySessionId(sessionId) //세션 Id
 
     OV.current = new OpenVidu() //OpenVidu 객체 생성
-    OV.setLogLevel("OFF")
     // OV.current.setAdvancedConfiguration({logLevel: "OFF"}) //로그 비활성화
     const mySession = OV.current.initSession() //세션생성
     setSession(mySession)
@@ -181,7 +180,7 @@ const CallPage = () => {
 
   // 세션 생성
   const createSession = async (sessionId) => {
-    const response = await axios.post(
+    const response = await axiosInstance.post(
       `${APPLICATION_SERVER_URL}api/sessions`,
       {customSessionId: sessionId},
       {
@@ -193,7 +192,7 @@ const CallPage = () => {
 
   // 토큰 생성
   const createToken = async (sessionId) => {
-    const response = await axios.post(
+    const response = await axiosInstance.post(
       `${APPLICATION_SERVER_URL}api/sessions/${sessionId}/connections`,
       {},
       {
