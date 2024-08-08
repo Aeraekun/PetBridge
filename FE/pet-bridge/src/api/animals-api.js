@@ -1,6 +1,8 @@
 import axios from "axios"
 import axiosInstance from "./axios-instance"
 const BASE_API_URL = process.env.REACT_APP_API_URL + "/animals"
+const SERVICE_KEY = process.env.API_SERVICE_KEY
+const PUBLIC_API_URL = process.env.API_URL
 
 export const getListAnimalByUserId = async (userId) => {
   try {
@@ -57,7 +59,7 @@ export const getAnimalList = async (searchParams) => {
 //동물 등록
 export const registAnimal = async (formData) => {
   try {
-    const res = await axiosInstance.post(`/animals`, formData, {
+    const res = await axiosInstance.post(`${BASE_API_URL}/animals`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -100,63 +102,45 @@ export const removeAnimal = async (id) => {
 
 export const getShelterAnimalsAPI = async (searchParams) => {
   const params = {
-    serviceKey:
-      // "g5vQ++oXb4/6B8IvamxV9Vzg1V9U880MIrl02T7y3P9aAeVTHujkgA3wbTaMxcfyyJpmN8nNJBOmF/M21ApXlw==",
-      "w2SoV2W8SJI41W31IkRtQyPg9X2RLZ0QXU0ZQAPtwQ5Fy8ubzMDUFzzCbm4NRbK+2EKs3Fc+g/3oiBW0ftcCDw==",
+    serviceKey: {SERVICE_KEY},
     pageNo: searchParams.pageNo,
     numOfRows: searchParams.numOfRows,
     _type: "json",
     ...searchParams,
   }
-
-  const res = await axios.get(
-    "http://apis.data.go.kr/1543061/abandonmentPublicSrvc/abandonmentPublic",
-    {params: params}
-  )
-
+  const res = await axios.get(`${PUBLIC_API_URL}/abandonmentPublic`, {
+    params: params,
+  })
   return res
 }
 
 export const getSidoAPI = async () => {
   const params = {
-    serviceKey:
-      "w2SoV2W8SJI41W31IkRtQyPg9X2RLZ0QXU0ZQAPtwQ5Fy8ubzMDUFzzCbm4NRbK+2EKs3Fc+g/3oiBW0ftcCDw==",
+    serviceKey: {SERVICE_KEY},
     _type: "json",
     numOfRows: 100,
   }
-  const res = await axios.get(
-    `http://apis.data.go.kr/1543061/abandonmentPublicSrvc/sido`,
-    {params: params}
-  )
+  const res = await axios.get(`${PUBLIC_API_URL}/sido`, {params: params})
   return res
 }
 
 export const getSigunguAPI = async (selectedSido) => {
   const params = {
-    serviceKey:
-      "w2SoV2W8SJI41W31IkRtQyPg9X2RLZ0QXU0ZQAPtwQ5Fy8ubzMDUFzzCbm4NRbK+2EKs3Fc+g/3oiBW0ftcCDw==",
+    serviceKey: {SERVICE_KEY},
     _type: "json",
     upr_cd: selectedSido,
     numOfRows: 100,
   }
-  const res = await axios.get(
-    `http://apis.data.go.kr/1543061/abandonmentPublicSrvc/sigungu`,
-    {params: params}
-  )
+  const res = await axios.get(`${PUBLIC_API_URL}/sigungu`, {params: params})
   return res
 }
 
 export const getBreedAPI = async (selectedKindCd) => {
-  console.log("se", selectedKindCd)
   const params = {
-    serviceKey:
-      "w2SoV2W8SJI41W31IkRtQyPg9X2RLZ0QXU0ZQAPtwQ5Fy8ubzMDUFzzCbm4NRbK+2EKs3Fc+g/3oiBW0ftcCDw==",
+    serviceKey: {SERVICE_KEY},
     _type: "json",
     up_kind_cd: selectedKindCd,
   }
-  const res = await axios.get(
-    `http://apis.data.go.kr/1543061/abandonmentPublicSrvc/kind`,
-    {params: params}
-  )
+  const res = await axios.get(`${PUBLIC_API_URL}/kind`, {params: params})
   return res
 }
