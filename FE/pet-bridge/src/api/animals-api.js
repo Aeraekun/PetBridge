@@ -90,14 +90,27 @@ export const editAnimal = async (id, formData) => {
 }
 
 //동물 삭제
+// export const removeAnimal = async (id) => {
+//   try {
+//     const res = await axiosInstance.delete(`${BASE_API_URL}/${id}`)
+//     console.log("removeAnimal" + res)
+//     return res.data
+//   } catch (e) {
+//     console.error(e)
+//     return []
+//   }
+// }
+
 export const removeAnimal = async (id) => {
-  try {
-    const res = await axiosInstance.delete(`${BASE_API_URL}/${id}`)
-    console.log("removeAnimal" + res)
-    return res.data
-  } catch (e) {
-    console.error(e)
-    return []
+  if (confirm("정말 삭제하시겠습니까?")) {
+    try {
+      const res = await axiosInstance.delete(`${BASE_API_URL}/${id}`)
+      console.log("removeAnimal" + res)
+      return res.data
+    } catch (e) {
+      console.error(e)
+      return []
+    }
   }
 }
 

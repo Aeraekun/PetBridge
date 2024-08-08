@@ -21,22 +21,29 @@ function Kakao() {
             parseFloat(item.lon)
           ),
           content: `
-            <div style="position: relative; padding:5px; border:5px solid #fcd5ce; border-radius:10px; background-color: white; display: flex;">
-              <img src="${item.thumbnail}" alt="${item.title}" style="width: 50px; height: 50px; margin-right: 10px; object-fit: cover; border-radius: 5px;">
-              <div>
-                <p style="margin: 0; font-weight: bold;">${item.title}</p>
-                <a href="/communities/details/${item.id}" style="
-                  display: inline-block;
-                  margin-top: 5px;
-                  color: #fcd5ce;
-                  text-decoration: none;
-                  border: 1px solid #fcd5ce;
-                  border-radius: 3px;
-                  padding: 3px 8px;
-                  background-color: white;
-                ">자세히 보기</a>
-              </div>
-            </div>
+        <div style="position: relative; width: max-content; padding: 10px; border: 2px solid #fcd5ce; border-radius: 10px; background-color: white; text-align: center; display: flex; flex-direction: column; align-items: center;">
+          <img src="${item.thumbnail}" alt="${item.title}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 5px;">
+          <p style="margin: 10px 0 5px 0; font-weight: bold;">${item.title}</p>
+          <div style="display: flex; align-items: center; justify-content: center;">
+            <a href="/app/communities/details/${item.id}" style="
+              display: inline-block;
+              margin-top: 5px;
+              color: #fcd5ce;
+              text-decoration: none;
+              border: 1px solid #fcd5ce;
+              border-radius: 3px;
+              padding: 3px 8px;
+              background-color: white;
+            ">자세히 보기</a>
+            <button style="
+              margin-left: 10px;
+              background-color: transparent;
+              border: none;
+              font-size: 20px;
+              cursor: pointer;
+            ">&times;</button>
+          </div>
+        </div>
           `,
           image: markerImg,
         }))
