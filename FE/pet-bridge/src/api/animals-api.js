@@ -103,8 +103,9 @@ export const removeAnimal = async (id) => {
 
 export const getShelterAnimalsAPI = async (searchParams) => {
   console.log(BASE_PUB_API)
+  console.log(SERVICE_KEY)
   const params = {
-    serviceKey: {SERVICE_KEY},
+    serviceKey: SERVICE_KEY,
     pageNo: searchParams.pageNo,
     numOfRows: searchParams.numOfRows,
     _type: "json",
@@ -120,7 +121,7 @@ export const getShelterAnimalsAPI = async (searchParams) => {
 
 export const getSidoAPI = async () => {
   const params = {
-    serviceKey: {SERVICE_KEY},
+    serviceKey: SERVICE_KEY,
     _type: "json",
     numOfRows: 100,
   }
@@ -130,7 +131,7 @@ export const getSidoAPI = async () => {
 
 export const getSigunguAPI = async (selectedSido) => {
   const params = {
-    serviceKey: {SERVICE_KEY},
+    serviceKey: SERVICE_KEY,
     _type: "json",
     upr_cd: selectedSido,
     numOfRows: 100,
@@ -141,7 +142,7 @@ export const getSigunguAPI = async (selectedSido) => {
 
 export const getBreedAPI = async (selectedKindCd) => {
   const params = {
-    serviceKey: {SERVICE_KEY},
+    serviceKey: SERVICE_KEY,
     _type: "json",
     up_kind_cd: selectedKindCd,
   }
