@@ -13,4 +13,6 @@ public interface ChatRoomService {
 
 	int RegistOrEnterChatRoom(ChatRoomRequestDto chatRoomRequestDto);
 
+	void sendNewChatRoomInfo(int roomId, ChatMessageResponseDto chatMessageResponseDto);
+
 }
