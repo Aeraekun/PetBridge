@@ -115,7 +115,6 @@ export const editBoardComment = async (boardId, boardComment) => {
 }
 
 //댓글 삭제
-
 export const removeBoardComment = async (id) => {
   try {
     alert("댓글 삭제")

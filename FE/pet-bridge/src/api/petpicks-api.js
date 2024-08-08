@@ -1,6 +1,6 @@
 import axios from "axios"
-
 import axiosInstance from "./axios-instance"
+
 const PETPICK_API_URL = process.env.REACT_APP_API_URL + "/petpicks"
 const PETPICK_COMMENTS_API_URL =
   process.env.REACT_APP_API_URL + "/petpick-comments"
