@@ -9,6 +9,8 @@ import {
   loginUserThunk,
 } from "features/user/users-slice"
 
+const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL
+
 const LoginForm = () => {
   const [loginForm, setLoginForm] = useState({
     email: "",
@@ -87,7 +89,7 @@ const LoginForm = () => {
 
 const Login = () => {
   // 소셜 로그인 URL
-  const SOCIAL_BASE_URL = "http://localhost:8080/oauth2/authorization/"
+  const SOCIAL_BASE_URL = REACT_APP_SERVER_URL + "/oauth2/authorization/"
 
   // 소셜 로그인 클릭시 호출 함수
   const handleSocialLogin = (e) => {
