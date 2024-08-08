@@ -149,15 +149,19 @@ const AnimalBoardList = () => {
         </button>
       </div>
       <ul className="flex w-full flex-wrap justify-between">
-        {animals.map((item, index) => (
-          <li key={index}>
-            <AnimalItem
-              data={item}
-              onSelectAnimal={() => goAnimalDetail(item)}
-              isShelter={false}
-            />
-          </li>
-        ))}
+        {animals ? (
+          animals.map((item, index) => (
+            <li key={index}>
+              <AnimalItem
+                data={item}
+                onSelectAnimal={() => goAnimalDetail(item)}
+                isShelter={false}
+              />
+            </li>
+          ))
+        ) : (
+          <div>등록된 동물이 없습니다.</div>
+        )}
       </ul>
       <Pagination
         currentPage={currentPage}
