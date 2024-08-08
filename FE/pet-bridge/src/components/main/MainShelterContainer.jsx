@@ -38,9 +38,8 @@ ItemCard.propTypes = {
 }
 
 const getShelterAnimalsAPI = async (searchParams) => {
-  const PUBLIC_API_URL = process.env.API_URL
-  const SERVICE_KEY = process.env.API_SERVICE_KEY
-
+  const SERVICE_KEY = process.env.REACT_APP_API_SERVICE_KEY
+  const BASE_PUB_API = process.env.REACT_APP_BASE_PUB_API
   const params = {
     serviceKey: {SERVICE_KEY},
     pageNo: searchParams.pageNo || 1,
@@ -50,7 +49,7 @@ const getShelterAnimalsAPI = async (searchParams) => {
   }
 
   try {
-    const res = await axios.get(`${PUBLIC_API_URL}/abandonmentPublic`, {
+    const res = await axios.get(`${BASE_PUB_API}/abandonmentPublic`, {
       params: params,
     })
 
