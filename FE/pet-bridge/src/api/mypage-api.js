@@ -104,3 +104,13 @@ export const getMyContracts = async (userId, page) => {
     return error
   }
 }
+
+// 신고 목록 조회
+export const getResportList = async (searchParams) => {
+  try {
+    const res = await axiosInstance.get("/reports", {params: searchParams})
+    return res
+  } catch (error) {
+    return error
+  }
+}
