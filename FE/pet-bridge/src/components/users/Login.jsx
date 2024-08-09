@@ -13,7 +13,7 @@ import KakaoIcon from "assets/icons/icon-login-kakao.png"
 import GoogleIcon from "assets/icons/icon-login-google.svg"
 import logoImage from "assets/image/logo.png"
 
-const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL
 
 const LoginForm = () => {
   const [loginForm, setLoginForm] = useState({
@@ -104,7 +104,7 @@ const LoginForm = () => {
 
 const Login = () => {
   // 소셜 로그인 URL
-  const SOCIAL_BASE_URL = REACT_APP_SERVER_URL + "/oauth2/authorization/"
+  const SOCIAL_BASE_URL = REACT_APP_API_URL + "/oauth2/authorization/"
 
   // 소셜 로그인 클릭시 호출 함수
   const handleSocialLogin = (e) => {
