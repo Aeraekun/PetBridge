@@ -106,7 +106,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.PATCH, "/api/contract-checks/{id}").permitAll()
 
 				// 채팅
-				.requestMatchers(HttpMethod.GET,"/api/ws/**").permitAll()
+				.requestMatchers(HttpMethod.GET,"/api/chatting/**").permitAll()
 				.requestMatchers(HttpMethod.POST,"/api/ws/**").permitAll()
 				.requestMatchers(HttpMethod.GET,"/api/ws/chat/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/chat/rooms/user/{userId}").permitAll()
