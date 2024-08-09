@@ -143,7 +143,6 @@ const {kakao} = window
 
 function Kakao() {
   const [filteredMarkers, setFilteredMarkers] = useState([])
-  const [currentOverlay, setCurrentOverlay] = useState(null) // 현재 활성화된 오버레이 상태 관리
 
   useEffect(() => {
     getArticle()
@@ -257,24 +256,22 @@ function Kakao() {
       })
 
       kakao.maps.event.addListener(marker, "click", function () {
-        // 현재 열려 있는 오버레이가 있다면 제거
-        if (currentOverlay) {
-          currentOverlay.setMap(null)
-        }
-
+        // 기존 오버레이를 닫지 않음
         // 새 오버레이 표시
-        customOverlay.setMap(map)
-        setCurrentOverlay(customOverlay)
+        if (customOverlay.getMap()) {
+          customOverlay.setMap(null) // 이미 오버레이가 맵에 있으면 닫기
+        } else {
+          customOverlay.setMap(map) // 오버레이가 맵에 없으면 열기
+        }
 
         // 닫기 버튼 클릭 이벤트 핸들러
         const closeButton = customOverlay
           .getContent()
           .querySelector(".close-btn")
         if (closeButton) {
-          closeButton.addEventListener("click", () => {
-            customOverlay.setMap(null)
-            setCurrentOverlay(null)
-          })
+          closeButton.onclick = () => {
+            customOverlay.setMap(null) // 오버레이 닫기
+          }
         }
       })
     })
@@ -282,7 +279,7 @@ function Kakao() {
     return () => {
       markers.forEach((marker) => marker.setMap(null)) // 마커 제거하는 정리 함수
     }
-  }, [filteredMarkers, currentOverlay]) // filteredMarkers 또는 currentOverlay 변경 시 마커 업데이트
+  }, [filteredMarkers]) // filteredMarkers 변경 시 마커 업데이트
 
   return (
     <div className="p-4">
