@@ -33,7 +33,7 @@ function Kakao() {
               <img src="${item.thumbnail}" alt="${item.title}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 5px;">
               <p style="margin: 10px 0 5px 0; font-weight: bold;">${item.title}</p>
               <div style="display: flex; align-items: center; justify-content: center;">
-                <a href="/communities/details/${item.id}" style="
+                <a href="https://i11b106.p.ssafy.io/communities/details/${item.id}" style="
                   display: inline-block;
                   margin-top: 5px;
                   color: #fcd5ce;
