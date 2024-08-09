@@ -9,6 +9,8 @@ import SockJS from "sockjs-client"
 import {Stomp} from "@stomp/stompjs"
 import {getChatMessageList} from "api/chat-api"
 import {useInView} from "react-intersection-observer"
+import SendIcon from "assets/icons/icon-send-message.svg"
+import CallIcon from "assets/icons/icon-call-facetime.svg"
 
 const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL
 
@@ -222,17 +224,19 @@ const ChatMainContainer = () => {
             onChange={changeHandler}
             onKeyDown={keyDownHandler}
             type="text"
-            className="grow rounded-xl bg-stroke p-2 text-white"
+            className="bg-stroke grow rounded-xl p-2 text-white"
             placeholder="입력하세요"
             id="message-input"
           />
           <button
             onClick={sendHandler}
-            className="size-12 rounded-full border-2"
+            className="flex size-12 items-center justify-center rounded-full border-2"
           >
-            전송
+            <img src={SendIcon} alt="" className="size-12" />
           </button>
-          <button className="size-12 rounded-full border-2">화상</button>
+          <button className="flex size-12 items-center justify-center rounded-full border-2 ">
+            <img src={CallIcon} alt="" className="size-12" />
+          </button>
         </div>
       </div>
     </>
