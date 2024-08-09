@@ -74,6 +74,7 @@ public class SecurityConfig {
 
 				// 소셜 로그인
 				.requestMatchers(HttpMethod.GET, "/users/social/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/oauth2/authorization/**").permitAll()
 
 				// 인증
 				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email").permitAll()
