@@ -1,9 +1,12 @@
-import {getArticle, removeArticle} from "api/boards-api"
+import {removeArticle} from "api/boards-api"
 import Button from "components/common/Button"
 import {useEffect, useState} from "react"
 import {useInView} from "react-intersection-observer"
 import {Link, useNavigate} from "react-router-dom"
 import MyPageCard from "./MyPageCard"
+import {useSelector} from "react-redux"
+import {selectNickname} from "features/user/users-slice"
+import {getMyArticles} from "api/mypage-api"
 
 const MyPageArtilcesContainer = () => {
   // isLoading true로 설정해두고, 화면 초기 로드 완료시 false로 변경 후 스크롤 페이지 렌더링
@@ -13,35 +16,50 @@ const MyPageArtilcesContainer = () => {
   const [items, setItems] = useState([])
   const [page, setPage] = useState(0)
 
+  const nickname = useSelector(selectNickname)
+
   // API 요청을 보내기 위한 파라미터
-  const [searchParams, setSearchParams] = useState({size: 12, page: 0})
+  const [searchParams, setSearchParams] = useState({
+    size: 12,
+    page: 0,
+    nickname: nickname,
+  })
 
   // 초기값 로딩
   useEffect(() => {
-    const fetchInitData = async () => {
-      const newItems = await fetchData()
-      // 데이터 로드 성공시 (응답 배열에 데이터가 있다면)
-      if (newItems && newItems.length > 0) {
-        // 로딩상태 해제, 새로 받아온 값을 배열에 추가
-        setIsLoading(false)
-        setItems((prevItems) => [...prevItems, ...newItems])
-
-        console.log("items!!!", items)
-      }
+    if (nickname) {
+      setSearchParams((prevSearchParams) => ({
+        ...prevSearchParams,
+        nickname: nickname,
+      }))
+      fetchInitData()
     }
-
-    fetchInitData()
   }, [])
+
+  // 초기값 로딩
+  const fetchInitData = async () => {
+    const newItems = await fetchData()
+    // 데이터 로드 성공시 (응답 배열에 데이터가 있다면)
+    if (newItems && newItems.length > 0) {
+      // 로딩상태 해제, 새로 받아온 값을 배열에 추가
+      setIsLoading(false)
+      setItems((prevItems) => [...prevItems, ...newItems])
+
+      console.log("items!!!", items)
+    }
+  }
 
   // 내가 작성한 글들을 호출
   const fetchData = async () => {
     try {
-      const res = await getArticle(searchParams)
+      const res = await getMyArticles(searchParams)
       let newItems = []
 
-      if (res.data) {
-        console.log("데이터 추가!!!", res.data)
-        newItems = res.data
+      console.log("res: ", res)
+
+      if (res.data.content) {
+        console.log("데이터 추가!!!", res.data.content)
+        newItems = res.data.content
         setPage((prevPageNo) => prevPageNo + 1)
         return newItems
       } else {
@@ -69,14 +87,14 @@ const MyPageArtilcesContainer = () => {
     }
 
     // inView 값이 true가 됐을 때,
-    if (inView) {
+    if (inView && !isMoreRemained) {
       setIsLoadingMore(true)
       fetchMoreData()
     }
   }, [inView])
 
   useEffect(() => {
-    setSearchParams({...searchParams, page: page})
+    setSearchParams((prevSearchParams) => ({...prevSearchParams, page: page}))
   }, [page])
 
   const navigate = useNavigate()
@@ -91,7 +109,7 @@ const MyPageArtilcesContainer = () => {
       <div className="flex w-full justify-center p-2.5 ">
         <button className="text-4xl font-bold">내가 쓴 글</button>
         <Link
-          className=" fixed right-3 top-3 rounded-xl bg-mild p-2.5"
+          className=" bg-mild fixed right-3 top-3 rounded-xl p-2.5"
           to="/communities/write"
         >
           글 작성하기
@@ -100,7 +118,7 @@ const MyPageArtilcesContainer = () => {
       <div className="">클릭하면 수정가능합니다.</div>
       {isLoading ? (
         <div className="flex size-full items-center justify-center">
-          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
           <span className="px-5 text-6xl font-bold">Loading...</span>
         </div>
       ) : (
@@ -142,7 +160,7 @@ const MyPageArtilcesContainer = () => {
 
           {isLoadingMore ? (
             <div className="flex items-center">
-              <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+              <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
               <span>추가 데이터를 로딩중입니다</span>
             </div>
           ) : null}
