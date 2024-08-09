@@ -1,49 +1,174 @@
-// import data from "./articledata"
-import SirenButton from "components/common/SirenButton"
-import Button from "components/common/Button"
+// // import data from "./articledata"
+// import SirenButton from "components/common/SirenButton"
+// import Button from "components/common/Button"
+// import {useSelector} from "react-redux"
+// import {useNavigate, useParams} from "react-router-dom"
+// import {getArticleDetail, removeArticle} from "api/boards-api"
+// import React, {useEffect, useState} from "react"
+// import {selectId} from "features/user/users-slice"
+// import DOMPurify from "dompurify"
+// import Profile from "components/common/Profile"
+// import ArticleComments from "./ArticleComments"
+// import CommentIcon from "components/common/CommentIcon"
+
+// const ArticleDetail = () => {
+//   const [article, setArticle] = useState([])
+//   const {id} = useParams()
+//   const navigate = useNavigate()
+//   const sanitizedContent = DOMPurify.sanitize(article.content) //Quill안정성 높이기 위함
+//   const currentUserId = useSelector(selectId)
+
+//   useEffect(() => {
+//     const fetchArticle = async () => {
+//       const data = await getArticleDetail(Number(id)) //게시글 상세 조회 api
+//       setArticle(data)
+//       console.log(data)
+//     }
+//     fetchArticle()
+//   }, []) // 빈 배열을 두 번째 인자로 전달하여 마운트 시 한 번만 실행
+
+//   const goBack = () => {
+//     navigate(-1)
+//   }
+//   const goModifyArticle = () => {
+//     navigate(`/communities/modify/${id}`)
+//   }
+
+//   const goRemoveArticle = async (id) => {
+//     //게시글 삭제 api 함수 호출
+//     try {
+//       await removeArticle(id)
+
+//       navigate(-1)
+//     } catch (e) {
+//       console.error(e)
+//     }
+//   }
+//   return (
+//     <div className="rounded-xl border p-4">
+//       <button onClick={goBack} className="flex justify-start">
+//         돌아가기
+//       </button>
+//       <div className="text-center text-4xl font-bold">{article.title}</div>
+//       <hr />
+//       <Profile nickname={article.userNickname} image={article.userImage} />
+//       <div className="flex flex-row space-x-2 pl-6">
+//         <img src="/icons/icon-tag.svg" alt="Tag Icon" />
+//         <Profile
+//           nickname={article.animalName}
+//           image={article.animalThumbnail}
+//         />
+//       </div>
+//       <hr />
+//       대표사진
+//       {article.thumbnail ? (
+//         <div className="mt-4">
+//           <img
+//             src={article.thumbnail}
+//             alt="Uploaded Preview"
+//             className="ml-[100px] size-96 rounded border object-contain"
+//           />
+//         </div>
+//       ) : (
+//         <div className="flex h-64 w-96 flex-col items-center justify-center border border-gray-300 px-4 py-2">
+//           <>대표사진이 없습니다</>
+//         </div>
+//       )}
+//       <div
+//         className=" mx-auto min-h-72 w-[800px]"
+//         dangerouslySetInnerHTML={{__html: sanitizedContent}}
+//       ></div>
+//       <div className="flex justify-end">
+//         {Number(currentUserId) === Number(article.userId) ? (
+//           <div className="flex  space-x-3">
+//             <Button text={"수정하기"} onClick={goModifyArticle} />
+//             <Button
+//               text={"삭제하기"}
+//               onClick={() => {
+//                 goRemoveArticle(id)
+//               }}
+//             />
+//           </div>
+//         ) : (
+//           <div className="flex">
+//             <SirenButton />
+//           </div>
+//         )}
+//       </div>
+//       <hr />
+//       <div className="m-3 flex items-center space-x-2">
+//         <CommentIcon size={"small"} />
+//         <div>댓글 {article.commentCount}</div>
+//       </div>
+//       <div className="px-8">
+//         <ArticleComments articleId={id} currentUserId={currentUserId} />
+//       </div>
+//     </div>
+//   )
+// }
+
+// export default ArticleDetail
+
+import React, {useState, useEffect} from "react"
 import {useSelector} from "react-redux"
 import {useNavigate, useParams} from "react-router-dom"
-import {getArticleDetail, removeArticle} from "api/boards-api"
-import React, {useEffect, useState} from "react"
-import {selectId} from "features/user/users-slice"
 import DOMPurify from "dompurify"
+import {selectId} from "features/user/users-slice"
+import {getArticleDetail, removeArticle} from "api/boards-api"
 import Profile from "components/common/Profile"
 import ArticleComments from "./ArticleComments"
 import CommentIcon from "components/common/CommentIcon"
+import Button from "components/common/Button"
+import SirenButton from "components/common/SirenButton"
+import DeleteConfirmationModal from "components/common/DeleteConfirmationModal"
 
 const ArticleDetail = () => {
   const [article, setArticle] = useState([])
+  const [isModalOpen, setIsModalOpen] = useState(false) // 모달 상태 관리
   const {id} = useParams()
   const navigate = useNavigate()
-  const sanitizedContent = DOMPurify.sanitize(article.content) //Quill안정성 높이기 위함
+  const sanitizedContent = DOMPurify.sanitize(article.content) // Quill 안정성 높이기
   const currentUserId = useSelector(selectId)
 
   useEffect(() => {
     const fetchArticle = async () => {
-      const data = await getArticleDetail(Number(id)) //게시글 상세 조회 api
+      const data = await getArticleDetail(Number(id)) // 게시글 상세 조회
       setArticle(data)
       console.log(data)
     }
     fetchArticle()
-  }, []) // 빈 배열을 두 번째 인자로 전달하여 마운트 시 한 번만 실행
+  }, [id]) // `id`가 변경될 때마다 다시 호출
 
   const goBack = () => {
     navigate(-1)
   }
+
   const goModifyArticle = () => {
     navigate(`/communities/modify/${id}`)
   }
 
-  const goRemoveArticle = async (id) => {
-    //게시글 삭제 api 함수 호출
+  const goRemoveArticle = async () => {
     try {
       await removeArticle(id)
-
       navigate(-1)
     } catch (e) {
       console.error(e)
     }
   }
+
+  const handleDeleteClick = () => {
+    setIsModalOpen(true)
+  }
+
+  const handleConfirmDelete = () => {
+    goRemoveArticle()
+    setIsModalOpen(false)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+  }
+
   return (
     <div className="rounded-xl border p-4">
       <button onClick={goBack} className="flex justify-start">
@@ -75,19 +200,14 @@ const ArticleDetail = () => {
         </div>
       )}
       <div
-        className=" mx-auto min-h-72 w-[800px]"
+        className="mx-auto min-h-72 w-[800px]"
         dangerouslySetInnerHTML={{__html: sanitizedContent}}
       ></div>
       <div className="flex justify-end">
         {Number(currentUserId) === Number(article.userId) ? (
-          <div className="flex  space-x-3">
+          <div className="flex space-x-3">
             <Button text={"수정하기"} onClick={goModifyArticle} />
-            <Button
-              text={"삭제하기"}
-              onClick={() => {
-                goRemoveArticle(id)
-              }}
-            />
+            <Button text={"삭제하기"} onClick={handleDeleteClick} />
           </div>
         ) : (
           <div className="flex">
@@ -103,6 +223,12 @@ const ArticleDetail = () => {
       <div className="px-8">
         <ArticleComments articleId={id} currentUserId={currentUserId} />
       </div>
+      {/* 삭제 확인 모달 */}
+      <DeleteConfirmationModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   )
 }
