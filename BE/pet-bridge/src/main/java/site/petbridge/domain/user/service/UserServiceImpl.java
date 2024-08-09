@@ -159,7 +159,8 @@ public class UserServiceImpl implements UserService {
 		User entity = authUtil.getAuthenticatedUser();
 
 		// 닉네임 중복시 409 CONFLICT
-		if (userRepository.findByNicknameAndDisabledFalse(userEditRequestDto.getNickname()).isPresent()) {
+		Optional<User> existingUser = userRepository.findByNicknameAndDisabledFalse(userEditRequestDto.getNickname());
+		if (existingUser.isPresent() && existingUser.get().getId() != (entity.getId())) {
 			throw new PetBridgeException(ErrorCode.CONFLICT);
 		}
 
