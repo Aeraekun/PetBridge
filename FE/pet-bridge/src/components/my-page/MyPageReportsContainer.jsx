@@ -52,8 +52,9 @@ const MyPageReportsContainer = () => {
             <th className="w-[100px]">유저</th>
             <th className="w-[100px]">대상 유형</th>
             <th className="w-[200px]">사유</th>
-            <th className="w-[100px]">내용</th>
+            <th className="w-[100px]">처리 여부</th>
             <th className="w-[100px]">회원 삭제</th>
+            <th className="w-[100px]">신고 처리</th>
           </tr>
         </thead>
         <tbody>
