@@ -170,8 +170,25 @@ public class UserServiceImpl implements UserService {
 			savedImageFileName = fileUtil.saveFile(imageFile, "images");
 		}
 
-		entity.update(userEditRequestDto, savedImageFileName);
-		entity.passwordEncode(passwordEncoder);
+		// null에 따라 회원정보 수정
+		if (userEditRequestDto.getNickname() == null) {
+			throw new PetBridgeException(ErrorCode.BAD_REQUEST);
+		} else {
+			entity.setNickname(userEditRequestDto.getNickname());
+		}
+		if (userEditRequestDto.getPassword() != null) {
+			entity.setPassword(passwordEncoder.encode(userEditRequestDto.getPassword()));
+		}
+		if (userEditRequestDto.getBirth() != null) {
+			entity.setBirth(userEditRequestDto.getBirth());
+		}
+		if (userEditRequestDto.getPhone() != null) {
+			entity.setPhone(userEditRequestDto.getPhone());
+		}
+		if (savedImageFileName != null) {
+			entity.setImage(savedImageFileName);
+		}
+
 		userRepository.save(entity);
 	}
 
