@@ -232,10 +232,10 @@ const ChatMainContainer = () => {
             onClick={sendHandler}
             className="flex size-12 items-center justify-center rounded-full border-2"
           >
-            <img src={SendIcon} alt="" className="size-12" />
+            <img src={SendIcon} alt="전송" className="size-12" />
           </button>
           <button className="flex size-12 items-center justify-center rounded-full border-2 ">
-            <img src={CallIcon} alt="" className="size-12" />
+            <img src={CallIcon} alt="화상" className="size-12" />
           </button>
         </div>
       </div>
