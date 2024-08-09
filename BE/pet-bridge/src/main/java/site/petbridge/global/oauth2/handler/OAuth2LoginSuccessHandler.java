@@ -26,8 +26,8 @@ import java.io.IOException;
 @Transactional
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-    @Value("${redirectURL}")
-    private static String REDIRECT_URL;
+//    @Value("${redirectURL}")
+    private static String REDIRECT_URL = "https://i11b106.p.ssafy.io";
     private final JwtService jwtService;
     private static final String GUEST_URI = REDIRECT_URL + "/users/social/update";
     private static final String USER_URI = REDIRECT_URL + "/users/social/success";
