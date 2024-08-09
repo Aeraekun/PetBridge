@@ -123,6 +123,10 @@ function Kakao() {
         // 기존 오버레이를 닫기
         if (currentOverlay) {
           currentOverlay.setMap(null)
+          if (currentOverlay === customOverlay) {
+            setCurrentOverlay(null)
+            return
+          }
         }
 
         // 새 오버레이 표시
@@ -135,10 +139,8 @@ function Kakao() {
           .querySelector(".close-btn")
         if (closeButton) {
           closeButton.onclick = () => {
-            setTimeout(() => {
-              customOverlay.setMap(null) // 오버레이 닫기
-              setCurrentOverlay(null) // 현재 오버레이 상태 초기화
-            }, 50) // 약간의 지연을 주어 이벤트 충돌 방지
+            customOverlay.setMap(null) // 오버레이 닫기
+            setCurrentOverlay(null) // 현재 오버레이 상태 초기화
           }
         }
       })
