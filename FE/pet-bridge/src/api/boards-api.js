@@ -63,29 +63,15 @@ export const editArticle = async (id, formData) => {
 }
 
 //게시글 삭제
-// export const removeArticle = async (articleId) => {
-//   try {
-//     const res = await axiosInstance.delete(`${BOARD_API_URL}/${articleId}`)
-//     console.log("removeBoard" + res)
-//     alert("삭제 되었습니다.")
-//     return res.data
-//   } catch (e) {
-//     console.error(e)
-//     return []
-//   }
-// }
-
 export const removeArticle = async (articleId) => {
-  if (confirm("정말 삭제하시겠습니까?")) {
-    try {
-      const res = await axiosInstance.delete(`${BOARD_API_URL}/${articleId}`)
-      console.log("removeBoard" + res)
-      alert("삭제 되었습니다.")
-      return res.data
-    } catch (e) {
-      console.error(e)
-      return []
-    }
+  try {
+    const res = await axiosInstance.delete(`${BOARD_API_URL}/${articleId}`)
+    console.log("removeBoard" + res)
+    alert("삭제 되었습니다.")
+    return res.data
+  } catch (e) {
+    console.error(e)
+    return []
   }
 }
 
@@ -129,28 +115,14 @@ export const editBoardComment = async (boardId, boardComment) => {
 }
 
 //댓글 삭제
-// export const removeBoardComment = async (id) => {
-//   try {
-//     alert("댓글 삭제")
-//     const res = await axiosInstance.delete(`${BOARD_COMMENTS_API_URL}/${id}`)
-//     console.log("removeBoardComment" + res)
-//     return res.data
-//   } catch (e) {
-//     console.error(e)
-//     return []
-//   }
-// }
-
 export const removeBoardComment = async (id) => {
-  if (confirm("정말 삭제하시겠습니까?")) {
-    try {
-      alert("댓글 삭제")
-      const res = await axiosInstance.delete(`${BOARD_COMMENTS_API_URL}/${id}`)
-      console.log("removeBoardComment" + res)
-      return res.data
-    } catch (e) {
-      console.error(e)
-      return []
-    }
+  try {
+    alert("댓글 삭제")
+    const res = await axiosInstance.delete(`${BOARD_COMMENTS_API_URL}/${id}`)
+    console.log("removeBoardComment" + res)
+    return res.data
+  } catch (e) {
+    console.error(e)
+    return []
   }
 }

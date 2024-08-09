@@ -135,10 +135,9 @@
 // }
 
 // export default Kakao
-
 import React, {useEffect, useState} from "react"
 import markerImg from "../../assets/image/marker.png"
-import {getArticle} from "api/boards-api"
+import {getArticle} from "../../api/boards-api"
 
 const {kakao} = window
 
@@ -150,16 +149,17 @@ function Kakao() {
       .then((response) => {
         console.log(response) // 전체 데이터 객체를 확인
 
-        // 게시물 데이터가 포함된 속성을 확인하고 접근
-        const articles = response.articles || []
+        // response.content 배열에서 게시물 데이터에 접근
+        const articles = response.content || []
 
         // "LOST" 타입만 필터링
-        const lostArticles = articles.filter((item) => item.type === "LOST")
+        const lostArticles = articles.filter(
+          (item) => item.boardType === "LOST"
+        )
 
         // 마커 데이터 생성
         const markers = lostArticles.map((item) => ({
           id: item.id,
-          type: "LOST",
           position: new kakao.maps.LatLng(
             parseFloat(item.lat),
             parseFloat(item.lon)
