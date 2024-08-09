@@ -107,6 +107,7 @@ public class SecurityConfig {
 
 				// 채팅
 				.requestMatchers(HttpMethod.GET,"/ws/**").permitAll()
+				.requestMatchers(HttpMethod.POST,"/ws/**").permitAll()
 				.requestMatchers(HttpMethod.GET,"/ws/chat/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/chat/rooms/user/{userId}").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/chat/rooms/{roomId}").permitAll()
