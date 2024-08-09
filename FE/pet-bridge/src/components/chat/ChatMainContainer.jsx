@@ -120,7 +120,7 @@ const ChatMainContainer = () => {
       }
       console.log(sendingMessage)
       stompClient.current.send(
-        `/ws/api/chat/messages`,
+        `/api/chatting/messages`,
         {},
         JSON.stringify(sendingMessage)
       )
