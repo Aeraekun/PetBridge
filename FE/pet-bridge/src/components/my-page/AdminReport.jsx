@@ -27,21 +27,28 @@ const AdminReport = ({report}) => {
       <td>{report.userId}</td>
       <td>{report.reportType}</td>
       <td>{report.reason}</td>
+      <td>{report.confirmed}</td>
       <td>
         <button
           onClick={() => onClickDisableHandler(report.userId)}
-          className="rounded-lg p-1 outline outline-alert hover:bg-alert"
+          className="outline-alert hover:bg-alert rounded-lg p-1 outline"
         >
           회원 삭제
         </button>
       </td>
       <td>
-        <button
-          onClick={() => onClickPatchHandler(report.id)}
-          className="rounded-lg p-1 outline outline-alert hover:bg-alert"
-        >
-          신고 처리
-        </button>
+        {report.confirmed ? (
+          <button disabled={true} className="bg-stroke rounded-lg p-1">
+            처리 완료
+          </button>
+        ) : (
+          <button
+            onClick={() => onClickPatchHandler(report.id)}
+            className="outline-alert hover:bg-alert rounded-lg p-1 outline"
+          >
+            신고 처리
+          </button>
+        )}
       </td>
     </tr>
   )
