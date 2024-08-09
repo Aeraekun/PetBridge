@@ -61,15 +61,15 @@ axiosInstance.interceptors.request.use(
 
     // 액세스 토큰이 유효한 경우 - 헤더에 액세스 토큰 추가
     if (isAccessTokenValid) {
-      config.headers["authorization-petbridge"] = `Bearer ${accessToken}`
-      config.headers["authorization-refresh"] = ""
+      config.headers["Authorization-petbridge"] = `Bearer ${accessToken}`
+      config.headers["Authorization-refresh"] = ""
     } else {
-      config.headers["authorization-petbridge"] = ""
+      config.headers["Authorization-petbridge"] = ""
     }
 
     // 액세스 토큰은 만료됐고 리프레시 토큰은 있는 경우 - 헤더에 리프레시 토큰 추가
     if (!isAccessTokenValid && refreshToken) {
-      config.headers["authorization-refresh"] = `Bearer ${refreshToken}`
+      config.headers["Authorization-refresh"] = `Bearer ${refreshToken}`
     }
 
     return config
@@ -120,7 +120,7 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config
 
     // 기존에 액세스 토큰을 안담아서 보냈다면 에러 반환
-    if (!originalRequest.headers["authorization-petbridge"]) {
+    if (!originalRequest.headers["Authorization-petbridge"]) {
       return Promise.reject(error)
     }
 
@@ -135,7 +135,7 @@ axiosInstance.interceptors.response.use(
 
       // 리프레시 토큰과 유저 아이디가 있으면
       if (refreshToken && id) {
-        originalRequest.headers["authorization-refresh"] =
+        originalRequest.headers["Authorization-refresh"] =
           `Bearer ${refreshToken}`
         originalRequest.headers["user-id"] = id
 
