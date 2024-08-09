@@ -50,6 +50,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation 'io.github.pendula95:logback-mattermost-appender:1.1.0'
 
 	// openvidu
 	implementation 'org.springframework.boot:spring-boot-starter-web'
