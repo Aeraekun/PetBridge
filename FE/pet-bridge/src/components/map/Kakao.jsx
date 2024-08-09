@@ -33,7 +33,7 @@ function Kakao() {
               <img src="${item.thumbnail}" alt="${item.title}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 5px;">
               <p style="margin: 10px 0 5px 0; font-weight: bold;">${item.title}</p>
               <div style="display: flex; align-items: center; justify-content: center;">
-                <a href="/communities/details/${item.id}" style="
+                <a href="https://i11b106.p.ssafy.io/communities/details/${item.id}" style="
                   display: inline-block;
                   margin-top: 5px;
                   color: #fcd5ce;
@@ -123,6 +123,10 @@ function Kakao() {
         // 기존 오버레이를 닫기
         if (currentOverlay) {
           currentOverlay.setMap(null)
+          if (currentOverlay === customOverlay) {
+            setCurrentOverlay(null)
+            return
+          }
         }
 
         // 새 오버레이 표시
@@ -135,10 +139,8 @@ function Kakao() {
           .querySelector(".close-btn")
         if (closeButton) {
           closeButton.onclick = () => {
-            setTimeout(() => {
-              customOverlay.setMap(null) // 오버레이 닫기
-              setCurrentOverlay(null) // 현재 오버레이 상태 초기화
-            }, 50) // 약간의 지연을 주어 이벤트 충돌 방지
+            customOverlay.setMap(null) // 오버레이 닫기
+            setCurrentOverlay(null) // 현재 오버레이 상태 초기화
           }
         }
       })
