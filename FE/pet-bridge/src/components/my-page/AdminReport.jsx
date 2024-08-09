@@ -23,14 +23,14 @@ const AdminReport = ({report}) => {
   }
 
   return (
-    <tr>
+    <tr className="border-2">
       <td>{report.userId}</td>
       <td>{report.reportType}</td>
       <td>{report.reason}</td>
       <td>
         <button
           onClick={() => onClickDisableHandler(report.userId)}
-          className="rounded-xl p-2.5 outline outline-alert"
+          className="rounded-lg p-1 outline outline-alert hover:bg-alert"
         >
           회원 삭제
         </button>
@@ -38,7 +38,7 @@ const AdminReport = ({report}) => {
       <td>
         <button
           onClick={() => onClickPatchHandler(report.id)}
-          className="rounded-xl p-2.5 outline outline-alert"
+          className="rounded-lg p-1 outline outline-alert hover:bg-alert"
         >
           신고 처리
         </button>

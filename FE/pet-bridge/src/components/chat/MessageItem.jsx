@@ -1,10 +1,11 @@
 const MessageItem = ({isMyMessage, content, registTime}) => {
-  const timeHMS = registTime.slice(11)
+  const timeHMS = registTime.slice(11, 19)
   // 내가 보낸 메세지와, 상대가 보낸 메세지를 구분 (isMyMessage)
   return (
-    <div className={`flex space-x-2 ${isMyMessage && "flex-row-reverse"}`}>
+    <div className={`my-1 flex space-x-2`}>
+      {isMyMessage && <div className="grow"></div>}
       <div
-        className={`max-w-xs rounded-2xl bg-mild p-3 ${isMyMessage && "bg-yellow"}`}
+        className={`max-w-xs rounded-2xl bg-mild p-3 ${isMyMessage && "order-last bg-yellow"}`}
       >
         {content}
       </div>

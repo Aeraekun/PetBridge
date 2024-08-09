@@ -1,88 +1,155 @@
-import {getUserContracts} from "api/contracts-api"
-import {useEffect, useRef, useState} from "react"
+import {getArticle, removeArticle} from "api/boards-api"
+import Button from "components/common/Button"
+import {useEffect, useState} from "react"
 import {useInView} from "react-intersection-observer"
-import {useParams} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
+import MyPageCard from "./MyPageCard"
 
 const MyPageArtilcesContainer = () => {
-  const {userId} = useParams()
-
-  // 초기에 api 요청이 완료되기 전 로딩 현황
+  // isLoading true로 설정해두고, 화면 초기 로드 완료시 false로 변경 후 스크롤 페이지 렌더링
   const [isLoading, setIsLoading] = useState(true)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const [isMoreRemained, setIsMoreRemaind] = useState(true)
+  const [items, setItems] = useState([])
+  const [page, setPage] = useState(0)
 
-  // 게시글 초기값 선언
-  const [allArticles, setAllArticles] = useState([])
-  const [viewArticles, setViewArticles] = useState([])
-  const rootRef = useRef(null)
+  // API 요청을 보내기 위한 파라미터
+  const [searchParams, setSearchParams] = useState({size: 12, page: 0})
 
-  // inView 사용
-  // ref: observer가 지켜 볼 객체를 선정
-  // inView: view 상태 (Boolean)
-  const {ref, inView} = useInView({
-    root: rootRef.current,
-    rootMargin: "0px 0px",
-  })
-
-  // 컴포넌트 처음 마운트시, 백엔드에 API 요청을 보내서 유저 관련 모든 정보를 받아와서 페이지 상태에 저장한다.
+  // 초기값 로딩
   useEffect(() => {
-    const loadInitialArticles = async () => {
-      const res = await getUserContracts(userId)
+    const fetchInitData = async () => {
+      const newItems = await fetchData()
+      // 데이터 로드 성공시 (응답 배열에 데이터가 있다면)
+      if (newItems && newItems.length > 0) {
+        // 로딩상태 해제, 새로 받아온 값을 배열에 추가
+        setIsLoading(false)
+        setItems((prevItems) => [...prevItems, ...newItems])
 
-      setAllArticles(res.data)
-      setViewArticles(res.data.slice(0, 10))
-      setIsLoading(false)
+        console.log("items!!!", items)
+      }
     }
-    loadInitialArticles()
+
+    fetchInitData()
   }, [])
 
-  // ref 객체를 화면에서 감지했을 때, inView 값이 true로 변경된다.
-  // 해당 이벤트 발생시 allArticles에 남아 있는 게시글들을 viewArticles에 추가 (10개씩)
-  useEffect(() => {
-    if (inView && viewArticles.length < allArticles.length) {
-      const nextArticles = allArticles.slice(
-        viewArticles.length,
-        viewArticles.length + 10
-      )
-      setViewArticles((prevArticles) => [...prevArticles, ...nextArticles])
+  // 내가 작성한 글들을 호출
+  const fetchData = async () => {
+    try {
+      const res = await getArticle(searchParams)
+      let newItems = []
+
+      if (res.data) {
+        console.log("데이터 추가!!!", res.data)
+        newItems = res.data
+        setPage((prevPageNo) => prevPageNo + 1)
+        return newItems
+      } else {
+        setIsLoading(false)
+        setIsMoreRemaind(false)
+      }
+    } catch (error) {
+      alert("추가 데이터 로드에 실패했습니다.")
+      console.log(error)
     }
-  }, [inView, allArticles, viewArticles.length])
+  }
+
+  // 현재 화면에서 ref 객체를 탐지하기 위한 inView 사용
+  const {ref, inView} = useInView({})
+
+  // inView 값이 변함을 탐지
+  useEffect(() => {
+    const fetchMoreData = async () => {
+      const newItems = await fetchData()
+      // 데이터 로드 성공시 (응답 배열에 데이터가 있다면)
+      if (newItems && newItems.length > 0) {
+        setIsLoadingMore(false)
+        setItems((prevItems) => [...prevItems, ...newItems])
+      }
+    }
+
+    // inView 값이 true가 됐을 때,
+    if (inView) {
+      setIsLoadingMore(true)
+      fetchMoreData()
+    }
+  }, [inView])
+
+  useEffect(() => {
+    setSearchParams({...searchParams, page: page})
+  }, [page])
+
+  const navigate = useNavigate()
+
+  const handleClick = (item) => {
+    console.log(item)
+    navigate(`/communities/modify/${item.id}`, {state: {item}})
+  }
 
   return (
     <div className="flex h-full flex-col items-center">
-      <div className="p-2.5 text-4xl font-bold">내 게시글</div>
-      <div
-        ref={rootRef}
-        className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth"
-      >
-        {isLoading ? (
-          <div>로딩중입니다</div>
-        ) : (
-          // 이미지 기준으로 반복
-          viewArticles.map((article, index) => (
+      <div className="flex w-full justify-center p-2.5 ">
+        <button className="text-4xl font-bold">내가 쓴 글</button>
+        <Link
+          className=" fixed right-3 top-3 rounded-xl bg-mild p-2.5"
+          to="/communities/write"
+        >
+          글 작성하기
+        </Link>
+      </div>
+      <div className="">클릭하면 수정가능합니다.</div>
+      {isLoading ? (
+        <div className="flex size-full items-center justify-center">
+          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+          <span className="px-5 text-6xl font-bold">Loading...</span>
+        </div>
+      ) : (
+        <div className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
+          {items.map((item, index) => (
             <div
               key={index}
-              // ref 값이 화면에 들어왔을 때 api가 요청됨
-              ref={index === viewArticles.length - 1 ? ref : null}
-              className="m-2.5 h-[450px] w-[300px] snap-center rounded-xl border"
+              className="relative m-2.5 "
+              // 화면에 들어오는지 확인할 객체를 선택하기 위한 ref 설정 : 배열의 마지막 값
+              ref={index === items.length - 1 ? ref : null}
             >
-              <img
-                src={`/data/petBridge/uploads/animal/${article.animalImage}`}
-                alt={article.animalName}
-                className="h-[300px] rounded-t-xl"
+              <MyPageCard
+                id={item.id}
+                imageSrc={item.thumbnail}
+                imageAlt={item.title}
+                content1={item.title}
+                content2={item.registTime.split("T")[0]}
+                content3={item.content}
+                onClick={() => {
+                  // handleClick(item)
+                }}
               />
-              <div className="space-y-2.5 p-2.5">
-                <p>{article.animalName}</p>
-                <p>계약일 : {article.contractDate} 번</p>
-                {article.contractorId === Number(userId) ? (
-                  <span>입양자 : </span>
-                ) : (
-                  <span>보호자 : </span>
-                )}
-                <span>{article.contracteeNickname}</span>
+              <div className="absolute bottom-16 right-1 flex flex-col">
+                <Button
+                  text={"삭제하기"}
+                  onClick={() => {
+                    removeArticle(item.id)
+                  }}
+                />
+                <Button
+                  text={"수정하기"}
+                  onClick={() => {
+                    handleClick(item.id)
+                  }}
+                />
               </div>
             </div>
-          ))
-        )}
-      </div>
+          ))}
+
+          {isLoadingMore ? (
+            <div className="flex items-center">
+              <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+              <span>추가 데이터를 로딩중입니다</span>
+            </div>
+          ) : null}
+
+          {!isMoreRemained && <p>불러올 데이터가 없습니다.</p>}
+        </div>
+      )}
     </div>
   )
 }

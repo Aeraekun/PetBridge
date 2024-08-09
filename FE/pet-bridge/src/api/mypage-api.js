@@ -43,7 +43,7 @@ export const getMyAnimals = async (searchParams) => {
     size: searchParams.size,
   }
   try {
-    const res = await axiosInstance.get("/animals/user", {
+    const res = await axiosInstance.get("/animals/my", {
       params: params,
     })
     return res
@@ -101,6 +101,16 @@ export const getMyContracts = async (userId, page) => {
     return res
   } catch (error) {
     console.log(error)
+    return error
+  }
+}
+
+// 신고 목록 조회
+export const getResportList = async (searchParams) => {
+  try {
+    const res = await axiosInstance.get("/reports", {params: searchParams})
+    return res
+  } catch (error) {
     return error
   }
 }

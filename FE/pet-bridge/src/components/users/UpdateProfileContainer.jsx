@@ -1,17 +1,16 @@
 import {patchUserInfo} from "api/users-api"
 import DefaultUser150 from "assets/icons/icon-default-user-150.svg"
 import {
+  getUserInfoThunk,
   selectBirth,
   selectId,
   selectImage,
   selectNickname,
   selectPhone,
-  setUserInfos,
 } from "features/user/users-slice"
 import {useState} from "react"
 import {useDispatch, useSelector} from "react-redux"
 import {Link, useNavigate} from "react-router-dom"
-import {setUserInfosAtSession} from "utils/user-utils"
 import {
   validateBirth,
   validateNickname,
@@ -133,12 +132,11 @@ const UpdateProfileContainer = () => {
 
       // patch 비동기 요청
       try {
-        const res = await patchUserInfo(formData)
+        await patchUserInfo(formData)
         navigate(`/users/${userId}`)
-        console.log(res)
 
-        setUserInfosAtSession(res.data)
-        dispatch(setUserInfos(res.data))
+        dispatch(getUserInfoThunk())
+
         return
       } catch (error) {
         console.log("patch 실패 에러", error)

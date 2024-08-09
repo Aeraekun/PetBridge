@@ -15,7 +15,7 @@ const initialState = {
   email: "",
   birth: "",
   phone: "",
-  img: "",
+  image: "",
   role: "",
   isAuthenticated: false,
   loading: false,
@@ -33,22 +33,21 @@ export const loginUserThunk = createAsyncThunk(
   // async - await 문법으로 프로미스 객체 활용
   async (loginData, {rejectWithValue, dispatch}) => {
     console.log("usersApi.ks => loginUser => console.log(loginData)", loginData)
+    try {
+      const res = await postLoginUser(loginData)
 
-    const res = await postLoginUser(loginData)
-
-    // 응답을 200번으로 받지 못한다면, 에러 반환
-    if (res.status !== 200) {
+      // 로그인에 성공하며 바로 유저 정보를 받아온다.
+      console.log("loginUserThunk fulfilled")
+      dispatch(getUserInfoThunk())
+      return res.data
+    } catch (error) {
+      // 응답을 200번으로 받지 못한다면, 에러 반환
       console.log(
         "usersApi.ks => loginUser => catch => console.log(error)",
-        res
+        error
       )
       return rejectWithValue("로그인 실패. 아이디와 비밀번호를 확인해주세요.")
     }
-
-    // 로그인에 성공하며 바로 유저 정보를 받아온다.
-    console.log("loginUserThunk fulfilled")
-    dispatch(getUserInfoThunk())
-    return res.data
   }
 )
 
@@ -128,7 +127,7 @@ export const usersSlice = createSlice({
       state.email = ""
       state.birth = ""
       state.phone = ""
-      state.img = ""
+      state.image = ""
       state.role = ""
       state.isAuthenticated = false
     },
@@ -141,7 +140,7 @@ export const usersSlice = createSlice({
       state.email = action.payload.email
       state.birth = action.payload.birth
       state.phone = action.payload.phone
-      state.img = action.payload.img
+      state.image = action.payload.image
       state.role = action.payload.role
       state.isAuthenticated = true
     },
@@ -166,7 +165,7 @@ export const usersSlice = createSlice({
         state.email = action.payload.email
         state.birth = action.payload.birth
         state.phone = action.payload.phone
-        state.img = action.payload.img
+        state.image = action.payload.image
         state.role = action.payload.role
         state.isAuthenticated = true
       })
@@ -205,7 +204,7 @@ export const selectNickname = (state) => state.user.nickname
 export const selectId = (state) => state.user.id
 export const selectBirth = (state) => state.user.birth
 export const selectPhone = (state) => state.user.phone
-export const selectImage = (state) => state.user.img
+export const selectImage = (state) => state.user.image
 export const selectIsAuthenticated = (state) => state.user.isAuthenticated
 export const selectIsLoadingDuplication = (state) =>
   state.user.isLoadingDuplication

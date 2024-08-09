@@ -295,13 +295,17 @@ const SignUp = () => {
       email: signUpFormData.email,
       code: Number(confirmNumbers.emailConfirm),
     }
-    const res = await postEmailCheck(emailConfirmData)
+    try {
+      const res = await postEmailCheck(emailConfirmData)
 
-    if (res?.status === 200) {
-      setIsEmailVerified(true)
-    } else {
-      console.log(res)
-      alert("잘못된 인증번호입니다. 다시 확인해주세요.")
+      if (res?.status === 200) {
+        setIsEmailVerified(true)
+      } else {
+        console.log(res)
+        alert("잘못된 인증번호입니다. 다시 확인해주세요.")
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -311,13 +315,19 @@ const SignUp = () => {
       phone: signUpFormData.phone,
       code: Number(confirmNumbers.phoneConfirm),
     }
-    const res = await postPhoneCheck(phoneConfirmData)
-    console.log("postPhoneCheck", res)
-    if (res?.status === 200) {
-      setIsPhoneVerified(true)
-    } else {
-      console.log(res)
-      alert("잘못된 인증번호입니다. 다시 확인해주세요.")
+    try {
+      const res = await postPhoneCheck(phoneConfirmData)
+      console.log("postPhoneCheck", res)
+      if (res?.status === 200) {
+        setIsPhoneVerified(true)
+        errors.phoneConfirm = ""
+      } else {
+        console.log(res)
+        alert("잘못된 인증번호입니다. 다시 입력해주세요.")
+      }
+    } catch (error) {
+      console.log(error)
+      errors.phoneConfirm = "인증 오류. 다시 시도해주세요."
     }
   }
 
@@ -487,7 +497,9 @@ const SignUp = () => {
             </span>
           )}
           {isValidNickname ? (
-            <span className="text-green-500">사용 가능한 닉네임입니다.</span>
+            <span className="px-2.5 text-green-500">
+              사용 가능한 닉네임입니다.
+            </span>
           ) : null}
           {/* 전화번호 입력 창 */}
           <div className="grid w-full grid-cols-12 items-center gap-x-2.5">
@@ -558,6 +570,11 @@ const SignUp = () => {
           {!isValidPhone && (
             <span className="text-alert col-span-12 px-2.5">
               {errors.phone}
+            </span>
+          )}
+          {errors.phoneConfirm && (
+            <span className="text-alert col-span-12 px-2.5">
+              {errors.phoneConfirm}
             </span>
           )}
           {isPhoneVerified && (
