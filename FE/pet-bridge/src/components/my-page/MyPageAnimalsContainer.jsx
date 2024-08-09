@@ -11,7 +11,7 @@ const MyPageAnimalsContainer = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [isMoreRemained, setIsMoreRemaind] = useState(true)
   const [items, setItems] = useState([])
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
 
   // API 요청을 보내기 위한 파라미터
   const [searchParams, setSearchParams] = useState({size: 12, page: 1})

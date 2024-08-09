@@ -32,7 +32,7 @@ const Popover = ({list, children, type, onSelectAnimal, onVisible}) => {
     <div className="relative inline-block">
       <button onClick={togglePopover}>{children}</button>
       {visible && (
-        <div className="absolute left-0 top-10 z-50 mb-2 h-fit w-96 rounded-lg bg-white text-sm  shadow-lg">
+        <ul className="absolute left-0 top-10 z-50 mb-2 h-fit w-96 rounded-lg bg-white text-sm  shadow-lg">
           <li>
             <button
               className="mx-4 h-12 bg-gray-300 text-lg  "
@@ -46,15 +46,15 @@ const Popover = ({list, children, type, onSelectAnimal, onVisible}) => {
               {type === "animal" ? (
                 <AnimalProfile
                   data={item}
-                  isSelected={selectedAnimalId === item.user_id}
-                  onSelect={() => handleAnimalSelect(item.user_id)}
+                  isSelected={selectedAnimalId === item.id}
+                  onSelect={() => handleAnimalSelect(item.id)}
                 />
               ) : (
                 <TaggedArticleItem data={item} />
               )}
             </li>
           ))}
-        </div>
+        </ul>
       )}
     </div>
   )
