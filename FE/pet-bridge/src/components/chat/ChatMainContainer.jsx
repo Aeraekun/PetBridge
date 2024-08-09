@@ -12,7 +12,7 @@ import {useInView} from "react-intersection-observer"
 
 const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL
 
-const ChatMainContainer = () => {
+const ChatMainContainer = ({onStartCall}) => {
   const [chatMessageRequestDto, setChatMessageRequestDto] = useState({
     roomId: null,
     senderId: null,
@@ -127,6 +127,12 @@ const ChatMainContainer = () => {
     }
   }
 
+  // 화상채팅으로 바꿔줌.
+  // const callHandler = () => {
+  //   console.log("화상")
+  //   onStartCall
+  // }
+
   // 추가 메세지 로드
   const getChatMessages = async (roomId) => {
     console.log("get Chat Messages 호출")
@@ -223,7 +229,7 @@ const ChatMainContainer = () => {
             onChange={changeHandler}
             onKeyDown={keyDownHandler}
             type="text"
-            className="bg-stroke grow rounded-xl p-2 text-white"
+            className="grow rounded-xl bg-stroke p-2 text-white"
             placeholder="입력하세요"
             id="message-input"
           />
@@ -233,7 +239,12 @@ const ChatMainContainer = () => {
           >
             전송
           </button>
-          <button className="size-12 rounded-full border-2">화상</button>
+          <button
+            className="size-12 rounded-full border-2"
+            onClick={onStartCall}
+          >
+            화상
+          </button>
         </div>
       </div>
     </>
