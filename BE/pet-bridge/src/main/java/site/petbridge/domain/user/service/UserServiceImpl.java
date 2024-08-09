@@ -42,6 +42,7 @@ import site.petbridge.global.login.userdetail.CustomUserDetail;
 import site.petbridge.global.redis.service.RedisService;
 import site.petbridge.util.AuthUtil;
 import site.petbridge.util.FileUtil;
+import site.petbridge.util.S3FileUtil;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
-	private final FileUtil fileUtil;
+	private final S3FileUtil fileUtil;
 	private final AuthUtil authUtil;
 
 	private final JavaMailSender javaMailSender;
@@ -166,7 +167,7 @@ public class UserServiceImpl implements UserService {
 
 		String savedImageFileName = null;
 		if (imageFile != null) {
-			savedImageFileName = fileUtil.saveFile(imageFile, "users");
+			savedImageFileName = fileUtil.saveFile(imageFile, "images");
 		}
 
 		entity.update(userEditRequestDto, savedImageFileName);
