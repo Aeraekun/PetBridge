@@ -1,7 +1,38 @@
-import React from "react"
+import {useState} from "react"
 
 import Siren from "../../assets/image/Siren-white.png"
-const SirenModal = ({isOpen, onClose}) => {
+import {postReport} from "api/users-api"
+
+const SirenModal = ({isOpen, onClose, reportType, reportId}) => {
+  const [reportReason, setReportReason] = useState("")
+
+  const submitHandler = async () => {
+    if (!reportReason) {
+      return alert("신고 사유를 작성해주세요.")
+    }
+
+    const reportRegistRequestDto = {
+      reportType,
+      reportId,
+      reason: reportReason,
+    }
+
+    try {
+      const res = postReport(reportRegistRequestDto)
+      console.log(res)
+      alert("신고가 접수되었습니다.")
+      onClose()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const changeHandler = (event) => {
+    const targetValue = event.currentTarget.value
+    if (targetValue) {
+      setReportReason(targetValue)
+    }
+  }
   if (!isOpen) return null
 
   return (
@@ -22,7 +53,7 @@ const SirenModal = ({isOpen, onClose}) => {
             <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
               <div className="sm:flex-col sm:items-start ">
                 <div className="my-5 flex justify-center sm:w-full">
-                  <div className="mx-auto flex size-16 shrink-0 items-center justify-center rounded-full bg-alert sm:mx-0 sm:size-16">
+                  <div className="bg-alert mx-auto flex size-16 shrink-0 items-center justify-center rounded-full sm:mx-0 sm:size-16">
                     <img src={Siren} alt="Siren Icon" />
                   </div>
                 </div>
@@ -35,6 +66,8 @@ const SirenModal = ({isOpen, onClose}) => {
                   </h3>
 
                   <textarea
+                    value={reportReason}
+                    onChange={changeHandler}
                     className="w-full rounded border border-gray-300 bg-gray-100 p-2 focus:border-indigo-500 focus:outline-none"
                     rows="4"
                     placeholder="신고 사유를 입력해주세요.(100자 이내)"
@@ -48,7 +81,8 @@ const SirenModal = ({isOpen, onClose}) => {
             <div className="justify-center bg-gray-50 px-4 py-3 sm:flex sm:flex-row  sm:px-6">
               <button
                 type="button"
-                className="mr-3 inline-flex w-36 justify-center rounded-md bg-alert p-3 text-sm text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-36"
+                className="bg-alert mr-3 inline-flex w-36 justify-center rounded-md p-3 text-sm text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-36"
+                onClick={submitHandler}
               >
                 신고
               </button>
