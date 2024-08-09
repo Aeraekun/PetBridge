@@ -143,6 +143,7 @@ const {kakao} = window
 
 function Kakao() {
   const [filteredMarkers, setFilteredMarkers] = useState([])
+  const [currentOverlay, setCurrentOverlay] = useState(null) // 현재 활성화된 오버레이 상태 관리
 
   useEffect(() => {
     getArticle()
@@ -179,7 +180,7 @@ function Kakao() {
                   padding: 3px 8px;
                   background-color: white;
                 ">자세히 보기</a>
-                <button style="
+                <button class="close-btn" style="
                   margin-left: 10px;
                   background-color: transparent;
                   border: none;
@@ -250,20 +251,38 @@ function Kakao() {
       const customOverlay = new kakao.maps.CustomOverlay({
         position,
         content,
-        xAnchor: 0.5,
-        yAnchor: 1.7,
+        xAnchor: 0.5, // 가로 중앙
+        yAnchor: 0, // 마커 바로 위에 오도록 조정
         removable: false,
       })
 
       kakao.maps.event.addListener(marker, "click", function () {
+        // 현재 열려 있는 오버레이가 있다면 제거
+        if (currentOverlay) {
+          currentOverlay.setMap(null)
+        }
+
+        // 새 오버레이 표시
         customOverlay.setMap(map)
+        setCurrentOverlay(customOverlay)
+
+        // 닫기 버튼 클릭 이벤트 핸들러
+        const closeButton = customOverlay
+          .getContent()
+          .querySelector(".close-btn")
+        if (closeButton) {
+          closeButton.addEventListener("click", () => {
+            customOverlay.setMap(null)
+            setCurrentOverlay(null)
+          })
+        }
       })
     })
 
     return () => {
       markers.forEach((marker) => marker.setMap(null)) // 마커 제거하는 정리 함수
     }
-  }, [filteredMarkers]) // filteredMarkers 변경 시 마커 업데이트
+  }, [filteredMarkers, currentOverlay]) // filteredMarkers 또는 currentOverlay 변경 시 마커 업데이트
 
   return (
     <div className="p-4">
