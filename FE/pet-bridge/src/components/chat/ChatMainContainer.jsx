@@ -147,7 +147,7 @@ const ChatMainContainer = () => {
   }
 
   const initChatConnection = (roomId, userId) => {
-    const socket = new SockJS(REACT_APP_SERVER_URL + "/ws/chat")
+    const socket = new SockJS(REACT_APP_SERVER_URL + "/api/ws/chat")
     stompClient.current = Stomp.over(socket)
     let reconnect = 0
 
