@@ -22,7 +22,7 @@ const MyPageArtilcesContainer = () => {
   const [searchParams, setSearchParams] = useState({
     size: 12,
     page: 0,
-    nickname: nickname,
+    usernickname: nickname,
   })
 
   // 초기값 로딩
