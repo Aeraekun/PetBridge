@@ -14,14 +14,14 @@ const AdminUser = ({user}) => {
     <tr className="border-2">
       <td className="h-12">{user.email}</td>
       <td>{user.nickname}</td>
-      <td>{user.disabled ? <span>활성</span> : <span>비활성</span>}</td>
+      <td>{!user.disabled ? <span>활성</span> : <span>비활성</span>}</td>
       <td>{user.role}</td>
       <td>
         <button
           onClick={() =>
             onClickDisableHandler({id: user.id, nickname: user.nickname})
           }
-          className="rounded-lg p-1 outline outline-alert hover:bg-alert"
+          className="outline-alert hover:bg-alert rounded-lg p-1 outline"
         >
           회원 삭제
         </button>
