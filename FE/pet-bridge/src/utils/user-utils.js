@@ -40,6 +40,7 @@ export const getUserInfosFromSession = () => {
     "phone",
     "isAuthenticated",
     "role",
+    "image",
   ]
   // 유저 정보를 저장할 빈 객체 초기화
   const userInfos = {}

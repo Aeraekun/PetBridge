@@ -11,6 +11,7 @@ import java.time.LocalDate;
 
 @Entity
 @Getter
+@Setter
 @ToString
 @Table(name = "users")
 @NoArgsConstructor(access =  AccessLevel.PROTECTED)
@@ -59,27 +60,6 @@ public class User {
         this.role = role;
         this.socialType = socialType;
         this.socialId = socialId;
-    }
-
-    // 유저 수정 메소드
-    public void update(UserEditRequestDto userEditRequestDto, String image) {
-        
-        // 비밀번호 변경할시에만, 기존 비밀번호 유지
-        if (userEditRequestDto.getPassword() != null) {
-            this.password = userEditRequestDto.getPassword();
-        }
-        this.nickname = userEditRequestDto.getNickname();
-        this.birth = userEditRequestDto.getBirth();
-        this.phone = userEditRequestDto.getPhone();
-        this.image = image;
-    }
-
-    // 소셜 유저 수정 메소드
-    public void updateSocialUserInfo(UserEditRequestDto userEditRequestDto) {
-        this.password = userEditRequestDto.getPassword();
-        this.nickname = userEditRequestDto.getNickname();
-        this.birth = userEditRequestDto.getBirth();
-        this.phone = userEditRequestDto.getPhone();
     }
 
     // 유저 권한 설정 메소드

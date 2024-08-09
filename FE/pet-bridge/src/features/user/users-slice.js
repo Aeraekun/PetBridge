@@ -202,6 +202,7 @@ export const usersSlice = createSlice({
 // 선택자 함수 정의
 export const selectNickname = (state) => state.user.nickname
 export const selectId = (state) => state.user.id
+export const selectEmail = (state) => state.user.email
 export const selectBirth = (state) => state.user.birth
 export const selectPhone = (state) => state.user.phone
 export const selectImage = (state) => state.user.image
