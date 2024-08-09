@@ -135,8 +135,10 @@ function Kakao() {
           .querySelector(".close-btn")
         if (closeButton) {
           closeButton.onclick = () => {
-            customOverlay.setMap(null) // 오버레이 닫기
-            setCurrentOverlay(null) // 현재 오버레이 상태 초기화
+            setTimeout(() => {
+              customOverlay.setMap(null) // 오버레이 닫기
+              setCurrentOverlay(null) // 현재 오버레이 상태 초기화
+            }, 50) // 약간의 지연을 주어 이벤트 충돌 방지
           }
         }
       })
