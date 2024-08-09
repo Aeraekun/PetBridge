@@ -70,7 +70,7 @@ const ChatListContainer = () => {
 
   //   초기 리스트 로드시 소켓 연결
   const initializeConnection = () => {
-    const socket = new SockJS(REACT_APP_SERVER_URL + "/ws/chat")
+    const socket = new SockJS(REACT_APP_SERVER_URL + "/api/ws/chat")
     stompClient.current = Stomp.over(socket)
 
     const onConnect = () => {

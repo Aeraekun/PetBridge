@@ -74,7 +74,7 @@ public class SecurityConfig {
 
 				// 소셜 로그인
 				.requestMatchers(HttpMethod.GET, "/users/social/**").permitAll()
-				.requestMatchers(HttpMethod.GET, "/oauth2/authorization/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/oauth2/authorization/**").permitAll()
 
 				// 인증
 				.requestMatchers(HttpMethod.POST,"/api/users/authentication/email").permitAll()
@@ -106,9 +106,9 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.PATCH, "/api/contract-checks/{id}").permitAll()
 
 				// 채팅
-				.requestMatchers(HttpMethod.GET,"/ws/**").permitAll()
-				.requestMatchers(HttpMethod.POST,"/ws/**").permitAll()
-				.requestMatchers(HttpMethod.GET,"/ws/chat/**").permitAll()
+				.requestMatchers(HttpMethod.GET,"/api/ws/**").permitAll()
+				.requestMatchers(HttpMethod.POST,"/api/ws/**").permitAll()
+				.requestMatchers(HttpMethod.GET,"/api/ws/chat/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/chat/rooms/user/{userId}").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/chat/rooms/{roomId}").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/chat/rooms").permitAll()
