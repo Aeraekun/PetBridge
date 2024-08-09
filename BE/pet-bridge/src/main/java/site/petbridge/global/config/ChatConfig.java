@@ -15,7 +15,7 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
     private String URL;
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/api/ws/chat").setAllowedOriginPatterns("*")
+        registry.addEndpoint("/ws/chat").setAllowedOriginPatterns("*")
             .setAllowedOrigins(URL, "null") // 올바른 출처 설정
             .withSockJS();
 
@@ -26,6 +26,6 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 
         registry.enableSimpleBroker("/queue", "/topic");
 
-        registry.setApplicationDestinationPrefixes("/ws");
+        registry.setApplicationDestinationPrefixes("/api/chatting");
     }
 }

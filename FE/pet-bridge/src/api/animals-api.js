@@ -60,7 +60,7 @@ export const getAnimalList = async (searchParams) => {
 //동물 등록
 export const registAnimal = async (formData) => {
   try {
-    const res = await axiosInstance.post(`${BASE_API_URL}/animals`, formData, {
+    const res = await axiosInstance.post(`${BASE_API_URL}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

@@ -1,10 +1,11 @@
 import MyPageCard from "components/my-page/MyPageCard"
-import {Link} from "react-router-dom"
 import {useEffect, useState} from "react"
 import {getMyAnimals} from "api/mypage-api"
 import {useInView} from "react-intersection-observer"
+import {useNavigate} from "react-router-dom"
 
 const MyPageAnimalsContainer = () => {
+  const navigate = useNavigate()
   // isLoading true로 설정해두고, 화면 초기 로드 완료시 false로 변경 후 스크롤 페이지 렌더링
   const [isLoading, setIsLoading] = useState(true)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
@@ -50,6 +51,12 @@ const MyPageAnimalsContainer = () => {
       console.log(error)
     }
   }
+  const clickHandler = (animal) => {
+    const navigateDetail = () => {
+      navigate(`/shelter/details/${animal.id}`, {state: {animal}})
+    }
+    navigateDetail()
+  }
 
   // 현재 화면에서 ref 객체를 탐지하기 위한 inView 사용
   const {ref, inView} = useInView({})
@@ -83,18 +90,20 @@ const MyPageAnimalsContainer = () => {
       </div>
       {isLoading ? (
         <div className="flex size-full items-center justify-center">
-          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
           <span className="px-5 text-6xl font-bold">Loading...</span>
         </div>
       ) : (
         <div className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
           {items.map((item, index) => (
-            <Link
+            <button
               key={index}
-              to={`/shelter/details/${item.id}`}
               className="m-2.5 "
               // 화면에 들어오는지 확인할 객체를 선택하기 위한 ref 설정 : 배열의 마지막 값
               ref={index === items.length - 1 ? ref : null}
+              onClick={() => {
+                clickHandler(item)
+              }}
             >
               <MyPageCard
                 id={item.id}
@@ -104,11 +113,11 @@ const MyPageAnimalsContainer = () => {
                 content2={item.kindCd}
                 content3={item.age}
               />
-            </Link>
+            </button>
           ))}
           {isLoadingMore ? (
             <div className="flex items-center">
-              <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+              <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
               <span>추가 데이터를 로딩중입니다</span>
             </div>
           ) : null}
