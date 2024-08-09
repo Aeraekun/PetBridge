@@ -15,7 +15,7 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
     private String URL;
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws/chat").setAllowedOriginPatterns("*")
+        registry.addEndpoint("api/ws/chat").setAllowedOriginPatterns("*")
             .setAllowedOrigins(URL, "null") // 올바른 출처 설정
             .withSockJS();
 
