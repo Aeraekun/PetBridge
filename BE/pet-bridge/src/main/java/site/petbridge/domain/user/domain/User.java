@@ -63,7 +63,11 @@ public class User {
 
     // 유저 수정 메소드
     public void update(UserEditRequestDto userEditRequestDto, String image) {
-        this.password = userEditRequestDto.getPassword();
+        
+        // 비밀번호 변경할시에만, 기존 비밀번호 유지
+        if (userEditRequestDto.getPassword() != null) {
+            this.password = userEditRequestDto.getPassword();
+        }
         this.nickname = userEditRequestDto.getNickname();
         this.birth = userEditRequestDto.getBirth();
         this.phone = userEditRequestDto.getPhone();

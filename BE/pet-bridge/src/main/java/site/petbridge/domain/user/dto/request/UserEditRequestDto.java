@@ -12,13 +12,9 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserEditRequestDto {
 
-    @NotNull
     private String password;
-    @NotNull
     private String nickname;
-    @NotNull
     private LocalDate birth;
-    @NotNull
     private String phone;
 
     public User toEntity(String image) {
