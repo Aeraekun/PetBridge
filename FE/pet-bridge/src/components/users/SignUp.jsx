@@ -12,6 +12,7 @@ import {
 } from "features/user/users-slice"
 import Timer from "components/common/Timer"
 import {validateConfirmPassword} from "utils/user-validations"
+import logoImage from "assets/image/logo.png"
 
 const SignUp = () => {
   const dispatch = useDispatch()
@@ -335,7 +336,7 @@ const SignUp = () => {
     // form 태그
     <>
       <Link to="/" className=" my-2 text-8xl font-bold">
-        로고
+        <img src={logoImage} alt="로고" className="size-36" />
       </Link>
       <form
         className="mb-10 flex size-full flex-col justify-between px-10"

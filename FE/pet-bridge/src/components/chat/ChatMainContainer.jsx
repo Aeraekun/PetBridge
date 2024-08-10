@@ -1,7 +1,7 @@
 import {useSelector} from "react-redux"
 import MessageItem from "./MessageItem"
 import DefaultUserImage from "assets/image/default_user_150.png"
-import {selectId, selectImage} from "features/user/users-slice"
+import {selectId} from "features/user/users-slice"
 import {selectCurrentChatId, selectOpponentInfo} from "features/chat/chat-slice"
 import {useEffect, useRef, useState} from "react"
 import SockJS from "sockjs-client"
@@ -9,6 +9,8 @@ import SockJS from "sockjs-client"
 import {Stomp} from "@stomp/stompjs"
 import {getChatMessageList} from "api/chat-api"
 import {useInView} from "react-intersection-observer"
+import SendIcon from "assets/icons/icon-send-message.svg"
+import CallIcon from "assets/icons/icon-call-facetime.svg"
 
 const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL
 
@@ -22,7 +24,6 @@ const ChatMainContainer = ({onStartCall}) => {
   const opponentInfo = useSelector(selectOpponentInfo)
 
   const userId = useSelector(selectId)
-  const userImage = useSelector(selectImage)
   const roomId = useSelector(selectCurrentChatId)
   const stompClient = useRef(null)
   const messagesEndRef = useRef(null)
@@ -119,19 +120,13 @@ const ChatMainContainer = ({onStartCall}) => {
       }
       console.log(sendingMessage)
       stompClient.current.send(
-        `/app/api/chat/messages`,
+        `/api/chatting/messages`,
         {},
         JSON.stringify(sendingMessage)
       )
       setMessageInput("")
     }
   }
-
-  // 화상채팅으로 바꿔줌.
-  // const callHandler = () => {
-  //   console.log("화상")
-  //   onStartCall
-  // }
 
   // 추가 메세지 로드
   const getChatMessages = async (roomId) => {
@@ -154,7 +149,7 @@ const ChatMainContainer = ({onStartCall}) => {
   }
 
   const initChatConnection = (roomId, userId) => {
-    const socket = new SockJS(REACT_APP_SERVER_URL + "/ws/chat")
+    const socket = new SockJS(REACT_APP_SERVER_URL + "/api/ws/chat")
     stompClient.current = Stomp.over(socket)
     let reconnect = 0
 
@@ -203,7 +198,7 @@ const ChatMainContainer = ({onStartCall}) => {
       <div className="flex size-full flex-col divide-y">
         <div className="flex items-center space-x-2 px-3 py-1">
           <img
-            src={userImage ? userImage : DefaultUserImage}
+            src={opponentInfo.image ? opponentInfo.image : DefaultUserImage}
             alt=""
             className="size-12 rounded-full border-2"
           />
@@ -235,17 +230,17 @@ const ChatMainContainer = ({onStartCall}) => {
           />
           <button
             onClick={sendHandler}
-            className="size-12 rounded-full border-2"
+            className="flex size-12 items-center justify-center rounded-full border-2"
           >
-            전송
+            <img src={SendIcon} alt="전송" className="size-12" />
           </button>
           <button
-            className="size-12 rounded-full border-2"
+            className="flex size-12 items-center justify-center rounded-full border-2 "
             onClick={() => {
               onStartCall(true)
             }}
           >
-            화상
+            <img src={CallIcon} alt="화상" className="size-12" />
           </button>
         </div>
       </div>

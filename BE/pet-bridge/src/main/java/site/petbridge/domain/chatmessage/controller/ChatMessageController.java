@@ -18,7 +18,7 @@ public class ChatMessageController {
 	private final ChatRoomService chatRoomService;
 	private final SimpMessageSendingOperations sendingOperations;
 
-	@MessageMapping("/api/chat/messages")
+	@MessageMapping("/messages")
 	public void registChatMessage(
 		ChatMessageRequestDto chatMessageRequestDto) throws Exception {
 

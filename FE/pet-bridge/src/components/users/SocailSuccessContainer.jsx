@@ -25,7 +25,7 @@ const SocialSuccessContainer = () => {
     }
 
     getUserInfoAndNavigate()
-  })
+  }, [])
 
   return <h1>소셜 로그인 성공</h1>
 }

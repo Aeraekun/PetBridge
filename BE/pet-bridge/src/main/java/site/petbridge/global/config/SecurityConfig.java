@@ -106,8 +106,9 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.PATCH, "/api/contract-checks/{id}").permitAll()
 
 				// 채팅
-				.requestMatchers(HttpMethod.GET,"/ws/**").permitAll()
-				.requestMatchers(HttpMethod.GET,"/ws/chat/**").permitAll()
+				.requestMatchers(HttpMethod.GET,"/api/chatting/**").permitAll()
+				.requestMatchers(HttpMethod.POST,"/api/ws/**").permitAll()
+				.requestMatchers(HttpMethod.GET,"/api/ws/chat/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/chat/rooms/user/{userId}").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/chat/rooms/{roomId}").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/chat/rooms").permitAll()
@@ -133,6 +134,9 @@ public class SecurityConfig {
 				.userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(customOAuth2UserService))
 				.successHandler(oAuth2LoginSuccessHandler)
 				.failureHandler(oAuth2LoginFailureHandler)
+				.authorizationEndpoint().baseUri("/api/oauth2/authorization")
+				.and()
+				.redirectionEndpoint().baseUri("/api/login/oauth2/code/*")
 			)
 			// 예외 처리
 			.exceptionHandling(exceptionHandling -> exceptionHandling

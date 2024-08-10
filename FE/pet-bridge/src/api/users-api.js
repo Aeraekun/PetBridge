@@ -118,6 +118,18 @@ export const deleteUser = async (userId) => {
   }
 }
 
+// 신고 등록
+export const postReport = async (reportRequestDto) => {
+  try {
+    const res = await axiosInstance.post(`/reports`, {params: reportRequestDto})
+    return res
+  } catch (error) {
+    return error
+  }
+}
+
+// 신고 목록 조회 -> mypage-api.js
+
 // 신고 상태 수정
 export const patchReport = async (reportId) => {
   const res = await axiosInstance.patch(`/reports/${reportId}`)

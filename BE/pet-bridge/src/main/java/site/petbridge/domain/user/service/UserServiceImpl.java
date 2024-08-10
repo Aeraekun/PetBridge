@@ -42,6 +42,7 @@ import site.petbridge.global.login.userdetail.CustomUserDetail;
 import site.petbridge.global.redis.service.RedisService;
 import site.petbridge.util.AuthUtil;
 import site.petbridge.util.FileUtil;
+import site.petbridge.util.S3FileUtil;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
-	private final FileUtil fileUtil;
+	private final S3FileUtil fileUtil;
 	private final AuthUtil authUtil;
 
 	private final JavaMailSender javaMailSender;
@@ -159,17 +160,35 @@ public class UserServiceImpl implements UserService {
 		User entity = authUtil.getAuthenticatedUser();
 
 		// 닉네임 중복시 409 CONFLICT
-		if (userRepository.findByNicknameAndDisabledFalse(userEditRequestDto.getNickname()).isPresent()) {
+		Optional<User> existingUser = userRepository.findByNicknameAndDisabledFalse(userEditRequestDto.getNickname());
+		if (existingUser.isPresent() && existingUser.get().getId() != (entity.getId())) {
 			throw new PetBridgeException(ErrorCode.CONFLICT);
 		}
 
 		String savedImageFileName = null;
 		if (imageFile != null) {
-			savedImageFileName = fileUtil.saveFile(imageFile, "users");
+			savedImageFileName = fileUtil.saveFile(imageFile, "images");
 		}
 
-		entity.update(userEditRequestDto, savedImageFileName);
-		entity.passwordEncode(passwordEncoder);
+		// null에 따라 회원정보 수정
+		if (userEditRequestDto.getNickname() == null) {
+			throw new PetBridgeException(ErrorCode.BAD_REQUEST);
+		} else {
+			entity.setNickname(userEditRequestDto.getNickname());
+		}
+		if (userEditRequestDto.getPassword() != null) {
+			entity.setPassword(passwordEncoder.encode(userEditRequestDto.getPassword()));
+		}
+		if (userEditRequestDto.getBirth() != null) {
+			entity.setBirth(userEditRequestDto.getBirth());
+		}
+		if (userEditRequestDto.getPhone() != null) {
+			entity.setPhone(userEditRequestDto.getPhone());
+		}
+		if (savedImageFileName != null) {
+			entity.setImage(savedImageFileName);
+		}
+
 		userRepository.save(entity);
 	}
 

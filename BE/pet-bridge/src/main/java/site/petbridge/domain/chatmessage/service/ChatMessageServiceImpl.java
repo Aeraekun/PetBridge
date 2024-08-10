@@ -30,10 +30,6 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
 	@Override
 	public ChatMessageResponseDto registChatMessage(ChatMessageRequestDto chatMessageRequestDto) throws Exception{
-		User user = authUtil.getAuthenticatedUser();
-		if(user.getId()!= chatMessageRequestDto.getSenderId()){
-			throw new PetBridgeException(ErrorCode.UNAUTHORIZED);
-		}
 
 		ChatMessage chatMessage = chatMessageRepository.save(ChatMessage.builder()
 			.roomId(chatMessageRequestDto.getRoomId())

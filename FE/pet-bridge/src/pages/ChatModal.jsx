@@ -114,7 +114,7 @@ const ChatModal = () => {
             <Draggable handle="#chatHeader">
               {/* 전체 틀 */}
               <div
-                className={`flex h-[600px] flex-col divide-y overflow-hidden rounded-lg border bg-white shadow-2xl transition-[width] ${!currentChatId ? "w-60" : "w-[800px]"}`}
+                className={`flex h-[600px] flex-col divide-y rounded-lg border bg-white shadow-2xl transition-[width] ${!currentChatId ? "w-60" : "w-[800px]"}`}
               >
                 {/* 채팅 헤더 */}
                 <header

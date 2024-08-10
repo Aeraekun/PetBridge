@@ -3,6 +3,7 @@ import DefaultUser150 from "assets/icons/icon-default-user-150.svg"
 import {
   getUserInfoThunk,
   selectBirth,
+  selectEmail,
   selectId,
   selectImage,
   selectNickname,
@@ -23,6 +24,7 @@ const UpdateProfileContainer = () => {
 
   const userId = useSelector(selectId)
   const nickname = useSelector(selectNickname)
+  const email = useSelector(selectEmail)
   const birth = useSelector(selectBirth)
   const phone = useSelector(selectPhone)
   const image = useSelector(selectImage)
@@ -191,14 +193,22 @@ const UpdateProfileContainer = () => {
       className="flex size-full flex-col items-center space-y-1.5"
       onSubmit={onSubmitHandler}
     >
-      <span className="text-2xl font-bold">닉네임(아이디)</span>
-      <img
-        src={previewUrl}
-        alt="유저이미지"
-        className="size-[100px] rounded-full"
-      />
+      <span className="text-2xl font-bold">{nickname}</span>
+      <span>({email})</span>
+      <label htmlFor="image" className="cursor-pointer">
+        <img
+          src={previewUrl}
+          alt="유저이미지"
+          className="size-48 rounded-full"
+        />
+      </label>
       {/* 프로필 입력 */}
-      <input type="file" id="image" onChange={imageChangeHandler} />
+      <input
+        type="file"
+        id="image"
+        onChange={imageChangeHandler}
+        style={{display: "none"}}
+      />
       {/* 비밀번호 입력 */}
       <div className="w-full">
         {/* 비밀번호 입력 창 */}

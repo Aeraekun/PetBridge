@@ -1,6 +1,8 @@
 import axios from "axios"
 import axiosInstance from "api/axios-instance"
 
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL
+
 // 보호소 동물 조회
 export const getShelterAnimals = async (searchParams) => {
   const params = {
@@ -39,7 +41,7 @@ export const getFollowingAnimals = async (searchParams) => {
 // 내가 보호중인 동물 조회
 export const getMyAnimals = async (searchParams) => {
   const params = {
-    page: searchParams.page - 1,
+    page: searchParams.page,
     size: searchParams.size,
   }
   try {
@@ -101,6 +103,18 @@ export const getMyContracts = async (userId, page) => {
     return res
   } catch (error) {
     console.log(error)
+    return error
+  }
+}
+
+// 내 게시글 조회
+export const getMyArticles = async (searchParams) => {
+  try {
+    const res = await axios.get(`${REACT_APP_API_URL}/boards`, {
+      params: searchParams,
+    })
+    return res
+  } catch (error) {
     return error
   }
 }

@@ -49,7 +49,7 @@ const PetpickPage = () => {
     const newPetpick = await fetchPetpickData()
     const newAnimals = await fetchAnimalData(6300000)
     let result = []
-    const animalsLength = newAnimals?.length
+    const animalsLength = 4
     let animalIndex = 0
 
     for (let i = 0; i < newPetpick?.length; i++) {
@@ -69,6 +69,7 @@ const PetpickPage = () => {
       // 로딩상태 해제, 새로 받아온 값을 배열에 추가
       setList((prevItems) => [...prevItems, ...result])
     }
+    return result
   }
 
   // 펫핏 데이터 받아오기

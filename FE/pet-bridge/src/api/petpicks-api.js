@@ -109,29 +109,15 @@ export const getDetailPetPick = async (petpickId) => {
   }
 }
 //펫픽삭제
-// export const removePetPick = async (id) => {
-//   try {
-//     const res = await axiosInstance.delete(`${PETPICK_API_URL}/${id}`)
-//     console.log("removePetPick" + res)
-//     alert("삭제완료")
-//     return res.data
-//   } catch (e) {
-//     console.error(e)
-//     return []
-//   }
-// }
-
 export const removePetPick = async (id) => {
-  if (confirm("정말 삭제하시겠습니까?")) {
-    try {
-      const res = await axiosInstance.delete(`${PETPICK_API_URL}/${id}`)
-      console.log("removePetPick" + res)
-      alert("삭제완료")
-      return res.data
-    } catch (e) {
-      console.error(e)
-      return []
-    }
+  try {
+    const res = await axiosInstance.delete(`${PETPICK_API_URL}/${id}`)
+    console.log("removePetPick" + res)
+    alert("삭제완료")
+    return res.data
+  } catch (e) {
+    console.error(e)
+    return []
   }
 }
 
