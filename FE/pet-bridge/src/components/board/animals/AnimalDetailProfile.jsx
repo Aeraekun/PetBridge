@@ -235,7 +235,7 @@ const AnimalDetailProfile = ({
                 className="size-full object-cover"
               />
             ) : (
-              <div className="flex size-full items-center justify-center">
+              <div className="flex size-full  flex-col items-center justify-center">
                 이미지 없음
               </div>
             )}

@@ -23,10 +23,10 @@ const MyPageCard = ({
         alt={imageAlt}
         className="h-[300px] w-full rounded-t-xl"
       />
-      <ul className="space-y-2.5 p-2.5 font-bold">
+      <ul className="space-y-2.5 p-2.5 text-left font-bold">
         <li>{content1}</li>
         <li>{content2}</li>
-        <li>{content3}</li>
+        <div>{content3}</div>
       </ul>
     </div>
   )

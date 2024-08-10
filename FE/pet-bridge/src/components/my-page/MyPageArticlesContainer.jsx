@@ -1,5 +1,5 @@
-import {removeArticle} from "api/boards-api"
-import Button from "components/common/Button"
+// import {removeArticle} from "api/boards-api"
+// import Button from "components/common/Button"
 import {useEffect, useState} from "react"
 import {useInView} from "react-intersection-observer"
 import {Link, useNavigate} from "react-router-dom"
@@ -105,20 +105,19 @@ const MyPageArtilcesContainer = () => {
   }
 
   return (
-    <div className="flex h-full flex-col items-center">
-      <div className="flex w-full justify-center p-2.5 ">
-        <button className="text-4xl font-bold">내가 쓴 글</button>
+    <div className="flex h-full  min-w-80 flex-col items-center">
+      <div className="relative flex w-full justify-center p-2.5 ">
+        <button className="text-2xl font-bold">내가 쓴 글</button>
         <Link
-          className=" bg-mild fixed right-3 top-3 rounded-xl p-2.5"
+          className="absolute right-1.5 top-1.5 rounded-xl bg-mild p-2.5"
           to="/communities/write"
         >
           글 작성하기
         </Link>
       </div>
-      <div className="">클릭하면 수정가능합니다.</div>
       {isLoading ? (
-        <div className="flex size-full items-center justify-center">
-          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
+        <div className="flex size-full  flex-col items-center justify-center">
+          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
           <span className="px-5 text-6xl font-bold">Loading...</span>
         </div>
       ) : (
@@ -134,40 +133,24 @@ const MyPageArtilcesContainer = () => {
                 id={item.id}
                 imageSrc={item.thumbnail}
                 imageAlt={item.title}
-                content1={item.title}
-                content2={item.registTime.split("T")[0]}
+                content1={`제목: ${item.title}`}
+                content2={`작성 시간: ${item.registTime.split("T")[0]}`}
                 content3={item.content}
                 onClick={() => {
-                  // handleClick(item)
+                  handleClick(item)
                 }}
               />
-              <div className="absolute bottom-16 right-1 flex flex-col">
-                <Button
-                  text={"삭제하기"}
-                  onClick={() => {
-                    removeArticle(item.id)
-                  }}
-                />
-                <Button
-                  text={"수정하기"}
-                  onClick={() => {
-                    handleClick(item.id)
-                  }}
-                />
-              </div>
             </div>
           ))}
-
-          {isLoadingMore ? (
-            <div className="flex items-center">
-              <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
-              <span>추가 데이터를 로딩중입니다</span>
-            </div>
-          ) : null}
-
-          {!isMoreRemained && <p>불러올 데이터가 없습니다.</p>}
         </div>
       )}
+      {isLoadingMore ? (
+        <div className="flex items-center">
+          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+          <span>추가 데이터를 로딩중입니다</span>
+        </div>
+      ) : null}
+      {!isMoreRemained && !isLoadingMore && <p>불러올 데이터가 없습니다.</p>}
     </div>
   )
 }
