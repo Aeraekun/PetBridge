@@ -8,6 +8,7 @@ import {
   selectImage,
   selectNickname,
   selectPhone,
+  selectSocialType,
 } from "features/user/users-slice"
 import {useState} from "react"
 import {useDispatch, useSelector} from "react-redux"
@@ -28,6 +29,7 @@ const UpdateProfileContainer = () => {
   const birth = useSelector(selectBirth)
   const phone = useSelector(selectPhone)
   const image = useSelector(selectImage)
+  const socialType = useSelector(selectSocialType)
 
   // 유저 정보 수정 폼 제출을 위한 인자 저장 state
   const [updateFormData, setUpdateFormData] = useState({
@@ -209,37 +211,39 @@ const UpdateProfileContainer = () => {
         onChange={imageChangeHandler}
         style={{display: "none"}}
       />
-      {/* 비밀번호 입력 */}
-      <div className="w-full">
-        {/* 비밀번호 입력 창 */}
-        <input
-          value={updateFormData.password}
-          onChange={changeHandler}
-          type="password"
-          className="my-1 w-full rounded-md border p-2.5"
-          placeholder="비밀번호"
-          id="password"
-          minLength={8}
-          maxLength={16}
-          autoComplete="new-password"
-          onBlur={onBlurHandler}
-        />
-        {/* 비밀번호 확인 입력 창 */}
-        <input
-          value={confirmNumbers.passwordConfirm}
-          onChange={changeConfirmHandler}
-          type="password"
-          className=" my-1 w-full rounded-md border p-2.5"
-          placeholder="비밀번호 확인"
-          id="passwordConfirm"
-          minLength={8}
-          maxLength={16}
-          autoComplete="new-password"
-        />
-        {errors.password && (
-          <span className="text-alert col-span-12">{errors.password}</span>
-        )}
-      </div>
+      {!socialType ? (
+        // 비밀번호 입력
+        <div className="w-full">
+          {/* 비밀번호 입력 창 */}
+          <input
+            value={updateFormData.password}
+            onChange={changeHandler}
+            type="password"
+            className="my-1 w-full rounded-md border p-2.5"
+            placeholder="비밀번호"
+            id="password"
+            minLength={8}
+            maxLength={16}
+            autoComplete="new-password"
+            onBlur={onBlurHandler}
+          />
+          {/* 비밀번호 확인 입력 창 */}
+          <input
+            value={confirmNumbers.passwordConfirm}
+            onChange={changeConfirmHandler}
+            type="password"
+            className=" my-1 w-full rounded-md border p-2.5"
+            placeholder="비밀번호 확인"
+            id="passwordConfirm"
+            minLength={8}
+            maxLength={16}
+            autoComplete="new-password"
+          />
+          {errors.password && (
+            <span className="col-span-12 text-alert">{errors.password}</span>
+          )}
+        </div>
+      ) : null}
 
       {/* 닉네임 입력 창 */}
       <div className="w-full">
@@ -254,7 +258,7 @@ const UpdateProfileContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.nickname && (
-          <span className="text-alert col-span-12">{errors.nickname}</span>
+          <span className="col-span-12 text-alert">{errors.nickname}</span>
         )}
       </div>
       {/* 전화번호 입력 창 */}
@@ -271,7 +275,7 @@ const UpdateProfileContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.phone && (
-          <span className="text-alert col-span-12">{errors.phone}</span>
+          <span className="col-span-12 text-alert">{errors.phone}</span>
         )}
       </div>
       {/* 생년월일 창 */}
@@ -288,20 +292,20 @@ const UpdateProfileContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.birth && (
-          <span className="text-alert col-span-12">{errors.birth}</span>
+          <span className="col-span-12 text-alert">{errors.birth}</span>
         )}
       </div>
 
       <div className="grid w-full grid-cols-2 gap-10">
         {/* 수정하기 버튼 */}
-        <button type="submit" className="bg-mild h-12 rounded-md px-3.5 py-2.5">
+        <button type="submit" className="h-12 rounded-md bg-mild px-3.5 py-2.5">
           수정하기
         </button>
         {/* 취소 버튼 */}
         <Link
           to="/"
           type="button"
-          className="bg-mild rounded-md px-3.5 py-2.5 text-center"
+          className="rounded-md bg-mild px-3.5 py-2.5 text-center"
         >
           취소하기
         </Link>
