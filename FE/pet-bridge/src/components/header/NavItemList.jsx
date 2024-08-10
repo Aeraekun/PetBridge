@@ -1,12 +1,5 @@
-import {Link, NavLink} from "react-router-dom"
-
-const NavLogo = () => {
-  return (
-    <li className="flex h-12 cursor-pointer items-center px-2.5 text-xl">
-      <Link to="/">로고</Link>
-    </li>
-  )
-}
+import {NavLink} from "react-router-dom"
+import NavLogo from "./NavLogo"
 
 const NavItemList = () => {
   let itemId = 0
@@ -38,21 +31,23 @@ const NavItemList = () => {
     },
   ]
   return (
-    <nav className="flex h-12 items-center">
+    <nav className="flex h-8 items-center sm:h-10 md:h-12">
       <NavLogo />
-      {navItems.map((item) => (
-        <NavLink
-          key={item.id}
-          to={item.to}
-          className={({isActive}) =>
-            `rounded-xl ${isActive ? "bg-yellow font-bold" : ""}`
-          }
-        >
-          <span className="flex h-12 cursor-pointer items-center px-2.5 text-xl">
-            {item.category}
-          </span>
-        </NavLink>
-      ))}
+      <ul className="flex">
+        {navItems.map((item) => (
+          <NavLink
+            key={item.id}
+            to={item.to}
+            className={({isActive}) =>
+              `rounded-xl truncate ${isActive ? "bg-yellow font-bold" : ""}`
+            }
+          >
+            <span className="flex h-12 cursor-pointer items-center  px-1 text-center text-sm sm:text-lg  md:px-2.5 md:text-xl">
+              {item.category}
+            </span>
+          </NavLink>
+        ))}
+      </ul>
     </nav>
   )
 }
