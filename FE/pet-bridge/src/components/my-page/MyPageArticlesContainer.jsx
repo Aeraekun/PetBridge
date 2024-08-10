@@ -105,19 +105,18 @@ const MyPageArtilcesContainer = () => {
   }
 
   return (
-    <div className="flex h-full flex-col items-center">
-      <div className="flex w-full justify-center p-2.5 ">
-        <button className="text-4xl font-bold">내가 쓴 글</button>
+    <div className="flex h-full  min-w-80 flex-col items-center">
+      <div className="relative flex w-full justify-center p-2.5 ">
+        <button className="text-2xl font-bold">내가 쓴 글</button>
         <Link
-          className=" fixed right-3 top-3 rounded-xl bg-mild p-2.5"
+          className="absolute right-1.5 top-1.5 rounded-xl bg-mild p-2.5"
           to="/communities/write"
         >
           글 작성하기
         </Link>
       </div>
-      <div className="">클릭하면 수정가능합니다.</div>
       {isLoading ? (
-        <div className="flex size-full items-center justify-center">
+        <div className="flex size-full  flex-col items-center justify-center">
           <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
           <span className="px-5 text-6xl font-bold">Loading...</span>
         </div>
@@ -136,7 +135,7 @@ const MyPageArtilcesContainer = () => {
                 imageAlt={item.title}
                 content1={`제목: ${item.title}`}
                 content2={`작성 시간: ${item.registTime.split("T")[0]}`}
-                content3={`내용 : ${item.content}`}
+                content3={item.content}
                 onClick={() => {
                   handleClick(item)
                 }}

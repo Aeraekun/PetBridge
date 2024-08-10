@@ -84,14 +84,16 @@ const MyPageAnimalsContainer = () => {
   }, [page])
 
   return (
-    <div className="flex h-full flex-col items-center">
+    <div className="flex h-full  min-w-80 flex-col items-center">
       <div className="flex w-full justify-center p-2.5 ">
-        <button className="text-4xl font-bold">내가 보호중인 동물</button>
+        <button className="text-2xl font-bold md:text-2xl">
+          내가 보호중인 동물
+        </button>
       </div>
       {isLoading ? (
-        <div className="flex size-full items-center justify-center">
+        <div className="flex size-full  flex-col items-center justify-center">
           <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
-          <span className="px-5 text-6xl font-bold">Loading...</span>
+          <span className="px-5 text-6xl font-bold">Loading</span>
         </div>
       ) : (
         <div className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">

@@ -26,7 +26,7 @@ const MyPageCard = ({
       <ul className="space-y-2.5 p-2.5 text-left font-bold">
         <li>{content1}</li>
         <li>{content2}</li>
-        <li>{content3}</li>
+        <div>{content3}</div>
       </ul>
     </div>
   )
