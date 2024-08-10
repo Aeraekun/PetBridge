@@ -17,6 +17,7 @@ const initialState = {
   phone: "",
   image: "",
   role: "",
+  social_type: "",
   isAuthenticated: false,
   loading: false,
   isLoadingEmailCode: false,
@@ -129,6 +130,7 @@ export const usersSlice = createSlice({
       state.phone = ""
       state.image = ""
       state.role = ""
+      state.social_type = ""
       state.isAuthenticated = false
     },
     setAuthenticated(state, action) {
@@ -142,6 +144,7 @@ export const usersSlice = createSlice({
       state.phone = action.payload.phone
       state.image = action.payload.image
       state.role = action.payload.role
+      state.social_type = action.payload.social_type
       state.isAuthenticated = true
     },
   },
@@ -167,6 +170,7 @@ export const usersSlice = createSlice({
         state.phone = action.payload.phone
         state.image = action.payload.image
         state.role = action.payload.role
+        state.social_type = action.payload.social_type
         state.isAuthenticated = true
       })
       .addCase(getIsDuplicatedNicknameThunk.pending, (state) => {
@@ -206,12 +210,14 @@ export const selectEmail = (state) => state.user.email
 export const selectBirth = (state) => state.user.birth
 export const selectPhone = (state) => state.user.phone
 export const selectImage = (state) => state.user.image
+export const selectSocialType = (state) => state.user.social_type
 export const selectIsAuthenticated = (state) => state.user.isAuthenticated
 export const selectIsLoadingDuplication = (state) =>
   state.user.isLoadingDuplication
 export const selectLoading = (state) => state.user.loading
 export const selectError = (state) => state.user.error
 export const selectRole = (state) => state.user.role
+
 export const selectIsLoadingPhoneCode = (state) => state.user.isLoadingPhoneCode
 export const selectIsLoadingEmailCode = (state) => state.user.isLoadingEmailCode
 export const {logOut, setAuthenticated, setUserInfos} = usersSlice.actions
