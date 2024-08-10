@@ -241,7 +241,9 @@ const ChatMainContainer = ({onStartCall}) => {
           </button>
           <button
             className="size-12 rounded-full border-2"
-            onClick={onStartCall}
+            onClick={() => {
+              onStartCall(true)
+            }}
           >
             화상
           </button>

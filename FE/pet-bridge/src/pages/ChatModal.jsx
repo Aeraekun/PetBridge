@@ -1,5 +1,5 @@
 import {useDispatch, useSelector} from "react-redux"
-import {useState} from "react"
+import {useEffect, useState} from "react"
 import {
   selectIsChatModalOpen,
   selectIsChatMinimized,
@@ -75,9 +75,12 @@ const ChatModal = () => {
   // 화상채팅여부
   const [isCall, setIsCall] = useState(false)
 
-  const handleCall = () => {
+  useEffect(() => {
+    setIsCall(false)
+  }, [currentChatId])
+  const handleCall = (event) => {
     console.log(isCall, "isCall")
-    setIsCall(!isCall)
+    setIsCall(event)
   }
   // 유저 아이디로 채팅방 목록을 받아오기
 
@@ -137,7 +140,7 @@ const ChatModal = () => {
                   {/* 우측 채팅 화면 */}
                   {currentChatId ? (
                     isCall ? (
-                      <div className="overflow-auto">
+                      <div className="size-full overflow-auto">
                         <CallPage onEndCall={handleCall} />
                       </div>
                     ) : (
