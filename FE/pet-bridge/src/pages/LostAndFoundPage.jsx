@@ -1,6 +1,6 @@
 import {useNavigate, Routes, Route} from "react-router-dom"
-
 import Kakao from "components/map/Kakao"
+import Report from "components/map/Report"
 
 const categories = [
   {id: 0, title: "실종동물지도", path: "/lost-and-found"},
@@ -31,19 +31,24 @@ const CategoryNavbar = () => {
 
 const LostAndFoundPage = () => {
   return (
-    <>
-      <div className="mt-10 flex w-[1000px] flex-col">
-        <CategoryNavbar /> {/* 카테고리 네비게이션 추가 */}
+    <div className="flex w-full justify-center">
+      <div className="w-[1000px]">
+        {" "}
+        {/* 1000px 고정 너비 설정 */}
+        <div className="mt-10 flex flex-col">
+          <CategoryNavbar /> {/* 카테고리 네비게이션 추가 */}
+        </div>
+        <div className="flex flex-col items-center space-y-3">
+          <hr className="w-full border-gray-300" />
+          <section className="flex w-full justify-center">
+            <Routes>
+              <Route path="/" element={<Kakao />} />
+              <Route path="/report" element={<Report />} />
+            </Routes>
+          </section>
+        </div>
       </div>
-      <div className="flex w-full flex-col items-center space-y-3">
-        <hr className="w-full max-w-[1000px] border-gray-300" />
-        <section className="flex w-full max-w-[1000px] justify-center">
-          <Routes>
-            <Route path="/" element={<Kakao />} />
-          </Routes>
-        </section>
-      </div>
-    </>
+    </div>
   )
 }
 
