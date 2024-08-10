@@ -1,12 +1,8 @@
-import DogImage from "../../assets/image/dog.png"
-
-// import React, {useState} from "react"
-
 const ArticleInfo = ({data}) => {
   return (
     <div className="flex w-full flex-col ">
       <div className="flex w-full justify-between space-x-2 p-1">
-        <ArticleState state={data.processState}></ArticleState>
+        <ArticleState state={data.boardType}></ArticleState>
         <div className="text-sm">{data.registTime.split("T")[0]}</div>
       </div>
 
@@ -38,8 +34,8 @@ const TaggedArticleItem = ({data, onClick}) => {
       <div className="flex w-full space-x-3">
         <div className="flex flex-col justify-center">
           <img
-            src={DogImage}
-            className="w-16  object-cover"
+            src={data.thumbnail}
+            className="w-16  max-h-16 object-cover "
             alt="animalImage"
           />
         </div>

@@ -1,5 +1,6 @@
 import {registPetPick} from "api/petpicks-api"
 import AnimalTag from "components/common/AnimalTag"
+import ArticleTag from "components/common/ArticleTag"
 import Button from "components/common/Button"
 import Profile from "components/common/Profile"
 import React, {useState} from "react"
@@ -176,7 +177,7 @@ const PetpickWrite = () => {
       </div>
 
       <AnimalTag onSelectAnimalId={handleAnimalSelect} />
-      <AnimalTag onSelectAnimalId={handleArticleSelect} />
+      <ArticleTag onSelectArticleId={handleArticleSelect} />
       <div className="flex justify-end">
         태그된 동물 번호 {selectedAnimalId} <br></br>
         태그된 게시글 번호 {selectedArticleId}
