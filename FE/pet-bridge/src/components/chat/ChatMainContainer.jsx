@@ -32,6 +32,7 @@ const ChatMainContainer = () => {
   const [searchPage, setSearchPage] = useState(0)
   const [fetchMessages, setFetchMessages] = useState(false)
   const [isMessagesLeft, setIsMessagesLeft] = useState(true)
+  const [isComposing, setIsComposing] = useState(false) // IME 상태 확인
 
   const initMessageForm = () => {
     setChatMessageRequestDto({
@@ -101,10 +102,20 @@ const ChatMainContainer = () => {
     }))
   }
 
+  // IME 입력 상태 시작
+  const compositionStartHandler = () => {
+    setIsComposing(true)
+  }
+
+  // IME 입력 상태 종료
+  const compositionEndHandler = () => {
+    setIsComposing(false)
+  }
+
   // 엔터시 clickSendHandler를 동작시킴
 
   const keyDownHandler = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && !isComposing) {
       sendHandler()
     }
   }
@@ -223,8 +234,10 @@ const ChatMainContainer = () => {
             value={messageInput}
             onChange={changeHandler}
             onKeyDown={keyDownHandler}
+            onCompositionStart={compositionStartHandler} // IME 입력 시작 감지
+            onCompositionEnd={compositionEndHandler} // IME 입력 종료 감지
             type="text"
-            className="bg-stroke grow rounded-xl p-2 text-white"
+            className="grow rounded-xl bg-stroke p-2 text-white"
             placeholder="입력하세요"
             id="message-input"
           />
