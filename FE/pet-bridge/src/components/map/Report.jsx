@@ -126,15 +126,17 @@ const Report = () => {
   }
 
   return (
-    <div className="mx-auto max-w-4xl rounded-lg bg-white p-6 shadow-md">
+    <div className="mx-auto flex w-full max-w-[1000px] flex-col rounded-lg bg-white p-6 shadow-md">
+      {" "}
+      {/* 1000px 고정 너비 설정 */}
       <button
         onClick={() => navigate(-1)}
-        className="mb-4 text-blue-500 hover:underline"
+        className="mb-4 text-left text-blue-500 hover:underline" // 좌측 정렬 설정
       >
         &larr; 돌아가기
       </button>
       <input
-        className="mb-4 w-full rounded-lg border border-gray-300 p-4 text-2xl font-bold placeholder:text-gray-500"
+        className="mb-4 w-full rounded-lg border border-gray-300 p-4 text-center text-2xl font-bold placeholder:text-gray-500" // 가운데 정렬 설정
         placeholder="제목을 입력하세요"
         onChange={(e) => setTitle(e.target.value)}
         value={title}
@@ -142,7 +144,6 @@ const Report = () => {
       <hr className="my-4" />
       <Profile nickname={currentUserNickname} image={currentUserImage} />
       <hr className="my-4" />
-
       <div className="mb-4">
         <h2 className="mb-2 text-xl font-semibold">대표사진</h2>
         {imageSrc ? (
@@ -173,14 +174,14 @@ const Report = () => {
           />
         </div>
       </div>
-
       <div id="map" className="mb-4 h-64 w-full rounded border"></div>
-
-      <div className="mb-6 min-h-72 w-full">
+      <div className="mb-8 min-h-72 w-full">
+        {" "}
         <Editor value={editorContent} onChange={setEditorContent} />
       </div>
-
-      <div className="flex justify-end space-x-2">
+      <div className="mt-8 flex justify-end space-x-2">
+        {" "}
+        {/* 여백 추가 및 배치 조정 */}
         <Button text={"작성하기"} onClick={writeArticle} />
         <Button text={"삭제하기"} onClick={() => navigate(-1)} />
       </div>
