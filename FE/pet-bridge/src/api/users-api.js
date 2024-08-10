@@ -121,7 +121,7 @@ export const deleteUser = async (userId) => {
 // 신고 등록
 export const postReport = async (reportRequestDto) => {
   try {
-    const res = await axiosInstance.post(`/reports`, {params: reportRequestDto})
+    const res = await axiosInstance.post(`/reports`, reportRequestDto)
     return res
   } catch (error) {
     return error
