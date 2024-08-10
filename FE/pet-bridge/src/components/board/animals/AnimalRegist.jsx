@@ -64,7 +64,17 @@ const AnimalRegist = () => {
     navigate(-1)
   }
   const validateForm = () => {
-    const requiredFields = ["name", "species", "age"]
+    const requiredFields = [
+      "name",
+      "species",
+      "kindCd",
+      "colorCd",
+      "age",
+      "weight",
+      "sexCd",
+      "neuterYn",
+      "careAddr",
+    ]
     const newErrors = {}
 
     requiredFields.forEach((field) => {
@@ -98,9 +108,10 @@ const AnimalRegist = () => {
     }
     try {
       await registAnimal(formData)
-      console.log(animal)
-      // navigate(`/shelter/1`)
-      alert("동물등록성공")
+      console.log("등록한", newAnimal)
+      // alert("동물등록성공")
+      let path = `/shelter/1`
+      navigate(path, {state: {newAnimal}})
     } catch (e) {
       console.error(e)
     }

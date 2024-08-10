@@ -211,7 +211,7 @@ const ArticleDetail = () => {
           </div>
         ) : (
           <div className="flex">
-            <SirenButton />
+            <SirenButton reportId={id} reportType={"BOARD"} />
           </div>
         )}
       </div>

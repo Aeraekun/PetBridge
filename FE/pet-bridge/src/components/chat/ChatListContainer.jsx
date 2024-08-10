@@ -52,9 +52,9 @@ const ChatListContainer = () => {
         if (res.data) {
           // 받아온 채팅 리스트를 최근 메세지 시간순으로 정렬
           const sortedChatList = res.data.sort((a, b) => {
-            if (!a.recentTime) return -1 // a의 recentTime이 없으면 a를 앞으로
-            if (!b.recentTime) return 1 // b의 recentTime이 없으면 b를 앞으로
-            return Date(a.recentTime) - Date(b.recentTime)
+            if (!a.recentTime) return 1 // a의 recentTime이 없으면 a를 뒤로
+            if (!b.recentTime) return -1 // b의 recentTime이 없으면 b를 앞으로
+            return Date(b.recentTime) - Date(a.recentTime)
           })
 
           setChatList(sortedChatList)
@@ -96,8 +96,8 @@ const ChatListContainer = () => {
 
             // 최근 시간이 없는 방을 맨 위로 정렬
             const sortedRooms = newRooms.sort((a, b) => {
-              if (!a.recentTime) return -1 // a의 recentTime이 없으면 a를 앞으로
-              if (!b.recentTime) return 1 // b의 recentTime이 없으면 b를 앞으로
+              if (!a.recentTime) return 1 // a의 recentTime이 없으면 a를 뒤로
+              if (!b.recentTime) return -1 // b의 recentTime이 없으면 b를 앞으로
               return new Date(b.recentTime) - new Date(a.recentTime) // 최근 시간이 있으면 내림차순 정렬
             })
 

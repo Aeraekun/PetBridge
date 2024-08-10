@@ -86,16 +86,11 @@ export const editPetPick = async (id, formData) => {
 
 //펫픽랜덤조회
 export const getRandomDetailPetPick = async () => {
-  try {
-    const res = await axiosInstance.get(`${PETPICK_API_URL}`, {
-      params: {initcommentsize: 3},
-    })
-    console.log("getRandomDetailPetPick", res.data)
-    return res.data
-  } catch (e) {
-    console.error(e)
-    return e
-  }
+  const res = await axiosInstance.get(`${PETPICK_API_URL}`, {
+    params: {initcommentsize: 3},
+  })
+  console.log("getRandomDetailPetPick", res.data)
+  return res.data
 }
 
 export const getDetailPetPick = async (petpickId) => {

@@ -15,6 +15,7 @@ import iconMyContracts from "assets/icons/icon-my-contracts.svg"
 import iconMyFavorites from "assets/icons/icon-my-favorites.svg"
 import iconMyLikes from "assets/icons/icon-my-likes.svg"
 import iconMyPets from "assets/icons/icon-my-pets.svg"
+import {useState} from "react"
 
 const MyPageNavList = () => {
   let itemId = 0
@@ -49,13 +50,13 @@ const MyPageNavList = () => {
   ]
 
   return (
-    <nav className="flex h-[260px] w-[300px] flex-col justify-between px-5">
+    <nav className="grid grid-cols-3 gap-4 px-5 md:flex md:flex-col md:justify-between">
       {navItems.map((item) => (
         <NavLink
           key={item.id}
           to={item.url}
           className={({isActive}) =>
-            `rounded-xl ${isActive ? "bg-yellow" : ""}`
+            `border rounded-xl ${isActive ? "bg-yellow" : ""}`
           }
         >
           <MyPageNav text={item.text} imgSrc={item.imgSrc} />
@@ -66,13 +67,17 @@ const MyPageNavList = () => {
 }
 
 const MyPageNavContainer = () => {
-  // 유저 이름 초기화
+  // 유저 정보 초기화
   const userName = useSelector(selectNickname)
   const userImage = useSelector(selectImage)
   const role = useSelector(selectRole)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  // 로그아웃
+
+  // 햄버거 버튼
+  const [isNavOpen, setIsNavOpen] = useState(false)
+
+  // 로그아웃 처리
   const deleteJWT = () => {
     console.log("NavAction.jsx => deleteJWT => 리프레시 토큰 삭제")
     localStorage.removeItem("refreshToken")
@@ -93,7 +98,7 @@ const MyPageNavContainer = () => {
 
   return (
     // 마이페이지 전체 틀
-    <div className="flex h-full w-[300px] flex-col  items-center justify-center space-y-4 py-2.5 text-center">
+    <div className="col-span-3 flex flex-col items-center  justify-center space-y-3 py-2.5 text-center md:h-full md:w-80">
       {/* 1. 유저 프로필 이미지 */}
       <img
         src={userImage ? userImage : DefaulUser150}
@@ -105,22 +110,35 @@ const MyPageNavContainer = () => {
         {userName}
       </button>
       {/* 3. 수정하기, 로그아웃 */}
-      <div className="flex space-x-5">
+      <div className="flex items-center justify-between space-x-2">
+        {/* 햄버거 버튼 */}
+        <div className="md:hidden">
+          <button
+            onClick={() => setIsNavOpen(!isNavOpen)}
+            className="text-3xl focus:outline-none"
+          >
+            &#9776; {/* 햄버거 메뉴 아이콘 */}
+          </button>
+        </div>
         <Link
           to="/users/update"
-          className="bg-mild flex h-[35px] w-[100px] items-center justify-center rounded-xl"
+          className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild"
         >
           수정하기
         </Link>
         <button
-          className="bg-mild flex h-[35px] w-[100px] items-center justify-center rounded-xl"
+          className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild"
           onClick={handleLogOut}
         >
           로그아웃
         </button>
       </div>
-      {/* 카테고리 리스트 */}
-      <MyPageNavList />
+
+      {/* 네비게이션 리스트 */}
+      <div className={`${isNavOpen ? "block" : "hidden"} md:block`}>
+        <MyPageNavList />
+      </div>
+
       {role === "ADMIN" ? (
         // 관리자
         <div>
@@ -146,6 +164,7 @@ const MyPageNavContainer = () => {
           to="disable"
           className={({isActive}) => [
             isActive ? "text-red-400" : "text-stroke",
+            "m-0",
           ]}
         >
           [회원 탈퇴하기]

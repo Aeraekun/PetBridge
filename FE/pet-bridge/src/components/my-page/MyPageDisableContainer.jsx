@@ -30,7 +30,7 @@ const MyPageDisableContainer = () => {
     navigate("/")
   }
   return (
-    <div className="flex size-full items-center justify-center">
+    <div className="flex size-full  flex-col items-center justify-center">
       <div className="overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
         <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
           <div className="sm:flex-col sm:items-start ">

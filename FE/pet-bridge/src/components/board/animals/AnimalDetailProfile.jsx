@@ -184,7 +184,7 @@ const AnimalDetailProfile = ({
   const filteredFields = getFilteredFields()
 
   return (
-    <div className="flex w-full flex-wrap justify-center p-4">
+    <div className="flex w-full justify-center p-4">
       {/* Animal Image */}
       <div className="flex max-w-[400px] flex-col lg:w-1/2">
         {isEditing ? (
@@ -222,14 +222,20 @@ const AnimalDetailProfile = ({
           </div>
         ) : (
           <div className="flex h-96 w-full items-center justify-center border border-gray-300">
-            {animal.filename ? (
+            {isShelter ? (
               <img
                 src={animal.popfile}
+                alt="animal popfile"
+                className="size-full object-cover"
+              />
+            ) : animal.filename ? (
+              <img
+                src={animal.filename}
                 alt="animal profile"
                 className="size-full object-cover"
               />
             ) : (
-              <div className="flex size-full items-center justify-center">
+              <div className="flex size-full  flex-col items-center justify-center">
                 이미지 없음
               </div>
             )}
@@ -251,7 +257,7 @@ const AnimalDetailProfile = ({
                     name={name}
                     value={value}
                     onChange={handleInputChange}
-                    className="bg-mild w-full rounded border p-2"
+                    className="w-full rounded border bg-mild p-2"
                   >
                     <option key={"none"} value={""}>
                       선택
@@ -269,7 +275,7 @@ const AnimalDetailProfile = ({
                     name={name}
                     value={value}
                     onChange={handleInputChange}
-                    className="bg-mild w-full rounded border p-2"
+                    className="w-full rounded border bg-mild p-2"
                   />
                 )}
                 {errors[name] && (
@@ -282,7 +288,7 @@ const AnimalDetailProfile = ({
               <div
                 id={name}
                 name={name}
-                className="bg-mild w-full rounded border p-2"
+                className="w-full rounded border bg-mild p-2"
               >
                 {value}
               </div>
