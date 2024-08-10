@@ -17,7 +17,7 @@ const Popover = ({list, children, type, onSelectAnimal, onVisible}) => {
 
   useEffect(() => {
     console.log("list", list)
-  })
+  }, [])
   const handleAnimalSelect = (id) => {
     setSelectedAnimalId(id)
     if (onSelectAnimal) {
@@ -40,7 +40,7 @@ const Popover = ({list, children, type, onSelectAnimal, onVisible}) => {
         {children}
       </button>
       <div
-        className={`max-h-[400px] h-fit  overflow-auto absolute left-0 top-12 z-50 mb-2 w-96 rounded-lg bg-white text-sm shadow-lg border border-gray-200 transition-transform duration-200 ease-in-out transform ${
+        className={`max-h-[400px] h-fit overflow-auto absolute left-0 top-12 z-50 mb-2 w-[400px] rounded-lg bg-white text-sm shadow-lg border border-gray-200 transition-transform duration-200 ease-in-out transform ${
           visible
             ? "opacity-100 scale-100"
             : "opacity-0 scale-95 pointer-events-none"
@@ -63,7 +63,7 @@ const Popover = ({list, children, type, onSelectAnimal, onVisible}) => {
                   type === "animal" && selectedAnimalId === item.id
                     ? "bg-blue-100"
                     : "hover:bg-gray-100"
-                } transition duration-150`}
+                } transition duration-150 flex items-center`}
               >
                 {type === "animal" ? (
                   <AnimalProfile
@@ -72,7 +72,10 @@ const Popover = ({list, children, type, onSelectAnimal, onVisible}) => {
                     onSelect={() => handleAnimalSelect(item.id)}
                   />
                 ) : (
-                  <TaggedArticleItem data={item} />
+                  <TaggedArticleItem
+                    data={item}
+                    onClick={() => handleAnimalSelect(item.id)}
+                  />
                 )}
               </li>
             ))
