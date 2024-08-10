@@ -11,12 +11,25 @@ const AnimalItem = ({data, onSelectAnimal, isShelter}) => {
     >
       <StateBadge state={data.processState} />
 
-      <img
-        src={data.popfile}
-        alt="imag"
-        className="contain h-[200px] w-[300px] snap-center  overflow-hidden "
-      />
-      <div className="m-2  text-xl font-bold">{data.kindCd}</div>
+      {isShelter ? (
+        <img
+          src={data.popfile}
+          alt="imag"
+          className="object-contain  h-[200px] w-[300px] snap-center   overflow-hidden "
+        />
+      ) : (
+        <img
+          src={data.filename}
+          alt="imag"
+          className="object-contain  h-[200px] w-[300px] snap-center  overflow-hidden "
+        />
+      )}
+
+      {isShelter ? (
+        <div className="m-2  text-xl font-bold">{data.kindCd}</div>
+      ) : (
+        <div className="m-2  text-xl font-bold">{data.name}</div>
+      )}
       <div className="mx-2 flex flex-row space-x-2 ">
         <div className=" flex flex-col space-y-2">
           {isShelter ? (
@@ -26,8 +39,8 @@ const AnimalItem = ({data, onSelectAnimal, isShelter}) => {
             </div>
           ) : (
             <div className=" flex ">
-              <div className="mr-3 w-20">이름</div>
-              <div className="w-full">{data.name}</div>
+              <div className="mr-3 w-20">품종</div>
+              <div className="w-full">{data.kindCd}</div>
             </div>
           )}
           <div className=" flex ">

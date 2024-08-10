@@ -222,9 +222,15 @@ const AnimalDetailProfile = ({
           </div>
         ) : (
           <div className="flex h-96 w-full items-center justify-center border border-gray-300">
-            {animal.filename ? (
+            {isShelter ? (
               <img
                 src={animal.popfile}
+                alt="animal popfile"
+                className="size-full object-cover"
+              />
+            ) : animal.filename ? (
+              <img
+                src={animal.filename}
                 alt="animal profile"
                 className="size-full object-cover"
               />
