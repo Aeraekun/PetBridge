@@ -173,8 +173,9 @@ function App() {
             <Route path="eyes" element={<AiEyes />} />
             <Route path="skin" element={<AiSkin />} />
           </Route>
-          <Route path="lost-and-found" element={<LostAndFoundPage />}></Route>
-          <Route path="lost-and-found/report" element={<Report />}></Route>
+          <Route path="lost-and-found" element={<LostAndFoundPage />}>
+            <Route path="report" element={<Report />}></Route>
+          </Route>
         </Route>
         <Route path="/users/" element={<UsersLayout />}>
           <Route path="social" element={<SocialPage />}>
