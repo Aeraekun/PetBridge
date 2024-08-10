@@ -14,7 +14,7 @@ const MyPageAnimalsContainer = () => {
   const [page, setPage] = useState(0)
 
   // API 요청을 보내기 위한 파라미터
-  const [searchParams, setSearchParams] = useState({size: 12, page: 1})
+  const [searchParams, setSearchParams] = useState({size: 12, page: 0})
 
   // 초기값 로딩
   useEffect(() => {
@@ -86,11 +86,11 @@ const MyPageAnimalsContainer = () => {
   return (
     <div className="flex h-full flex-col items-center">
       <div className="flex w-full justify-center p-2.5 ">
-        <button className="text-4xl font-bold">내 동물</button>
+        <button className="text-4xl font-bold">내가 보호중인 동물</button>
       </div>
       {isLoading ? (
         <div className="flex size-full items-center justify-center">
-          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
+          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
           <span className="px-5 text-6xl font-bold">Loading...</span>
         </div>
       ) : (
@@ -107,7 +107,7 @@ const MyPageAnimalsContainer = () => {
             >
               <MyPageCard
                 id={item.id}
-                imageSrc={item.popfile}
+                imageSrc={item.filename}
                 imageAlt={item.name}
                 content1={item.name}
                 content2={item.kindCd}
@@ -115,15 +115,15 @@ const MyPageAnimalsContainer = () => {
               />
             </button>
           ))}
-          {isLoadingMore ? (
-            <div className="flex items-center">
-              <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
-              <span>추가 데이터를 로딩중입니다</span>
-            </div>
-          ) : null}
-          {!isMoreRemained && <p>불러올 데이터가 없습니다.</p>}
         </div>
       )}
+      {isLoadingMore ? (
+        <div className="flex items-center">
+          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+          <span>추가 데이터를 로딩중입니다</span>
+        </div>
+      ) : null}
+      {!isMoreRemained && !isLoadingMore && <p>불러올 데이터가 없습니다.</p>}
     </div>
   )
 }

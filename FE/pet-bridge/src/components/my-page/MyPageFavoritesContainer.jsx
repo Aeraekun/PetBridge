@@ -79,7 +79,7 @@ const MyPageFavoritesContainer = () => {
       </div>
       {isLoading ? (
         <div className="flex size-full items-center justify-center">
-          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
+          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
           <span className="px-5 text-6xl font-bold">Loading...</span>
         </div>
       ) : (
@@ -104,7 +104,7 @@ const MyPageFavoritesContainer = () => {
           ))}
           {isLoadingMore ? (
             <div className="flex items-center">
-              <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
+              <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
               <span>추가 데이터를 로딩중입니다</span>
             </div>
           ) : null}
