@@ -142,12 +142,15 @@ const ArticleBoardList = () => {
       {matchingCategory ? <h2>{matchingCategory.title}</h2> : <p>홈</p>}
       <Button text={"글쓰기"} onClick={goWrite} />
       <ul className="flex w-full flex-wrap justify-between">
-        {articles &&
+        {articles ? (
           articles.map((article) => (
             <li key={article.id}>
               <ArticleItem data={article} onSelectArticle={goDetail} />
             </li>
-          ))}
+          ))
+        ) : (
+          <div>등록된 게시글이 없습니다.</div>
+        )}
       </ul>
       <Pagination
         currentPage={currentPage}

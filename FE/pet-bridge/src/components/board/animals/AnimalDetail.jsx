@@ -68,6 +68,7 @@
 
 import React, {useState, useEffect} from "react"
 import {useLocation, useNavigate, useParams} from "react-router-dom"
+
 import {useSelector} from "react-redux"
 import {selectId} from "features/user/users-slice"
 import {removeAnimal} from "api/animals-api"
@@ -76,23 +77,22 @@ import Button from "components/common/Button"
 import SirenIcon from "components/common/SirenIcon"
 import DeleteConfirmationModal from "components/common/DeleteConfirmationModal"
 
-const AnimalDetail = ({isShelter}) => {
+const AnimalDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false) // 모달 열림 상태
   const [animalToDelete, setAnimalToDelete] = useState(null) // 삭제할 동물 정보
 
   const currentUserId = useSelector(selectId)
   const location = useLocation()
   const animal = location.state.animal || {}
-
+  const [isShelter, setIsShelter] = useState(true)
   const {animalId} = useParams()
-  console.log(animalId)
+  useEffect(() => {
+    if (animalId > 40000000) {
+      setIsShelter(true)
+    }
+  }, [animalId])
 
   const navigate = useNavigate()
-
-  useEffect(() => {
-    console.log(animal)
-  }, [animal])
-
   const goBack = () => {
     navigate(-1)
   }

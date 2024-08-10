@@ -2,29 +2,35 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import React, {useState, useEffect, useCallback, useRef} from "react"
+// import React, {useState, useEffect, useCallback, useRef} from "react"
+import React, {useState, useEffect, useRef} from "react"
 import {OpenVidu} from "openvidu-browser"
 import UserVideoComponent from "./UserVideoComponent"
 import {useSelector} from "react-redux"
 import {selectNickname} from "features/user/users-slice"
 import axiosInstance from "api/axios-instance"
+import {selectCurrentChatId, selectOpponentInfo} from "features/chat/chat-slice"
 
 // 애플리케이션 서버 URL 설정
 const BASE_API_URL = process.env.REACT_APP_API_URL
 const APPLICATION_SERVER_URL = BASE_API_URL
 // process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/"
 
-const CallPage = () => {
+const CallPage = ({onEndCall}) => {
   // 상태 변수 선언
   const nickname = useSelector(selectNickname)
-  const sessionId = "petbridge"
-  const [mySessionId, setMySessionId] = useState(sessionId) // 세션 ID
+  const roomId = useSelector(selectCurrentChatId)
+  const opponentInfo = useSelector(selectOpponentInfo)
+  const [mySessionId, setMySessionId] = useState(roomId + "petbridge") // 세션 ID
+  // const [setNowSession] = useState()
   const [myUserName, setMyUserName] = useState(nickname) // 사용자 이름
   const [session, setSession] = useState(undefined) // OpenVidu 세션
   const [mainStreamManager, setMainStreamManager] = useState(undefined) // 메인 비디오 스트림 매니저
   const [publisher, setPublisher] = useState(undefined) // 퍼블리셔
   const [subscribers, setSubscribers] = useState([]) // 구독자 목록
   const [currentVideoDevice, setCurrentVideoDevice] = useState(undefined) // 현재 비디오 디바이스
+
+  // const [isAlone, setisAlone] = useState(true)
 
   const OV = useRef(null) // OpenVidu 객체를 위한 참조
 
@@ -38,26 +44,73 @@ const CallPage = () => {
     }
   }, [])
 
-  // 세션에 조인하는 함수 (페이지에 들어가자마자 세션 요청해서 들어감.)
-  const JoinSession = useCallback(async () => {
+  useEffect(() => {
+    const changeSessionID = () => {
+      // console.log(roomId + "roomId")
+      if (session) {
+        leaveSession()
+        //   session.disconnect()
+      }
+      const roomIdpetbridge = roomId + "petbridge"
+      setMySessionId(roomIdpetbridge)
+      console.log(mySessionId + "mySessionId")
+      console.log(roomIdpetbridge)
+      // console.log(roomId + "petbridge")
+      // if (session) {
+      //   leaveSession() // 기존 세션 종료
+      //   setMySessionId(roomId + "petbridge") // 새 세션 ID 설정
+      //   JoinSession() // 새 세션에 조인
+      // }
+    }
+    changeSessionID()
+  }, [roomId])
+
+  useEffect(() => {
+    const joinSessionByMySessionId = () => {
+      // JoinSession()
+      console.log(mySessionId)
+    }
+
+    joinSessionByMySessionId()
+  }, [mySessionId])
+
+  // 세션에 조인하는 함수
+  const JoinSession = async () => {
     setMyUserName(nickname) // 사용자 이름. 현재 로그인한 유저 닉네임으로 입장
-    setMySessionId(sessionId) //세션 Id
+    setMySessionId(roomId + "petbridge") //세션 Id
 
     OV.current = new OpenVidu() //OpenVidu 객체 생성
+    OV.current.enableProdMode()
     // OV.current.setAdvancedConfiguration({logLevel: "OFF"}) //로그 비활성화
     const mySession = OV.current.initSession() //세션생성
     setSession(mySession)
 
+    //새로운 커넥션 생기는 경우
+    mySession.on("connectionCreated", (event) => {
+      //새 커넥션의 email을 memeber 배열에 추가
+      console.log("Connection " + event.connection.connectionId + " created")
+    })
+
     // session 객체 내에서
     // 새로운 스트림 수신 시, 관심 있는 세션 구독
     mySession.on("streamCreated", (event) => {
+      console.log(subscribers)
       const subscriber = mySession.subscribe(event.stream, undefined)
-      setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber])
+      const existingNicknames = subscribers.map(
+        (sub) => JSON.parse(sub.stream.connection.data).clientData
+      )
+      if (existingNicknames.includes(myUserName)) {
+        console.log(existingNicknames)
+      } else {
+        setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber])
+      }
+      console.log("Create Subscriber nickname:", nickname)
     })
 
     // user가 video-call을 나갔을 때, 즉 session의 stream이 해제, 종료되었을 때
     mySession.on("streamDestroyed", (event) => {
       deleteSubscriber(event.stream.streamManager)
+      console.log("DEstry Subscriber nickname:", nickname)
     })
 
     // 예외 발생 시
@@ -68,6 +121,15 @@ const CallPage = () => {
     try {
       const token = await getToken() // 토큰 가져오기
       await mySession.connect(token, {clientData: myUserName}) // 토큰을 가져와 세션에 연결
+
+      const existingNicknames = subscribers.map(
+        (sub) => JSON.parse(sub.stream.connection.data).clientData
+      )
+      if (existingNicknames.includes(myUserName)) {
+        alert("이미 다른 참가자가 이 닉네임을 사용 중입니다.")
+        leaveSession()
+        return
+      }
 
       // 세션에 참여할 사람의 설정 정보
       const publisher = await OV.current.initPublisherAsync(undefined, {
@@ -104,15 +166,14 @@ const CallPage = () => {
     } catch (error) {
       console.log("세션 연결 중 오류 발생:", error.code, error.message)
     }
-  }, [myUserName])
+  }
 
   // 세션 종료 함수
   const leaveSession = () => {
-    window.location.reload() //추가한거
+    // window.location.reload() //추가한거
     if (session) {
       session.disconnect()
     }
-
     // 상태 초기화
     OV.current = null
     setSession(undefined)
@@ -121,6 +182,13 @@ const CallPage = () => {
     setMyUserName(nickname)
     setMainStreamManager(undefined)
     setPublisher(undefined)
+  }
+
+  const handleEndCall = () => {
+    if (confirm("화상채팅을 종료하시겠습니까?")) {
+      leaveSession()
+      onEndCall(false)
+    }
   }
 
   // 카메라 전환 함수
@@ -159,23 +227,18 @@ const CallPage = () => {
     }
   }
 
-  // 메인 비디오 스트림 설정 핸들러
-  const handleMainVideoStream = (stream) => {
-    if (mainStreamManager !== stream) {
-      setMainStreamManager(stream)
-    }
-  }
-
   // 구독자 삭제 함수
-  const deleteSubscriber = (streamManager) => {
-    setSubscribers((prevSubscribers) =>
-      prevSubscribers.filter((sub) => sub !== streamManager)
-    )
+  const deleteSubscriber = () => {
+    setSubscribers([])
   }
 
   // 토큰 가져오기
   const getToken = async () => {
     const sessionId = await createSession(mySessionId)
+    // setNowSession(sessionId)
+    if (sessionId === "") {
+      alert("세션받아오기 실패")
+    }
     return await createToken(sessionId)
   }
 
@@ -204,97 +267,78 @@ const CallPage = () => {
   }
 
   return (
-    <div className="flex flex-col bg-gray-100 p-4">
+    <div className="flex size-full h-full flex-col bg-gray-100 p-4">
+      <ul>
+        {subscribers.map((sub, index) => (
+          <li key={index}>
+            Subscriber ID: {JSON.parse(sub.stream.connection.data).clientData}
+          </li>
+        ))}
+      </ul>
+      {roomId}
       {session === undefined ? (
-        <div
-          id="join"
-          className="flex flex-1 flex-col items-center justify-center"
-        >
-          <div id="join-dialog" className="rounded-lg bg-white p-8 shadow-lg">
+        <div className="flex flex-col items-center justify-center">
+          <div id="join-dialog" className="rounded-lg bg-white shadow-lg">
             <button
-              className="mt-4 rounded-lg bg-green-500  text-white "
+              className="mt-4 rounded-l"
               type="submit"
-              onClick={JoinSession}
+              onClick={() => {
+                JoinSession()
+              }}
             >
-              JOIN
+              (세션 없음)세션 만들기.
             </button>
           </div>
         </div>
       ) : (
-        <div
-          id="join"
-          className="flex flex-1 flex-col items-center justify-center"
-        >
-          <div id="join-dialog" className="rounded-lg bg-white shadow-lg">
-            <div className=" mt-4 rounded-lg">참여중</div>
-          </div>
+        <div className="flex flex-1 flex-col items-center justify-center">
+          참여중 세션 아이디 : {mySessionId}
         </div>
       )}
 
       <div id="session" className="flex h-full flex-col">
-        <div
-          id="session-header"
-          className="flex items-center justify-between bg-white p-4 shadow-md"
-        >
-          <h1 id="session-title" className="text-xl font-bold">
-            {myUserName}
-          </h1>
-          <div className="flex space-x-4">
-            <button
-              className="btn btn-large btn-danger rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-600"
-              id="buttonLeaveSession"
-              onClick={leaveSession}
-            >
-              Leave session
-            </button>
-            <button
-              className="btn btn-large btn-success rounded-lg bg-green-500 px-4 py-2 text-white hover:bg-green-600"
-              id="buttonSwitchCamera"
-              onClick={switchCamera}
-            >
-              Switch Camera
-            </button>
-            <button
-              className="btn btn-large btn-danger rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-600"
-              id="buttonLeaveSession"
-              onClick={deleteSubscriber}
-            >
-              구독자 삭제
-            </button>
-          </div>
+        <div className="flex items-center justify-between bg-white p-4 shadow-md">
+          {opponentInfo.nickname}님과의 화상채팅
         </div>
-        {mainStreamManager !== undefined ? (
-          <div
-            id="main-video"
-            className="w-[600px] flex-1 border p-4 "
-            onClick={() => handleMainVideoStream(publisher)}
-          >
-            <div> 메인스트리머</div>
-            <UserVideoComponent streamManager={mainStreamManager} />
-          </div>
-        ) : null}
-
-        <div id="video-container" className="flex flex-wrap p-4">
+        <div className="flex flex-wrap p-4">
           {publisher !== undefined ? (
-            <div
-              className=" w-[400px] flex-1 cursor-pointer border p-2"
-              onClick={() => handleMainVideoStream(publisher)}
-            >
+            <div className="w-1/2 flex-1 cursor-pointer border p-2">
               <div> 퍼블리셔</div>
               <UserVideoComponent streamManager={publisher} />
             </div>
           ) : null}
-          {subscribers.map((sub) => (
-            <div
-              key={sub.id}
-              className="stream-container col-md-6 col-xs-6 w-[200px]"
-              onClick={() => this.handleMainVideoStream(sub)}
-            >
-              <span>{sub.id}</span>
-              <UserVideoComponent streamManager={sub} />
+          {subscribers && (
+            <div className=" w-1/2 flex-1 border p-2">
+              {/* <span>{subscribers[0]}</span> */}
+              <UserVideoComponent streamManager={subscribers[0]} />
             </div>
-          ))}
-          {myUserName}
+          )}
+        </div>
+        <div className="flex h-8 space-x-4">
+          <button
+            className=" bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+            id="buttonLeaveSession"
+            onClick={leaveSession}
+          >
+            Leave session
+          </button>
+          <button
+            className=" bg-green-500 px-4 py-2 text-white hover:bg-green-600"
+            id="buttonSwitchCamera"
+            onClick={switchCamera}
+          >
+            Switch Camera
+          </button>
+          <button
+            className=" bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+            id="buttonLeaveSession"
+            onClick={deleteSubscriber}
+          >
+            구독자 삭제
+          </button>
+          <button className="size-8" onClick={handleEndCall}>
+            <img src="/icons/icon-endCall.svg" alt="endcall" />
+          </button>
         </div>
       </div>
     </div>

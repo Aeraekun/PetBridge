@@ -184,7 +184,7 @@ const AnimalDetailProfile = ({
   const filteredFields = getFilteredFields()
 
   return (
-    <div className="flex w-full flex-wrap justify-center p-4">
+    <div className="flex w-full justify-center p-4">
       {/* Animal Image */}
       <div className="flex max-w-[400px] flex-col lg:w-1/2">
         {isEditing ? (
@@ -251,7 +251,7 @@ const AnimalDetailProfile = ({
                     name={name}
                     value={value}
                     onChange={handleInputChange}
-                    className="bg-mild w-full rounded border p-2"
+                    className="w-full rounded border bg-mild p-2"
                   >
                     <option key={"none"} value={""}>
                       선택
@@ -269,7 +269,7 @@ const AnimalDetailProfile = ({
                     name={name}
                     value={value}
                     onChange={handleInputChange}
-                    className="bg-mild w-full rounded border p-2"
+                    className="w-full rounded border bg-mild p-2"
                   />
                 )}
                 {errors[name] && (
@@ -282,7 +282,7 @@ const AnimalDetailProfile = ({
               <div
                 id={name}
                 name={name}
-                className="bg-mild w-full rounded border p-2"
+                className="w-full rounded border bg-mild p-2"
               >
                 {value}
               </div>
