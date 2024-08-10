@@ -60,7 +60,7 @@ export const getAnimalList = async (searchParams) => {
 //동물 등록
 export const registAnimal = async (formData) => {
   try {
-    const res = await axiosInstance.post(`${BASE_API_URL}/animals`, formData, {
+    const res = await axiosInstance.post(`${BASE_API_URL}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -115,8 +115,6 @@ export const removeAnimal = async (id) => {
 }
 
 export const getShelterAnimalsAPI = async (searchParams) => {
-  console.log(BASE_PUB_API)
-  console.log(SERVICE_KEY)
   const params = {
     serviceKey: SERVICE_KEY,
     pageNo: searchParams.pageNo,
@@ -124,9 +122,7 @@ export const getShelterAnimalsAPI = async (searchParams) => {
     _type: "json",
     ...searchParams,
   }
-
   const res = await axios.get(`${BASE_PUB_API}/abandonmentPublic`, {
-    // const res = await axios.get(`${process.env.BASE_PUB_API}/abandonmentPublic`, {
     params: params,
   })
   return res

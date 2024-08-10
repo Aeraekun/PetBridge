@@ -2,22 +2,25 @@ import SirenIcon from "components/common/SirenIcon"
 import Button from "components/common/Button"
 import {useLocation, useNavigate, useParams} from "react-router-dom"
 import AnimalDetailProfile from "./AnimalDetailProfile"
-import {useEffect} from "react"
+import {useEffect, useState} from "react"
 import {useSelector} from "react-redux"
 import {selectId} from "features/user/users-slice"
 import {removeAnimal} from "api/animals-api"
 
-const AnimalDetail = ({isShelter}) => {
+const AnimalDetail = () => {
   const currentUserId = useSelector(selectId)
   const location = useLocation()
   const animal = location.state.animal || {}
-
+  const [isShelter, setIsShelter] = useState(true)
   const {animalId} = useParams()
-  console.log(animalId)
-  const navigate = useNavigate()
   useEffect(() => {
-    console.log(animal)
-  }, [])
+    if (animalId > 40000000) {
+      setIsShelter(true)
+    }
+  }, [animalId]) // Only run this effect when animalId changes
+
+  // console.log(animalId)
+  const navigate = useNavigate()
   const goBack = () => {
     navigate(-1)
   }
