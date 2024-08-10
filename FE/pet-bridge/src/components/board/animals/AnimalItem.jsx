@@ -11,11 +11,19 @@ const AnimalItem = ({data, onSelectAnimal, isShelter}) => {
     >
       <StateBadge state={data.processState} />
 
-      <img
-        src={data.popfile}
-        alt="imag"
-        className="contain h-[200px] w-[300px] snap-center  overflow-hidden "
-      />
+      {isShelter ? (
+        <img
+          src={data.popfile}
+          alt="imag"
+          className="object-contain  h-[200px] w-[300px] snap-center   overflow-hidden "
+        />
+      ) : (
+        <img
+          src={data.filename}
+          alt="imag"
+          className="object-contain  h-[200px] w-[300px] snap-center  overflow-hidden "
+        />
+      )}
 
       {isShelter ? (
         <div className="m-2  text-xl font-bold">{data.kindCd}</div>

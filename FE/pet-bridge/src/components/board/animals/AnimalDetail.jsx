@@ -67,7 +67,7 @@
 // export default AnimalDetail
 
 import React, {useState, useEffect} from "react"
-import {useLocation, useNavigate, useParams} from "react-router-dom"
+import {useLocation, useNavigate} from "react-router-dom"
 
 import {useSelector} from "react-redux"
 import {selectId} from "features/user/users-slice"
@@ -84,13 +84,14 @@ const AnimalDetail = () => {
   const currentUserId = useSelector(selectId)
   const location = useLocation()
   const animal = location.state.animal || {}
-  const [isShelter, setIsShelter] = useState(true)
-  const {animalId} = useParams()
+  const [isShelter, setIsShelter] = useState(false)
   useEffect(() => {
-    if (animalId > 40000000) {
+    console.log(animal)
+    const id = animal.desertionNo ? animal.desertionNo : animal.id
+    if (id > 40000000) {
       setIsShelter(true)
     }
-  }, [animalId])
+  }, [animal])
 
   const navigate = useNavigate()
   const goBack = () => {
