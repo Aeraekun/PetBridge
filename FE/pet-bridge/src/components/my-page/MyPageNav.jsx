@@ -1,9 +1,9 @@
 const MyPageNav = ({text, imgSrc}) => {
   return (
-    <div className="flex size-full h-[35px] items-center justify-between rounded-xl border px-2.5 font-medium">
+    <div className="flex size-full h-[35px] items-center justify-between px-2.5 md:font-medium">
       <img src={imgSrc} alt={text} />
-      {text}
-      <div></div>
+      <span className="hidden md:inline">{text}</span>
+      <div />
     </div>
   )
 }

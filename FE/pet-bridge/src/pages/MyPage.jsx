@@ -3,9 +3,9 @@ import {Outlet} from "react-router-dom"
 
 const MyPage = () => {
   return (
-    <section className="flex h-[600px] w-[1000px] grid-cols-10 place-content-center items-center rounded-lg border">
+    <section className="flex grid-cols-10 flex-col place-content-center items-center divide-y overflow-y-auto rounded-lg border md:h-[600px] md:flex-row">
       <MyPageNavContainer />
-      <div className="h-full grow overflow-y-auto border-l">
+      <div className="h-full overflow-y-auto border-l transition-transform">
         <Outlet />
       </div>
     </section>

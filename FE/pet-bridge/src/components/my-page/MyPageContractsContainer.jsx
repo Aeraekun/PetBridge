@@ -78,12 +78,12 @@ const MyPageContractsContainer = () => {
   }, [page])
 
   return (
-    <div className="flex h-full flex-col items-center">
+    <div className="flex min-w-80  h-full flex-col items-center">
       <div className="flex w-full justify-between p-2.5 ">
         <div />
-        <button className="text-4xl font-bold">내 입양기록</button>
+        <button className="text-2xl font-bold">내 입양기록</button>
         <Link
-          className="fixed right-3 top-3  rounded-xl bg-mild p-2.5"
+          className="absolute right-1.5 top-1.5   rounded-xl bg-mild p-2.5"
           to="/contracts/create"
         >
           입양 보내기
@@ -91,7 +91,7 @@ const MyPageContractsContainer = () => {
         <div />
       </div>
       {isLoading ? (
-        <div className="flex size-full items-center justify-center">
+        <div className="flex size-full  flex-col items-center justify-center">
           <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
           <span className="px-5 text-6xl font-bold">Loading...</span>
         </div>
