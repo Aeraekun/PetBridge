@@ -80,11 +80,15 @@ const MyPageContractsContainer = () => {
   return (
     <div className="flex h-full flex-col items-center">
       <div className="flex w-full justify-between p-2.5 ">
-        <div></div>
+        <div />
         <button className="text-4xl font-bold">내 입양기록</button>
-        <Link className="rounded-xl bg-mild p-2.5" to="/contracts/create">
+        <Link
+          className="fixed right-3 top-3  rounded-xl bg-mild p-2.5"
+          to="/contracts/create"
+        >
           입양 보내기
         </Link>
+        <div />
       </div>
       {isLoading ? (
         <div className="flex size-full items-center justify-center">
@@ -111,15 +115,15 @@ const MyPageContractsContainer = () => {
               />
             </Link>
           ))}
-          {isLoadingMore ? (
-            <div className="flex items-center">
-              <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
-              <span>추가 데이터를 로딩중입니다</span>
-            </div>
-          ) : null}
-          {!isMoreRemained && <p>불러올 데이터가 없습니다.</p>}
         </div>
       )}
+      {isLoadingMore ? (
+        <div className="flex items-center">
+          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+          <span>추가 데이터를 로딩중입니다</span>
+        </div>
+      ) : null}
+      {!isMoreRemained && !isLoadingMore && <p>불러올 데이터가 없습니다.</p>}
     </div>
   )
 }
