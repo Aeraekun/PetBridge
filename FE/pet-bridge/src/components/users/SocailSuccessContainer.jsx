@@ -4,7 +4,8 @@ import {
 } from "features/user/users-slice"
 import {useEffect} from "react"
 import {useDispatch, useSelector} from "react-redux"
-import {useNavigate} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
+import logoImage from "assets/image/logo.png"
 
 const SocialSuccessContainer = () => {
   // 로그인 완료 상태에서 확인
@@ -20,14 +21,22 @@ const SocialSuccessContainer = () => {
         await dispatch(getUserInfoThunk())
         navigate("/")
       } else {
+        alert("로그인 실패. 다시 시도해주세요.")
         navigate("/users/login")
       }
     }
 
     getUserInfoAndNavigate()
-  }, [])
+  }, [isAuthenticated])
 
-  return <h1>소셜 로그인 성공</h1>
+  return (
+    <>
+      <h1>소셜 로그인 성공</h1>
+      <Link to="/">
+        <img src={logoImage} alt="로고" className="size-24" />
+      </Link>
+    </>
+  )
 }
 
 export default SocialSuccessContainer
