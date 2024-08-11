@@ -1,6 +1,6 @@
 package site.petbridge.domain.animal.repository;
 
-import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,33 +18,25 @@ public class CustomAnimalRepositoryImpl implements CustomAnimalRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<Animal> findAnimalsWithFilters(String species, String kindCd, String careAddr, Pageable pageable) {
+    public Page<Animal> findAnimalsByDynamicQuery(int page, int size, String species, String kindCd, String careAddr, List<Integer> filteredAnimalIds, Pageable pageable) {
         QAnimal animal = QAnimal.animal;
 
-        BooleanBuilder builder = new BooleanBuilder();
-
-        if (species != null) {
-            builder.and(animal.species.eq(species));
-        }
-        if (kindCd != null) {
-            builder.and(animal.kindCd.containsIgnoreCase(kindCd));
-        }
-        if (careAddr != null) {
-            builder.and(animal.careAddr.containsIgnoreCase(careAddr));
-        }
-        builder.and(animal.disabled.isFalse()); // 기본적으로 disabled가 false인 항목만 가져옴
+        BooleanExpression speciesExpression = species != null ? animal.species.eq(species) : null;
+        BooleanExpression kindCdExpression = kindCd != null ? animal.kindCd.contains(kindCd) : null;
+        BooleanExpression careAddrExpression = careAddr != null ? animal.careAddr.contains(careAddr) : null;
+        BooleanExpression filteredIdsExpression = animal.id.in(filteredAnimalIds);
 
         List<Animal> animals = queryFactory
                 .selectFrom(animal)
-                .where(builder)
-                .orderBy(animal.id.desc())
+                .where(speciesExpression, kindCdExpression, careAddrExpression, filteredIdsExpression, animal.disabled.isFalse())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(animal.id.desc())
                 .fetch();
 
         long total = queryFactory
                 .selectFrom(animal)
-                .where(builder)
+                .where(speciesExpression, kindCdExpression, careAddrExpression, filteredIdsExpression, animal.disabled.isFalse())
                 .fetchCount();
 
         return new PageImpl<>(animals, pageable, total);

@@ -22,10 +22,8 @@ public class FollowController {
      * 팔로우 등록
      */
     @PostMapping
-    public ResponseEntity<Void> registFollow(
-            HttpServletRequest httpServletRequest,
-            @RequestBody FollowRequestDto followRequestDto) throws Exception {
-        followService.registFollow(httpServletRequest, followRequestDto);
+    public ResponseEntity<Void> registFollow(@RequestBody FollowRequestDto followRequestDto) throws Exception {
+        followService.registFollow(followRequestDto);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -34,10 +32,8 @@ public class FollowController {
      * 팔로우 삭제
      */
     @DeleteMapping
-    public ResponseEntity<Void> deleteFollow(
-            HttpServletRequest httpServletRequest,
-            @RequestBody FollowRequestDto followRequestDto) throws Exception {
-        followService.deleteFollow(httpServletRequest, followRequestDto);
+    public ResponseEntity<Void> deleteFollow(@RequestBody FollowRequestDto followRequestDto) throws Exception {
+        followService.deleteFollow(followRequestDto);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -46,8 +42,7 @@ public class FollowController {
      * 팔로우 조회
      */
     @GetMapping("/{id}")
-    public ResponseEntity<FollowResponseDto> getDetailFollow(
-            @PathVariable(name = "id") int id) throws Exception {
+    public ResponseEntity<FollowResponseDto> getDetailFollow(@PathVariable(name = "id") int id) throws Exception {
         FollowResponseDto followResponseDto = followService.getDetailFollow(id);
 
         return new ResponseEntity<>(followResponseDto, HttpStatus.OK);

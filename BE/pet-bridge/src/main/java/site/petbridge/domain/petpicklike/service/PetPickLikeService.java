@@ -6,11 +6,9 @@ import site.petbridge.domain.petpicklike.dto.response.PetPickLikeResponseDto;
 
 public interface PetPickLikeService {
 
-    void registPetPickLike(HttpServletRequest httpServletRequest,
-                           PetPickLikeRequestDto petPickLikeRequestDto) throws Exception;
+    void registPetPickLike(PetPickLikeRequestDto petPickLikeRequestDto) throws Exception;
 
-    void deletePetPickLike(HttpServletRequest httpServletRequest,
-                           PetPickLikeRequestDto petPickLikeRequestDto) throws Exception;
+    void deletePetPickLike(PetPickLikeRequestDto petPickLikeRequestDto) throws Exception;
 
     PetPickLikeResponseDto getDetailPetPickLike(int id) throws Exception;
 }

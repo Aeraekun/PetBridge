@@ -62,6 +62,10 @@ import {
 import ContractsContainer from "components/contracts/ContractsContainer"
 import ContractsPage from "pages/ContractsPage"
 import ContractsCreateContainer from "components/contracts/ContractsCreateContainer"
+import PaymentPage from "pages/PaymentPage.jsx"
+import PaymentComplete from "components/payment/PaymentComplete"
+import PaymentCancel from "components/payment/PaymentCancel"
+import PaymentFail from "components/payment/PaymentFail"
 
 // 메인페이지
 import MainPage from "pages/MainPage"
@@ -168,6 +172,11 @@ function App() {
           <Route path="/contracts" element={<ContractsPage />}>
             <Route path=":id" element={<ContractsContainer />}></Route>
             <Route path="create" element={<ContractsCreateContainer />}></Route>
+          </Route>
+          <Route path="/payment" element={<PaymentPage />}>
+            <Route path="completed" element={<PaymentComplete />} />
+            <Route path="cancel" element={<PaymentCancel />} />
+            <Route path="fail" element={<PaymentFail />} />
           </Route>
           <Route path="/ai" element={<AiPage />}>
             <Route path="eyes" element={<AiEyes />} />
