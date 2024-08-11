@@ -1,142 +1,3 @@
-// import SirenIcon from "components/common/SirenIcon"
-// import Button from "components/common/Button"
-// // import animaldata from "./animaldata"
-// import {useLocation, useNavigate} from "react-router-dom"
-// import AnimalDetailProfile from "./AnimalDetailProfile"
-// import React, {useState, useEffect} from "react"
-// import {editAnimal, removeAnimal} from "api/animals-api"
-
-// const ArticleDetailModify = () => {
-//   const navigate = useNavigate()
-//   const [animal, setAnimal] = useState(null)
-//   const location = useLocation()
-//   const [imageFile, setImageFile] = useState(null)
-//   const getanimal = location.state.animal || {}
-//   const [errors, setErrors] = useState({})
-
-//   //초기값으로
-//   useEffect(() => {
-//     if (getanimal) {
-//       setAnimal(getanimal)
-//     }
-//   }, [])
-
-//   const handleInputChange = (event) => {
-//     const {name, value} = event.target
-//     setAnimal((prevAnimal) => ({
-//       ...prevAnimal,
-//       [name]: value,
-//     }))
-//   }
-//   if (!animal) {
-//     return <div>Loading...</div>
-//   }
-//   const goBack = () => {
-//     navigate(-1)
-//   }
-
-//   const handleFileChange = (event) => {
-//     const file = event.target.files[0]
-//     if (file) {
-//       // const reader = new FileReader()
-//       // reader.onloadend = () => {
-//       //   setAnimal((prevAnimal) => ({
-//       //     ...prevAnimal,
-//       //     filename: reader.result, // Set the file preview URL
-//       //   }))
-//       // }
-//       // reader.readAsDataURL(file) // Read the file as a data URL
-//       setImageFile(file)
-//     }
-//   }
-
-//   const goAnimalModify = async () => {
-//     if (!validateForm()) {
-//       return
-//     }
-
-//     const newAnimal = animal
-//     console.log(animal)
-//     //formData로 file이랑 animal 정보 한번에 넘김.
-//     const formData = new FormData()
-//     formData.append(
-//       "animalEditRequestDto",
-//       new Blob([JSON.stringify(newAnimal)], {type: "application/json"})
-//     )
-//     if (imageFile) {
-//       formData.append("imageFile", imageFile)
-//     }
-//     try {
-//       console.log(animal.id, "id")
-//       await editAnimal(animal.id, formData)
-//       // navigate(`/shelter/1`)
-//       alert("동물등록성공")
-//     } catch (e) {
-//       console.error(e)
-//     }
-
-//     // navigate(`/shelter/details/${animal.id}`)
-//   }
-//   const goDeleteAnimal = async () => {
-//     await removeAnimal(animal.id)
-//   }
-
-//   const validateForm = () => {
-//     const requiredFields = ["name", "species", "age"]
-//     const newErrors = {}
-
-//     requiredFields.forEach((field) => {
-//       if (!animal[field]) {
-//         newErrors[field] = `${field} 필드는 필수입니다.`
-//       }
-//     })
-
-//     if (!imageFile) {
-//       newErrors.imageFile = "이미지를 업로드해주세요."
-//     }
-
-//     setErrors(newErrors)
-//     console.log(newErrors)
-//     return Object.keys(newErrors).length === 0
-//   }
-
-//   return (
-//     <>
-//       <button onClick={goBack} className="flex justify-start">
-//         돌아가기{" "}
-//       </button>
-//       <hr />
-//       <hr />
-
-//       <AnimalDetailProfile
-//         animal={animal}
-//         isEditing={true}
-//         onInputChange={handleInputChange}
-//         onFileChange={handleFileChange}
-//         isShelter={false}
-//         errors={errors}
-//       />
-
-//       <div className="flex justify-end">
-//         <SirenIcon />
-//       </div>
-//       <div className="flex justify-end">
-//         <Button text={"수정하기"} onClick={goAnimalModify} />
-//         <Button
-//           text={"삭제하기"}
-//           onClick={() => {
-//             goDeleteAnimal(animal.id)
-//           }}
-//         />
-//         <Button text={"취소하기"} onClick={goBack} />
-//       </div>
-//     </>
-//   )
-// }
-
-// export default ArticleDetailModify
-
-import SirenIcon from "components/common/SirenIcon"
 import Button from "components/common/Button"
 import {useLocation, useNavigate} from "react-router-dom"
 import AnimalDetailProfile from "./AnimalDetailProfile"
@@ -159,16 +20,20 @@ const ArticleDetailModify = () => {
     if (getanimal) {
       setAnimal(getanimal)
     }
+    console.log("getanimal", getanimal)
   }, [getanimal])
 
+  //사용자가 내용을 수정할때마다 업데이트
   const handleInputChange = (event) => {
     const {name, value} = event.target
     setAnimal((prevAnimal) => ({
       ...prevAnimal,
       [name]: value,
     }))
+    console.log("animal", animal)
   }
 
+  //파일이 수정된 경우
   const handleFileChange = (event) => {
     const file = event.target.files[0]
     if (file) {
@@ -180,31 +45,51 @@ const ArticleDetailModify = () => {
     navigate(-1)
   }
 
+  //수정하기 버튼 클릭
   const goAnimalModify = async () => {
     if (!validateForm()) {
+      console.log("다 안채워짐")
       return
     }
+    //수정 다 된 동물정보
+    const updateAnimalData = {
+      name: animal.name || "",
+      species: animal.species || "",
+      kindCd: animal.kindCd || "",
+      colorCd: animal.colorCd || "",
+      age: animal.age || 0,
+      weight: animal.weight || 0,
+      sexCd: animal.sexCd || "",
+      neuterYn: animal.neuterYn || "",
+      specialMark: animal.specialMark || "",
+      careAddr: animal.careAddr || "",
+    }
 
-    const newAnimal = animal
-    console.log(animal)
+    console.log("updatedAnimal", updateAnimalData)
     const formData = new FormData()
     formData.append(
       "animalEditRequestDto",
-      new Blob([JSON.stringify(newAnimal)], {type: "application/json"})
+      new Blob([JSON.stringify(updateAnimalData)], {type: "application/json"})
     )
+    // 이미지 파일이 변경되지 않았으면 기존 파일을 사용
+    console.log("이미지", imageFile)
+    console.log("이미지", getanimal.filename)
     if (imageFile) {
+      console.log("이미지 바뀜")
       formData.append("imageFile", imageFile)
+    } else {
+      console.log("이미지 안바뀜")
     }
     try {
-      console.log(animal.id, "id")
       await editAnimal(animal.id, formData)
-      alert("동물 등록 성공")
-      navigate(`/shelter/details/${animal.id}`)
+      alert("동물 정보가 성공적으로 수정되었습니다.")
+      navigate(`/shelter/details/${animal.id}`, {
+        state: {animal: updateAnimalData},
+      })
     } catch (e) {
       console.error(e)
     }
   }
-
   const openDeleteModal = () => {
     setAnimalToDelete(animal) // 삭제할 동물 정보를 설정
     setIsModalOpen(true) // 모달 열기
@@ -224,7 +109,17 @@ const ArticleDetailModify = () => {
   }
 
   const validateForm = () => {
-    const requiredFields = ["name", "species", "age"]
+    const requiredFields = [
+      "name",
+      "species",
+      "kindCd",
+      "colorCd",
+      "age",
+      "weight",
+      "sexCd",
+      "neuterYn",
+      "careAddr",
+    ]
     const newErrors = {}
 
     requiredFields.forEach((field) => {
@@ -233,11 +128,8 @@ const ArticleDetailModify = () => {
       }
     })
 
-    if (!imageFile) {
-      newErrors.imageFile = "이미지를 업로드해주세요."
-    }
-
     setErrors(newErrors)
+    console.log(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
@@ -262,9 +154,6 @@ const ArticleDetailModify = () => {
         errors={errors}
       />
 
-      <div className="flex justify-end">
-        <SirenIcon />
-      </div>
       <div className="flex justify-end">
         <Button text={"수정하기"} onClick={goAnimalModify} />
         <Button text={"삭제하기"} onClick={openDeleteModal} />
