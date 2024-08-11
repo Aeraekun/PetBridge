@@ -37,7 +37,9 @@ const SearchDropDown = ({subtitle, placeholder, itemName, onDataChange}) => {
       }
     }
 
-    searchUsers()
+    if (searchValue) {
+      searchUsers()
+    }
   }, [searchValue])
 
   const onChangeHandler = (event) => {
@@ -61,13 +63,14 @@ const SearchDropDown = ({subtitle, placeholder, itemName, onDataChange}) => {
 
     // const selectedInfo = userDatas[event.target.key]
     dispatch(setOpponentInfo(selectedInfo))
+    setIsOpen(false)
   }
 
   return (
     <>
       <button
         onClick={clickHandler}
-        className="flex h-10 w-full justify-between rounded-xl border p-3 text-sm"
+        className="absolute right-4 top-0 flex h-10 justify-between rounded-xl border p-3 text-sm"
         ref={buttonRef}
       >
         {subtitle}

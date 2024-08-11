@@ -24,7 +24,6 @@ const ContractsCreateContainer = () => {
   // 동물 선택 상태에 따른 동물 컴포넌트 표시 - 상태 관리
   const [selectedAnimal, setSelectedAnimalId] = useState(null)
   const [selectedContracteeId, setSelectedContracteeId] = useState(null)
-  const [isContracteeSelected, setIsContracteeSelected] = useState(false)
   const [contracteeInfo, setContracteeInfo] = useState({
     image: "",
     id: "",
@@ -113,9 +112,6 @@ const ContractsCreateContainer = () => {
   // 선택 드롭다운 값 변경시
   const onDataChangeHandler = (newData) => {
     setSelectedContracteeId(Number(newData))
-    if (newData) {
-      setIsContracteeSelected(true)
-    }
   }
 
   // 서명하기 클릭시
@@ -161,9 +157,9 @@ const ContractsCreateContainer = () => {
     >
       <span className="my-5 text-4xl font-bold">입양 보내기</span>
       <section className="h-40 w-full">
-        <div className="grid w-full grid-cols-4">
+        <div className="relative grid w-full grid-cols-4">
           {/* 입양 동물 정보란 */}
-          <div className="col-span-2 rounded-l-xl border p-2.5">
+          <div className="col-span-2 rounded-l-xl p-2.5">
             <AnimalTag onSelectAnimalId={handleAnimalSelect} />
           </div>
 
@@ -174,26 +170,17 @@ const ContractsCreateContainer = () => {
             nickname={nickname}
           />
           {/* 입양자 정보란 */}
-          {isContracteeSelected ? (
-            <>
-              <ContractPerson
-                imageSrc={contracteeInfo.image}
-                title="계약자"
-                nickname={contracteeInfo.nickname}
-              />
-            </>
-          ) : (
-            <div className="col-span-1 flex flex-col justify-between border p-2.5">
-              <div>
-                <SearchDropDown
-                  subtitle="입양자를 선택해주세요."
-                  placeholder="유저 닉네임으로 검색"
-                  itemName="유저"
-                  onDataChange={onDataChangeHandler}
-                />
-              </div>
-            </div>
-          )}
+          <SearchDropDown
+            subtitle="입양자를 선택해주세요."
+            placeholder="유저 닉네임으로 검색"
+            itemName="유저"
+            onDataChange={onDataChangeHandler}
+          />
+          <ContractPerson
+            imageSrc={contracteeInfo.image}
+            title="계약자"
+            nickname={contracteeInfo.nickname}
+          />
         </div>
       </section>
 
@@ -209,7 +196,7 @@ const ContractsCreateContainer = () => {
               className="h-12 w-40 rounded-lg border-2 text-center font-bold"
               onChange={changeHandler}
             >
-              <option value="" selected={true}>
+              <option value="" defaultValue="">
                 선택 (1 ~ 12 개월)
               </option>
               {monthsOption.map((item) => (
