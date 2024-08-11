@@ -35,8 +35,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Transactional
     @Override
-    public void registFollow(HttpServletRequest httpServletRequest, FollowRequestDto followRequestDto) throws Exception {
-
+    public void registFollow(FollowRequestDto followRequestDto) throws Exception {
         User user = authUtil.getAuthenticatedUser();
 
         // 존재하는 animal에 대한 요청인지 확인
@@ -58,7 +57,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Transactional
     @Override
-    public void deleteFollow(HttpServletRequest httpServletRequest, FollowRequestDto followRequestDto) throws Exception {
+    public void deleteFollow(FollowRequestDto followRequestDto) throws Exception {
 
         User user = authUtil.getAuthenticatedUser();
 
