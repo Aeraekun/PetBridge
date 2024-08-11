@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import site.petbridge.domain.animal.domain.Animal;
 import site.petbridge.domain.animal.repository.AnimalRepository;
 import site.petbridge.domain.board.repository.BoardRepository;
 import site.petbridge.domain.follow.repository.FollowRepository;
@@ -28,7 +29,6 @@ import site.petbridge.domain.petpickcomment.dto.response.PetPickCommentResponseD
 import site.petbridge.domain.petpickcomment.repository.PetPickCommentRepository;
 import site.petbridge.domain.petpicklike.repository.PetPickLikeRepository;
 import site.petbridge.domain.user.domain.User;
-import site.petbridge.domain.user.dto.response.UserResponseDto;
 import site.petbridge.domain.user.repository.UserRepository;
 import site.petbridge.global.exception.ErrorCode;
 import site.petbridge.global.exception.PetBridgeException;
@@ -55,29 +55,31 @@ public class PetPickServiceImpl implements PetPickService {
      */
     @Override
     @Transactional
-    public void registPetPick(HttpServletRequest httpServletRequest, final PetPickRegistRequestDto petPickRegistRequestDto,
+    public void registPetPick(PetPickRegistRequestDto petPickRegistRequestDto,
                     MultipartFile thumbnailFile, MultipartFile videoFile) throws Exception {
+        // null 입력 처리
+        if (petPickRegistRequestDto.getAnimalId() == null || petPickRegistRequestDto.getTitle() == null
+        || petPickRegistRequestDto.getContent() == null || thumbnailFile == null || videoFile == null) {
+            throw new PetBridgeException(ErrorCode.BAD_REQUEST);
+        }
 
         User user = authUtil.getAuthenticatedUser();
 
-        if (!boardRepository.findByIdAndDisabledFalse(petPickRegistRequestDto.getBoardId()).isPresent()) {
-            throw new PetBridgeException(ErrorCode.BAD_REQUEST);
-        }
-
+        // 태그 동물 외래키 오류
         if (!animalRepository.findByIdAndDisabledFalse(petPickRegistRequestDto.getAnimalId()).isPresent()) {
             throw new PetBridgeException(ErrorCode.BAD_REQUEST);
         }
-
-        String savedThumbnailFileName = null;
-        String savedVideoFileName = null;
-
-        if (thumbnailFile != null) {
-            savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "images");
+        // 태그 게시글 외래키 오류 (게시글은 null 들어올 수 있음 고려)
+        Integer taggedBoardId = petPickRegistRequestDto.getBoardId();
+        if (taggedBoardId != null) {
+            if (!boardRepository.findByIdAndDisabledFalse(taggedBoardId).isPresent()) {
+                throw new PetBridgeException(ErrorCode.BAD_REQUEST);
+            }
         }
 
-        if (videoFile != null) {
-            savedVideoFileName = fileUtil.saveFile(videoFile, "videos");
-        }
+        // 등록 진행
+        String savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "images");
+        String savedVideoFileName = fileUtil.saveFile(videoFile, "videos");
 
         PetPick entity = petPickRegistRequestDto.toEntity(user.getId(), savedThumbnailFileName, savedVideoFileName);
         petPickRepository.save(entity);
@@ -87,8 +89,8 @@ public class PetPickServiceImpl implements PetPickService {
      * 펫픽 랜덤 목록 조회
      */
     @Override
-    public List<PetPickResponseDto> getRandomListPetPick(HttpServletRequest httpServletRequest,
-                                                         int initCommentSize) throws Exception {
+    public List<PetPickResponseDto> getRandomListPetPick(int initCommentSize) throws Exception {
+        // 쇼츠 조회시 로그인, 비로그인 체크 (조회는 비로그인이여도 예외던지면 안되므로 AuthUtil 사용 X)
         User user = null;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof CustomUserDetail) {
@@ -96,127 +98,105 @@ public class PetPickServiceImpl implements PetPickService {
             user = userRepository.findByIdAndDisabledFalse(userDetail.getId())
                     .orElseThrow(() -> new PetBridgeException(ErrorCode.UNAUTHORIZED));
         }
-        final User finalUser = user;
 
+        // PetPick 랜덤 조회 -> List<PetPick>
         List<PetPick> petPicks = petPickRepository.findRandomPetPicks();
 
-        return petPicks.stream().map(petPick -> {
-            User petPickWriter = userRepository.findById(petPick.getUserId()).orElse(null);
-            String petPickWriterNickname = petPickWriter.getNickname();
-            String petPickWriterImage = petPickWriter.getImage();
-
-            // 펫픽 좋아요, 팔로우 여부 확인
-            boolean isLiking = false;
-            boolean isFollowing = false;
-            // 로그인시
-            if (finalUser != null) {
-                int userId = finalUser.getId();
-                isLiking = petPickLikeRepository.existsByUserIdAndPetPickId(userId, petPick.getId());
-                isFollowing = followRepository.existsByUserIdAndAnimalId(userId, petPick.getAnimalId());
-            }
-
-            Sort sort = Sort.by(Sort.Direction.DESC, "registTime");
-            Pageable pageable = PageRequest.of(0, initCommentSize, sort); // 최신순 페이징 initCommentSize 개수만큼
-            List<PetPickCommentResponseDto> comments = petPickCommentRepository.findByPetPickId((long) petPick.getId(), pageable).stream()
-                    .collect(Collectors.toList());
-
-            int likeCnt = petPickLikeRepository.countByPetPickId(petPick.getId());
-
-            return new PetPickResponseDto(petPick, petPickWriterNickname, petPickWriterImage, likeCnt, isLiking, isFollowing, comments);
-        }).collect(Collectors.toList());
+        return getListPetPickResponseDto(petPicks, user, initCommentSize);
     }
 
     /**
      * 내가 쓴 펫픽 목록 조회
      */
     @Override
-    public List<PetPickResponseDto> getListMyPetPick(HttpServletRequest httpServletRequest, int page, int size,
-                                                     int initCommentSize) throws Exception {
-
+    public List<PetPickResponseDto> getListMyPetPick(int page, int size, int initCommentSize) throws Exception {
         User user = authUtil.getAuthenticatedUser();
 
         Sort sort = Sort.by(Sort.Direction.DESC, "registTime");
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<PetPick> petpicks = petPickRepository.findByUserId(user.getId(), pageable);
+        Page<PetPick> petPicks = petPickRepository.findByUserId(user.getId(), pageable);
 
-        return getListPetPickResponseDtoByConditions(petpicks.getContent(), new UserResponseDto(user), initCommentSize);
+        return getListPetPickResponseDto(petPicks.getContent(), user, initCommentSize);
     }
 
     /**
      * 내가 좋아요한 펫픽 목록 조회
      */
     @Override
-    public List<PetPickResponseDto> getListLikePetPick(HttpServletRequest httpServletRequest, int page, int size, int initCommentSize) throws Exception {
-
+    public List<PetPickResponseDto> getListLikePetPick(int page, int size, int initCommentSize) throws Exception {
         User user = authUtil.getAuthenticatedUser();
 
         Sort sort = Sort.by(Sort.Direction.DESC, "registTime");
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<PetPick> petpicks = petPickRepository.findLikedPetPicksByUserId(user.getId(), pageable);
 
-        return getListPetPickResponseDtoByConditions(petpicks.getContent(), new UserResponseDto(user), initCommentSize);
+        return getListPetPickResponseDto(petpicks.getContent(), user, initCommentSize);
     }
 
     /**
-     * paging 된 내가 쓴 글, 좋아요한 글 petpick 가져온 후,
-     * 작성자 정보 설정, 좋아요,팔로우 설정 및 댓글 페이징 처리 메소드
+     * List<PetPick> -> List<PetPickResponseDto>
      */
-    List<PetPickResponseDto> getListPetPickResponseDtoByConditions(List<PetPick> petPicks, UserResponseDto userResponseDto,
-                                                                   int initCommentSize) {
-
+    List<PetPickResponseDto> getListPetPickResponseDto(List<PetPick> petPicks, User user, int initCommentSize) {
         List<PetPickResponseDto> result = petPicks.stream().map(petPick -> {
-            User petPickWriter = userRepository.findById(petPick.getUserId()).orElse(null);
-            String petPickWriterNickname = petPickWriter.getNickname();
-            String petPickWriterImage = petPickWriter.getImage();
-
-            // 펫픽 좋아요, 팔로우 여부 확인
-            boolean isLiking = false;
-            boolean isFollowing = false;
-            // 로그인 된 유저일 경우
-            if (userResponseDto != null) {
-                int userId = userResponseDto.getId();
-                isLiking = petPickLikeRepository.existsByUserIdAndPetPickId(userId, petPick.getId());
-                isFollowing = followRepository.existsByUserIdAndAnimalId(userId, petPick.getAnimalId());
-            }
-
-            Sort sort = Sort.by(Sort.Direction.DESC, "registTime");
-            Pageable pageable = PageRequest.of(0, initCommentSize, sort);
-            List<PetPickCommentResponseDto> comments = petPickCommentRepository.findByPetPickId((long) petPick.getId(), pageable).stream()
-                    .collect(Collectors.toList());
-
-            int likeCnt = petPickLikeRepository.countByPetPickId(petPick.getId());
-
-            return new PetPickResponseDto(petPick, petPickWriterNickname, petPickWriterImage, likeCnt, isLiking, isFollowing, comments);
+            return getPetPickResponseDto(petPick, user, initCommentSize);
         }).collect(Collectors.toList());
 
         return result;
     }
 
     /**
-     * 펫픽 상세 조회
+     * PetPick -> PetPickResponseDto
+     * 작성자 정보
+     * 좋아요,팔로우 설정
+     * 댓글(페이징)
+     * 좋아요 개수
      */
-    public PetPickResponseDto getDetailPetPick(int id) throws Exception {
-
-        // 해당 id 펫픽
-        PetPick petPick = petPickRepository.findByIdAndDisabledFalse(id)
-                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
-
+    public PetPickResponseDto getPetPickResponseDto(PetPick petPick, User user, int initCommentSize) {
         User petPickWriter = userRepository.findById(petPick.getUserId()).orElse(null);
         String petPickWriterNickname = petPickWriter.getNickname();
         String petPickWriterImage = petPickWriter.getImage();
 
-        int likeCnt = petPickLikeRepository.countByPetPickId(id);
+        // 펫픽 좋아요 여부, 동물 팔로우 여부 확인
+        boolean isLiking = false;
+        boolean isFollowing = false;
+        // 로그인 된 유저일 경우
+        if (user != null) {
+            int userId = user.getId();
+            isLiking = petPickLikeRepository.existsByUserIdAndPetPickId(userId, petPick.getId());
+            isFollowing = followRepository.existsByUserIdAndAnimalId(userId, petPick.getAnimalId());
+        }
 
-        List<PetPickCommentResponseDto> comments = petPickCommentRepository.findByPetPickIdAndDisabledFalse(id).stream()
-                .map(petPickComment -> {
-                    User user = userRepository.findByIdAndDisabledFalse(petPickComment.getUserId())
-                            .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
-                    return new PetPickCommentResponseDto(petPickComment, user.getNickname(), user.getImage());
-                })
-                .sorted(Comparator.comparing(PetPickCommentResponseDto::getRegistTime).reversed())
+        // 댓글 페이징 처리
+        Sort sort = Sort.by(Sort.Direction.ASC, "registTime");
+        Pageable pageable = PageRequest.of(0, initCommentSize, sort);
+        List<PetPickCommentResponseDto> comments = petPickCommentRepository.findByPetPickIdAndDisabledFalse(petPick.getId(), pageable).stream()
                 .collect(Collectors.toList());
 
-        return new PetPickResponseDto(petPick, petPickWriterNickname, petPickWriterImage, likeCnt, false, false, comments);
+        // 좋아요 개수
+        int likeCnt = petPickLikeRepository.countByPetPickId(petPick.getId());
+
+        return new PetPickResponseDto(petPick, petPickWriterNickname, petPickWriterImage, likeCnt, isLiking, isFollowing, comments);
+    }
+
+
+    /**
+     * 펫픽 상세 조회
+     */
+    public PetPickResponseDto getDetailPetPick(int id, int initCommentSize) throws Exception {
+        // 쇼츠 상세 조회시 로그인, 비로그인 체크 (조회는 비로그인이여도 예외던지면 안되므로 AuthUtil 사용 X)
+        User user = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof CustomUserDetail) {
+            CustomUserDetail userDetail = (CustomUserDetail) authentication.getPrincipal();
+            user = userRepository.findByIdAndDisabledFalse(userDetail.getId())
+                    .orElseThrow(() -> new PetBridgeException(ErrorCode.UNAUTHORIZED));
+        }
+
+        // PetPick 없거나 삭제됐을 경우 404, 그거만 아니면 다 보여주면됨.
+        PetPick petPick = petPickRepository.findByIdAndDisabledFalse(id)
+                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+
+        return getPetPickResponseDto(petPick, user, initCommentSize);
     }
 
     /**
@@ -224,38 +204,43 @@ public class PetPickServiceImpl implements PetPickService {
      */
     @Override
     @Transactional
-    public void editPetPick(HttpServletRequest httpServletRequest, PetPickEditRequestDto petPickEditRequestDto,
-                            int petPickId, MultipartFile thumbnailFile) throws Exception {
+    public void editPetPick(int petPickId, PetPickEditRequestDto petPickEditRequestDto, MultipartFile thumbnailFile) throws Exception {
+        // null 입력 처리
+        if (petPickEditRequestDto.getAnimalId() == null || petPickEditRequestDto.getTitle() == null
+                || petPickEditRequestDto.getContent() == null || thumbnailFile == null) {
+            throw new PetBridgeException(ErrorCode.BAD_REQUEST);
+        }
 
+        // 유저 정보
         User user = authUtil.getAuthenticatedUser();
-        // 펫픽 없을 때
-        PetPick entity = petPickRepository.findByIdAndDisabledFalse(petPickId).orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
-        // 내가 작성한 펫픽이 아닐 때
+        
+        // 없거나 삭제된 펫픽에 대한 요청일 경우 404
+        PetPick entity = petPickRepository.findByIdAndDisabledFalse(petPickId)
+                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+
+        // 내가 쓴 펫픽이 아닌 경우 403
         if (user.getId() != entity.getUserId()) {
             throw new PetBridgeException(ErrorCode.FORBIDDEN);
         }
-        // 조회했는데 삭제된 펫픽일 때
-        if (entity.isDisabled()) {
-            throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND);
-        }
 
-        if (petPickEditRequestDto.getBoardId() != null && !boardRepository.findByIdAndDisabledFalse(petPickEditRequestDto.getBoardId()).isPresent()) {
-            throw new PetBridgeException(ErrorCode.BAD_REQUEST);
-        }
-
+        // 태그 동물 외래키 오류
         if (!animalRepository.findByIdAndDisabledFalse(petPickEditRequestDto.getAnimalId()).isPresent()) {
             throw new PetBridgeException(ErrorCode.BAD_REQUEST);
         }
-
-        String savedThumbnailFileName = null;
-        if (thumbnailFile != null) {
-            savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "images");
+        // 태그 게시글 외래키 오류 (게시글은 null 들어올 수 있음 고려)
+        Integer taggedBoardId = petPickEditRequestDto.getBoardId();
+        if (taggedBoardId != null) {
+            if (!boardRepository.findByIdAndDisabledFalse(taggedBoardId).isPresent()) {
+                throw new PetBridgeException(ErrorCode.BAD_REQUEST);
+            }
         }
 
-        entity.update(petPickEditRequestDto.getBoardId(),
-                petPickEditRequestDto.getTitle(),
-                savedThumbnailFileName,
-                petPickEditRequestDto.getContent());
+        // 수정 진행
+        String savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "images");
+        entity.setThumbnail(savedThumbnailFileName);
+
+        entity.update(petPickEditRequestDto);
+        petPickRepository.save(entity);
     }
 
     /**
@@ -263,25 +248,19 @@ public class PetPickServiceImpl implements PetPickService {
      */
     @Transactional
     @Override
-    public void delete(HttpServletRequest httpServletRequest, final Long petPickId) throws Exception {
-
+    public void removePetPick(int petPickId) throws Exception {
         User user = authUtil.getAuthenticatedUser();
 
-        // 펫픽 없을 때
-        PetPick entity = petPickRepository.findById(petPickId).orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+        // 없거나 삭제된 펫픽에 대한 요청일 경우 404
+        PetPick entity = petPickRepository.findByIdAndDisabledFalse(petPickId)
+                .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
 
-        // 내가 작성한 쇼츠가 아닐 때
+        // 내가 쓴 펫픽이 아닌 경우 403
         if (user.getId() != entity.getUserId()) {
             throw new PetBridgeException(ErrorCode.FORBIDDEN);
         }
 
-        // 이미 삭제된 쇼츠일 때
-        if (entity.isDisabled()) {
-            throw new PetBridgeException(ErrorCode.CONFLICT);
-        }
-
         entity.disable();
+        petPickRepository.save(entity);
     }
-
-
 }

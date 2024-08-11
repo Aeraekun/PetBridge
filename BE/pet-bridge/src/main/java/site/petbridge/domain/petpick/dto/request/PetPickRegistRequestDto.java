@@ -1,5 +1,6 @@
 package site.petbridge.domain.petpick.dto.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +12,12 @@ import site.petbridge.domain.petpick.domain.PetPick;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PetPickRegistRequestDto {
 
-    private int boardId;
-    private int animalId;
+    private Integer boardId;
+    @NotNull
+    private Integer animalId;
+    @NotNull
     private String title;
+    @NotNull
     private String content;
 
     public PetPick toEntity(int userId, String thumbnailFile, String videoFile) {

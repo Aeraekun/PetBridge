@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 import site.petbridge.domain.board.domain.Board;
+import site.petbridge.domain.petpick.dto.request.PetPickEditRequestDto;
 import site.petbridge.domain.user.domain.User;
 
 import java.time.LocalDateTime;
@@ -52,16 +53,14 @@ public class PetPick {
         this.video = video;
     }
 
-    public void update(Integer boardId, String title, String thumbnail, String content) {
-        this.boardId = boardId;
-        this.title = title;
-        this.thumbnail = thumbnail;
-        this.content = content;
+    public void update(PetPickEditRequestDto petPickEditRequestDto) {
+        this.boardId = petPickEditRequestDto.getBoardId();
+        this.animalId = petPickEditRequestDto.getAnimalId();
+        this.title = petPickEditRequestDto.getTitle();
+        this.content = petPickEditRequestDto.getContent();
     }
 
     public void disable() {
         this.disabled = true;
     }
-
-
 }
