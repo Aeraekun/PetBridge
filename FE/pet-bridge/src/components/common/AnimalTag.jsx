@@ -3,7 +3,7 @@ import {useEffect, useState} from "react"
 // import AnimalProfile from "./AnimalProfile"
 import {getMyAnimals} from "api/mypage-api"
 
-const AnimalTag = ({onSelectAnimalId}) => {
+const AnimalTag = ({onSelectAnimalId, onSelectAnimalName}) => {
   const [selectedAnimalId, setSelectedAnimalId] = useState(null)
   const [visible, setVisible] = useState(false)
   const [myAnimals, setMyAnimals] = useState([])
@@ -44,6 +44,13 @@ const AnimalTag = ({onSelectAnimalId}) => {
     if (!id) {
       setSelectedAnimal(null)
     }
+
+    if (onSelectAnimalName) {
+      const animal = myAnimals.find((animal) => animal.id === id)
+      if (animal) {
+        onSelectAnimalName(animal.name)
+      }
+    }
   }
   const handleVisibilityChange = (isVisible) => {
     setVisible(isVisible)
@@ -73,7 +80,7 @@ const AnimalTag = ({onSelectAnimalId}) => {
       </div>
       <div className="h-32 w-96">
         {selectedAnimal ? (
-          <div className="flex justify-between space-x-2 rounded bg-amber-50 p-2">
+          <div className="flex justify-between space-x-2 rounded bg-green-50 p-2">
             <div className="flex w-full space-x-3">
               <div className="flex flex-col justify-center">
                 <img

@@ -45,22 +45,18 @@
 const AnimalProfile = ({data, isSelected, onSelect}) => {
   return (
     <div className="">
-      <div
-        className={`flex h-26 w-full justify-between space-x-2 rounded p-3 ${isSelected ? "" : ""}`}
-        onClick={onSelect}
-      >
-        <div className="flex w-full space-x-3">
-          <div className="flex flex-col justify-center">
-            <img
-              src={data.filename}
-              className="size-16 object-cover rounded-full "
-              alt="animalImage"
-            />
-          </div>
-          <div className=" flex flex-col space-y-0 overflow-hidden">
-            <div className=" flex ">
-              <div className="mr-3 w-20">이름</div>
-              <div className="w-full ">{data.name}</div>
+      <div className=" flex items-center justify-around space-x-2.5 ">
+        <div
+          className={`flex w-full justify-between space-x-2 rounded bg-green-50 p-3 hover:bg-green-100  ${isSelected ? "bg-green-100" : "bg-gray-300"}`}
+          onClick={onSelect}
+        >
+          <div className="flex w-full space-x-3">
+            <div className="flex flex-col justify-center">
+              <img
+                src={data.filename}
+                className="size-16 rounded-full object-cover "
+                alt="animalImage"
+              />
             </div>
             <div className=" flex ">
               <div className="mr-3 w-20 ">품종</div>
