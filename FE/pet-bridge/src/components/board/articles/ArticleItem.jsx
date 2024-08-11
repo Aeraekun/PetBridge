@@ -17,7 +17,7 @@ const ArticleItem = ({data, onSelectArticle}) => {
       <img
         src={data.thumbnail}
         alt="imag"
-        className="size-[300px] object-contain"
+        className="size-[300px] object-cover"
       />
       <div className="p-4">
         <div className=" mb-4 flex h-8 items-center justify-between">

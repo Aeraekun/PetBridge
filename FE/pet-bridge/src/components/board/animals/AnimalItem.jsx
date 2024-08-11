@@ -15,13 +15,13 @@ const AnimalItem = ({data, onSelectAnimal, isShelter}) => {
         <img
           src={data.popfile}
           alt="imag"
-          className="object-contain  h-[200px] w-[300px] snap-center   overflow-hidden "
+          className="h-[200px]  w-[300px] snap-center overflow-hidden   object-cover "
         />
       ) : (
         <img
           src={data.filename}
           alt="imag"
-          className="object-contain  h-[200px] w-[300px] snap-center  overflow-hidden "
+          className="h-[200px]  w-[300px] snap-center overflow-hidden  object-cover "
         />
       )}
 
