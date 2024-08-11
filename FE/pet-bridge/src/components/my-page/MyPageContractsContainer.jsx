@@ -78,7 +78,7 @@ const MyPageContractsContainer = () => {
   }, [page])
 
   return (
-    <div className="flex min-w-80  h-full flex-col items-center">
+    <div className="flex h-full  min-w-80 flex-col items-center">
       <div className="flex w-full justify-between p-2.5 ">
         <div />
         <button className="text-2xl font-bold">내 입양기록</button>
@@ -107,10 +107,10 @@ const MyPageContractsContainer = () => {
             >
               <MyPageCard
                 id={item.id}
-                imageSrc={item.thumbnail}
+                imageSrc={item.animalImage}
                 imageAlt={item.title}
-                content1={item.title}
-                content2={item.animalId}
+                content1={`입양 동물 : ${item.animalName}`}
+                content2={`입양자 : ${item.contracteeNickname}`}
                 content3={item.content}
               />
             </Link>

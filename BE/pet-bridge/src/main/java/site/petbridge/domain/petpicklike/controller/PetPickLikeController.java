@@ -20,10 +20,8 @@ public class PetPickLikeController {
      * 펫픽 좋아요 등록
      */
     @PostMapping
-    public ResponseEntity<Void> registPetPickLike(
-            HttpServletRequest httpServletRequest,
-            @RequestBody PetPickLikeRequestDto petPickLikeRequestDto) throws Exception {
-        petPickLikeService.registPetPickLike(httpServletRequest, petPickLikeRequestDto);
+    public ResponseEntity<Void> registPetPickLike(@RequestBody PetPickLikeRequestDto petPickLikeRequestDto) throws Exception {
+        petPickLikeService.registPetPickLike(petPickLikeRequestDto);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -32,10 +30,8 @@ public class PetPickLikeController {
      * 펫픽 좋아요 삭제
      */
     @DeleteMapping
-    public ResponseEntity<Void> deletePetPickLike(
-            HttpServletRequest httpServletRequest,
-            @RequestBody PetPickLikeRequestDto petPickLikeRequestDto) throws Exception {
-        petPickLikeService.deletePetPickLike(httpServletRequest, petPickLikeRequestDto);
+    public ResponseEntity<Void> deletePetPickLike(@RequestBody PetPickLikeRequestDto petPickLikeRequestDto) throws Exception {
+        petPickLikeService.deletePetPickLike(petPickLikeRequestDto);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -44,8 +40,7 @@ public class PetPickLikeController {
      * 펫핏 좋아요 조회
      */
     @GetMapping("/{id}")
-    public ResponseEntity<PetPickLikeResponseDto> getDetailPetPickLike(
-            @PathVariable(name = "id") int id) throws Exception {
+    public ResponseEntity<PetPickLikeResponseDto> getDetailPetPickLike(@PathVariable(name = "id") int id) throws Exception {
         PetPickLikeResponseDto petPickLikeResponseDto = petPickLikeService.getDetailPetPickLike(id);
 
         return new ResponseEntity<>(petPickLikeResponseDto, HttpStatus.OK);

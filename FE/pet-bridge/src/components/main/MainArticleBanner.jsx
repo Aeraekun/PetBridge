@@ -29,7 +29,7 @@ const MainArticleBanner = () => {
           <div className="flex justify-center gap-4">
             <Link
               to="/users/login"
-              className="inline-flex h-12 items-center justify-center rounded-md border border-stroke bg-mild px-3.5 py-4 text-black"
+              className="inline-flex h-12 items-center justify-center rounded-md border border-stroke bg-[#FECACA] px-3.5 py-4 text-black"
             >
               <img
                 src={iconPawprint}
@@ -40,7 +40,7 @@ const MainArticleBanner = () => {
             </Link>
             <Link
               to="/users/sign-up"
-              className="inline-flex h-12 items-center justify-center rounded-md border border-stroke bg-mild px-3.5 py-4 text-black"
+              className="inline-flex h-12 items-center justify-center rounded-md border border-stroke bg-[#FECACA] px-3.5 py-4 text-black"
             >
               <img
                 src={iconPawprint}

@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import site.petbridge.domain.contract.dto.request.ContractEditRequestDto;
+import site.petbridge.domain.contract.service.ContractService;
+import site.petbridge.domain.user.domain.User;
 import site.petbridge.domain.user.repository.UserRepository;
 import site.petbridge.global.payment.dto.request.PaymentRequestDto;
 import site.petbridge.global.payment.dto.response.ApproveResponseDto;
@@ -33,7 +36,7 @@ public class PaymentController {
 
 	private final KakaoPayService kakaoPayService;
 	private final RedisService redisService;
-	private final UserRepository userRepository;
+	private final ContractService contractService;
 	private final AuthUtil authUtil;
 
 	@Value("${spring.auth-code-expiration-millis}")
@@ -58,13 +61,18 @@ public class PaymentController {
 
 	@GetMapping("/completed")
 	public ResponseEntity<ApproveResponseDto> payCompleted(
-		@RequestParam("user_id") String userId,
-		@RequestParam("pg_token") String pgToken) {
-		String tid = redisService.getValues(userId);
+		@RequestParam("contract_id") String contractId,
+		@RequestParam("pg_token") String pgToken) throws Exception {
+		String tid = redisService.getValues(contractId);
 
 		// 카카오 결제 요청하기
 		ApproveResponseDto approveResponseDto = kakaoPayService.payApprove(tid, pgToken);
 
+		// 계약 완료 처리
+		User user = authUtil.getAuthenticatedUser();
+		if(contractService.editContract(Integer.parseInt(contractId), new ContractEditRequestDto(Integer.parseInt(contractId), user.getId(), "계약완료")) == 0){
+			return new ResponseEntity<>(approveResponseDto, HttpStatus.BAD_REQUEST);
+		}
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(approveResponseDto);
 	}

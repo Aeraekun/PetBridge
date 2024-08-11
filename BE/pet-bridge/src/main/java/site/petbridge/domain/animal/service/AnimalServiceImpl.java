@@ -49,14 +49,20 @@ public class AnimalServiceImpl implements AnimalService {
 	@Transactional
 	@Override
 	public void registAnimal(AnimalRegistRequestDto animalRegistRequestDto, MultipartFile imageFile) throws Exception {
-		User user = authUtil.getAuthenticatedUser();
-
-		String savedImageFileName = null;
-		if (imageFile != null) {
-			savedImageFileName = fileUtil.saveFile(imageFile, "images");
+		if (animalRegistRequestDto.getName() == null || animalRegistRequestDto.getSpecies() == null ||
+		animalRegistRequestDto.getKindCd() == null || animalRegistRequestDto.getColorCd() == null ||
+		animalRegistRequestDto.getAge() == null || animalRegistRequestDto.getWeight() == null ||
+				animalRegistRequestDto.getSexCd() == null || animalRegistRequestDto.getNeuterYn() == null ||
+				animalRegistRequestDto.getCareAddr() == null || imageFile == null) {
+			throw new PetBridgeException(ErrorCode.BAD_REQUEST);
 		}
 
+		User user = authUtil.getAuthenticatedUser();
+
+		// 등록 진행
+		String savedImageFileName = fileUtil.saveFile(imageFile, "images");
 		Animal entity = animalRegistRequestDto.toEntity(user.getId(), savedImageFileName);
+
 		animalRepository.save(entity);
 	}
 
@@ -66,23 +72,28 @@ public class AnimalServiceImpl implements AnimalService {
 	@Transactional
 	@Override
 	public void editAnimal(int id, AnimalEditRequestDto animalEditRequestDto, MultipartFile imageFile) throws Exception {
+		if (animalEditRequestDto.getName() == null || animalEditRequestDto.getSpecies() == null ||
+				animalEditRequestDto.getKindCd() == null || animalEditRequestDto.getColorCd() == null ||
+				animalEditRequestDto.getAge() == null || animalEditRequestDto.getWeight() == null ||
+				animalEditRequestDto.getSexCd() == null || animalEditRequestDto.getNeuterYn() == null ||
+				animalEditRequestDto.getCareAddr() == null || imageFile == null) {
+			throw new PetBridgeException(ErrorCode.BAD_REQUEST);
+		}
+
 		User user = authUtil.getAuthenticatedUser();
 
 		// 없거나 삭제된 동물
 		Animal entity = animalRepository.findByIdAndDisabledFalse(id)
 			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
-
 		// 내 동물 아닐때
 		if (user.getId() != entity.getUserId()) {
 			throw new PetBridgeException(ErrorCode.FORBIDDEN);
 		}
 
-		String savedImageFileName = null;
-		if (imageFile != null) {
-			savedImageFileName = fileUtil.saveFile(imageFile, "images");
-		}
-
+		// 수정 진행
+		String savedImageFileName = fileUtil.saveFile(imageFile, "images");
 		entity.update(animalEditRequestDto, savedImageFileName);
+		
 		animalRepository.save(entity);
 	}
 
@@ -97,13 +108,14 @@ public class AnimalServiceImpl implements AnimalService {
 		// 없거나 삭제된 동물
 		Animal entity = animalRepository.findByIdAndDisabledFalse(id)
 			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
-
 		// 내 동물 아닐때
 		if (user.getId() != entity.getUserId()) {
 			throw new PetBridgeException(ErrorCode.FORBIDDEN);
 		}
 
+		// 삭제
 		entity.disable();
+
 		animalRepository.save(entity);
 	}
 
@@ -118,56 +130,23 @@ public class AnimalServiceImpl implements AnimalService {
 
 		// processState에 따라 contract 테이블로부터 동물 id 필터링
 		List<Integer> filteredAnimalIds = filterByProcessState(processState);
-		System.out.println(filteredAnimalIds);
 
-		// animal 테이블에서 species, kindCd, careAddr에 따른 검색 (No 페이징)
-		Page<Animal> animals;
-		if (species != null && kindCd != null && careAddr != null) {
-			animals = animalRepository.findBySpeciesAndKindCdContainingAndCareAddrContainingAndDisabledFalse(species, kindCd, careAddr, Pageable.unpaged());
-		} else if (species != null && kindCd != null) {
-			animals = animalRepository.findBySpeciesAndKindCdContainingAndDisabledFalse(species, kindCd, Pageable.unpaged());
-		} else if (species != null && careAddr != null) {
-			animals = animalRepository.findBySpeciesAndCareAddrContainingAndDisabledFalse(species, careAddr, Pageable.unpaged());
-		} else if (kindCd != null && careAddr != null) {
-			animals = animalRepository.findByKindCdContainingAndCareAddrContainingAndDisabledFalse(kindCd, careAddr, Pageable.unpaged());
-		} else if (species != null) {
-			animals = animalRepository.findBySpeciesAndDisabledFalse(species, Pageable.unpaged());
-		} else if (kindCd != null) {
-			animals = animalRepository.findByKindCdContainingAndDisabledFalse(kindCd, Pageable.unpaged());
-		} else if (careAddr != null) {
-			animals = animalRepository.findByCareAddrContainingAndDisabledFalse(careAddr, Pageable.unpaged());
-		} else {
-			animals = animalRepository.findAllByDisabledFalse(Pageable.unpaged());
-		}
+		// 동적 쿼리 적용
+		Page<Animal> pagedAnimals = animalRepository.findAnimalsByDynamicQuery(page, size, species, kindCd, careAddr, filteredAnimalIds, pageable);
 
-		// 동물 id processState 필터링 적용
-		List<Animal> filteredAnimals = animals.stream()
-			.filter(animal -> filteredAnimalIds.contains(animal.getId()))
-			.sorted((a1, a2) -> Integer.compare(a2.getId(), a1.getId())) // 큰 id부터 나오게
-			.collect(Collectors.toList());
+		List<AnimalResponseDto> animalResponseDtos = pagedAnimals.stream()
+				.map(animal -> {
+					try {
+						User animalUser = userRepository.findByIdAndDisabledFalse(animal.getUserId())
+								.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+						return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(page, size, animal.getId()), animalUser);
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
+				})
+				.collect(Collectors.toList());
 
-		// 최종 paging 처리
-		int start = (int) pageable.getOffset();
-		int end = Math.min((start + pageable.getPageSize()), filteredAnimals.size());
-		if (start > end) {
-			throw new IllegalArgumentException("Invalid page request");
-		}
-		Page<Animal> pagedAnimals = new PageImpl<>(filteredAnimals.subList(start, end), pageable,
-			filteredAnimals.size());
-
-		List<AnimalResponseDto> animalResponseDtos =  pagedAnimals.stream()
-			.map(animal -> {
-                try {
-					User animalUser = userRepository.findByIdAndDisabledFalse(animal.getUserId())
-							.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
-                    return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(page, size, animal.getId()), animalUser);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            })
-			.collect(Collectors.toList());
-
-		return new PageImpl<>(animalResponseDtos, pageable, filteredAnimals.size());
+		return new PageImpl<>(animalResponseDtos, pageable, pagedAnimals.getTotalElements());
 	}
 
 	/**
@@ -179,7 +158,6 @@ public class AnimalServiceImpl implements AnimalService {
 
 		Sort sort = Sort.by(Sort.Direction.DESC, "id");
 		Pageable pageable = PageRequest.of(page, size, sort);
-
 		Page<Animal> animals = animalRepository.findByUserIdAndDisabledFalse(user.getId(), pageable);
 
 		return animals.stream()

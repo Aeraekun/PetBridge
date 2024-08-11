@@ -14,6 +14,7 @@ import {patchThisMonthStamp} from "utils/contract-utils"
 import {useSelector} from "react-redux"
 import {selectId, selectPhone} from "features/user/users-slice"
 import {postPhoneCheck, postPhoneVerificationCode} from "api/users-api"
+import ContractBackground from "assets/image/contract-bg.webp"
 
 const ContractsContainer = () => {
   const navigate = useNavigate()
@@ -98,32 +99,32 @@ const ContractsContainer = () => {
       }
     }
   }
+  // !!!!!계약 체결 버튼을 누르면 결제 하고, 결제가 완료되면 자동으로 계약이 체결되는것으로 변경!!!!!
+  // // 계약 체결 버튼을 누르면
+  // const clickPatchButtonHandler = async () => {
+  //   // 계약서 아이디로 삭제 요청을 보냄
+  //   if (confirm("계약을 체결하시겠습니까?")) {
+  //     console.log(contractInfo)
+  //     const contractEditRequestDto = {
+  //       id: Number(contractInfo.id),
+  //       userId: Number(contractInfo.contracteeId),
+  //       status: "계약완료",
+  //     }
+  //     try {
+  //       const res = await patchContract(contractEditRequestDto)
 
-  // 계약 체결 버튼을 누르면
-  const clickPatchButtonHandler = async () => {
-    // 계약서 아이디로 삭제 요청을 보냄
-    if (confirm("계약을 체결하시겠습니까?")) {
-      console.log(contractInfo)
-      const contractEditRequestDto = {
-        id: Number(contractInfo.id),
-        userId: Number(contractInfo.contracteeId),
-        status: "계약완료",
-      }
-      try {
-        const res = await patchContract(contractEditRequestDto)
-
-        alert("계약이 완료되었습니다.")
-        if (res.status == 204) {
-          const fetchedContractInfo = await getContractDetail(id)
-          if (fetchedContractInfo.data) {
-            setContractInfo(fetchedContractInfo.data)
-          }
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    }
-  }
+  //       alert("계약이 완료되었습니다.")
+  //       if (res.status == 204) {
+  //         const fetchedContractInfo = await getContractDetail(id)
+  //         if (fetchedContractInfo.data) {
+  //           setContractInfo(fetchedContractInfo.data)
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //   }
+  // }
 
   // 계약 종료 (환급) 버튼 클릭
   const clickFinishHandler = () => {
@@ -152,6 +153,7 @@ const ContractsContainer = () => {
     const code = event.target.value
     setPhoneCode(code)
   }
+
   const clickPhoneCodeCheckHandler = async () => {
     const phoneConfirmData = {
       phone: phone,
@@ -169,11 +171,25 @@ const ContractsContainer = () => {
   }
 
   const clickPaymentHandler = async () => {
-    try {
-      const res = await postPayment(contractInfo.animalName, contractInfo.money)
-      return res
-    } catch (error) {
-      console.log(error)
+    if (
+      confirm(
+        "결제가 완료되면 계약이 자동으로 체결됩니다. 결제 화면으로 이동하시겠습니까?"
+      )
+    ) {
+      try {
+        const res = await postPayment(
+          Number(contractInfo.id),
+          contractInfo.animalName,
+          Number(contractInfo.payment)
+        )
+        console.log("clickPaymendHandler에서 res 출력", res)
+        if (res.data?.next_redirect_pc_url) {
+          window.location.href = res.data.next_redirect_pc_url
+        }
+        return res
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 
@@ -205,8 +221,15 @@ const ContractsContainer = () => {
               nickname={contractInfo.contracteeNickname}
             />
           </div>
-          <div className="bg-stroke flex h-[600px] w-full flex-col items-center rounded-2xl p-5">
-            <p className="my-10 text-4xl font-bold">계약서</p>
+          <div
+            className="flex h-[600px] w-full flex-col items-center bg-stroke p-5"
+            style={{
+              backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(${ContractBackground})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            <p className="my-16 text-4xl font-bold">계약서</p>
             <ContractDetail
               contractorNickname={contractInfo.contractorNickname}
               contracteeNickname={contractInfo.contracteeNickname}
@@ -220,7 +243,7 @@ const ContractsContainer = () => {
           {contractInfo.status === "계약완료" ? (
             <>
               <span className="text-4xl font-bold">입양 스탬프북</span>
-              <div className="border-mild flex w-full flex-col items-center justify-center rounded-2xl border-2 p-5">
+              <div className="flex w-full flex-col items-center justify-center rounded-2xl border-2 border-mild p-5">
                 <div className="flex h-full flex-wrap justify-center">
                   {Array.from({length: contractInfo.month}).map((_, index) => (
                     <ContractStamp
@@ -233,7 +256,7 @@ const ContractsContainer = () => {
                 <div className="flex h-20 items-center justify-center">
                   {Number(userId) == contractInfo.contractorId ? (
                     <button
-                      className="bg-mild rounded-2xl p-2.5 text-2xl font-bold text-white"
+                      className="rounded-2xl bg-mild p-2.5 text-2xl font-bold text-white"
                       onClick={onClickStampHandler}
                     >
                       이번 달 스탬프 찍기
@@ -249,8 +272,8 @@ const ContractsContainer = () => {
           ) : Number(userId) !== contractInfo.contractorId ? (
             <>
               {/* 서명란 */}
-              <section className="">
-                <p className="my-4 text-center font-bold">- 서명</p>
+              <section className="h-80">
+                <p className="my-4 text-center font-bold">서명</p>
                 <div className="flex h-40 w-full gap-10">
                   {/* 보호자 서명 */}
                   <div className="w-80">
@@ -264,7 +287,7 @@ const ContractsContainer = () => {
 
                       <button
                         disabled={true}
-                        className={`bg-stroke rounded-2xl border p-2.5`}
+                        className={`rounded-2xl border bg-stroke p-2.5`}
                       >
                         서명 완료
                       </button>
@@ -282,10 +305,10 @@ const ContractsContainer = () => {
                       {isPhoneCodeSent ? (
                         isPhoneCodeChecked ? (
                           <button
-                            onClick={clickPaymentHandler}
-                            className="bg-mild grow rounded-2xl border px-2"
+                            disabled={true}
+                            className={`rounded-2xl border bg-stroke p-2.5`}
                           >
-                            결제하기
+                            서명 완료
                           </button>
                         ) : (
                           <>
@@ -297,9 +320,8 @@ const ContractsContainer = () => {
                               onChange={changeCodeHandler}
                             />
                             <button
-                              disabled={!isPhoneCodeChecked}
                               onClick={clickPhoneCodeCheckHandler}
-                              className="hover:bg-mild grow rounded-2xl border px-2"
+                              className="grow rounded-2xl border px-2 hover:bg-mild"
                             >
                               확인
                             </button>
@@ -319,28 +341,56 @@ const ContractsContainer = () => {
                 </div>
               </section>
 
-              {/* 클릭시 계약 체결하기 */}
+              {/* 클릭시 결제 후 계약 체결하기 */}
               <button
                 disabled={!isPhoneCodeChecked}
-                className="bg-mild rounded-xl p-2.5 text-white"
-                onClick={clickPatchButtonHandler}
-              >
-                계약 체결하기
-              </button>
-              <button
-                className="bg-mild rounded-xl p-2.5 text-white"
-                onClick={clickPatchButtonHandler}
+                className="rounded-xl bg-mild p-2.5 text-white"
+                onClick={clickPaymentHandler}
               >
                 계약 체결하기
               </button>
             </>
           ) : contractInfo.status === "계약전" ? (
-            <button
-              className="bg-alert rounded-xl p-2.5 text-white"
-              onClick={clickDeleteButtonHandler}
-            >
-              계약서 삭제하기
-            </button>
+            <section className="h-80">
+              <p className="my-4 text-center text-xl font-bold">서명</p>
+              <div className="flex h-40 w-full gap-10">
+                {/* 보호자 서명 */}
+                <div className="w-80">
+                  <ContractPerson
+                    imageSrc={contractInfo.contractorImage}
+                    title="보호자"
+                    nickname={contractInfo.contractorNickname}
+                  />
+                  <div className="flex gap-4 py-2.5">
+                    <span className="my-3 font-bold">서명</span>
+
+                    <button
+                      disabled={true}
+                      className={`rounded-2xl border bg-stroke p-2.5`}
+                    >
+                      서명 완료
+                    </button>
+                  </div>
+                </div>
+                {/* 계약자 서명 */}
+                <div className="w-80">
+                  <ContractPerson
+                    imageSrc={contractInfo.contracteeImage}
+                    title="계약자"
+                    nickname={contractInfo.contracteeNickname}
+                  />
+                  <div className="flex gap-4 p-2.5">
+                    <p className="my-3 font-bold">서명</p>
+                  </div>
+                </div>
+                <button
+                  className="rounded-xl bg-alert p-2.5 text-white"
+                  onClick={clickDeleteButtonHandler}
+                >
+                  계약서 삭제하기
+                </button>
+              </div>
+            </section>
           ) : (
             <div>계약전아님</div>
           )}
