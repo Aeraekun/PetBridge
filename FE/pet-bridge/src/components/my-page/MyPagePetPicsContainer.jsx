@@ -86,20 +86,19 @@ const MyPagePetPicsContainer = () => {
     navigate(`/petpick/modify/${item.id}`, {state: {item}})
   }
   return (
-    <div className="flex h-full flex-col items-center">
+    <div className="flex h-full  min-w-80 flex-col items-center">
       <div className="flex w-full justify-center p-2.5 ">
-        <button className="text-4xl font-bold">내 펫픽</button>
+        <button className="text-2xl font-bold">내 펫픽</button>
         <Link
-          className=" bg-mild fixed right-3 top-3 rounded-xl p-2.5"
+          className=" absolute right-1.5 top-1.5  rounded-xl bg-mild p-2.5"
           to="/petpick/write"
         >
           펫픽 만들기
         </Link>
       </div>
-      <div className="">클릭하면 수정가능합니다.</div>
       {isLoading ? (
-        <div className="flex size-full items-center justify-center">
-          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
+        <div className="flex size-full  flex-col items-center justify-center">
+          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
           <span className="px-5 text-6xl font-bold">Loading...</span>
         </div>
       ) : (
@@ -141,7 +140,7 @@ const MyPagePetPicsContainer = () => {
 
           {isLoadingMore ? (
             <div className="flex items-center">
-              <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
+              <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
               <span>추가 데이터를 로딩중입니다</span>
             </div>
           ) : null}

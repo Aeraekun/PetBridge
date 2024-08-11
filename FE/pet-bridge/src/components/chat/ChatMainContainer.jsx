@@ -14,7 +14,7 @@ import CallIcon from "assets/icons/icon-call-facetime.svg"
 
 const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL
 
-const ChatMainContainer = () => {
+const ChatMainContainer = ({onStartCall}) => {
   const [chatMessageRequestDto, setChatMessageRequestDto] = useState({
     roomId: null,
     senderId: null,
@@ -32,6 +32,7 @@ const ChatMainContainer = () => {
   const [searchPage, setSearchPage] = useState(0)
   const [fetchMessages, setFetchMessages] = useState(false)
   const [isMessagesLeft, setIsMessagesLeft] = useState(true)
+  const [isComposing, setIsComposing] = useState(false) // IME 상태 확인
 
   const initMessageForm = () => {
     setChatMessageRequestDto({
@@ -101,10 +102,20 @@ const ChatMainContainer = () => {
     }))
   }
 
+  // IME 입력 상태 시작
+  const compositionStartHandler = () => {
+    setIsComposing(true)
+  }
+
+  // IME 입력 상태 종료
+  const compositionEndHandler = () => {
+    setIsComposing(false)
+  }
+
   // 엔터시 clickSendHandler를 동작시킴
 
   const keyDownHandler = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && !isComposing) {
       sendHandler()
     }
   }
@@ -223,8 +234,10 @@ const ChatMainContainer = () => {
             value={messageInput}
             onChange={changeHandler}
             onKeyDown={keyDownHandler}
+            onCompositionStart={compositionStartHandler} // IME 입력 시작 감지
+            onCompositionEnd={compositionEndHandler} // IME 입력 종료 감지
             type="text"
-            className="bg-stroke grow rounded-xl p-2 text-white"
+            className="grow rounded-xl bg-stroke p-2 text-white"
             placeholder="입력하세요"
             id="message-input"
           />
@@ -234,7 +247,12 @@ const ChatMainContainer = () => {
           >
             <img src={SendIcon} alt="전송" className="size-12" />
           </button>
-          <button className="flex size-12 items-center justify-center rounded-full border-2 ">
+          <button
+            className="flex size-12 items-center justify-center rounded-full border-2 "
+            onClick={() => {
+              onStartCall(true)
+            }}
+          >
             <img src={CallIcon} alt="화상" className="size-12" />
           </button>
         </div>

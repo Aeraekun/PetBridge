@@ -1,7 +1,7 @@
 import React, {useState} from "react"
 import SirenModal from "./SirenModal"
 
-const SirenIcon = () => {
+const SirenIcon = ({reportType, reportId}) => {
   const [modalOpen, setModalOpen] = useState(false)
 
   const openModal = () => {
@@ -17,7 +17,12 @@ const SirenIcon = () => {
       <button onClick={openModal}>
         <img src="/icons/icon-siren.svg" alt="Siren Icon" />
       </button>
-      <SirenModal isOpen={modalOpen} onClose={closeModal} />
+      <SirenModal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        reportType={reportType}
+        reportId={reportId}
+      />
     </>
   )
 }

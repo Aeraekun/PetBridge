@@ -2,6 +2,8 @@ package site.petbridge.domain.petpickcomment.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import site.petbridge.domain.boardcomment.dto.request.BoardCommentEditRequestDto;
+import site.petbridge.domain.petpickcomment.dto.request.PetPickCommentEditRequestDto;
 
 import java.time.LocalDateTime;
 
@@ -35,8 +37,8 @@ public class PetPickComment {
         this.content = content;
     }
 
-    public void update(String content) {
-        this.content = content;
+    public void update(PetPickCommentEditRequestDto petPickCommentEditRequestDto) {
+        this.content = petPickCommentEditRequestDto.getContent();
     }
 
     public void disable() {

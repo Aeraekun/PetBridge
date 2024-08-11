@@ -29,6 +29,8 @@ public class AnimalResponseDto {
 
     private Page<BoardResponseDto> boards;
 
+    // 동물 게시판 뭐 넣노?
+
     public AnimalResponseDto(Animal entity, String processState, Page<BoardResponseDto> boards) {
         this.id = entity.getId();
         this.userId = entity.getUserId();

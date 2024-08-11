@@ -11,7 +11,7 @@ import UserVideoComponent from "./UserVideoComponent"
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/"
 
-const CallPage = () => {
+const CallPage = ({onEndCall}) => {
   // 상태 변수 선언
   const [mySessionId, setMySessionId] = useState("SessionA") // 세션 ID
   const [myUserName, setMyUserName] = useState(
@@ -26,6 +26,8 @@ const CallPage = () => {
   const OV = useRef(null) // OpenVidu 객체를 위한 참조
 
   useEffect(() => {
+    // 바로 세션에 참가
+    joinSession()
     // 컴포넌트가 언마운트 될 때 세션을 종료
 
     return () => {
@@ -100,7 +102,7 @@ const CallPage = () => {
     if (session) {
       session.disconnect()
     }
-
+    onEndCall()
     // 상태 초기화
     OV.current = null
     setSession(undefined)
@@ -201,7 +203,7 @@ const CallPage = () => {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-gray-100 p-4">
+    <div className="flex h-screen flex-col overflow-auto bg-gray-100 p-4">
       {session === undefined ? (
         <div
           id="join"

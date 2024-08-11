@@ -1,5 +1,5 @@
 import {useDispatch, useSelector} from "react-redux"
-import {useState} from "react"
+import {useEffect, useState} from "react"
 import {
   selectIsChatModalOpen,
   selectIsChatMinimized,
@@ -14,6 +14,7 @@ import CloseIcon from "assets/icons/icon-close.svg"
 import MinimizeIcon from "assets/icons/icon-minimize.svg"
 import ChatMainContainer from "components/chat/ChatMainContainer"
 import ChatListContainer from "components/chat/ChatListContainer"
+import CallPage from "components/chat/CallPage"
 
 const ChatModal = () => {
   const dispatch = useDispatch()
@@ -68,8 +69,19 @@ const ChatModal = () => {
     } else {
       onClickIcon()
     }
+    // setIsCall(!isCall)
   }
 
+  // 화상채팅여부
+  const [isCall, setIsCall] = useState(false)
+
+  useEffect(() => {
+    setIsCall(false)
+  }, [currentChatId])
+  const handleCall = (event) => {
+    console.log(isCall, "isCall")
+    setIsCall(event)
+  }
   // 유저 아이디로 채팅방 목록을 받아오기
 
   return (
@@ -92,9 +104,9 @@ const ChatModal = () => {
                   alt=""
                   className="pointer-events-none size-8"
                 />
-                <span className="bg-alert fixed bottom-0 right-0 flex size-5 items-center justify-center rounded-full text-xs">
+                <span className="fixed bottom-0 right-0 flex size-5 items-center justify-center rounded-full bg-alert text-xs">
                   <span className="text-white">{newChats.length}</span>
-                  <span className="bg-alert fixed size-4 animate-ping rounded-full"></span>
+                  <span className="fixed size-4 animate-ping rounded-full bg-alert"></span>
                 </span>
               </button>
             </Draggable>
@@ -126,7 +138,15 @@ const ChatModal = () => {
                 <main className="flex h-[calc(100%-2rem)] grow divide-x">
                   <ChatListContainer />
                   {/* 우측 채팅 화면 */}
-                  {currentChatId && <ChatMainContainer />}
+                  {currentChatId ? (
+                    isCall ? (
+                      <div className="size-full overflow-auto">
+                        <CallPage onEndCall={handleCall} />
+                      </div>
+                    ) : (
+                      <ChatMainContainer onStartCall={handleCall} />
+                    )
+                  ) : null}
                 </main>
               </div>
             </Draggable>
