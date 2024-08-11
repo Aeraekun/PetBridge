@@ -1,14 +1,12 @@
 package site.petbridge.domain.animal.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import site.petbridge.domain.animal.dto.request.AnimalEditRequestDto;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "animals")
 @NoArgsConstructor(access =  AccessLevel.PROTECTED)
 public class Animal {
@@ -67,9 +65,8 @@ public class Animal {
 		this.careAddr = careAddr;
 	}
 
-	public void update(AnimalEditRequestDto animalEditRequestDto, String filename) {
+	public void update(AnimalEditRequestDto animalEditRequestDto) {
 		this.name = animalEditRequestDto.getName();
-		this.filename = filename;
 		this.species = animalEditRequestDto.getSpecies();
 		this.kindCd = animalEditRequestDto.getKindCd();
 		this.colorCd = animalEditRequestDto.getColorCd();

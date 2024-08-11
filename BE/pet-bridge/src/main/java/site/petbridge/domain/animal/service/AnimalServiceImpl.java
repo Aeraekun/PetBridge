@@ -76,10 +76,10 @@ public class AnimalServiceImpl implements AnimalService {
 				animalEditRequestDto.getKindCd() == null || animalEditRequestDto.getColorCd() == null ||
 				animalEditRequestDto.getAge() == null || animalEditRequestDto.getWeight() == null ||
 				animalEditRequestDto.getSexCd() == null || animalEditRequestDto.getNeuterYn() == null ||
-				animalEditRequestDto.getCareAddr() == null || imageFile == null) {
+				animalEditRequestDto.getCareAddr() == null) {
 			throw new PetBridgeException(ErrorCode.BAD_REQUEST);
 		}
-
+		
 		User user = authUtil.getAuthenticatedUser();
 
 		// 없거나 삭제된 동물
@@ -91,8 +91,11 @@ public class AnimalServiceImpl implements AnimalService {
 		}
 
 		// 수정 진행
-		String savedImageFileName = fileUtil.saveFile(imageFile, "images");
-		entity.update(animalEditRequestDto, savedImageFileName);
+		if (imageFile != null && !imageFile.isEmpty()) { // 이미지 파일 입력이 있을때만 entity에 저장
+			String savedImageFileName = fileUtil.saveFile(imageFile, "images");
+			entity.setFilename(savedImageFileName);
+		}
+		entity.update(animalEditRequestDto);
 		
 		animalRepository.save(entity);
 	}
