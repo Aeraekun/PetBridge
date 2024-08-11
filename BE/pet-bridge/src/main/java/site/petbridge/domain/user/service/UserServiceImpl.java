@@ -143,6 +143,9 @@ public class UserServiceImpl implements UserService {
 		return new UserResponseDto(entity);
 	}
 
+	/**
+	 * 닉네임 기반 회원 전체 조회
+	 */
 	@Override
 	public List<UserResponseDto> getListUserByNickname(String nickname) throws Exception {
 		List<User> users = userRepository.findByNicknameContainingAndDisabledFalse(nickname);

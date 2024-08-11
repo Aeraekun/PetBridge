@@ -14,41 +14,37 @@ public interface PetPickService {
     /**
      * 펫픽 생성
      */
-    void registPetPick(HttpServletRequest httpServletRequest, final PetPickRegistRequestDto petPickRegistRequestDto, MultipartFile thumbnailFile,
-             MultipartFile videoFile) throws Exception;
+    void registPetPick(PetPickRegistRequestDto petPickRegistRequestDto, MultipartFile thumbnailFile, MultipartFile videoFile) throws Exception;
 
     /**
      * 펫픽 랜덤 목록 조회
      */
-    List<PetPickResponseDto> getRandomListPetPick(HttpServletRequest httpServletRequest, int initCommentSize) throws Exception;
+    List<PetPickResponseDto> getRandomListPetPick(int initCommentSize) throws Exception;
 
     /**
      * 내가 쓴 펫픽 목록 조회
      */
-    List<PetPickResponseDto> getListMyPetPick(HttpServletRequest httpServletRequest, int page, int size,
-                                                     int initCommentSize) throws Exception;
+    List<PetPickResponseDto> getListMyPetPick(int page, int size, int initCommentSize) throws Exception;
 
     /**
      * 내가 좋아요한 펫픽 목록 조회
      */
-    List<PetPickResponseDto> getListLikePetPick(HttpServletRequest httpServletRequest, int page, int size,
-                                              int initCommentSize) throws Exception;
+    List<PetPickResponseDto> getListLikePetPick(int page, int size, int initCommentSize) throws Exception;
 
     /**
      * 펫픽 상세 조회
      */
-    PetPickResponseDto getDetailPetPick(int id) throws Exception;
+    PetPickResponseDto getDetailPetPick(int id, int initCommentSize) throws Exception;
 
     /**
      * 내 펫픽 수정
      */
-    void editPetPick(HttpServletRequest httpServletRequest, PetPickEditRequestDto petPickEditRequestDto,
-                     int petPickId, MultipartFile thumbnailFile) throws Exception;
+    void editPetPick(int petPickId, PetPickEditRequestDto petPickEditRequestDto, MultipartFile thumbnailFile) throws Exception;
 
     /**
      * 내 펫픽 삭제
      */
-    void delete(HttpServletRequest httpServletRequest, final Long id) throws Exception;
+    void removePetPick(int petPickId) throws Exception;
 
 
 }
