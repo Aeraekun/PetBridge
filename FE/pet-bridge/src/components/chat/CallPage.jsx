@@ -10,6 +10,7 @@ import {useSelector} from "react-redux"
 import {selectNickname} from "features/user/users-slice"
 import axiosInstance from "api/axios-instance"
 import {selectCurrentChatId, selectOpponentInfo} from "features/chat/chat-slice"
+import DefaultUserImage from "assets/image/default_user_150.png"
 
 // 애플리케이션 서버 URL 설정
 const BASE_API_URL = process.env.REACT_APP_API_URL
@@ -267,61 +268,45 @@ const CallPage = ({onEndCall}) => {
   }
 
   return (
-    <div className="flex size-full h-full flex-col bg-gray-100 p-4">
-      <ul>
+    <div className="flex size-full h-full flex-col bg-gray-700 ">
+      <div className="flex items-center space-x-2 bg-white px-3 py-1">
+        <img
+          src={opponentInfo.image ? opponentInfo.image : DefaultUserImage}
+          alt=""
+          className="size-12 rounded-full border-2"
+        />
+        <span className="font-bold">{opponentInfo.nickname}</span>
+        <span>님과의 화상채팅</span>
+      </div>
+      <ul className="absolute bg-gray-100">
         {subscribers.map((sub, index) => (
           <li key={index}>
             Subscriber ID: {JSON.parse(sub.stream.connection.data).clientData}
           </li>
         ))}
       </ul>
-      {roomId}
-      {session === undefined ? (
-        <div className="flex flex-col items-center justify-center">
-          <div id="join-dialog" className="rounded-lg bg-white shadow-lg">
-            <button
-              className="mt-4 rounded-l"
-              type="submit"
-              onClick={() => {
-                JoinSession()
-              }}
-            >
-              (세션 없음)세션 만들기.
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-1 flex-col items-center justify-center">
-          참여중 세션 아이디 : {mySessionId}
-        </div>
-      )}
 
-      <div id="session" className="flex h-full flex-col">
-        <div className="flex items-center justify-between bg-white p-4 shadow-md">
-          {opponentInfo.nickname}님과의 화상채팅
-        </div>
-        <div className="flex flex-wrap p-4">
-          {publisher !== undefined ? (
-            <div className="w-1/2 flex-1 cursor-pointer border p-2">
-              <div> 퍼블리셔</div>
-              <UserVideoComponent streamManager={publisher} />
-            </div>
-          ) : null}
+      <div id="session" className="flex h-full flex-col bg-white">
+        <div className="relative flex size-full bg-black my-auto">
           {subscribers && (
-            <div className=" w-1/2 flex-1 border p-2">
-              {/* <span>{subscribers[0]}</span> */}
+            <div className="flex-1">
               <UserVideoComponent streamManager={subscribers[0]} />
+            </div>
+          )}
+          {publisher !== undefined && (
+            <div className="absolute bottom-0 right-0 w-[200px] p-2">
+              <UserVideoComponent streamManager={publisher} />
             </div>
           )}
         </div>
         <div className="flex h-8 space-x-4">
-          <button
+          {/* <button
             className=" bg-red-500 px-4 py-2 text-white hover:bg-red-600"
             id="buttonLeaveSession"
             onClick={leaveSession}
           >
             Leave session
-          </button>
+          </button> */}
           <button
             className=" bg-green-500 px-4 py-2 text-white hover:bg-green-600"
             id="buttonSwitchCamera"
@@ -340,6 +325,27 @@ const CallPage = ({onEndCall}) => {
             <img src="/icons/icon-endCall.svg" alt="endcall" />
           </button>
         </div>
+        <ul className="absolute bg-gray-100">
+          {roomId}
+          {session === undefined ? (
+            <div className="flex flex-col items-center justify-center">
+              <div id="join-dialog" className="rounded-lg bg-red-100">
+                <button
+                  type="submit"
+                  onClick={() => {
+                    JoinSession()
+                  }}
+                >
+                  (세션 없음)세션 만들기.
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-1 flex-col items-center justify-center">
+              참여중 세션 아이디 : {mySessionId}
+            </div>
+          )}
+        </ul>
       </div>
     </div>
   )
