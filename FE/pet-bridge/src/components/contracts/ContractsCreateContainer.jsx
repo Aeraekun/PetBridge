@@ -93,14 +93,17 @@ const ContractsCreateContainer = () => {
   const onSubmitHandler = async () => {
     console.log(contractFormData)
     // 폼의 유효성 검사
-    try {
-      // 비동기 요청 (계약서 작성)
-      const res = await postContract(contractFormData)
-      console.log(res)
-      alert("계약서가 작성되었습니다.")
-      navigate(`/users/${contractFormData.contractorId}`)
-    } catch (error) {
-      console.log(error)
+    if (confirm("계약서를 작성하시겠습니까?")) {
+      try {
+        // 비동기 요청 (계약서 작성)
+        const res = await postContract(contractFormData)
+        console.log(res)
+        alert("계약서가 작성되었습니다.")
+        navigate(`/users/${contractFormData.contractorId}`)
+      } catch (error) {
+        console.log(error)
+        alert("계약서 작성에 실패했습니다. 다시 시도해주세요.")
+      }
     }
   }
 
@@ -238,14 +241,15 @@ const ContractsCreateContainer = () => {
       </section>
       {/* 계약서 미리보기란 */}
       <div
-        className="flex h-[600px] w-full flex-col items-center rounded-2xl p-5"
+        className="flex h-[600px] w-full flex-col items-center p-5"
         style={{
           backgroundImage: `url(${ContractBackground})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
+          opacity: 0.9,
         }}
       >
-        <p className="my-10 text-4xl font-bold">계약서 미리보기</p>
+        <p className="my-16 text-4xl font-bold">계약서 미리보기</p>
         <ContractDetail
           contractorNickname={nickname}
           contracteeNickname={contracteeInfo.nickname}

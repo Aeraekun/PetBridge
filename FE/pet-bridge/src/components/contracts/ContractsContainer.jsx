@@ -14,7 +14,7 @@ import {patchThisMonthStamp} from "utils/contract-utils"
 import {useSelector} from "react-redux"
 import {selectId, selectPhone} from "features/user/users-slice"
 import {postPhoneCheck, postPhoneVerificationCode} from "api/users-api"
-import ContractBackground from "assets/image/contract-background.webp"
+import ContractBackground from "assets/image/contract-bg.webp"
 
 const ContractsContainer = () => {
   const navigate = useNavigate()
@@ -207,14 +207,14 @@ const ContractsContainer = () => {
             />
           </div>
           <div
-            className="flex h-[600px] w-full flex-col items-center rounded-2xl bg-stroke p-5"
+            className="flex h-[600px] w-full flex-col items-center bg-stroke p-5"
             style={{
-              backgroundImage: `url(${ContractBackground})`,
+              backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(${ContractBackground})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
           >
-            <p className="my-10 text-4xl font-bold">계약서</p>
+            <p className="my-16 text-4xl font-bold">계약서</p>
             <ContractDetail
               contractorNickname={contractInfo.contractorNickname}
               contracteeNickname={contractInfo.contracteeNickname}
@@ -258,7 +258,7 @@ const ContractsContainer = () => {
             <>
               {/* 서명란 */}
               <section className="">
-                <p className="my-4 text-center font-bold">- 서명</p>
+                <p className="my-4 text-center font-bold">서명</p>
                 <div className="flex h-40 w-full gap-10">
                   {/* 보호자 서명 */}
                   <div className="w-80">
@@ -305,7 +305,6 @@ const ContractsContainer = () => {
                               onChange={changeCodeHandler}
                             />
                             <button
-                              disabled={!isPhoneCodeChecked}
                               onClick={clickPhoneCodeCheckHandler}
                               className="grow rounded-2xl border px-2 hover:bg-mild"
                             >
@@ -343,12 +342,46 @@ const ContractsContainer = () => {
               </button>
             </>
           ) : contractInfo.status === "계약전" ? (
-            <button
-              className="rounded-xl bg-alert p-2.5 text-white"
-              onClick={clickDeleteButtonHandler}
-            >
-              계약서 삭제하기
-            </button>
+            <section className="h-80">
+              <p className="my-4 text-center text-xl font-bold">서명</p>
+              <div className="flex h-40 w-full gap-10">
+                {/* 보호자 서명 */}
+                <div className="w-80">
+                  <ContractPerson
+                    imageSrc={contractInfo.contractorImage}
+                    title="보호자"
+                    nickname={contractInfo.contractorNickname}
+                  />
+                  <div className="flex gap-4 py-2.5">
+                    <span className="my-3 font-bold">서명</span>
+
+                    <button
+                      disabled={true}
+                      className={`rounded-2xl border bg-stroke p-2.5`}
+                    >
+                      서명 완료
+                    </button>
+                  </div>
+                </div>
+                {/* 계약자 서명 */}
+                <div className="w-80">
+                  <ContractPerson
+                    imageSrc={contractInfo.contracteeImage}
+                    title="계약자"
+                    nickname={contractInfo.contracteeNickname}
+                  />
+                  <div className="flex gap-4 p-2.5">
+                    <p className="my-3 font-bold">서명</p>
+                  </div>
+                </div>
+                <button
+                  className="rounded-xl bg-alert p-2.5 text-white"
+                  onClick={clickDeleteButtonHandler}
+                >
+                  계약서 삭제하기
+                </button>
+              </div>
+            </section>
           ) : (
             <div>계약전아님</div>
           )}
