@@ -3,7 +3,7 @@ import AnimalTag from "components/common/AnimalTag"
 import ArticleTag from "components/common/ArticleTag"
 import Button from "components/common/Button"
 import Profile from "components/common/Profile"
-import {selectImage, selectNickname} from "features/user/users-slice"
+import {selectId, selectImage, selectNickname} from "features/user/users-slice"
 import React, {useState} from "react"
 import ReactPlayer from "react-player"
 import {useSelector} from "react-redux"
@@ -97,10 +97,16 @@ const PetpickWrite = () => {
 
   const currentUserImage = useSelector(selectImage)
   const currentUserNickname = useSelector(selectNickname)
+  const currentUserId = useSelector(selectId)
 
   return (
     <div className="mx-auto mt-[80px] flex h-screen w-[600px] max-w-[1000px] flex-col md:w-11/12 ">
-      <Profile nickname={currentUserNickname} image={currentUserImage} />
+      <Profile
+        nickname={currentUserNickname}
+        image={currentUserImage}
+        isMe={true}
+        userId={currentUserId}
+      />
       <hr />
       <div className="flex ">
         <div className="m-5 flex w-[300px] flex-col">

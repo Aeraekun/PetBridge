@@ -27,11 +27,20 @@ const SirenModal = ({isOpen, onClose, reportType, reportId}) => {
       console.log(error)
     }
   }
-
+  const [textCount, settextCount] = useState(0)
   const changeHandler = (event) => {
     const targetValue = event.currentTarget.value
     if (targetValue) {
       setReportReason(targetValue)
+      settextCount(targetValue.length)
+    } else {
+      setReportReason("")
+      settextCount(0) // 입력이 비어 있을 경우 글자 수를 0으로 설정
+    }
+    if (textCount >= 100) {
+      alert("100자 이상은 입력할 수 없습니다.")
+      settextCount(100)
+      setReportReason(targetValue.slice(0, 100)) // 100자 이상일 경우 100자로 자른다.
     }
   }
   if (!isOpen) return null
@@ -74,7 +83,7 @@ const SirenModal = ({isOpen, onClose, reportType, reportId}) => {
                     placeholder="신고 사유를 입력해주세요.(100자 이내)"
                   ></textarea>
                   <div className="flex w-full justify-end text-sm text-gray-300">
-                    0/100
+                    {textCount}/100
                   </div>
                 </div>
               </div>
