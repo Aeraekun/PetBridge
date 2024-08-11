@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import site.petbridge.domain.boardcomment.domain.BoardComment;
 import site.petbridge.domain.petpick.domain.PetPick;
 import site.petbridge.domain.petpick.dto.request.PetPickEditRequestDto;
 import site.petbridge.domain.petpick.dto.request.PetPickRegistRequestDto;
@@ -48,18 +49,15 @@ public class PetPickCommentServiceImpl implements PetPickCommentService {
      */
     @Transactional
     @Override
-    public void registPetPickComment(HttpServletRequest httpServletRequest, PetPickCommentRegistRequestDto petPickCommentRegistRequestDto) throws Exception {
-
+    public void registPetPickComment(PetPickCommentRegistRequestDto petPickCommentRegistRequestDto) throws Exception {
         User user = authUtil.getAuthenticatedUser();
 
-        PetPickComment entity = petPickCommentRegistRequestDto.toEntity(user.getId());
-
-        // 존재하는 PetPick에 대한 요청인지 확인
-        boolean exists = petPickRepository.existsById((long) petPickCommentRegistRequestDto.getPetPickId());
-        if (!exists) {
+        // 존재하는 PetPick 아니면 404
+        if (!petPickRepository.findByIdAndDisabledFalse(petPickCommentRegistRequestDto.getPetPickId()).isPresent()) {
             throw new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND);
         }
 
+        PetPickComment entity = petPickCommentRegistRequestDto.toEntity(user.getId());
         petPickCommentRepository.save(entity);
     }
 
@@ -67,33 +65,32 @@ public class PetPickCommentServiceImpl implements PetPickCommentService {
      * 펫픽 ID기반 펫픽 댓글 조회(페이징)
      */
     @Override
-    public List<PetPickCommentResponseDto> getListPetPickComment(Long petPickId, int page, int size) {
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "registTime"));
-        Page<PetPickCommentResponseDto> petPickComments = petPickCommentRepository.findByPetPickId(petPickId, pageable);
+    public List<PetPickCommentResponseDto> getListPetPickComment(int petPickId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "registTime"));
+        Page<PetPickCommentResponseDto> petPickComments = petPickCommentRepository.findByPetPickIdAndDisabledFalse(petPickId, pageable);
 
         return petPickComments.getContent();
     }
 
     /**
-     * 펫픽 수정
+     * 펫픽 댓글 수정
      */
     @Transactional
     @Override
-    public void editPetPickComment(HttpServletRequest httpServletRequest, Long id, PetPickCommentEditRequestDto petPickCommentEditRequestDto) throws Exception {
-
+    public void editPetPickComment(int id, PetPickCommentEditRequestDto petPickCommentEditRequestDto) throws Exception {
         User user = authUtil.getAuthenticatedUser();
 
-        // 해당 id 펫픽 댓글 없을 때
-        PetPickComment entity = petPickCommentRepository.findById(id)
+        // 없거나 삭제된 펫픽 댓글 404
+        PetPickComment entity = petPickCommentRepository.findByIdAndDisabledFalse(id)
                 .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
-
-        // 내가 작성한 댓글 아니거나, 삭제된 펫픽 댓글일 때
-        if (user.getId() != entity.getUserId() || entity.isDisabled()) {
+        
+        // 내 펫픽 댓글 아님 403
+        if (entity.getUserId() != user.getId()) {
             throw new PetBridgeException(ErrorCode.FORBIDDEN);
         }
 
-        entity.update(petPickCommentEditRequestDto.getContent());
+        entity.update(petPickCommentEditRequestDto);
+        petPickCommentRepository.save(entity);
     }
 
     /**
@@ -101,19 +98,19 @@ public class PetPickCommentServiceImpl implements PetPickCommentService {
      */
     @Transactional
     @Override
-    public void removePetPickComment(HttpServletRequest httpServletRequest, Long id) throws Exception {
-
+    public void removePetPickComment(int id) throws Exception {
         User user = authUtil.getAuthenticatedUser();
 
-        // 해당 id 펫픽 댓글 없을 때
-        PetPickComment entity = petPickCommentRepository.findById(id)
+        // 없거나 삭제된 펫픽 댓글 404
+        PetPickComment entity = petPickCommentRepository.findByIdAndDisabledFalse(id)
                 .orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
 
-        // 내가 작성한 댓글 아니거나, 삭제된 펫픽 댓글일 때
-        if (user.getId() != entity.getUserId() || entity.isDisabled()) {
+        // 내 펫픽 댓글 아님 403
+        if (entity.getUserId() != user.getId()) {
             throw new PetBridgeException(ErrorCode.FORBIDDEN);
         }
 
         entity.disable();
+        petPickCommentRepository.save(entity);
     }
 }

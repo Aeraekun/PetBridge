@@ -11,13 +11,10 @@ import site.petbridge.domain.petpick.domain.PetPick;
 public class PetPickEditRequestDto {
 
     private Integer boardId;
-
     @NotNull
-    private int animalId;
-
+    private Integer animalId;
     @NotNull
     private String title;
-
     @NotNull
     private String content;
 
