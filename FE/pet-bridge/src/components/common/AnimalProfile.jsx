@@ -58,29 +58,23 @@ const AnimalProfile = ({data, isSelected, onSelect}) => {
                 alt="animalImage"
               />
             </div>
-            <div className=" flex flex-col space-y-0 overflow-hidden">
-              <div className=" flex ">
-                <div className="mr-3 w-20">이름</div>
-                <div className="w-full ">{data.name}</div>
+            <div className=" flex ">
+              <div className="mr-3 w-20 ">품종</div>
+              <div className="w-full ">{data.kindCd}</div>
+            </div>
+            <div className=" flex ">
+              <div className="mr-3 w-20">성별</div>
+              <div className="w-full ">
+                {data.sexCd === "F"
+                  ? "암컷"
+                  : data.sexCd === "M"
+                    ? "수컷"
+                    : "미상"}
               </div>
-              <div className=" flex ">
-                <div className="mr-3 w-20 ">품종</div>
-                <div className="w-full ">{data.kindCd}</div>
-              </div>
-              <div className=" flex ">
-                <div className="mr-3 w-20">성별</div>
-                <div className="w-full ">
-                  {data.sexCd === "F"
-                    ? "암컷"
-                    : data.sexCd === "M"
-                      ? "수컷"
-                      : "미상"}
-                </div>
-              </div>
-              <div className=" flex ">
-                <div className="mr-3 w-20">나이</div>
-                <div className="w-full ">{data.age} 년생</div>
-              </div>
+            </div>
+            <div className=" flex ">
+              <div className="mr-3 w-20">나이</div>
+              <div className="w-full ">{data.age} 년생</div>
             </div>
           </div>
         </div>

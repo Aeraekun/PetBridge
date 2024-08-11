@@ -50,7 +50,7 @@ public class BoardCommentServiceImpl implements BoardCommentService {
      */
     @Override
     public List<BoardCommentResponseDto> getListBoardComment(int boardId, int page, int size) throws Exception {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "registTime"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "registTime"));
         Page<BoardCommentResponseDto> boardComments = boardCommentRepository.findByBoardIdAndDisabledFalse(boardId, pageable);
 
         return boardComments.getContent();

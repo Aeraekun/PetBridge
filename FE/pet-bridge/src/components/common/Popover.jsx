@@ -63,7 +63,7 @@ const Popover = ({list, children, type, onSelectAnimal, onVisible}) => {
                   type === "animal" && selectedAnimalId === item.id
                     ? "bg-blue-100"
                     : "hover:bg-gray-100"
-                } transition duration-150`}
+                } flex items-center transition duration-150`}
               >
                 {type === "animal" ? (
                   <AnimalProfile
@@ -72,7 +72,10 @@ const Popover = ({list, children, type, onSelectAnimal, onVisible}) => {
                     onSelect={() => handleAnimalSelect(item.id)}
                   />
                 ) : (
-                  <TaggedArticleItem data={item} />
+                  <TaggedArticleItem
+                    data={item}
+                    onClick={() => handleAnimalSelect(item.id)}
+                  />
                 )}
               </li>
             ))

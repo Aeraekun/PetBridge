@@ -16,6 +16,17 @@ public interface AnimalRepository extends JpaRepository<Animal, Long> {
 
     Page<Animal> findByCareAddrContainingAndDisabledFalse(String careAddr, Pageable pageable);
 
+    Page<Animal> findBySpeciesAndKindCdContainingAndCareAddrContainingAndDisabledFalse(
+            String species, String kindCd, String careAddr, Pageable pageable);
+
+    Page<Animal> findBySpeciesAndKindCdContainingAndDisabledFalse(
+            String species, String kindCd, Pageable pageable);
+
+    Page<Animal> findByKindCdContainingAndCareAddrContainingAndDisabledFalse(
+            String kindCd, String careAddr, Pageable pageable);
+
+    Page<Animal> findByKindCdContainingAndDisabledFalse(String kindCd, Pageable pageable);
+
     Page<Animal> findByUserIdAndDisabledFalse(int userId, Pageable pageable);
 
     Optional<Animal> findById(int id);

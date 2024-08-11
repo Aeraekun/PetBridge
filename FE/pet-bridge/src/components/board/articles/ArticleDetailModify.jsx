@@ -288,7 +288,11 @@ const ArticleDetailModify = () => {
       />
       <hr />
       {article && (
-        <Profile nickname={article.userNickname} image={article.userImage} />
+        <Profile
+          nickname={article.userNickname}
+          image={article.userImage}
+          userId={article.userId}
+        />
       )}
       <div className="my-2 flex flex-row">
         <img src="/icons/icon-tag.svg" alt="Tag Icon" />

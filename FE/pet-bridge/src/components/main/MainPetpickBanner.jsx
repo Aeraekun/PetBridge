@@ -24,7 +24,7 @@ const MainPetpickBanner = () => {
   }, [currentVideo])
 
   return (
-    <div className="mx-auto flex w-[1000px] items-center justify-center gap-2 overflow-hidden">
+    <div className="mx-auto flex w-[1000px] items-center justify-center gap-12 overflow-hidden">
       {videoSources.map((source, index) => (
         <video
           key={index}

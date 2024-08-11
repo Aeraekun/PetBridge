@@ -108,6 +108,7 @@ const PetpickPage = () => {
 
   useEffect(() => {
     updateItemRefs()
+    console.log("list")
     console.log(list)
   }, [list, updateItemRefs])
 
