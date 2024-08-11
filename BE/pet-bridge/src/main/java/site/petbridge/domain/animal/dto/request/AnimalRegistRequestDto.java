@@ -19,14 +19,13 @@ public class AnimalRegistRequestDto {
     @NotNull
     private String colorCd;
     @NotNull
-    private int age;
+    private Integer age;
     @NotNull
-    private int weight;
+    private Integer weight;
     @NotNull
-    private char sexCd;
+    private Character sexCd;
     @NotNull
-    private char neuterYn;
-    @NotNull
+    private Character neuterYn;
     private String specialMark;
     @NotNull
     private String careAddr;

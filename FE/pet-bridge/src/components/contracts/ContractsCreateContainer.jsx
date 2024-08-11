@@ -14,6 +14,8 @@ import SearchDropDown from "components/common/SearchDropDown"
 import AnimalTag from "components/common/AnimalTag"
 import {selectOpponentInfo} from "features/chat/chat-slice"
 import {postPhoneCheck, postPhoneVerificationCode} from "api/users-api"
+import ContractBackground from "assets/image/contract-bg.webp"
+
 const ContractsCreateContainer = () => {
   const navigate = useNavigate()
   const userId = useSelector(selectId)
@@ -23,6 +25,7 @@ const ContractsCreateContainer = () => {
   const opponentInfo = useSelector(selectOpponentInfo)
   // 동물 선택 상태에 따른 동물 컴포넌트 표시 - 상태 관리
   const [selectedAnimal, setSelectedAnimalId] = useState(null)
+  const [selectedAnimalName, setSelectedAnimalName] = useState(null)
   const [selectedContracteeId, setSelectedContracteeId] = useState(null)
   const [contracteeInfo, setContracteeInfo] = useState({
     image: "",
@@ -82,18 +85,25 @@ const ContractsCreateContainer = () => {
     setSelectedAnimalId(id)
   }
 
+  const handleAnimalNameSelect = (animalName) => {
+    setSelectedAnimalName(animalName)
+  }
+
   // 계약서 작성하기 클릭시 동작
   const onSubmitHandler = async () => {
     console.log(contractFormData)
     // 폼의 유효성 검사
-    try {
-      // 비동기 요청 (계약서 작성)
-      const res = await postContract(contractFormData)
-      console.log(res)
-      alert("계약서가 작성되었습니다.")
-      navigate(`/users/${contractFormData.contractorId}`)
-    } catch (error) {
-      console.log(error)
+    if (confirm("계약서를 작성하시겠습니까?")) {
+      try {
+        // 비동기 요청 (계약서 작성)
+        const res = await postContract(contractFormData)
+        console.log(res)
+        alert("계약서가 작성되었습니다.")
+        navigate(`/users/${contractFormData.contractorId}`)
+      } catch (error) {
+        console.log(error)
+        alert("계약서 작성에 실패했습니다. 다시 시도해주세요.")
+      }
     }
   }
 
@@ -142,6 +152,7 @@ const ContractsCreateContainer = () => {
     try {
       const res = await postPhoneCheck(phoneConfirmData)
       if (res?.status === 200) {
+        alert("SMS 인증 성공")
         setIsPhoneCodeChecked(true)
       }
     } catch (error) {
@@ -160,9 +171,11 @@ const ContractsCreateContainer = () => {
         <div className="relative grid w-full grid-cols-4">
           {/* 입양 동물 정보란 */}
           <div className="col-span-2 rounded-l-xl p-2.5">
-            <AnimalTag onSelectAnimalId={handleAnimalSelect} />
+            <AnimalTag
+              onSelectAnimalId={handleAnimalSelect}
+              onSelectAnimalName={handleAnimalNameSelect}
+            />
           </div>
-
           {/* 임보자 정보란 */}
           <ContractPerson
             imageSrc={userImage}
@@ -227,12 +240,20 @@ const ContractsCreateContainer = () => {
         ></textarea>
       </section>
       {/* 계약서 미리보기란 */}
-      <div className="flex h-[600px] w-full flex-col items-center rounded-2xl bg-stroke p-5">
-        <p className="my-10 text-4xl font-bold">계약서 미리보기</p>
+      <div
+        className="flex h-[600px] w-full flex-col items-center p-5"
+        style={{
+          backgroundImage: `url(${ContractBackground})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          opacity: 0.9,
+        }}
+      >
+        <p className="my-16 text-4xl font-bold">계약서 미리보기</p>
         <ContractDetail
           contractorNickname={nickname}
           contracteeNickname={contracteeInfo.nickname}
-          animalName={contractFormData.animalName}
+          animalName={selectedAnimalName}
           month={contractFormData.month}
           payment={contractFormData.payment}
           content={contractFormData.content}
@@ -240,7 +261,6 @@ const ContractsCreateContainer = () => {
       </div>
       {/* 서명란 */}
       <section className="">
-        <p className="my-4 text-center font-bold">- 서명</p>
         <div className="flex h-40 w-full gap-10">
           {/* 보호자 서명 */}
           <div className="w-80">

@@ -4,7 +4,7 @@ const ContractPerson = ({title, nickname, imageSrc}) => {
   return (
     <div className="col-span-1 flex h-full flex-col justify-between p-2.5">
       <p className="text-xl font-bold">{title}</p>
-      <div className="flex h-28 items-center space-x-5 rounded bg-amber-50 p-2">
+      <div className="flex h-28 items-center space-x-5 rounded bg-green-50 p-2">
         <img
           src={imageSrc ? imageSrc : DefaultUser150}
           alt={nickname}
