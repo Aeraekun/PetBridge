@@ -42,9 +42,10 @@ public class AnimalController {
     public ResponseEntity<Page<AnimalResponseDto>> getListAnimal(@RequestParam(name = "page", defaultValue = "0") int page,
                                                                  @RequestParam(name = "size", defaultValue = "12") int size,
                                                                  @RequestParam(name = "species", required = false) String species,
+                                                                 @RequestParam(name = "kindcd", required = false) String kindCd,
                                                                  @RequestParam(name = "careaddr", required = false) String careAddr,
                                                                  @RequestParam(name = "processstate", required = false, defaultValue = "") String processState) throws Exception {
-        Page<AnimalResponseDto> animalResponseDtos = animalService.getListAnimal(page, size, species, careAddr, processState);
+        Page<AnimalResponseDto> animalResponseDtos = animalService.getListAnimal(page, size, species, kindCd, careAddr, processState);
 
         if (animalResponseDtos.hasContent()) {
             return new ResponseEntity<>(animalResponseDtos, HttpStatus.OK);
