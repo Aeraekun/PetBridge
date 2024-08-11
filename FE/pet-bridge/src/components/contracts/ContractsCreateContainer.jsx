@@ -6,7 +6,6 @@ import {
 } from "features/user/users-slice"
 import {useSelector} from "react-redux"
 import ContractDetail from "components/contracts/ContractDetail"
-// import ContractAnimal from "components/contracts/ContractAnimal"
 import ContractPerson from "components/contracts/ContractPerson"
 import {useEffect, useState} from "react"
 import {postContract} from "api/contracts-api"
@@ -25,7 +24,6 @@ const ContractsCreateContainer = () => {
   // 동물 선택 상태에 따른 동물 컴포넌트 표시 - 상태 관리
   const [selectedAnimal, setSelectedAnimalId] = useState(null)
   const [selectedContracteeId, setSelectedContracteeId] = useState(null)
-  const [isContracteeSelected, setIsContracteeSelected] = useState(false)
   const [contracteeInfo, setContracteeInfo] = useState({
     image: "",
     id: "",
@@ -35,9 +33,9 @@ const ContractsCreateContainer = () => {
     contractorId: "contractorId",
     contracteeId: "contracteeId",
     animalId: "animalId",
-    month: "month",
-    payment: "payment",
-    content: "content",
+    month: "",
+    payment: "",
+    content: "",
   })
   // 서명 (전화번호) 인증 코드 관련 state
   const [isPhoneCodeSent, setIsPhoneCodeSent] = useState(false)
@@ -114,9 +112,6 @@ const ContractsCreateContainer = () => {
   // 선택 드롭다운 값 변경시
   const onDataChangeHandler = (newData) => {
     setSelectedContracteeId(Number(newData))
-    if (newData) {
-      setIsContracteeSelected(true)
-    }
   }
 
   // 서명하기 클릭시
@@ -160,28 +155,13 @@ const ContractsCreateContainer = () => {
       className="my-5 flex w-[1000px] flex-col items-center space-y-10"
       onSubmit={onSubmitHandler}
     >
-      <span className="my-20 text-4xl font-bold">입양 보내기</span>
+      <span className="my-5 text-4xl font-bold">입양 보내기</span>
       <section className="h-40 w-full">
-        <div className="grid w-full grid-cols-4">
+        <div className="relative grid w-full grid-cols-4">
           {/* 입양 동물 정보란 */}
-          {selectedAnimal ? (
-            <div className="col-span-2 rounded-l-xl border p-2.5">
-              <AnimalTag onSelectAnimalId={handleAnimalSelect} />
-              {/* <ContractAnimal
-                isCreate={true}
-                imageSrc="imgScr"
-                name="name"
-                kind="kind"
-                age="3살"
-              /> */}
-            </div>
-          ) : (
-            <div className="col-span-2 rounded-l-xl border p-2.5">
-              <div>
-                <AnimalTag onSelectAnimalId={handleAnimalSelect} />
-              </div>
-            </div>
-          )}
+          <div className="col-span-2 rounded-l-xl p-2.5">
+            <AnimalTag onSelectAnimalId={handleAnimalSelect} />
+          </div>
 
           {/* 임보자 정보란 */}
           <ContractPerson
@@ -190,53 +170,53 @@ const ContractsCreateContainer = () => {
             nickname={nickname}
           />
           {/* 입양자 정보란 */}
-          {isContracteeSelected ? (
-            <>
-              <ContractPerson
-                imageSrc={contracteeInfo.image}
-                title="계약자"
-                nickname={contracteeInfo.nickname}
-              />
-            </>
-          ) : (
-            <div className="col-span-1 flex flex-col justify-between border p-2.5">
-              <div>
-                <SearchDropDown
-                  subtitle="입양자를 선택해주세요."
-                  placeholder="유저 닉네임으로 검색"
-                  itemName="유저"
-                  onDataChange={onDataChangeHandler}
-                />
-              </div>
-            </div>
-          )}
+          <SearchDropDown
+            subtitle="입양자를 선택해주세요."
+            placeholder="유저 닉네임으로 검색"
+            itemName="유저"
+            onDataChange={onDataChangeHandler}
+          />
+          <ContractPerson
+            imageSrc={contracteeInfo.image}
+            title="계약자"
+            nickname={contracteeInfo.nickname}
+          />
         </div>
       </section>
 
       {/* 계약서 작성 폼 */}
       <section className="flex w-full flex-col gap-4">
-        <span className="text-4xl font-bold">계약서 작성 폼</span>
-        <p className="font-bold">- 계약 이행 기간 (1 ~ 12 개월)</p>
-        <select
-          name="month"
-          id="month"
-          className="h-12 w-40 rounded-lg border-2 text-center font-bold"
-          onChange={changeHandler}
-        >
-          {monthsOption.map((item) => (
-            <option key={item} value={item} selected={item === 12}>
-              {item} 개월
-            </option>
-          ))}
-        </select>
-        <p className="font-bold">- 계약 금액</p>
-        <input
-          id="payment"
-          type="number"
-          placeholder="계약 금액"
-          className="h-12 w-40 rounded-lg border-2 text-center font-bold"
-          onChange={changeHandler}
-        />
+        <span className="my-3 text-4xl font-bold">계약서 정보</span>
+        <div className="grid grid-cols-2">
+          <div>
+            <p className="font-bold">계약 이행 기간</p>
+            <select
+              name="month"
+              id="month"
+              className="h-12 w-40 rounded-lg border-2 text-center font-bold"
+              onChange={changeHandler}
+            >
+              <option value="" defaultValue="">
+                선택 (1 ~ 12 개월)
+              </option>
+              {monthsOption.map((item) => (
+                <option key={item} value={item}>
+                  {item} 개월
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <p className="font-bold">계약 금액 (원)</p>
+            <input
+              id="payment"
+              type="number"
+              placeholder="계약 금액"
+              className="h-12 w-40 rounded-lg border-2 text-center font-bold"
+              onChange={changeHandler}
+            />
+          </div>
+        </div>
         <p className="font-bold">- 특약 사항</p>
         <textarea
           name="content"
@@ -247,7 +227,7 @@ const ContractsCreateContainer = () => {
         ></textarea>
       </section>
       {/* 계약서 미리보기란 */}
-      <div className="bg-stroke flex h-[600px] w-full flex-col items-center rounded-2xl p-5">
+      <div className="flex h-[600px] w-full flex-col items-center rounded-2xl bg-stroke p-5">
         <p className="my-10 text-4xl font-bold">계약서 미리보기</p>
         <ContractDetail
           contractorNickname={nickname}
@@ -282,7 +262,7 @@ const ContractsCreateContainer = () => {
                   />
                   <button
                     onClick={clickPhoneCodeCheckHandler}
-                    className="hover:bg-mild grow rounded-2xl border px-2"
+                    className="grow rounded-2xl border px-2 hover:bg-mild"
                   >
                     확인
                   </button>
@@ -320,14 +300,14 @@ const ContractsCreateContainer = () => {
         disabled={!isPhoneCodeChecked}
         type="button"
         onClick={onSubmitHandler}
-        className="bg-mild h-10 w-40 rounded-xl border-2"
+        className="h-10 w-40 rounded-xl border-2 bg-mild"
       >
         계약서 작성하기
       </button>
       <button
         type="button"
         onClick={onSubmitHandler}
-        className="bg-mild h-10 w-40 rounded-xl border-2"
+        className="h-10 w-40 rounded-xl border-2 bg-mild"
       >
         계약서 작성하기
       </button>

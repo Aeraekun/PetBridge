@@ -37,7 +37,9 @@ const SearchDropDown = ({subtitle, placeholder, itemName, onDataChange}) => {
       }
     }
 
-    searchUsers()
+    if (searchValue) {
+      searchUsers()
+    }
   }, [searchValue])
 
   const onChangeHandler = (event) => {
@@ -51,9 +53,9 @@ const SearchDropDown = ({subtitle, placeholder, itemName, onDataChange}) => {
     setIsOpen(!isOpen)
   }
 
-  const onClickHandler = (event) => {
+  const clickItemHandler = (event) => {
     // 특정 유저를 클릭했을 때, 해당 유저 아이디를 기준으로 배열에서 찾아 정보를 상태에 저장
-    const selectedSearchId = event.target.id
+    const selectedSearchId = event.currentTarget.id
     const selectedInfo = userDatas.find(
       (data) => Number(data.id) === Number(selectedSearchId)
     )
@@ -61,13 +63,14 @@ const SearchDropDown = ({subtitle, placeholder, itemName, onDataChange}) => {
 
     // const selectedInfo = userDatas[event.target.key]
     dispatch(setOpponentInfo(selectedInfo))
+    setIsOpen(false)
   }
 
   return (
     <>
       <button
         onClick={clickHandler}
-        className="flex h-10 w-full justify-between rounded-xl border p-3 text-sm"
+        className="absolute right-4 top-0 flex h-10 justify-between rounded-xl border p-3 text-sm"
         ref={buttonRef}
       >
         {subtitle}
@@ -96,7 +99,7 @@ const SearchDropDown = ({subtitle, placeholder, itemName, onDataChange}) => {
           <div className="h-60 w-full overflow-auto">
             <div className="p-3">
               {itemName}
-              <span className="bg-stroke mx-2 rounded-xl px-2 py-1 text-xs">
+              <span className="mx-2 rounded-xl bg-stroke px-2 py-1 text-xs">
                 {userCount}
               </span>
             </div>
@@ -109,8 +112,8 @@ const SearchDropDown = ({subtitle, placeholder, itemName, onDataChange}) => {
                   <button
                     key={index}
                     id={user.id}
-                    onClick={onClickHandler}
-                    className="hover:bg-stroke me-3 flex h-10 grow items-center gap-2 rounded-xl p-3 hover:text-white"
+                    onClick={clickItemHandler}
+                    className="me-3 flex h-10 grow items-center gap-2 rounded-xl p-3 hover:bg-stroke hover:text-white"
                   >
                     <img
                       src={user.image ? user.image : DefaultUser150}

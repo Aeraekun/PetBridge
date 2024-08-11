@@ -16,8 +16,8 @@ const Popover = ({list, children, type, onSelectAnimal, onVisible}) => {
   }
 
   useEffect(() => {
-    console.log("list", list)
-  }, [])
+    // console.log("list", list)
+  })
   const handleAnimalSelect = (id) => {
     setSelectedAnimalId(id)
     if (onSelectAnimal) {
@@ -34,22 +34,22 @@ const Popover = ({list, children, type, onSelectAnimal, onVisible}) => {
   return (
     <div className="relative inline-block">
       <button
-        className="px-2 py-2 hover:scale-105 transform transition duration-200 ease-in-out focus:outline-none"
+        className="p-2 transition duration-200 ease-in-out hover:scale-105 focus:outline-none"
         onClick={togglePopover}
       >
         {children}
       </button>
       <div
-        className={`max-h-[400px] h-fit overflow-auto absolute left-0 top-12 z-50 mb-2 w-[400px] rounded-lg bg-white text-sm shadow-lg border border-gray-200 transition-transform duration-200 ease-in-out transform ${
+        className={`absolute left-0  top-12 z-50 mb-2 h-fit max-h-[400px] w-96 overflow-auto rounded-lg border border-gray-200 bg-white text-sm shadow-lg transition-transform duration-200 ease-in-out${
           visible
-            ? "opacity-100 scale-100"
-            : "opacity-0 scale-95 pointer-events-none"
+            ? "scale-100 opacity-100"
+            : "pointer-events-none scale-95 opacity-0"
         }`}
       >
         <ul>
           <li>
             <button
-              className="mx-4 my-2 w-11/12 h-12 bg-gray-300 text-lg rounded-md hover:bg-gray-400 transition duration-150"
+              className="mx-4 my-2 h-12 w-11/12 rounded-md bg-gray-300 text-lg transition duration-150 hover:bg-gray-400"
               onClick={ResetselectedAnimal}
             >
               선택안함
@@ -63,7 +63,7 @@ const Popover = ({list, children, type, onSelectAnimal, onVisible}) => {
                   type === "animal" && selectedAnimalId === item.id
                     ? "bg-blue-100"
                     : "hover:bg-gray-100"
-                } transition duration-150 flex items-center`}
+                } flex items-center transition duration-150`}
               >
                 {type === "animal" ? (
                   <AnimalProfile

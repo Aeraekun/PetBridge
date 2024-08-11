@@ -152,7 +152,9 @@ public class AnimalServiceImpl implements AnimalService {
 		List<AnimalResponseDto> animalResponseDtos =  pagedAnimals.stream()
 			.map(animal -> {
                 try {
-                    return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(page, size, animal.getId()));
+					User animalUser = userRepository.findByIdAndDisabledFalse(animal.getUserId())
+							.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+                    return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(page, size, animal.getId()), animalUser);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -177,7 +179,9 @@ public class AnimalServiceImpl implements AnimalService {
 		return animals.stream()
 			.map(animal -> {
                 try {
-                    return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(page, size, animal.getId()));
+					User animalUser = userRepository.findByIdAndDisabledFalse(animal.getUserId())
+							.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+                    return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(page, size, animal.getId()), animalUser);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -201,7 +205,9 @@ public class AnimalServiceImpl implements AnimalService {
 		return animals.stream()
 				.map(animal -> {
                     try {
-                        return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(page, size, animal.getId()));
+						User animalUser = userRepository.findByIdAndDisabledFalse(animal.getUserId())
+								.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+                        return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(page, size, animal.getId()), animalUser);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -233,7 +239,9 @@ public class AnimalServiceImpl implements AnimalService {
 		return pagedAnimals.stream()
 			.map(animal -> {
                 try {
-                    return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(page, size, animal.getId()));
+					User animalUser = userRepository.findByIdAndDisabledFalse(animal.getUserId())
+							.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+                    return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(page, size, animal.getId()), animalUser);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -248,8 +256,10 @@ public class AnimalServiceImpl implements AnimalService {
 	public AnimalResponseDto getDetailAnimal(int id, int page, int size) throws Exception {
 		Animal animal = animalRepository.findByIdAndDisabledFalse(id)
 			.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
+		User animalUser = userRepository.findByIdAndDisabledFalse(animal.getUserId())
+				.orElseThrow(() -> new PetBridgeException(ErrorCode.RESOURCES_NOT_FOUND));
 
-		return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(page, size, animal.getId()));
+		return new AnimalResponseDto(animal, determineProcessState(animal), boardService.getListBoardByAnimalId(page, size, animal.getId()), animalUser);
 	}
 
 	private List<Integer> filterByProcessState(String processState) {
@@ -261,8 +271,6 @@ public class AnimalServiceImpl implements AnimalService {
 		List<Integer> confirmedAnimalIds = contractRepository.findByStatusNot("계약전").stream()
 				.map(Contract::getAnimalId)
 				.collect(Collectors.toList());
-		System.out.println(waitingAnimalIds);
-		System.out.println(confirmedAnimalIds);
 
 		switch (processState) {
 			case "입양대기" :

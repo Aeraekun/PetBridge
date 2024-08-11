@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.springframework.data.domain.Page;
 import site.petbridge.domain.animal.domain.Animal;
 import site.petbridge.domain.board.dto.response.BoardResponseDto;
+import site.petbridge.domain.user.domain.User;
 
 import java.util.List;
 
@@ -29,9 +30,10 @@ public class AnimalResponseDto {
 
     private Page<BoardResponseDto> boards;
 
-    // 동물 게시판 뭐 넣노?
+    private String userNickname;
+    private String userImage;
 
-    public AnimalResponseDto(Animal entity, String processState, Page<BoardResponseDto> boards) {
+    public AnimalResponseDto(Animal entity, String processState, Page<BoardResponseDto> boards, User animalUser) {
         this.id = entity.getId();
         this.userId = entity.getUserId();
         this.name = entity.getName();
@@ -50,5 +52,8 @@ public class AnimalResponseDto {
         this.processState = processState;
 
         this.boards = boards;
+
+        this.userNickname = animalUser.getNickname();
+        this.userImage = animalUser.getImage();
     }
 }
