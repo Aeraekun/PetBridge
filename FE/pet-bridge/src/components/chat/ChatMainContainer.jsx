@@ -256,7 +256,7 @@ const ChatMainContainer = ({onStartCall}) => {
               onStartCall(true)
             }}
           >
-            <img src={CallIcon} alt="화상" className="size-12" />
+            <img src={CallIcon} alt="화상채팅" className="size-12" />
           </button>
         </div>
       </div>

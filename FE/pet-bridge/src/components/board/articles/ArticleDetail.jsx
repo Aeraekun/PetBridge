@@ -176,13 +176,15 @@ const ArticleDetail = () => {
       </button>
       <div className="text-center text-4xl font-bold">{article.title}</div>
       <hr />
-      <Profile nickname={article.userNickname} image={article.userImage} />
+      <Profile
+        userId={article.userId}
+        nickname={article.userNickname}
+        image={article.userImage}
+        isMe={Number(currentUserId) === Number(article.userId)}
+      />
       <div className="flex flex-row space-x-2 pl-6">
         <img src="/icons/icon-tag.svg" alt="Tag Icon" />
-        <Profile
-          nickname={article.animalName}
-          image={article.animalThumbnail}
-        />
+        <Profile nickname={article.animalName} image={article.animalFilename} />
       </div>
       <hr />
       대표사진
