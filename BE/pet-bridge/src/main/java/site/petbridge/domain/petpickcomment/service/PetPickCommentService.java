@@ -16,24 +16,20 @@ public interface PetPickCommentService {
     /**
      * 펫픽 댓글 등록
      */
-    void registPetPickComment(HttpServletRequest httpServletRequest,
-             final PetPickCommentRegistRequestDto petPickCommentRegistRequestDto) throws Exception;
+    void registPetPickComment(PetPickCommentRegistRequestDto petPickCommentRegistRequestDto) throws Exception;
 
     /**
      * 펫픽 댓글 목록 조회
      */
-    List<PetPickCommentResponseDto> getListPetPickComment(Long petPickId, int page, int size);
+    List<PetPickCommentResponseDto> getListPetPickComment(int petPickId, int page, int size);
 
     /**
      * 펫픽 댓글 수정
      */
-    void editPetPickComment(HttpServletRequest httpServletRequest,
-                            final Long petPickCommentId,
-                            final PetPickCommentEditRequestDto petPickCommentEditRequestDto
-                ) throws Exception;
+    void editPetPickComment(int petPickCommentId, PetPickCommentEditRequestDto petPickCommentEditRequestDto) throws Exception;
 
     /**
      * 펫픽 댓글 삭제
      */
-    void removePetPickComment(HttpServletRequest httpServletRequest, Long id) throws Exception;
+    void removePetPickComment(int id) throws Exception;
 }

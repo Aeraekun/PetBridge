@@ -73,7 +73,7 @@ public class UserController {
      * 닉네임 기반 모든 회원 조회
      */
     @GetMapping("/list/{nickname}")
-    public ResponseEntity<List<UserResponseDto>> getListUserByNickname(@PathVariable String nickname) throws Exception {
+    public ResponseEntity<List<UserResponseDto>> getListUserByNickname(@PathVariable(name = "nickname") String nickname) throws Exception {
         List<UserResponseDto> userResponseDtos = userService.getListUserByNickname(nickname);
 
         return Optional.ofNullable(userResponseDtos)
