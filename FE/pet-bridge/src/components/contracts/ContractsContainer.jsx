@@ -14,6 +14,7 @@ import {patchThisMonthStamp} from "utils/contract-utils"
 import {useSelector} from "react-redux"
 import {selectId, selectPhone} from "features/user/users-slice"
 import {postPhoneCheck, postPhoneVerificationCode} from "api/users-api"
+import ContractBackground from "assets/image/contract-background.webp"
 
 const ContractsContainer = () => {
   const navigate = useNavigate()
@@ -205,7 +206,14 @@ const ContractsContainer = () => {
               nickname={contractInfo.contracteeNickname}
             />
           </div>
-          <div className="bg-stroke flex h-[600px] w-full flex-col items-center rounded-2xl p-5">
+          <div
+            className="flex h-[600px] w-full flex-col items-center rounded-2xl bg-stroke p-5"
+            style={{
+              backgroundImage: `url(${ContractBackground})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
             <p className="my-10 text-4xl font-bold">계약서</p>
             <ContractDetail
               contractorNickname={contractInfo.contractorNickname}
@@ -220,7 +228,7 @@ const ContractsContainer = () => {
           {contractInfo.status === "계약완료" ? (
             <>
               <span className="text-4xl font-bold">입양 스탬프북</span>
-              <div className="border-mild flex w-full flex-col items-center justify-center rounded-2xl border-2 p-5">
+              <div className="flex w-full flex-col items-center justify-center rounded-2xl border-2 border-mild p-5">
                 <div className="flex h-full flex-wrap justify-center">
                   {Array.from({length: contractInfo.month}).map((_, index) => (
                     <ContractStamp
@@ -233,7 +241,7 @@ const ContractsContainer = () => {
                 <div className="flex h-20 items-center justify-center">
                   {Number(userId) == contractInfo.contractorId ? (
                     <button
-                      className="bg-mild rounded-2xl p-2.5 text-2xl font-bold text-white"
+                      className="rounded-2xl bg-mild p-2.5 text-2xl font-bold text-white"
                       onClick={onClickStampHandler}
                     >
                       이번 달 스탬프 찍기
@@ -264,7 +272,7 @@ const ContractsContainer = () => {
 
                       <button
                         disabled={true}
-                        className={`bg-stroke rounded-2xl border p-2.5`}
+                        className={`rounded-2xl border bg-stroke p-2.5`}
                       >
                         서명 완료
                       </button>
@@ -283,7 +291,7 @@ const ContractsContainer = () => {
                         isPhoneCodeChecked ? (
                           <button
                             onClick={clickPaymentHandler}
-                            className="bg-mild grow rounded-2xl border px-2"
+                            className="grow rounded-2xl border bg-mild px-2"
                           >
                             결제하기
                           </button>
@@ -299,7 +307,7 @@ const ContractsContainer = () => {
                             <button
                               disabled={!isPhoneCodeChecked}
                               onClick={clickPhoneCodeCheckHandler}
-                              className="hover:bg-mild grow rounded-2xl border px-2"
+                              className="grow rounded-2xl border px-2 hover:bg-mild"
                             >
                               확인
                             </button>
@@ -322,13 +330,13 @@ const ContractsContainer = () => {
               {/* 클릭시 계약 체결하기 */}
               <button
                 disabled={!isPhoneCodeChecked}
-                className="bg-mild rounded-xl p-2.5 text-white"
+                className="rounded-xl bg-mild p-2.5 text-white"
                 onClick={clickPatchButtonHandler}
               >
                 계약 체결하기
               </button>
               <button
-                className="bg-mild rounded-xl p-2.5 text-white"
+                className="rounded-xl bg-mild p-2.5 text-white"
                 onClick={clickPatchButtonHandler}
               >
                 계약 체결하기
@@ -336,7 +344,7 @@ const ContractsContainer = () => {
             </>
           ) : contractInfo.status === "계약전" ? (
             <button
-              className="bg-alert rounded-xl p-2.5 text-white"
+              className="rounded-xl bg-alert p-2.5 text-white"
               onClick={clickDeleteButtonHandler}
             >
               계약서 삭제하기
