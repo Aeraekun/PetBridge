@@ -54,9 +54,9 @@ const ChatListContainer = () => {
           const sortedChatList = res.data.sort((a, b) => {
             if (!a.recentTime) return 1 // a의 recentTime이 없으면 a를 뒤로
             if (!b.recentTime) return -1 // b의 recentTime이 없으면 b를 앞으로
-            return Date(b.recentTime) - Date(a.recentTime)
+            return new Date(b.recentTime) - new Date(a.recentTime)
           })
-
+          console.log(sortedChatList)
           setChatList(sortedChatList)
         }
       } catch (error) {
