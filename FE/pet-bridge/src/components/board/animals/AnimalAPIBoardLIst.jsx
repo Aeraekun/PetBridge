@@ -6,20 +6,6 @@ import {useNavigate, useParams} from "react-router-dom"
 import AnimalSearchForm from "components/board/animals/AnimalSearchForm"
 import {getShelterAnimalsAPI} from "api/animals-api"
 
-const Search = () => {
-  return (
-    <div className="flex w-full justify-between px-10">
-      <input
-        type="text"
-        placeholder="검색어를 입력하세요."
-        className="border-stroke h-12 w-72 rounded-xl border-2 p-2"
-      />
-      <button className="flex h-10 w-16 items-center justify-center rounded-xl bg-green-600 text-white ">
-        조회
-      </button>
-    </div>
-  )
-}
 const AnimalAPIBoardLIst = () => {
   const {bcode} = useParams()
   const navigate = useNavigate()
@@ -100,7 +86,6 @@ const AnimalAPIBoardLIst = () => {
   }
   return (
     <>
-      <Search />
       <AnimalSearchForm searchParams={handleSearchForm} isShelter={true} />
       <Button text={"등록하기"} onClick={goRegist} />
       {isLoading ? (

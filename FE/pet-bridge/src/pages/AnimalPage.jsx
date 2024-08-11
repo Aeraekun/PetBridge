@@ -58,7 +58,7 @@ const AnimalPage = () => {
   // const [selectedCategory, setSelectedCategory] = useState(categories[0].id)
 
   return (
-    <div className="my-10 flex min-h-screen w-[400px] max-w-[1000px] flex-col space-y-3 sm:w-11/12 ">
+    <div className="my-10 flex min-h-screen w-[400px] max-w-[1000px] flex-col space-y-3 sm:w-11/12 sm:min-w-[900px] ">
       <BoardNavbar />
       <hr className="" />
 
