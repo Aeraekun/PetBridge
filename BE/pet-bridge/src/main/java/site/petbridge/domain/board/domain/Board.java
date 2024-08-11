@@ -1,10 +1,7 @@
 package site.petbridge.domain.board.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import site.petbridge.domain.board.domain.enums.BoardType;
 import site.petbridge.domain.board.dto.request.BoardEditRequestDto;
 
@@ -12,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "boards")
 @NoArgsConstructor(access =  AccessLevel.PROTECTED)
 public class Board {
@@ -58,10 +56,9 @@ public class Board {
         this.lon = lon;
     }
 
-    public void update(BoardEditRequestDto boardEditRequestDto, String thumbnail) {
+    public void update(BoardEditRequestDto boardEditRequestDto) {
         this.animalId = boardEditRequestDto.getAnimalId();
         this.boardType = boardEditRequestDto.getType();
-        this.thumbnail = thumbnail;
         this.title = boardEditRequestDto.getTitle();
         this.content = boardEditRequestDto.getContent();
         this.lat = boardEditRequestDto.getLat();
