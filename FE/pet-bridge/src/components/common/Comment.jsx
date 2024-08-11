@@ -39,17 +39,13 @@ const Comment = ({data, currentUserId, onDelete}) => {
               <div className="  text-base  ">{data.userNickname}</div>
               <div className="  text-sm  ">{data.registTime.split("T")[0]}</div>
             </div>
-            {Number(data.userId) === Number(currentUserId) && (
-              <button
-                className=""
-                onClick={() => {
-                  handleDelete(data.id)
-                }}
-              >
-                삭제
-              </button>
-            )}
-            <OptionIcon></OptionIcon>
+            <OptionIcon
+              userId={data.userId}
+              currentUserId={currentUserId}
+              onDelete={() => {
+                handleDelete(data.id)
+              }}
+            ></OptionIcon>
           </div>
           <div className="flex flex-col ">
             <div
