@@ -29,14 +29,14 @@ const ChatListContainer = () => {
   }
 
   // 선택 드롭다운 값 변경시
-  const onDataChangeHandler = (newData) => {
+  const onDataChangeHandler = async (newData) => {
     console.log(newData)
     if (confirm(`${newData.nickname} 님과의 채팅을 시작하시겠습니까?`)) {
       try {
-        const res = createChatRoom(userId, newData.id)
+        const res = await createChatRoom(userId, newData.id)
 
         console.log(res)
-        dispatch(setCurrentChatId(newData.id))
+        dispatch(setCurrentChatId(res.data))
       } catch (error) {
         console.log(error)
       }
@@ -54,9 +54,9 @@ const ChatListContainer = () => {
           const sortedChatList = res.data.sort((a, b) => {
             if (!a.recentTime) return 1 // a의 recentTime이 없으면 a를 뒤로
             if (!b.recentTime) return -1 // b의 recentTime이 없으면 b를 앞으로
-            return Date(b.recentTime) - Date(a.recentTime)
+            return new Date(b.recentTime) - new Date(a.recentTime)
           })
-
+          console.log(sortedChatList)
           setChatList(sortedChatList)
         }
       } catch (error) {
