@@ -179,7 +179,7 @@ const Report = () => {
           />
         </div>
       </div>
-      <div id="map" className="mb-4 h-64 w-full rounded border"></div>
+      <div id="map" className="mb-4 h-[450px] w-full rounded border"></div>
       <div className="mb-8 min-h-72 w-full">
         {" "}
         <Editor value={editorContent} onChange={setEditorContent} />
