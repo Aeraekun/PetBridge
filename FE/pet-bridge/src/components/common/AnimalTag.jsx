@@ -51,7 +51,7 @@ const AnimalTag = ({onSelectAnimalId}) => {
 
   return (
     <div className="flex flex-col space-y-2">
-      <div className="items-center flex">
+      <div className="flex items-center">
         <div className="text-xl"> 동물 태그 </div>
         <Popover
           list={myAnimals}
@@ -66,19 +66,19 @@ const AnimalTag = ({onSelectAnimalId}) => {
               <img src="/icons/icon-tag-select-open.svg" alt="tagIcon" />
             )}{" "}
             {!selectedAnimal && (
-              <text className="text-red">태그할 동물을골라주세요</text>
+              <span className="text-red">태그할 동물을 골라주세요</span>
             )}
           </div>
         </Popover>
       </div>
       <div className="h-32 w-96">
         {selectedAnimal ? (
-          <div className="flex justify-between space-x-2 rounded bg-gray-300 p-2">
+          <div className="flex justify-between space-x-2 rounded bg-amber-50 p-2">
             <div className="flex w-full space-x-3">
               <div className="flex flex-col justify-center">
                 <img
                   src={selectedAnimal.filename}
-                  className="size-24 object-cover rounded-full "
+                  className="size-24 rounded-full object-cover "
                   alt="animalImage"
                 />
               </div>

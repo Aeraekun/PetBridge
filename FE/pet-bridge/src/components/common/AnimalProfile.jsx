@@ -47,14 +47,14 @@ const AnimalProfile = ({data, isSelected, onSelect}) => {
     <div className="">
       <div className=" flex items-center justify-around space-x-2.5 ">
         <div
-          className={`flex w-full justify-between space-x-2 rounded bg-gray-300 p-3 hover:bg-gray-400  ${isSelected ? "bg-red-400" : "bg-gray-300"}`}
+          className={`flex w-full justify-between space-x-2 rounded bg-amber-50 p-3 hover:bg-amber-100  ${isSelected ? "bg-red-400" : "bg-gray-300"}`}
           onClick={onSelect}
         >
           <div className="flex w-full space-x-3">
             <div className="flex flex-col justify-center">
               <img
                 src={data.filename}
-                className="size-16 object-cover rounded-full "
+                className="size-16 rounded-full object-cover "
                 alt="animalImage"
               />
             </div>
