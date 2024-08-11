@@ -171,19 +171,25 @@ const ContractsContainer = () => {
   }
 
   const clickPaymentHandler = async () => {
-    try {
-      const res = await postPayment(
-        Number(contractInfo.id),
-        contractInfo.animalName,
-        Number(contractInfo.payment)
+    if (
+      confirm(
+        "결제가 완료되면 계약이 자동으로 체결됩니다. 결제 화면으로 이동하시겠습니까?"
       )
-      console.log("clickPaymendHandler에서 res 출력", res)
-      if (res.data?.next_redirect_pc_url) {
-        window.location.href = res.data.next_redirect_pc_url
+    ) {
+      try {
+        const res = await postPayment(
+          Number(contractInfo.id),
+          contractInfo.animalName,
+          Number(contractInfo.payment)
+        )
+        console.log("clickPaymendHandler에서 res 출력", res)
+        if (res.data?.next_redirect_pc_url) {
+          window.location.href = res.data.next_redirect_pc_url
+        }
+        return res
+      } catch (error) {
+        console.log(error)
       }
-      return res
-    } catch (error) {
-      console.log(error)
     }
   }
 

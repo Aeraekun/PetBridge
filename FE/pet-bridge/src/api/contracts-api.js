@@ -73,3 +73,16 @@ export const postPayment = async (contractId, name, totalPrice) => {
     return error
   }
 }
+
+// 결제 완료 및 계약서 작성 요청
+export const getPaymentCompleted = async (contract_id, pg_token) => {
+  const getParams = {contract_id, pg_token}
+  try {
+    const res = await axiosInstance.get("/payment/completed", {
+      params: getParams,
+    })
+    return res
+  } catch (error) {
+    return error
+  }
+}
