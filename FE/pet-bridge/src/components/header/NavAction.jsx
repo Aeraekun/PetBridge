@@ -5,7 +5,7 @@ import {
   selectId,
 } from "features/user/users-slice"
 import {useSelector, useDispatch} from "react-redux"
-import {Link, useNavigate} from "react-router-dom"
+import {Link} from "react-router-dom"
 import {logOutUser} from "utils/user-utils"
 import NavChat from "./NavChat"
 import {setIsChatModalOpen} from "features/chat/chat-slice"
@@ -22,11 +22,6 @@ const NavAction = () => {
 
   const onClickChatHandler = () => {
     dispatch(setIsChatModalOpen())
-  }
-  const navigate = useNavigate()
-
-  const onClickCallHandler = () => {
-    navigate(`/call`)
   }
 
   return (
