@@ -36,6 +36,12 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     @Override
     public void registBoard(BoardRegistRequestDto boardRegistRequestDto, MultipartFile thumbnailFile) throws Exception {
+        // null 입력 처리
+        if (boardRegistRequestDto.getType() == null || boardRegistRequestDto.getTitle() == null
+                || boardRegistRequestDto.getContent() == null) {
+            throw new PetBridgeException(ErrorCode.BAD_REQUEST);
+        }
+
         User user = authUtil.getAuthenticatedUser();
 
         String savedThumbnailFileName = null;
@@ -86,6 +92,12 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     @Override
     public void editBoard(int id, BoardEditRequestDto boardEditRequestDto, MultipartFile thumbnailFile) throws Exception {
+        // null 입력 처리
+        if (boardEditRequestDto.getType() == null || boardEditRequestDto.getTitle() == null
+                || boardEditRequestDto.getContent() == null) {
+            throw new PetBridgeException(ErrorCode.BAD_REQUEST);
+        }
+
         User user = authUtil.getAuthenticatedUser();
 
         // 없거나 삭제된 게시판 404
@@ -95,13 +107,14 @@ public class BoardServiceImpl implements BoardService {
         if (entity.getUserId() != user.getId()) {
             throw new PetBridgeException(ErrorCode.FORBIDDEN);
         }
-
-        String savedThumbnailFileName = null;
-        if (thumbnailFile != null) {
-            savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "images");
+        
+        if (thumbnailFile != null && !thumbnailFile.isEmpty()) { // 이미지 파일 입력이 있을때만 entity 저장
+            System.out.println("thumbnailFile 있음.");
+            String savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "images");
+            entity.setThumbnail(savedThumbnailFileName);
         }
 
-        entity.update(boardEditRequestDto, savedThumbnailFileName);
+        entity.update(boardEditRequestDto);
         boardRepository.save(entity);
     }
 
