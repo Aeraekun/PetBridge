@@ -16,7 +16,7 @@ public interface AnimalService {
 
     void removeAnimal(int id) throws Exception;
 
-    Page<AnimalResponseDto> getListAnimal(int page, int size, String species, String careAddr, String processState) throws Exception;
+    Page<AnimalResponseDto> getListAnimal(int page, int size, String species, String kindCd, String careAddr, String processState) throws Exception;
 
     List<AnimalResponseDto> getListMyAnimal(int page, int size) throws Exception;
 
