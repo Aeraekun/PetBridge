@@ -162,7 +162,8 @@ const ChatMainContainer = ({onStartCall}) => {
   const initChatConnection = (roomId, userId) => {
     const socket = new SockJS(REACT_APP_SERVER_URL + "/api/ws/chat")
     stompClient.current = Stomp.over(socket)
-    let reconnect = 0
+    let reconnectAttempts = 0
+    const maxReconnectAttempts = 5
 
     const onConnect = () => {
       stompClient.current.subscribe(
@@ -176,10 +177,12 @@ const ChatMainContainer = ({onStartCall}) => {
 
     // eslint-disable-next-line no-unused-vars
     const onError = (error) => {
-      if (reconnect++ <= 5) {
+      if (reconnectAttempts++ < maxReconnectAttempts) {
         setTimeout(() => {
           initChatConnection(roomId, userId)
         }, 10000)
+      } else {
+        console.log("채팅 연결 시도 5회 모두 실패")
       }
     }
 

@@ -42,8 +42,9 @@ const SearchDropDownChat = ({
         console.log(error)
       }
     }
-
-    searchUsers()
+    if (searchValue) {
+      searchUsers()
+    }
   }, [searchValue])
 
   const onChangeHandler = (event) => {
@@ -96,7 +97,7 @@ const SearchDropDownChat = ({
           <div className="h-60 w-full overflow-auto">
             <div className="p-3">
               {itemName}
-              <span className="bg-stroke mx-2 rounded-xl px-2 py-1 text-xs">
+              <span className="mx-2 rounded-xl bg-stroke px-2 py-1 text-xs">
                 {userCount}
               </span>
             </div>
@@ -110,7 +111,7 @@ const SearchDropDownChat = ({
                     key={index}
                     id={user.id}
                     onClick={onClickHandler}
-                    className="hover:bg-stroke me-3 flex h-10 grow items-center gap-2 rounded-xl p-3 hover:text-white"
+                    className="me-3 flex h-10 grow items-center gap-2 rounded-xl p-3 hover:bg-stroke hover:text-white"
                   >
                     <img
                       src={user.image ? user.image : DefaultUser150}
