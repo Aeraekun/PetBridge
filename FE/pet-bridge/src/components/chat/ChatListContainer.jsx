@@ -29,14 +29,14 @@ const ChatListContainer = () => {
   }
 
   // 선택 드롭다운 값 변경시
-  const onDataChangeHandler = (newData) => {
+  const onDataChangeHandler = async (newData) => {
     console.log(newData)
     if (confirm(`${newData.nickname} 님과의 채팅을 시작하시겠습니까?`)) {
       try {
-        const res = createChatRoom(userId, newData.id)
+        const res = await createChatRoom(userId, newData.id)
 
         console.log(res)
-        dispatch(setCurrentChatId(newData.id))
+        dispatch(setCurrentChatId(res.data))
       } catch (error) {
         console.log(error)
       }
