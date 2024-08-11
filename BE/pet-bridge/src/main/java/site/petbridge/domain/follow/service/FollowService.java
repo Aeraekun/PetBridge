@@ -7,11 +7,9 @@ import site.petbridge.domain.petpicklike.dto.request.PetPickLikeRequestDto;
 
 public interface FollowService {
 
-    void registFollow(HttpServletRequest httpServletRequest,
-                           FollowRequestDto followRequestDto) throws Exception;
+    void registFollow(FollowRequestDto followRequestDto) throws Exception;
 
-    void deleteFollow(HttpServletRequest httpServletRequest,
-                           FollowRequestDto followRequestDto) throws Exception;
+    void deleteFollow(FollowRequestDto followRequestDto) throws Exception;
 
     FollowResponseDto getDetailFollow(int id) throws Exception;
 }
