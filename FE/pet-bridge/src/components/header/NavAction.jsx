@@ -40,11 +40,6 @@ const NavAction = () => {
             <NavChat onClick={onClickChatHandler} />
           </li>
           <li className="mx-2.5 flex h-full cursor-pointer">
-            <button onClick={onClickCallHandler}>
-              <img src="icons/icon-call.svg" alt="" className="size-8" />
-            </button>
-          </li>
-          <li className="mx-2.5 flex h-full cursor-pointer">
             <Link to={`/users/${id}`}>
               <Button text="마이 페이지" />
             </Link>
