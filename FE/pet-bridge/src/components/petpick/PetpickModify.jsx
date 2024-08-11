@@ -201,6 +201,8 @@ import ReactPlayer from "react-player"
 import {editPetPick} from "api/petpicks-api"
 import {goDeletePetpick} from "utils/petpick-utils"
 import DeleteConfirmationModal from "components/common/DeleteConfirmationModal"
+import {selectId, selectImage, selectNickname} from "features/user/users-slice"
+import {useSelector} from "react-redux"
 
 const PetpickModify = () => {
   const [title, setTitle] = useState(null)
@@ -298,9 +300,18 @@ const PetpickModify = () => {
     }
   }
 
+  const currentUserImage = useSelector(selectImage)
+  const currentUserNickname = useSelector(selectNickname)
+  const currentUserId = useSelector(selectId)
+
   return (
     <div className="mx-auto mt-[80px] flex  w-[600px] max-w-[1000px] flex-col md:w-11/12 ">
-      <Profile nickname={"닉네임"} image={"이미지"} />
+      <Profile
+        nickname={currentUserNickname}
+        image={currentUserImage}
+        isMe={true}
+        userId={currentUserId}
+      />
       <hr />
       <div className="mx-16 min-w-[400px]">
         <div className="flex ">

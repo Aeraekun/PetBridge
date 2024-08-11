@@ -4,7 +4,7 @@ import Button from "components/common/Button"
 import Editor from "components/common/Editor"
 import {useNavigate} from "react-router-dom"
 import AnimalTag from "components/common/AnimalTag"
-import {selectImage, selectNickname} from "features/user/users-slice"
+import {selectId, selectImage, selectNickname} from "features/user/users-slice"
 import {useSelector} from "react-redux"
 import {registArticle} from "api/boards-api"
 
@@ -33,6 +33,7 @@ const ArticleBoardWrite = () => {
 
   const currentUserImage = useSelector(selectImage)
   const currentUserNickname = useSelector(selectNickname)
+  const currentUserId = useSelector(selectId)
 
   // 파일 선택 시 호출되는 함수
   const handleFileChange = (event) => {
@@ -108,7 +109,12 @@ const ArticleBoardWrite = () => {
         value={title}
       />
       <hr />
-      <Profile nickname={currentUserNickname} image={currentUserImage} />
+      <Profile
+        nickname={currentUserNickname}
+        image={currentUserImage}
+        userId={currentUserId}
+        isMe={true}
+      />
       <div className="my-2 flex flex-row">
         <img src="/icons/icon-tag.svg" alt="Tag Icon" />
       </div>

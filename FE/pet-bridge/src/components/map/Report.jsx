@@ -3,7 +3,7 @@ import Button from "components/common/Button"
 import Editor from "components/common/Editor"
 import {useNavigate} from "react-router-dom"
 import {useSelector} from "react-redux"
-import {selectImage, selectNickname} from "features/user/users-slice"
+import {selectId, selectImage, selectNickname} from "features/user/users-slice"
 import {registArticle} from "api/boards-api"
 import markerImg from "../../assets/image/marker.png"
 
@@ -34,6 +34,7 @@ const Report = () => {
 
   const currentUserImage = useSelector(selectImage)
   const currentUserNickname = useSelector(selectNickname)
+  const currentUserId = useSelector(selectId)
 
   useEffect(() => {
     const container = document.getElementById("map")
@@ -142,7 +143,11 @@ const Report = () => {
         value={title}
       />
       <hr className="my-4" />
-      <Profile nickname={currentUserNickname} image={currentUserImage} />
+      <Profile
+        nickname={currentUserNickname}
+        image={currentUserImage}
+        userId={currentUserId}
+      />
       <hr className="my-4" />
       <div className="mb-4">
         <h2 className="mb-2 text-xl font-semibold">대표사진</h2>

@@ -21,7 +21,11 @@ const ArticleItem = ({data, onSelectArticle}) => {
       />
       <div className="p-4">
         <div className=" mb-4 flex h-8 items-center justify-between">
-          <Profile nickname={data.userNickname} image={data.userImage} />
+          <Profile
+            nickname={data.userNickname}
+            image={data.userImage}
+            userId={data.userId}
+          />
           <div className="flex flex-row space-x-2">
             <img
               src="/icons/icon-comment.svg"

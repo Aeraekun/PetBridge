@@ -54,7 +54,7 @@ const CommentInput = ({petpickId, onCommentAdded}) => {
         <div className="flex items-center space-x-2.5">
           <input
             type="text"
-            className="mx-2 h-10 w-full rounded-md text-sm  outline outline-1 outline-stroke"
+            className="outline-stroke mx-2 h-10 w-full rounded-md  text-sm outline outline-1"
             placeholder="댓글을 남겨보세요"
             value={inputComment}
             onChange={(e) => setInputComment(e.target.value)}
@@ -66,7 +66,7 @@ const CommentInput = ({petpickId, onCommentAdded}) => {
         </div>
       ) : (
         <div className="flex items-center space-x-2.5">
-          <div className="mx-2 h-10 w-full content-center rounded-md  text-sm text-stroke outline outline-1 outline-stroke">
+          <div className="text-stroke outline-stroke mx-2 h-10 w-full  content-center rounded-md text-sm outline outline-1">
             좋아요와 댓글을 남기려면 로그인하세요{" "}
           </div>
         </div>
@@ -113,6 +113,16 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
   // const error = useSelector(selectPetpickError)
 
   // const [petpickId, setPetpickId] = useState(0)
+  const [isPlaying, setIsPlaying] = useState(false)
+
+  useEffect(() => {
+    if (inView) {
+      setIsPlaying(true) // 이 컴포넌트가 보이면 비디오 재생
+      onInView(nowindex)
+    } else {
+      setIsPlaying(false) // 이 컴포넌트가 보이지 않으면 비디오 일시 정지
+    }
+  }, [inView, onInView, nowindex])
 
   useEffect(() => {
     const fetchAnimalDetail = async (animalId) => {
@@ -209,6 +219,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
     let path = `/communities/details/${id}`
     navigate(path)
   }
+
   return (
     <div
       className=" z-50 mx-auto flex h-screen w-[1000px] snap-center flex-row justify-center py-[50px] sm:w-11/12"
@@ -221,7 +232,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
         observerRef(node)
       }}
     >
-      <PetpickVideo videoURL={petpick.video} />
+      <PetpickVideo videoURL={petpick.video} isPlaying={isPlaying} />
       {isDetail && (
         <>
           <div className="flex h-full min-w-[400px]  flex-col justify-between bg-gray-50 ">
