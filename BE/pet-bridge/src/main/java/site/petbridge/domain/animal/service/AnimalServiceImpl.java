@@ -53,7 +53,12 @@ public class AnimalServiceImpl implements AnimalService {
 		animalRegistRequestDto.getKindCd() == null || animalRegistRequestDto.getColorCd() == null ||
 		animalRegistRequestDto.getAge() == null || animalRegistRequestDto.getWeight() == null ||
 				animalRegistRequestDto.getSexCd() == null || animalRegistRequestDto.getNeuterYn() == null ||
-				animalRegistRequestDto.getCareAddr() == null || imageFile == null) {
+				animalRegistRequestDto.getCareAddr() == null) {
+			throw new PetBridgeException(ErrorCode.BAD_REQUEST);
+		}
+
+		// 등록은 이미지 필수
+		if (imageFile == null || imageFile.isEmpty()) {
 			throw new PetBridgeException(ErrorCode.BAD_REQUEST);
 		}
 
