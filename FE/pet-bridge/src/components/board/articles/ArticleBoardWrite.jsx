@@ -27,10 +27,16 @@ const ArticleBoardWrite = () => {
   const currentUserId = useSelector(selectId)
 
   const isAdmin = useSelector(selectRole) === "ADMIN"
+  const [error, setError] = useState(null)
 
   // 파일 선택 시 호출되는 함수
   const handleFileChange = (event) => {
     const file = event.target.files[0]
+    const maxSizeInBytes = 30 * 1024 * 1024 // 50MB 크기 제한
+    if (file.size > maxSizeInBytes) {
+      setError("파일 크기는 30MB를 초과할 수 없습니다.")
+      return
+    }
     if (file) {
       // 파일의 URL을 생성하여 상태에 저장
       const url = URL.createObjectURL(file)
@@ -158,6 +164,7 @@ const ArticleBoardWrite = () => {
           onChange={handleFileChange}
           className="cursor-pointer items-center"
         />
+        {error && <p className="text-sm text-red-500">{error}</p>}
         {imageSrc && (
           <button
             onClick={resetImage}

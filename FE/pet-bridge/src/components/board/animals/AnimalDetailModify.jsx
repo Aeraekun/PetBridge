@@ -33,9 +33,16 @@ const AnimalDetailModify = () => {
     console.log("animal", animal)
   }
 
-  //파일이 수정된 경우
+  const [error, setError] = useState(null)
+
+  // 파일 선택 시 호출되는 함수
   const handleFileChange = (event) => {
     const file = event.target.files[0]
+    const maxSizeInBytes = 30 * 1024 * 1024 // 50MB 크기 제한
+    if (file.size > maxSizeInBytes) {
+      setError("파일 크기는 30MB를 초과할 수 없습니다.")
+      return
+    }
     if (file) {
       setImageFile(file)
     }
@@ -153,6 +160,8 @@ const AnimalDetailModify = () => {
         isShelter={false}
         errors={errors}
       />
+
+      {error && <p className="text-sm text-red-500">{error}</p>}
 
       <div className="flex justify-end">
         <Button text={"수정하기"} onClick={goAnimalModify} />
