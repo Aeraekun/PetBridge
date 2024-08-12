@@ -12,22 +12,18 @@ import iconPawprint from "assets/icons/icon-pawprint.png" // 수정된 파일 �
 import {getShelterAnimalsAPI} from "api/animals-api"
 import PetpickComments from "components/petpick/PetpickComments"
 import AnimalAd from "components/petpick/AnimalAd"
-// import {getShelterAnimalsAPI} from "api/animals-api"
-// import {getMyLocation} from "utils/petpick-utils"
+import {getMyLocation} from "utils/petpick-utils"
 
 const PetpickPage = () => {
-  const [index, setIndex] = useState(0)
+  const [index, setIndex] = useState(0) // 현재 인덱스 상태
   const [list, setList] = useState([]) // list: petpick + 보호소 동물 정보
 
-  const containerRef = useRef(null)
-  const itemRefs = useRef(list.map(() => React.createRef()))
+  const containerRef = useRef(null) // 스크롤 컨테이너
+  const itemRefs = useRef(list.map(() => React.createRef())) // list의
 
   // 현재위치 받아오기
 
-  useEffect(() => {
-    // console.log(getMyLocation())
-  }, []) // 빈 배열을 넣어 처음 렌더링 될 때만 실행
-
+  useEffect(() => {}, [])
   const handleInView = (visibleIndex) => {
     setIndex(visibleIndex)
     // console.log(list.length)
@@ -44,10 +40,21 @@ const PetpickPage = () => {
   useEffect(() => {
     fetchData()
   }, [])
-
+  const fetchLocation = async () => {
+    try {
+      const regionCode = await getMyLocation()
+      console.log("Fetched Region Code:", regionCode)
+      return regionCode
+      // 추가로 필요한 작업을 여기에서 처리합니다.
+    } catch (error) {
+      console.error("Failed to fetch location:", error)
+    }
+  }
   const fetchData = async () => {
+    const regionCode = fetchLocation() || 6300000
     const newPetpick = await fetchPetpickData()
-    const newAnimals = await fetchAnimalData(6300000)
+
+    const newAnimals = await fetchAnimalData(regionCode)
     let result = []
     const animalsLength = 4
     let animalIndex = 0
@@ -123,8 +130,8 @@ const PetpickPage = () => {
       try {
         const nowLike = await getDetailPetPickLike(list[index].id)
         const nowFollow = await getDetailFollow(list[index].animalId)
-        console.log(nowLike)
-        console.log(nowFollow)
+        // console.log(nowLike)
+        // console.log(nowFollow)
         if (nowLike) {
           list[index].isLiking = true
         } else {
@@ -141,7 +148,8 @@ const PetpickPage = () => {
         console.log("catch")
       }
     }
-    if (index === list.length - 1) {
+    console.log("length", list.length)
+    if (index === list.length - 2) {
       loadMoreData()
     }
     if (list.length > 0) {
@@ -182,6 +190,7 @@ const PetpickPage = () => {
   }
   return (
     <div className=" relative h-screen">
+      {index}
       <button
         onClick={goPetpickWrite}
         className="absolute right-20 top-20 flex "
