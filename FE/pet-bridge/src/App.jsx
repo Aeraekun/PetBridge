@@ -22,7 +22,7 @@ import AnimalDetailModify from "components/board/animals/AnimalDetailModify"
 import PetpickPage from "pages/PetpickPage"
 import PetpickWrite from "components/petpick/PetpickWrite"
 import PetpickComments from "components/petpick/PetpickComments"
-import PetpickDetail from "components/petpick/AnimalAd"
+import PetpickDetail from "components/petpick/PetpickDetail"
 import PetpickModify from "components/petpick/PetpickModify"
 
 import {useDispatch, useSelector} from "react-redux"
