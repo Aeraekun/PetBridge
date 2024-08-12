@@ -5,7 +5,7 @@ import React, {useState, useEffect} from "react"
 import {editAnimal, removeAnimal} from "api/animals-api"
 import DeleteConfirmationModal from "components/common/DeleteConfirmationModal" // 모달 컴포넌트 임포트
 
-const ArticleDetailModify = () => {
+const AnimalDetailModify = () => {
   const navigate = useNavigate()
   const [animal, setAnimal] = useState(null)
   const location = useLocation()
@@ -169,4 +169,4 @@ const ArticleDetailModify = () => {
   )
 }
 
-export default ArticleDetailModify
+export default AnimalDetailModify

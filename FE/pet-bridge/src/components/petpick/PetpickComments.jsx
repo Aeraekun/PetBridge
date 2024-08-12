@@ -30,7 +30,7 @@ const CommentInput = ({petpickId, onCommentAdded}) => {
       petPickId: petpickId,
       content: inputComment,
     }
-    console.log(newComment)
+    // console.log(newComment)
 
     try {
       await registPetPickComment(newComment)
@@ -54,7 +54,7 @@ const CommentInput = ({petpickId, onCommentAdded}) => {
         <div className="flex items-center space-x-2.5">
           <input
             type="text"
-            className="outline-stroke mx-2 h-10 w-full rounded-md  text-sm outline outline-1"
+            className="mx-2 h-10 w-full rounded-md text-sm  outline outline-1 outline-stroke"
             placeholder="댓글을 남겨보세요"
             value={inputComment}
             onChange={(e) => setInputComment(e.target.value)}
@@ -66,7 +66,7 @@ const CommentInput = ({petpickId, onCommentAdded}) => {
         </div>
       ) : (
         <div className="flex items-center space-x-2.5">
-          <div className="text-stroke outline-stroke mx-2 h-10 w-full  content-center rounded-md text-sm outline outline-1">
+          <div className="mx-2 h-10 w-full content-center rounded-md  text-sm text-stroke outline outline-1 outline-stroke">
             좋아요와 댓글을 남기려면 로그인하세요{" "}
           </div>
         </div>
@@ -137,7 +137,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
     if (isDetail) {
       fetchAnimalDetail(petpick.animalId)
     }
-    console.log(isDetail, "isDetail")
+    // console.log(isDetail, "isDetail")
   }, [isDetail])
 
   const fetchComments = async () => {
