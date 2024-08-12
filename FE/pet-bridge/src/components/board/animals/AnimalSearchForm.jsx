@@ -44,6 +44,7 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
     fetchSido()
   }, [])
 
+  //시군구
   useEffect(() => {
     const fetchSigungu = async (selectedSido) => {
       try {
@@ -97,6 +98,7 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
   useEffect(() => {
     console.log(selectedKind)
   }, [selectedKind])
+
   const formatDateToYYYYMMDD = (date) => {
     if (!date) return ""
     return format(date, "yyyyMMdd")
@@ -118,8 +120,8 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
     let obj = {
       bgnde: formattedBgnDate,
       endde: formattedEndDate,
-      uprCd: selectedSido,
-      orgCd: selectedSigungu,
+      upr_cd: selectedSido,
+      org_cd: selectedSigungu,
       upkind: selectedUpKindCd, //축종코드 개, 고양이
       kind: selectedKind, //품종코드
     }
@@ -141,6 +143,14 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
     if (filteredData) {
       searchParams(filteredData)
     }
+    setBreed(null)
+    setSelectedSido(null)
+    setSelectedSigungu(null)
+    setEndde(null)
+    setBgnde(null)
+    setParams(null)
+    setSelectedUpKindCd(null)
+    setSelectedKind(null)
   }
 
   return (

@@ -93,7 +93,6 @@ const AnimalBoardList = () => {
   }
 
   ///임시보호
-
   const [searchParams, setSearchParams] = useState({}) // API 요청을 보내기 위한 파라미터
 
   // 초기값 로딩
@@ -148,7 +147,7 @@ const AnimalBoardList = () => {
           다음▶{" "}
         </button>
       </div>
-      <ul className="flex w-full flex-wrap justify-between">
+      <ul className="flex w-full flex-wrap justify-start gap-4">
         {animals ? (
           animals.map((item, index) => (
             <li key={index}>
