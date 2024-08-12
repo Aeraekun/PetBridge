@@ -63,8 +63,14 @@ const SocialUpdateContainer = () => {
     // 에러가 없다면
     if (Object.values(newErrors).every((value) => value === "")) {
       // patch 비동기 요청
+      const formData = new FormData()
+      formData.append(
+        "userEditRequestDto",
+        new Blob([JSON.stringify(updateFormData)], {type: "application/json"})
+      )
+
       try {
-        const res = await patchUserInfo(updateFormData)
+        const res = await patchUserInfo(formData)
         navigate("/users/social/success")
         console.log(res)
         return
@@ -115,6 +121,7 @@ const SocialUpdateContainer = () => {
           className=" my-1 w-full rounded-md border p-2.5"
           placeholder="닉네임"
           id="nickname"
+          minLength={2}
           maxLength={20}
           onBlur={onBlurHandler}
         />
