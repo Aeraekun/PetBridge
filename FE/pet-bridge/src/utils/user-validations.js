@@ -68,8 +68,13 @@ export const validatePhone = (formData) => {
 export const validateBirth = (formData) => {
   let new_error = "birth"
   let new_error_message = ""
+  const year = parseInt(formData.birth.split("-")[0], 10)
+  const minYear = 1900
+  const maxYear = 2024
   if (!formData.birth) {
     new_error_message = "*생년월일: 필수 정보입니다."
+  } else if (year < minYear || year > maxYear) {
+    new_error_message = `*생년월일: 연도는 ${minYear}년과 ${maxYear}년 사이여야 합니다.`
   } else {
     new_error_message = ""
   }
@@ -78,13 +83,9 @@ export const validateBirth = (formData) => {
 }
 
 // 닉네임 유효성 검사
-export const validateNickname = async (nickname, formData) => {
+export const validateNickname = async (formData) => {
   let new_error = "nickname"
   let new_error_message = ""
-
-  if (nickname === formData.nickname) {
-    return {new_error, new_error_message}
-  }
 
   if (!formData.nickname) {
     new_error_message = "*닉네임: 필수 정보입니다."
@@ -102,6 +103,5 @@ export const validateNickname = async (nickname, formData) => {
     }
   }
 
-  console.log({new_error, new_error_message})
   return {new_error, new_error_message}
 }

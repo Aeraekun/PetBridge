@@ -17,7 +17,7 @@ import {
   validateBirth,
   validateNickname,
   validatePassword,
-  validatePhone,
+  // validatePhone,
 } from "utils/user-validations"
 const UpdateProfileContainer = () => {
   const navigate = useNavigate()
@@ -35,7 +35,7 @@ const UpdateProfileContainer = () => {
   const [updateFormData, setUpdateFormData] = useState({
     nickname: nickname,
     birth: birth,
-    phone: phone,
+    // phone: phone,
     image: image,
   })
 
@@ -93,8 +93,10 @@ const UpdateProfileContainer = () => {
 
     let newErrors = {}
 
-    let nicknameError = await validateNickname(nickname, updateFormData)
-    if (nicknameError.new_error) {
+    let nicknameError = await validateNickname(updateFormData)
+    if (updateFormData.nickname === nickname) {
+      setError("phone", "")
+    } else if (nicknameError.new_error) {
       newErrors.nickname = nicknameError.new_error_message
     }
 
@@ -103,10 +105,10 @@ const UpdateProfileContainer = () => {
       newErrors.birth = birthError.new_error_message
     }
 
-    let phoneError = validatePhone(updateFormData)
-    if (phoneError.new_error) {
-      newErrors.phone = phoneError.new_error_message
-    }
+    // let phoneError = validatePhone(updateFormData)
+    // if (phoneError.new_error) {
+    //   newErrors.phone = phoneError.new_error_message
+    // }
     setErrors(newErrors)
     console.log("뉴에러ㅓㅓ", newErrors)
     // 에러가 없다면
@@ -117,7 +119,7 @@ const UpdateProfileContainer = () => {
         password: updateFormData.password,
         nickname: updateFormData.nickname,
         birth: updateFormData.birth,
-        phone: updateFormData.phone,
+        // phone: updateFormData.phone,
       }
 
       formData.append(
@@ -163,20 +165,25 @@ const UpdateProfileContainer = () => {
     const inputType = target.id
     // id 값으로 입력 양식 확인 후 양식 검사
     if (inputType === "nickname") {
-      ;({new_error, new_error_message} = await validateNickname(
-        nickname,
-        updateFormData
-      ))
+      if (updateFormData.nickname === nickname) {
+        setError("phone", "")
+        return
+      }
+      ;({new_error, new_error_message} = await validateNickname(updateFormData))
       setError(new_error, new_error_message)
     } else if (inputType === "birth") {
       ;({new_error, new_error_message} = validateBirth(updateFormData))
       setError(new_error, new_error_message)
-    } else if (inputType === "phone") {
-      ;({new_error, new_error_message} = validatePhone(updateFormData))
-      setError(new_error, new_error_message)
-    } else if (inputType === "password") {
-      ;({new_error, new_error_message} = validatePassword(updateFormData))
-      setError(new_error, new_error_message)
+    }
+    // else if (inputType === "phone") {
+    //   ;({new_error, new_error_message} = validatePhone(updateFormData))
+    //   setError(new_error, new_error_message)
+    // }
+    else if (inputType === "password") {
+      if (updateFormData.password) {
+        ;({new_error, new_error_message} = validatePassword(updateFormData))
+        setError(new_error, new_error_message)
+      }
     }
   }
 
@@ -211,7 +218,7 @@ const UpdateProfileContainer = () => {
         onChange={imageChangeHandler}
         style={{display: "none"}}
       />
-      {!socialType ? (
+      {!socialType && socialType !== "null" ? (
         // 비밀번호 입력
         <div className="w-full">
           {/* 비밀번호 입력 창 */}
@@ -240,7 +247,7 @@ const UpdateProfileContainer = () => {
             autoComplete="new-password"
           />
           {errors.password && (
-            <span className="col-span-12 text-alert">{errors.password}</span>
+            <span className="text-alert col-span-12">{errors.password}</span>
           )}
         </div>
       ) : null}
@@ -258,13 +265,14 @@ const UpdateProfileContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.nickname && (
-          <span className="col-span-12 text-alert">{errors.nickname}</span>
+          <span className="text-alert col-span-12">{errors.nickname}</span>
         )}
       </div>
       {/* 전화번호 입력 창 */}
       <div className="w-full">
         <input
-          value={updateFormData.phone}
+          disabled={true}
+          value={phone}
           onInput={onInputPhone}
           onChange={changeHandler}
           type="text"
@@ -274,9 +282,9 @@ const UpdateProfileContainer = () => {
           maxLength="11"
           onBlur={onBlurHandler}
         />
-        {errors.phone && (
-          <span className="col-span-12 text-alert">{errors.phone}</span>
-        )}
+        {/* {errors.phone && (
+          <span className="text-alert col-span-12">{errors.phone}</span>
+        )} */}
       </div>
       {/* 생년월일 창 */}
       <div className="w-full">
@@ -292,20 +300,20 @@ const UpdateProfileContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.birth && (
-          <span className="col-span-12 text-alert">{errors.birth}</span>
+          <span className="text-alert col-span-12">{errors.birth}</span>
         )}
       </div>
 
       <div className="grid w-full grid-cols-2 gap-10">
         {/* 수정하기 버튼 */}
-        <button type="submit" className="h-12 rounded-md bg-mild px-3.5 py-2.5">
+        <button type="submit" className="bg-mild h-12 rounded-md px-3.5 py-2.5">
           수정하기
         </button>
         {/* 취소 버튼 */}
         <Link
           to="/"
           type="button"
-          className="rounded-md bg-mild px-3.5 py-2.5 text-center"
+          className="bg-mild rounded-md px-3.5 py-2.5 text-center"
         >
           취소하기
         </Link>

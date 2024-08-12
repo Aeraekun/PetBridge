@@ -41,7 +41,7 @@ export const getUserInfosFromSession = () => {
     "isAuthenticated",
     "role",
     "image",
-    "social_type",
+    "socialType",
   ]
   // 유저 정보를 저장할 빈 객체 초기화
   const userInfos = {}

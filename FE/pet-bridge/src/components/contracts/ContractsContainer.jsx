@@ -80,7 +80,7 @@ const ContractsContainer = () => {
         alert("스탬프 찍기를 성공했어요.")
       } else if (res.response.status == 409) {
         alert(
-          "이번 달에 이미 스탬프를 찍었어요. 다음 달에 입양 후기를 확인하구 또 찍어주세요."
+          "이번 달에 이미 스탬프를 찍었어요. 다음 달에 입양 후기를 확인하고 또 찍어주세요."
         )
       }
     }
@@ -128,7 +128,7 @@ const ContractsContainer = () => {
 
   // 계약 종료 (환급) 버튼 클릭
   const clickFinishHandler = () => {
-    if (confirm("환급을 신창하시겠습니까?")) {
+    if (confirm("환급을 신청하시겠습니까?")) {
       patchContract(id)
     }
   }
@@ -149,6 +149,7 @@ const ContractsContainer = () => {
       console.log("서명 클릭")
     }
   }
+
   const changeCodeHandler = (event) => {
     const code = event.target.value
     setPhoneCode(code)
@@ -222,7 +223,7 @@ const ContractsContainer = () => {
             />
           </div>
           <div
-            className="flex h-[600px] w-full flex-col items-center bg-stroke p-5"
+            className="bg-stroke flex h-[600px] w-full flex-col items-center p-5"
             style={{
               backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(${ContractBackground})`,
               backgroundSize: "cover",
@@ -243,7 +244,7 @@ const ContractsContainer = () => {
           {contractInfo.status === "계약완료" ? (
             <>
               <span className="text-4xl font-bold">입양 스탬프북</span>
-              <div className="flex w-full flex-col items-center justify-center rounded-2xl border-2 border-mild p-5">
+              <div className="border-mild flex w-full flex-col items-center justify-center rounded-2xl border-2 p-5">
                 <div className="flex h-full flex-wrap justify-center">
                   {Array.from({length: contractInfo.month}).map((_, index) => (
                     <ContractStamp
@@ -256,7 +257,7 @@ const ContractsContainer = () => {
                 <div className="flex h-20 items-center justify-center">
                   {Number(userId) == contractInfo.contractorId ? (
                     <button
-                      className="rounded-2xl bg-mild p-2.5 text-2xl font-bold text-white"
+                      className="bg-mild rounded-2xl p-2.5 text-2xl font-bold text-white"
                       onClick={onClickStampHandler}
                     >
                       이번 달 스탬프 찍기
@@ -287,7 +288,7 @@ const ContractsContainer = () => {
 
                       <button
                         disabled={true}
-                        className={`rounded-2xl border bg-stroke p-2.5`}
+                        className={`bg-stroke rounded-2xl border p-2.5`}
                       >
                         서명 완료
                       </button>
@@ -306,7 +307,7 @@ const ContractsContainer = () => {
                         isPhoneCodeChecked ? (
                           <button
                             disabled={true}
-                            className={`rounded-2xl border bg-stroke p-2.5`}
+                            className={`bg-stroke rounded-2xl border p-2.5`}
                           >
                             서명 완료
                           </button>
@@ -321,7 +322,7 @@ const ContractsContainer = () => {
                             />
                             <button
                               onClick={clickPhoneCodeCheckHandler}
-                              className="grow rounded-2xl border px-2 hover:bg-mild"
+                              className="hover:bg-mild grow rounded-2xl border px-2"
                             >
                               확인
                             </button>
@@ -344,7 +345,7 @@ const ContractsContainer = () => {
               {/* 클릭시 결제 후 계약 체결하기 */}
               <button
                 disabled={!isPhoneCodeChecked}
-                className="rounded-xl bg-mild p-2.5 text-white"
+                className="bg-mild rounded-xl p-2.5 text-white"
                 onClick={clickPaymentHandler}
               >
                 계약 체결하기
@@ -366,7 +367,7 @@ const ContractsContainer = () => {
 
                     <button
                       disabled={true}
-                      className={`rounded-2xl border bg-stroke p-2.5`}
+                      className={`bg-stroke rounded-2xl border p-2.5`}
                     >
                       서명 완료
                     </button>
@@ -384,7 +385,7 @@ const ContractsContainer = () => {
                   </div>
                 </div>
                 <button
-                  className="rounded-xl bg-alert p-2.5 text-white"
+                  className="bg-alert rounded-xl p-2.5 text-white"
                   onClick={clickDeleteButtonHandler}
                 >
                   계약서 삭제하기
