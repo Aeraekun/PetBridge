@@ -1,7 +1,7 @@
 import {Route, Routes} from "react-router-dom"
 import Layout from "./layout/Layout"
 import LostAndFoundPage from "pages/LostAndFoundPage"
-import Report from "./components/map/Report"
+import LostAnimalReport from "./components/map/LostAnimalReport"
 
 //커뮤니티
 import BoardPage from "pages/BoardPage"
@@ -75,6 +75,8 @@ import AiSkin from "components/ai/AiSkin"
 import ChatModal from "pages/ChatModal"
 
 import CallPage from "components/chat/CallPage"
+import LostAnimalMap from "components/map/LostAnimalMap"
+import RecommendationPage from "pages/RecommendationPage"
 
 function App() {
   const dispatch = useDispatch()
@@ -182,8 +184,14 @@ function App() {
             <Route path="eyes" element={<AiEyes />} />
             <Route path="skin" element={<AiSkin />} />
           </Route>
+          <Route
+            path="/recommendation"
+            element={<RecommendationPage />}
+          ></Route>
           <Route path="lost-and-found" element={<LostAndFoundPage />}>
-            <Route path="report" element={<Report />}></Route>
+            <Route path="" element={<LostAnimalMap />}></Route>
+            <Route path="report" element={<LostAnimalReport />}></Route>
+            <Route path="details/:id" element={<ArticleDetail />}></Route>
           </Route>
         </Route>
         <Route path="/users/" element={<UsersLayout />}>

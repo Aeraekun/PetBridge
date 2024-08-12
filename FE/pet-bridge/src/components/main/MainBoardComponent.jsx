@@ -1,79 +1,43 @@
 import React, {useState, useEffect} from "react"
-import axios from "axios"
-import PropTypes from "prop-types"
-import MainShelterCard from "../../components/main/MainShelterCard" // MainShelterCard 컴포넌트 임포트
 import slideImage from "../../assets/image/Mainslide2.jpg" // 배경 이미지
-import {Link} from "react-router-dom" // Link 컴포넌트 임포트
+import {Link, useNavigate} from "react-router-dom" // Link 컴포넌트 임포트
 import iconPawprint from "../../assets/icons/icon-pawprint.png" // 아이콘 이미지
-
-// 개별 보호소 동물 아이템을 렌더링하는 컴포넌트
-const ItemCard = ({
-  noticeNo,
-  sexCd,
-  popfile,
-  kindCd,
-  cardNm,
-  careNm,
-  careAddr,
-}) => (
-  <MainShelterCard
-    noticeNo={noticeNo}
-    sexCd={sexCd}
-    popfile={popfile}
-    kindCd={kindCd}
-    cardNm={cardNm}
-    careNm={careNm}
-    careAddr={careAddr}
-  />
-)
-
-ItemCard.propTypes = {
-  noticeNo: PropTypes.string.isRequired,
-  sexCd: PropTypes.string.isRequired,
-  popfile: PropTypes.string.isRequired,
-  kindCd: PropTypes.string.isRequired,
-  cardNm: PropTypes.string,
-  careNm: PropTypes.string,
-  careAddr: PropTypes.string,
-}
-
-// 보호소 동물 데이터를 가져오는 API 호출 함수
-const getShelterAnimalsAPI = async (searchParams) => {
-  const SERVICE_KEY = process.env.REACT_APP_API_SERVICE_KEY
-  const BASE_PUB_API = process.env.REACT_APP_BASE_PUB_API
-  const params = {
-    serviceKey: SERVICE_KEY,
-    pageNo: searchParams.pageNo || 2,
-    numOfRows: searchParams.numOfRows || 10,
-    _type: "json",
-    ...searchParams,
-  }
-
-  try {
-    const res = await axios.get(`${BASE_PUB_API}/abandonmentPublic`, {
-      params: params,
-    })
-
-    return res.data.response.body.items.item || []
-  } catch (error) {
-    console.error("Error fetching shelter animals:", error)
-    return []
-  }
-}
+import AnimalItem from "components/board/animals/AnimalItem"
+import {getAnimalList} from "api/animals-api"
 
 // 메인 컴포넌트
 const MainBoardComponent = () => {
+  const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useState({})
   const [sectionOneItems, setSectionOneItems] = useState([])
 
   useEffect(() => {
-    const fetchShelterAnimals = async () => {
-      const items = await getShelterAnimalsAPI({pageNo: 2, numOfRows: 20})
-      const shuffledItems = shuffleArray([...items])
-      setSectionOneItems(shuffledItems.slice(0, 10))
-    }
-
-    fetchShelterAnimals()
+    setSearchParams(() => ({
+      page: 0,
+      size: 20,
+    }))
   }, [])
+
+  const goAnimalDetail = (animal) => {
+    console.log(animal)
+    const id = animal.id
+    let path = `/shelter/details/${id}`
+    navigate(path, {state: {animal}})
+  }
+
+  useEffect(() => {
+    const fetchInitData = async () => {
+      try {
+        const data = await getAnimalList(searchParams)
+        console.log(data)
+        const shuffledItems = shuffleArray([...data.content])
+        setSectionOneItems(shuffledItems.slice(0, 10))
+      } catch (e) {
+        console.log(e)
+      }
+    }
+    fetchInitData()
+  }, [searchParams])
 
   const shuffleArray = (array) => array.sort(() => Math.random() - 0.5)
 
@@ -100,16 +64,12 @@ const MainBoardComponent = () => {
       </div>
       <div className="flex w-full flex-col items-center">
         <ul className="flex max-h-[450px] w-[1000px] flex-col flex-wrap gap-2.5 overflow-y-auto bg-white">
-          {sectionOneItems.map((item) => (
-            <ItemCard
-              key={item.desertionNo}
-              noticeNo={item.noticeNo}
-              sexCd={item.sexCd}
-              popfile={item.popfile}
-              kindCd={item.kindCd}
-              cardNm={item.cardNm}
-              careNm={item.careNm}
-              careAddr={item.careAddr}
+          {sectionOneItems.map((item, index) => (
+            <AnimalItem
+              data={item}
+              onSelectAnimal={() => goAnimalDetail(item)}
+              isShelter={false}
+              key={index}
             />
           ))}
         </ul>
