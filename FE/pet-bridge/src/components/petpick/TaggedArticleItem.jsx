@@ -35,7 +35,7 @@ const TaggedArticleItem = ({data, onClick}) => {
         <div className="flex flex-col justify-center">
           <img
             src={data.thumbnail}
-            className="w-16  max-h-16 object-cover "
+            className="size-24 object-cover "
             alt="animalImage"
           />
         </div>

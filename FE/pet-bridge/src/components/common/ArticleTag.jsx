@@ -5,35 +5,51 @@ import TaggedArticleItem from "components/petpick/TaggedArticleItem"
 import {useSelector} from "react-redux"
 import {selectNickname} from "features/user/users-slice"
 
-const ArticleTag = ({onSelectArticleId}) => {
+const ArticleTag = ({onSelectArticleId, alreadySelectedAnimalId}) => {
   const [selectedArticleId, setSelectedArticleId] = useState(null)
   const [visible, setVisible] = useState(false)
   const [myArticles, setMyArticles] = useState([])
-  const [selectedArticle, setSelectedArticle] = useState(null)
+  const [selectedArticle, setSelectedArticle] = useState(
+    alreadySelectedAnimalId
+  )
 
   const nickname = useSelector(selectNickname)
 
+  // Fetch user's articles
   useEffect(() => {
-    initArticles()
-  }, [])
-
-  const initArticles = async () => {
-    try {
-      const res = await getMyArticles({
-        size: 12,
-        page: 0,
-        usernickname: nickname,
-      })
-      console.log("res", res.data)
-
-      if (res.data) {
-        setMyArticles(res.data.content)
+    const initArticles = async () => {
+      try {
+        const res = await getMyArticles({
+          size: 12,
+          page: 0,
+          usernickname: nickname,
+        })
+        console.log("res", res.data)
+        if (res.data) {
+          setMyArticles(res.data.content)
+        }
+      } catch (error) {
+        console.log(error)
       }
-    } catch (error) {
-      console.log(error)
     }
-  }
 
+    initArticles()
+  }, [nickname])
+
+  // Update selected article when articles are fetched or article ID changes
+  useEffect(() => {
+    if (alreadySelectedAnimalId && myArticles.length > 0) {
+      const newArticle = myArticles.find(
+        (article) => article.id === alreadySelectedAnimalId
+      )
+      if (newArticle) {
+        setSelectedArticle(newArticle)
+        setSelectedArticleId(alreadySelectedAnimalId) // Update the ID as well
+      }
+    }
+  }, [alreadySelectedAnimalId, myArticles])
+
+  // Update selected article when selected article ID changes
   useEffect(() => {
     const selectedArticle = myArticles.find(
       (article) => article.id === selectedArticleId
@@ -41,10 +57,12 @@ const ArticleTag = ({onSelectArticleId}) => {
     if (selectedArticle) {
       setSelectedArticle(selectedArticle)
     }
-  }, [selectedArticleId])
+    console.log("id", selectedArticleId)
+  }, [selectedArticleId, myArticles])
 
   const handleArticleSelect = (id) => {
     setSelectedArticleId(id)
+    console.log("article id", id)
     if (onSelectArticleId) {
       onSelectArticleId(id)
     }
@@ -59,7 +77,7 @@ const ArticleTag = ({onSelectArticleId}) => {
 
   return (
     <div className="flex flex-col space-y-2">
-      <div className="items-center flex">
+      <div className="flex items-center">
         <div className="text-xl"> 글 태그 </div>
         <Popover
           list={myArticles}
@@ -67,21 +85,22 @@ const ArticleTag = ({onSelectArticleId}) => {
           onSelectAnimal={handleArticleSelect}
           onVisible={handleVisibilityChange}
         >
-          <div className="flex flex-row">
-            {visible ? (
-              <img src="/icons/icon-tag-select.svg" alt="tagIcon" />
-            ) : (
-              <img src="/icons/icon-tag-select-open.svg" alt="tagIcon" />
-            )}
-            {!selectedArticle && (
-              <span className="text-red">태그할 글을 골라주세요</span>
-            )}
-          </div>
+          <img
+            src={
+              visible
+                ? "/icons/icon-tag-select.svg"
+                : "/icons/icon-tag-select-open.svg"
+            }
+            alt="tagIcon"
+          />
         </Popover>
+        {!selectedArticle && (
+          <span className="text-red">태그할 글을 골라주세요</span>
+        )}
       </div>
       <div className="h-32 w-96">
         {selectedArticle ? (
-          <div className="flex justify-between space-x-2 rounded bg-gray-300 p-2">
+          <div className="flex justify-between space-x-2 rounded bg-green-50 p-2">
             <TaggedArticleItem data={selectedArticle} />
           </div>
         ) : (
