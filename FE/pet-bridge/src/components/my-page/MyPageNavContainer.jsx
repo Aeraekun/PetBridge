@@ -98,7 +98,7 @@ const MyPageNavContainer = () => {
 
   return (
     // 마이페이지 전체 틀
-    <div className="col-span-3 flex flex-col items-center  justify-center space-y-3 py-2.5 text-center md:h-full md:w-80">
+    <div className="col-span-3 flex min-w-56 flex-col  items-center justify-center space-y-3 py-2.5 text-center md:h-full md:w-80">
       {/* 1. 유저 프로필 이미지 */}
       <img
         src={userImage ? userImage : DefaulUser150}
@@ -112,14 +112,6 @@ const MyPageNavContainer = () => {
       {/* 3. 수정하기, 로그아웃 */}
       <div className="flex items-center justify-between space-x-2">
         {/* 햄버거 버튼 */}
-        <div className="md:hidden">
-          <button
-            onClick={() => setIsNavOpen(!isNavOpen)}
-            className="text-3xl focus:outline-none"
-          >
-            &#9776; {/* 햄버거 메뉴 아이콘 */}
-          </button>
-        </div>
         <Link
           to="/users/update"
           className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild"
@@ -131,6 +123,14 @@ const MyPageNavContainer = () => {
           onClick={handleLogOut}
         >
           로그아웃
+        </button>
+      </div>
+      <div className="md:hidden">
+        <button
+          onClick={() => setIsNavOpen(!isNavOpen)}
+          className="text-4xl focus:outline-none"
+        >
+          &#9776; {/* 햄버거 메뉴 아이콘 */}
         </button>
       </div>
 

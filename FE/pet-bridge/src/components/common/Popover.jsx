@@ -19,11 +19,13 @@ const Popover = ({list, children, type, onSelectAnimal, onVisible}) => {
     // console.log("list", list)
   })
   const handleAnimalSelect = (id) => {
-    setSelectedAnimalId(id)
-    if (onSelectAnimal) {
-      onSelectAnimal(id) // 선택된 동물 ID를 부모 컴포넌트로 전달
+    if (visible) {
+      setSelectedAnimalId(id)
+      if (onSelectAnimal) {
+        onSelectAnimal(id) // 선택된 동물 ID를 부모 컴포넌트로 전달
+      }
+      togglePopover()
     }
-    togglePopover()
   }
   const ResetselectedAnimal = () => {
     setSelectedAnimalId(null)
