@@ -14,6 +14,8 @@ public interface BoardService {
 
     Page<BoardResponseDto> getListBoard(int page, int size, String userNickname, String title, BoardType type) throws Exception;
 
+    Page<BoardResponseDto> getListLostBoardByLocation(int page, int size, double lat, double lon) throws Exception;
+
     Page<BoardResponseDto> getListBoardByAnimalId(int page, int size, int animalId) throws Exception;
 
     BoardResponseDto getDetailBoard(int id) throws Exception;

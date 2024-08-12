@@ -82,9 +82,9 @@ const MyPagePetPicsContainer = () => {
   const navigate = useNavigate()
 
   const handleClick = (item) => {
-    console.log(item)
     navigate(`/petpick/modify/${item.id}`, {state: {item}})
   }
+
   return (
     <div className="flex h-full  min-w-80 flex-col items-center">
       <div className="flex w-full justify-center p-2.5 ">
@@ -131,7 +131,7 @@ const MyPagePetPicsContainer = () => {
                 <Button
                   text={"수정하기"}
                   onClick={() => {
-                    handleClick(item.id)
+                    handleClick(item)
                   }}
                 />
               </div>
