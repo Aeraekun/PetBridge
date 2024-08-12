@@ -147,7 +147,7 @@ const ChatListContainer = () => {
           </div>
         </div>
       </div>
-      <div className="w-full grow overflow-x-hidden overflow-y-scroll">
+      <div className="w-full grow divide-y overflow-x-hidden overflow-y-scroll">
         {chatList.map((chat) => (
           <ChatListItem
             key={chat.id}
@@ -156,6 +156,7 @@ const ChatListContainer = () => {
             opponentId={chat.opponentId}
             opponentNickname={chat.opponentNickname}
             recentMessage={chat.recentMessage}
+            recentTime={chat.recentTime}
           />
         ))}
       </div>
