@@ -7,21 +7,7 @@ import AnimalTag from "components/common/AnimalTag"
 import {selectId, selectImage, selectNickname} from "features/user/users-slice"
 import {useSelector} from "react-redux"
 import {registArticle} from "api/boards-api"
-
-const Profile = ({nickname}) => {
-  return (
-    <div className="mb-4 flex h-8 items-center justify-around space-x-2.5">
-      <img
-        src="https://via.placeholder.com/50"
-        alt="Author Avatar"
-        className="size-12 rounded-full border"
-      />
-      <div className="flex-1">
-        <p className="text-lg font-semibold">{nickname}</p>
-      </div>
-    </div>
-  )
-}
+import Profile from "components/common/Profile"
 
 const ArticleBoardWrite = () => {
   const [title, setTitle] = useState(null)
@@ -61,8 +47,8 @@ const ArticleBoardWrite = () => {
 
   // 작성하기
   const writeArticle = async () => {
-    if (editorContent.trim() === "" || !imageSrc) {
-      alert("제목과 대표사진을 모두 입력하세요.")
+    if (editorContent.trim() === "" || !title) {
+      alert("제목과 내용을 모두 입력하세요.")
       return
     }
     const newArticle = {
