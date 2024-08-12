@@ -1,6 +1,4 @@
-import {useNavigate, Routes, Route} from "react-router-dom"
-import Kakao from "components/map/Kakao"
-import Report from "components/map/Report"
+import {useNavigate, Outlet} from "react-router-dom"
 
 const categories = [
   {id: 0, title: "실종동물지도", path: "/lost-and-found"},
@@ -41,10 +39,7 @@ const LostAndFoundPage = () => {
         <div className="flex flex-col items-center space-y-3">
           <hr className="w-full border-gray-300" />
           <section className="flex w-full justify-center">
-            <Routes>
-              <Route path="/" element={<Kakao />} />
-              <Route path="/report" element={<Report />} />
-            </Routes>
+            <Outlet />
           </section>
         </div>
       </div>

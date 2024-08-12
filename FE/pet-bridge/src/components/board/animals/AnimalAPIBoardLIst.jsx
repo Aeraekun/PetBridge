@@ -1,6 +1,5 @@
 import {useEffect, useState} from "react"
 import AnimalItem from "./AnimalItem"
-import Button from "components/common/Button"
 
 import {useNavigate, useParams} from "react-router-dom"
 import AnimalSearchForm from "components/board/animals/AnimalSearchForm"
@@ -11,10 +10,6 @@ const AnimalAPIBoardLIst = () => {
   const navigate = useNavigate()
   useEffect(() => {}, [bcode])
 
-  const goRegist = () => {
-    let path = `/shelter/regist`
-    navigate(path)
-  }
   const goAnimalDetail = (animal) => {
     console.log(animal)
     const id = animal.desertionNo
@@ -87,10 +82,9 @@ const AnimalAPIBoardLIst = () => {
   return (
     <>
       <AnimalSearchForm searchParams={handleSearchForm} isShelter={true} />
-      <Button text={"등록하기"} onClick={goRegist} />
       {isLoading ? (
         <div className="flex items-center">
-          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
+          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
           <span>로딩중입니다</span>
         </div>
       ) : (
