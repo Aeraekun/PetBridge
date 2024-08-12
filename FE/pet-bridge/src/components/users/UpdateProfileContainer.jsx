@@ -93,8 +93,10 @@ const UpdateProfileContainer = () => {
 
     let newErrors = {}
 
-    let nicknameError = await validateNickname(nickname, updateFormData)
-    if (nicknameError.new_error) {
+    let nicknameError = await validateNickname(updateFormData)
+    if (updateFormData.nickname === nickname) {
+      setError("phone", "")
+    } else if (nicknameError.new_error) {
       newErrors.nickname = nicknameError.new_error_message
     }
 
@@ -163,10 +165,11 @@ const UpdateProfileContainer = () => {
     const inputType = target.id
     // id 값으로 입력 양식 확인 후 양식 검사
     if (inputType === "nickname") {
-      ;({new_error, new_error_message} = await validateNickname(
-        nickname,
-        updateFormData
-      ))
+      if (updateFormData.nickname === nickname) {
+        setError("phone", "")
+        return
+      }
+      ;({new_error, new_error_message} = await validateNickname(updateFormData))
       setError(new_error, new_error_message)
     } else if (inputType === "birth") {
       ;({new_error, new_error_message} = validateBirth(updateFormData))
