@@ -56,6 +56,22 @@ public class BoardController {
     }
 
     /**
+     * 실종 동물 게시판 위치 기반 목록 검색
+     */
+    @GetMapping("/lost")
+    public ResponseEntity<Page<BoardResponseDto>> getListLostBoardByLocation(@RequestParam(name = "page", required = false, defaultValue = "0") int page,
+                                                                             @RequestParam(name = "size", required = false, defaultValue = "12") int size,
+                                                                             @RequestParam(name = "lat") double lat,
+                                                                             @RequestParam(name = "lon") double lon) throws Exception {
+        Page<BoardResponseDto> boardResponseDtos = boardService.getListLostBoardByLocation(page, size, lat, lon);
+
+        if (boardResponseDtos.hasContent()) {
+            return new ResponseEntity<>(boardResponseDtos, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /**
      * 게시글 상세 조회
      */
     @GetMapping("/{id}")

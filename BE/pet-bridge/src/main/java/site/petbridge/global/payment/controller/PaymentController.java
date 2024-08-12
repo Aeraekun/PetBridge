@@ -52,8 +52,8 @@ public class PaymentController {
 		// 카카오 결제 준비하기
 		ReadyResponseDto readyResponseDto = kakaoPayService.payReady(contractId, name, totalPrice);
 
-		// SMS 인증 요청 시 인증 번호 Redis에 저장 ( key = userId / value = tid )
-		redisService.setValues(String.valueOf(authUtil.getAuthenticatedUser().getId()),
+		// 결제 요청 시 결제 고유번호 Redis에 저장 ( key = contractId / value = tid )
+		redisService.setValues(String.valueOf(contractId),
 			String.valueOf(readyResponseDto.getTid()), Duration.ofMillis(authCodeExpirationMillis));
 
 		return readyResponseDto;
