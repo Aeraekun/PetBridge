@@ -1,7 +1,5 @@
 import React, {useState, useRef, useEffect, useCallback} from "react"
 // import {useInView} from "react-intersection-observer"
-// import data from "components/petpick/dummydata"
-// import PetpickComments from "components/petpick/PetpickComments"
 import {
   getDetailFollow,
   getDetailPetPickLike,
@@ -13,47 +11,71 @@ import {getShelterAnimalsAPI} from "api/animals-api"
 import PetpickComments from "components/petpick/PetpickComments"
 import AnimalAd from "components/petpick/AnimalAd"
 import {getMyLocation} from "utils/petpick-utils"
+import Navbar from "components/header/Navbar"
 
 const PetpickPage = () => {
   const [index, setIndex] = useState(0) // 현재 인덱스 상태
   const [list, setList] = useState([]) // list: petpick + 보호소 동물 정보
-
+  const [nowPage, setNowPage] = useState(1)
   const containerRef = useRef(null) // 스크롤 컨테이너
-  const itemRefs = useRef(list.map(() => React.createRef())) // list의
+  const itemRefs = useRef(list.map(() => React.createRef()))
 
-  // 현재위치 받아오기
-
-  useEffect(() => {}, [])
   const handleInView = (visibleIndex) => {
     setIndex(visibleIndex)
-    // console.log(list.length)
   }
 
-  // itemRefs의 길이를 데이터 리스트의 길이와 맞추는 함수
-  const updateItemRefs = useCallback(() => {
-    itemRefs.current = list.map(
-      (_, i) => itemRefs.current[i] || React.createRef()
-    )
-  }, [list])
-
-  // 초기값 로딩
-  useEffect(() => {
-    fetchData()
-  }, [])
-  const fetchLocation = async () => {
-    try {
-      const regionCode = await getMyLocation()
-      console.log("Fetched Region Code:", regionCode)
-      return regionCode
-      // 추가로 필요한 작업을 여기에서 처리합니다.
-    } catch (error) {
-      console.error("Failed to fetch location:", error)
-    }
-  }
   const fetchData = async () => {
-    const regionCode = fetchLocation() || 6300000
-    const newPetpick = await fetchPetpickData()
+    //위치 받아오기
+    const fetchLocation = async () => {
+      try {
+        const regionCode = await getMyLocation()
+        return regionCode
+        // 추가로 필요한 작업을 여기에서 처리합니다.
+      } catch (error) {
+        console.error("Failed to fetch location:", error)
+      }
+    }
+    // 펫핏 데이터 받아오기
+    const fetchPetpickData = async () => {
+      try {
+        const res = await getRandomDetailPetPick()
+        if (res) {
+          return res
+        } else {
+          alert("펫픽 추가 데이터 로드에 실패했습니다.")
+        }
+      } catch (error) {
+        console.error("에러 발생:", error)
+        alert("펫픽 데이터 로드 중 에러가 발생했습니다.")
+      }
+    }
 
+    //동물 받아오기
+    const fetchAnimalData = async (sidoCode) => {
+      //5마리씩 sidoCode 넣어서 보호중(입양가능)인 동물만.
+      const searchParams = {
+        numOfRows: 5,
+        pageNo: nowPage,
+        upr_cd: sidoCode,
+        state: "protect",
+      }
+      const res = await getShelterAnimalsAPI(searchParams)
+
+      if (
+        res.data &&
+        res.data.response &&
+        res.data.response.body &&
+        res.data.response.body.items
+      ) {
+        return res.data.response.body.items.item
+      } else {
+        alert("추가 데이터 로드에 실패했습니다.")
+        return [] // 빈 배열 반환
+      }
+    }
+
+    const regionCode = (await fetchLocation()) || 6300000 // await 추가
+    const newPetpick = await fetchPetpickData()
     const newAnimals = await fetchAnimalData(regionCode)
     let result = []
     const animalsLength = 4
@@ -69,69 +91,41 @@ const PetpickPage = () => {
       }
     }
 
-    console.log(newAnimals, "animals")
-    console.log(result, "result")
-    // 데이터 로드 성공시 (응답 배열에 데이터가 있다면)
+    // console.log(newAnimals, "animals")
+    // console.log(result, "result")
+
     if (result && result.length > 0) {
+      // 데이터 로드 성공시 (응답 배열에 데이터가 있다면)
       // 로딩상태 해제, 새로 받아온 값을 배열에 추가
       setList((prevItems) => [...prevItems, ...result])
     }
     return result
   }
 
-  // 펫핏 데이터 받아오기
-  const fetchPetpickData = async () => {
-    try {
-      const res = await getRandomDetailPetPick()
-      if (res) {
-        // console.log("펫픽가져오기 성공", res)
+  // 초기값 로딩
+  useEffect(() => {
+    fetchData()
+  }, [])
 
-        return res
-      } else {
-        alert("펫픽 추가 데이터 로드에 실패했습니다.")
-      }
-    } catch (error) {
-      console.error("에러 발생:", error)
-      alert("펫픽 데이터 로드 중 에러가 발생했습니다.")
-    }
-  }
-
-  const fetchAnimalData = async (sidoCode) => {
-    //5마리씩 sidoCode 넣어서 보호중(입양가능)인 동물만.
-    const searchParams = {
-      numOfRows: 5,
-      pageNo: 1,
-      upr_cd: sidoCode,
-      state: "protect",
-    }
-    const res = await getShelterAnimalsAPI(searchParams)
-
-    if (res.data) {
-      return res.data.response.body.items.item
-    } else {
-      alert("추가 데이터 로드에 실패했습니다.")
-    }
-  }
+  // itemRefs의 길이를 데이터 리스트의 길이와 맞추는 함수
+  const updateItemRefs = useCallback(() => {
+    itemRefs.current = list.map(
+      (_, i) => itemRefs.current[i] || React.createRef()
+    )
+  }, [list])
 
   useEffect(() => {
-    updateItemRefs()
-    console.log("list")
-    console.log(list)
+    updateItemRefs() //list가 바뀔때마다 데이터 리스트의 길이와 맞추는 함수
+    // console.log(list, "list")
   }, [list, updateItemRefs])
 
-  const loadMoreData = async () => {
-    const newData = await fetchData()
-    console.log("moredata")
-    setList((prevList) => [...prevList, ...newData])
-  }
   // Index가 리스트의 마지막에서 두 번째인 경우 데이터를 추가
   useEffect(() => {
+    //인덱스가 바뀔때마다 팔로우, 좋아요 데이터 업데이트
     const fetchLikeFollow = async () => {
       try {
         const nowLike = await getDetailPetPickLike(list[index].id)
         const nowFollow = await getDetailFollow(list[index].animalId)
-        // console.log(nowLike)
-        // console.log(nowFollow)
         if (nowLike) {
           list[index].isLiking = true
         } else {
@@ -142,44 +136,27 @@ const PetpickPage = () => {
         } else {
           list[index].isFollowing = false
         }
-        setList(list)
-        // console.log(nowLike, nowFollow)
+        setList(list) //상태 바꾼 list 업데이트
       } catch {
         console.log("catch")
       }
     }
-    console.log("length", list.length)
+
+    const loadMoreData = async () => {
+      const newData = await fetchData()
+      setNowPage(nowPage + 1)
+      console.log("moredata", nowPage)
+      setList((prevList) => [...prevList, ...newData])
+      console.log("liset", list)
+    }
+
     if (index === list.length - 2) {
       loadMoreData()
     }
     if (list.length > 0) {
       fetchLikeFollow()
     }
-  }, [list, index])
-
-  //화면 중앙에 보이도록 해줌
-  useEffect(() => {
-    const container = containerRef.current
-    if (container && itemRefs.current[index]?.current) {
-      // const item = itemRefs.current[index].current
-      // const containerHeight = container.clientHeight
-      // const itemHeight = item.clientHeight + 3
-      // const itemTop = item.offsetTop
-      // console.log(
-      //   itemHeight,
-      //   "top : ",
-      //   itemTop,
-      //   "container",
-      //   "height : ",
-      //   containerHeight
-      // )
-      // Scroll to center the item in the container
-      // container.scrollTo({
-      //   top: itemTop - containerHeight / 2 + itemHeight / 2,
-      //   behavior: "smooth",
-      // })
-    }
-  }, [index])
+  }, [index]) //인덱스가 바뀔때마다 실행
 
   const navigate = useNavigate()
   const goPetpickWrite = () => {
@@ -188,72 +165,74 @@ const PetpickPage = () => {
   const goBack = () => {
     navigate(-1)
   }
+
   return (
-    <div className=" relative h-screen">
-      {index}
-      <button
-        onClick={goPetpickWrite}
-        className="absolute right-20 top-20 flex "
-      >
-        {" "}
-        <img
-          src={iconPawprint}
-          alt="Community Icon"
-          className="mr-2 size-6" // 이미지 크기와 간격 조정
-        />
-        펫픽 올리기
-      </button>
-      {/* <div className=" fixed mb-4 text-lg">현재 인덱스: {index}</div> */}
-      <button className="fixed left-20 top-20" onClick={goBack}>
-        뒤로가기
-      </button>
-      <div className="fixed right-8 top-1/2 flex flex-col space-y-8">
+    <div>
+      <Navbar />
+      <div className=" relative h-screen">
         <button
-          onClick={() => {
-            setIndex((prev) => Math.max(prev - 1, 0))
-            containerRef.current.scrollBy(0, -400)
-          }}
-          disabled={index === 0}
+          onClick={goPetpickWrite}
+          className="absolute right-20 top-20 flex "
         >
-          <img src="/icons/icon-up-button.svg" alt="upbutton" />
+          <img
+            src={iconPawprint}
+            alt="Community Icon"
+            className="mr-2 size-6" // 이미지 크기와 간격 조정
+          />
+          펫픽 올리기
         </button>
-        <button
-          onClick={() => {
-            setIndex((prev) => Math.min(prev + 1, list.length - 1))
-            containerRef.current.scrollBy(0, 400)
-          }}
-          disabled={index === list.length - 1}
+        {/* <div className=" fixed mb-4 text-lg">현재 인덱스: {index}</div> */}
+        <button className="fixed left-20 top-20" onClick={goBack}>
+          뒤로가기
+        </button>
+        <div className="fixed right-8 top-1/2 flex flex-col space-y-8">
+          <button
+            onClick={() => {
+              setIndex((prev) => Math.max(prev - 1, 0))
+              containerRef.current.scrollBy(0, -400)
+            }}
+            disabled={index === 0}
+          >
+            <img src="/icons/icon-up-button.svg" alt="upbutton" />
+          </button>
+          <button
+            onClick={() => {
+              setIndex((prev) => Math.min(prev + 1, list.length - 1))
+              containerRef.current.scrollBy(0, 400)
+            }}
+            disabled={index === list.length - 1}
+          >
+            <img src="/icons/icon-down-button.svg" alt="downbutton" />
+          </button>
+        </div>
+        <div
+          ref={containerRef}
+          className="h-full snap-y snap-mandatory overflow-y-scroll scrollbar-hide"
         >
-          <img src="/icons/icon-down-button.svg" alt="downbutton" />
-        </button>
-      </div>
-      <div
-        ref={containerRef}
-        className="h-full snap-y snap-mandatory overflow-y-scroll border border-gray-300 scrollbar-hide"
-      >
-        {list.map((item, i) => {
-          if (i !== 1 && (i + 1) % 4 === 0) {
-            return (
-              <AnimalAd
-                key={i}
-                ref={itemRefs.current[i]}
-                onInView={handleInView}
-                nowindex={i}
-                animal={item}
-              />
-            )
-          } else {
-            return (
-              <PetpickComments
-                key={i}
-                ref={itemRefs.current[i]}
-                onInView={handleInView}
-                nowindex={i}
-                pet={item}
-              />
-            )
-          }
-        })}
+          {list.map((item, i) => {
+            if (item.desertionNo) {
+              return (
+                <AnimalAd
+                  key={i}
+                  ref={itemRefs.current[i]}
+                  onInView={handleInView}
+                  nowindex={i}
+                  animal={item}
+                />
+              )
+            } else {
+              return (
+                <PetpickComments
+                  key={i}
+                  ref={itemRefs.current[i]}
+                  onInView={handleInView}
+                  nowindex={i}
+                  pet={item}
+                />
+              )
+            }
+          })}
+        </div>
       </div>
     </div>
   )

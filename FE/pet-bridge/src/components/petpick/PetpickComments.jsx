@@ -222,7 +222,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
 
   return (
     <div
-      className=" z-50 mx-auto flex h-screen w-[1000px] snap-center flex-row justify-center py-[50px] sm:w-11/12"
+      className=" z-50 mx-auto flex h-screen w-[1000px] snap-center flex-row justify-center pb-[100px] pt-[10px] sm:w-11/12"
       ref={(node) => {
         if (node) {
           if (ref && typeof ref === "object" && "current" in ref) {
