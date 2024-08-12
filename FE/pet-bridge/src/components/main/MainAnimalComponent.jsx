@@ -7,11 +7,10 @@ import {Link} from "react-router-dom" // Link 컴포넌트 임포트
 import iconPawprint from "../../assets/icons/icon-pawprint.png" // 아이콘 이미지
 
 // Swiper와 관련된 스타일 및 컴포넌트를 임포트
-import {
-  Swiper,
-  SwiperSlide,
-} from "../../../node_modules/swiper/swiper-react.mjs"
-import "../../../node_modules/swiper/swiper.min.css" // 최신 Swiper CSS 파일
+// eslint-disable-next-line import/no-unresolved
+import {Swiper, SwiperSlide} from "swiper/react"
+// eslint-disable-next-line import/no-unresolved
+import "swiper/css" // 최신 Swiper CSS 파일
 
 // 개별 보호소 동물 아이템을 렌더링하는 컴포넌트
 const ItemCard = ({
