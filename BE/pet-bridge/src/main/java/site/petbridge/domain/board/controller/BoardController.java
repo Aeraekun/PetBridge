@@ -87,4 +87,14 @@ public class BoardController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    /**
+     * 글,그림 함께 작성을 위한 S3 파일 업로드 후, 경로 정보 return
+     */
+    @PostMapping("/image")
+    public ResponseEntity<String> registImage(@RequestPart(name = "imageFile") MultipartFile imageFile) throws Exception {
+        String imageUrl = boardService.registImage(imageFile);
+
+        return new ResponseEntity<>(imageUrl, HttpStatus.OK);
+    }
 }

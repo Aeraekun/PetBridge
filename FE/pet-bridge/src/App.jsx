@@ -76,6 +76,7 @@ import ChatModal from "pages/ChatModal"
 
 import CallPage from "components/chat/CallPage"
 import LostAnimalMap from "components/map/LostAnimalMap"
+import RecommendationPage from "pages/RecommendationPage"
 
 function App() {
   const dispatch = useDispatch()
@@ -183,6 +184,10 @@ function App() {
             <Route path="eyes" element={<AiEyes />} />
             <Route path="skin" element={<AiSkin />} />
           </Route>
+          <Route
+            path="/recommendation"
+            element={<RecommendationPage />}
+          ></Route>
           <Route path="lost-and-found" element={<LostAndFoundPage />}>
             <Route path="" element={<LostAnimalMap />}></Route>
             <Route path="report" element={<LostAnimalReport />}></Route>

@@ -21,4 +21,6 @@ public interface BoardService {
     void editBoard(int id, BoardEditRequestDto boardEditRequestDto, MultipartFile thumbnailFile) throws Exception;
 
     void removeBoard(int id) throws Exception;
+
+    String registImage(MultipartFile thumbnailFile) throws Exception;
 }
