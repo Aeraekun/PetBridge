@@ -6,6 +6,13 @@ import slideImage from "../../assets/image/Mainslide2.jpg" // 배경 이미지
 import {Link} from "react-router-dom" // Link 컴포넌트 임포트
 import iconPawprint from "../../assets/icons/icon-pawprint.png" // 아이콘 이미지
 
+// Swiper와 관련된 스타일 및 컴포넌트를 임포트
+import {
+  Swiper,
+  SwiperSlide,
+} from "../../../node_modules/swiper/swiper-react.mjs"
+import "../../../node_modules/swiper/swiper.min.css" // 최신 Swiper CSS 파일
+
 // 개별 보호소 동물 아이템을 렌더링하는 컴포넌트
 const ItemCard = ({
   noticeNo,
@@ -99,20 +106,29 @@ const MainAnimalComponent = () => {
             새 가족 만나러 가기
           </Link>
         </div>
-        <ul className="scrollable-container flex max-h-[450px] w-[1000px] flex-col flex-wrap gap-2 overflow-y-auto bg-white">
-          {sectionOneItems.map((item) => (
-            <ItemCard
-              key={item.desertionNo}
-              noticeNo={item.noticeNo}
-              sexCd={item.sexCd}
-              popfile={item.popfile}
-              kindCd={item.kindCd}
-              cardNm={item.cardNm}
-              careNm={item.careNm}
-              careAddr={item.careAddr}
-            />
-          ))}
-        </ul>
+        <div className="w-[1000px]">
+          <Swiper
+            spaceBetween={10}
+            slidesPerView={3}
+            navigation
+            pagination={{clickable: true}}
+            loop
+          >
+            {sectionOneItems.map((item) => (
+              <SwiperSlide key={item.desertionNo}>
+                <ItemCard
+                  noticeNo={item.noticeNo}
+                  sexCd={item.sexCd}
+                  popfile={item.popfile}
+                  kindCd={item.kindCd}
+                  cardNm={item.cardNm}
+                  careNm={item.careNm}
+                  careAddr={item.careAddr}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       </div>
     </div>
   )
