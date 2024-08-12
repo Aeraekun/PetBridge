@@ -19,7 +19,6 @@ import site.petbridge.domain.user.domain.User;
 import site.petbridge.global.exception.ErrorCode;
 import site.petbridge.global.exception.PetBridgeException;
 import site.petbridge.util.AuthUtil;
-import site.petbridge.util.FileUtil;
 import site.petbridge.util.S3FileUtil;
 
 @Service
@@ -60,7 +59,7 @@ public class BoardServiceImpl implements BoardService {
     public Page<BoardResponseDto> getListBoard(int page, int size, String userNickname, String title, BoardType type) throws Exception {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
 
-        return boardRepository.findAllByUserNickNameAndTitleContains(userNickname, title, type, pageable);
+        return boardRepository.findAllByUserNickNameAndTypeAndTitleContains(userNickname, title, type, pageable);
     }
 
     /**
