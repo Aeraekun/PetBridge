@@ -99,7 +99,7 @@ const MainAnimalComponent = () => {
             새 가족 만나러 가기
           </Link>
         </div>
-        <ul className="flex max-h-[450px] w-[1000px] flex-col flex-wrap gap-2 overflow-y-auto bg-white">
+        <ul className="scrollable-container flex max-h-[450px] w-[1000px] flex-col flex-wrap gap-2 overflow-y-auto bg-white">
           {sectionOneItems.map((item) => (
             <ItemCard
               key={item.desertionNo}
@@ -109,6 +109,7 @@ const MainAnimalComponent = () => {
               kindCd={item.kindCd}
               cardNm={item.cardNm}
               careNm={item.careNm}
+              careAddr={item.careAddr}
             />
           ))}
         </ul>
