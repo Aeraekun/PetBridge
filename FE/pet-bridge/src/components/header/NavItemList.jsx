@@ -26,8 +26,8 @@ const NavItemList = () => {
     },
     {
       id: itemId++,
-      category: "동물 건강 진단",
-      to: "/ai",
+      category: "집사 유형 검사",
+      to: "/recommendation",
     },
   ]
   return (
