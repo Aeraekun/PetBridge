@@ -75,6 +75,7 @@ import AiSkin from "components/ai/AiSkin"
 import ChatModal from "pages/ChatModal"
 
 import CallPage from "components/chat/CallPage"
+import Kakao from "components/map/Kakao"
 
 function App() {
   const dispatch = useDispatch()
@@ -183,7 +184,9 @@ function App() {
             <Route path="skin" element={<AiSkin />} />
           </Route>
           <Route path="lost-and-found" element={<LostAndFoundPage />}>
+            <Route path="" element={<Kakao />}></Route>
             <Route path="report" element={<Report />}></Route>
+            <Route path="details/:id" element={<ArticleDetail />}></Route>
           </Route>
         </Route>
         <Route path="/users/" element={<UsersLayout />}>
