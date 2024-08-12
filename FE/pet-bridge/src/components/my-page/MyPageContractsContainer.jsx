@@ -12,10 +12,10 @@ const MyPageContractsContainer = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [isMoreRemained, setIsMoreRemaind] = useState(true)
   const [items, setItems] = useState([])
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
 
   // API 요청을 보내기 위한 파라미터
-  const [searchParams, setSearchParams] = useState({numOfRows: 12, pageNo: 1})
+  const [searchParams, setSearchParams] = useState({numOfRows: 12, pageNo: 0})
 
   // 초기값 로딩
   useEffect(() => {
@@ -24,8 +24,8 @@ const MyPageContractsContainer = () => {
       // 데이터 로드 성공시 (응답 배열에 데이터가 있다면)
       if (newItems && newItems.length > 0) {
         // 로딩상태 해제, 새로 받아온 값을 배열에 추가
-        setIsLoading(false)
         setItems((prevItems) => [...prevItems, ...newItems])
+        setIsLoading(false)
       }
     }
 
@@ -67,7 +67,7 @@ const MyPageContractsContainer = () => {
     }
 
     // inView 값이 true가 됐을 때,
-    if (inView) {
+    if (inView && !isMoreRemained) {
       setIsLoadingMore(true)
       fetchMoreData()
     }
@@ -111,7 +111,7 @@ const MyPageContractsContainer = () => {
                 imageAlt={item.title}
                 content1={`입양 동물 : ${item.animalName}`}
                 content2={`입양자 : ${item.contracteeNickname}`}
-                content3={item.content}
+                content3={`특약 내용 : ${item.content}`}
               />
             </Link>
           ))}

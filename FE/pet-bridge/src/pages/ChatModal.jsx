@@ -118,7 +118,7 @@ const ChatModal = () => {
               >
                 {/* 채팅 헤더 */}
                 <header
-                  className="flex h-8 shrink-0 flex-row-reverse bg-white px-2.5"
+                  className="flex h-8 shrink-0 flex-row-reverse rounded-t-lg bg-white px-2.5"
                   id="chatHeader"
                 >
                   <button

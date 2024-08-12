@@ -69,9 +69,6 @@ import PaymentFail from "components/payment/PaymentFail"
 
 // 메인페이지
 import MainPage from "pages/MainPage"
-import AiPage from "pages/AiPage"
-import AiEyes from "components/ai/AiEyes"
-import AiSkin from "components/ai/AiSkin"
 import ChatModal from "pages/ChatModal"
 
 import CallPage from "components/chat/CallPage"
@@ -179,10 +176,6 @@ function App() {
             <Route path="completed" element={<PaymentComplete />} />
             <Route path="cancel" element={<PaymentCancel />} />
             <Route path="fail" element={<PaymentFail />} />
-          </Route>
-          <Route path="/ai" element={<AiPage />}>
-            <Route path="eyes" element={<AiEyes />} />
-            <Route path="skin" element={<AiSkin />} />
           </Route>
           <Route
             path="/recommendation"
