@@ -168,8 +168,13 @@ const SignUp = () => {
   // 생일 유효성 검사
   // 8자리 숫자인지 확인
   const validateBirth = () => {
+    const year = parseInt(signUpFormData.birth.split("-")[0], 10)
+    const minYear = 1900
+    const maxYear = 2024
     if (!signUpFormData.birth) {
       errors.birth = "*생년월일: 필수 정보입니다."
+    } else if (year < minYear || year > maxYear) {
+      errors.birth = `*생년월일: 연도는 ${minYear}년과 ${maxYear}년 사이여야 합니다.`
     } else {
       errors.birth = ""
     }
@@ -615,10 +620,9 @@ const SignUp = () => {
             onChange={changeHandler}
             type="date"
             className=" my-1 w-full rounded-md border p-2.5"
-            placeholder="생년월일 8자리 (YYYYMMDD)"
             id="birth"
-            minLength="8"
-            maxLength="8"
+            min="1900-01-01"
+            max="2024-08-16"
             onBlur={validateBirth}
           />
           {errors.birth && (
@@ -630,7 +634,7 @@ const SignUp = () => {
 
         <div className="grid w-full grid-cols-2 gap-10">
           {/* 회원가입 버튼 */}
-          {isEmailVerified ? (
+          {isEmailVerified && isPhoneVerified ? (
             <button
               type="submit"
               className="bg-mild h-12 rounded-md px-3.5 py-2.5"
