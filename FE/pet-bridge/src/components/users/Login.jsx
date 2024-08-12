@@ -105,7 +105,6 @@ const LoginForm = () => {
 const Login = () => {
   // 소셜 로그인 URL
   const SOCIAL_BASE_URL = REACT_APP_API_URL + "/oauth2/authorization/"
-  console.log(SOCIAL_BASE_URL)
 
   // 소셜 로그인 클릭시 호출 함수
   const handleSocialLogin = (e) => {
