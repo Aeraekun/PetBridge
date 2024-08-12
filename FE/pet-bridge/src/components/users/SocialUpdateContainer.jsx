@@ -71,7 +71,11 @@ const SocialUpdateContainer = () => {
 
       try {
         const res = await patchUserInfo(formData)
-        navigate("/users/social/success")
+        if (res?.status === 200) {
+          navigate("/users/social/success")
+        } else {
+          alert("개인정보 수정 오류. 다시 시도해주세요.")
+        }
         console.log(res)
         return
       } catch (error) {
