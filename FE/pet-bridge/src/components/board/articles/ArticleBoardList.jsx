@@ -93,6 +93,7 @@ const ArticleBoardList = () => {
   //searchParmas가 바뀔때마다 새로 받아옴. (검색조건생겼을때, 페이지 넘어갈때)
   useEffect(() => {
     fetchArticles(searchParams)
+    console.log(articles)
   }, [searchParams])
 
   //페이지가 바뀌었을때 searchParmas 업데이트
@@ -141,7 +142,7 @@ const ArticleBoardList = () => {
       <Search searchform={handleSearchForm} />
       {matchingCategory ? <h2>{matchingCategory.title}</h2> : <p>홈</p>}
       <Button text={"글쓰기"} onClick={goWrite} />
-      <ul className="flex w-full flex-wrap justify-between">
+      <ul className="flex w-full flex-wrap justify-start gap-4">
         {articles ? (
           articles.map((article) => (
             <li key={article.id}>

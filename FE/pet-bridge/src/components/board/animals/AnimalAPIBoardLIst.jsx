@@ -106,7 +106,7 @@ const AnimalAPIBoardLIst = () => {
               다음▶{" "}
             </button>
           </div>
-          <ul className="flex w-full flex-wrap justify-between">
+          <ul className="flex w-full flex-wrap-reverse justify-start gap-4">
             {items
               // category와 bcode가 일치하는것만 필터링
               .map((item, index) => (
