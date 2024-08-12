@@ -79,11 +79,11 @@ const MyPageContractsContainer = () => {
 
   return (
     <div className="flex h-full  min-w-80 flex-col items-center">
-      <div className="flex w-full justify-between p-2.5 ">
+      <div className="relative flex w-full justify-between p-2.5 ">
         <div />
         <button className="text-2xl font-bold">내 입양기록</button>
         <Link
-          className="absolute right-1.5 top-1.5   rounded-xl bg-mild p-2.5"
+          className="absolute right-1.5 top-1.5 rounded-xl bg-mild p-2.5"
           to="/contracts/create"
         >
           입양 보내기
