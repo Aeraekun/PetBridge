@@ -59,7 +59,15 @@ public class PetPickServiceImpl implements PetPickService {
                     MultipartFile thumbnailFile, MultipartFile videoFile) throws Exception {
         // null 입력 처리
         if (petPickRegistRequestDto.getAnimalId() == null || petPickRegistRequestDto.getTitle() == null
-        || petPickRegistRequestDto.getContent() == null || thumbnailFile == null || videoFile == null) {
+        || petPickRegistRequestDto.getContent() == null) {
+            throw new PetBridgeException(ErrorCode.BAD_REQUEST);
+        }
+
+        // 등록은 이미지, 비디오 필수
+        if (thumbnailFile == null || thumbnailFile.isEmpty()) {
+            throw new PetBridgeException(ErrorCode.BAD_REQUEST);
+        }
+        if (videoFile == null || videoFile.isEmpty()) {
             throw new PetBridgeException(ErrorCode.BAD_REQUEST);
         }
 
@@ -235,7 +243,7 @@ public class PetPickServiceImpl implements PetPickService {
             }
         }
 
-        // 수정 진행
+        // 수정 진행 (없으면 안 바꿈)
         if (thumbnailFile != null && !thumbnailFile.isEmpty()) {
             String savedThumbnailFileName = fileUtil.saveFile(thumbnailFile, "images");
             entity.setThumbnail(savedThumbnailFileName);
