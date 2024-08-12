@@ -285,7 +285,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
             ></PetpickInfo>
           </div>
 
-          <ul className="flex flex-auto flex-col-reverse overflow-auto">
+          <ul className="flex flex-auto flex-col overflow-auto">
             {commentList.length > 0 ? (
               commentList.map((comment, index) => (
                 <li key={index}>
