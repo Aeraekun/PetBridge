@@ -128,11 +128,13 @@ const AnimalDetail = () => {
         돌아가기
       </button>
       <hr />
-      <Profile
-        image={animal.userImage}
-        nickname={animal.userNickname}
-        isMe={Number(currentUserId) === Number(animal.userId)}
-      />
+      {!isShelter && (
+        <Profile
+          image={animal.userImage}
+          nickname={animal.userNickname}
+          isMe={Number(currentUserId) === Number(animal.userId)}
+        />
+      )}
       <hr />
 
       <AnimalDetailProfile
