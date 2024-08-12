@@ -31,6 +31,12 @@ public class BoardResponseDto {
 
     private long commentCount;
 
+    private double distance = 0;
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
     public BoardResponseDto(Board entity, User user, Animal animal, long commentCount) {
         this.id = entity.getId();
         this.userId = entity.getUserId();
