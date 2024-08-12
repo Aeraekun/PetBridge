@@ -3,29 +3,45 @@ import {useEffect, useState} from "react"
 // import AnimalProfile from "./AnimalProfile"
 import {getMyAnimals} from "api/mypage-api"
 
-const AnimalTag = ({onSelectAnimalId, onSelectAnimalName}) => {
+const AnimalTag = ({
+  onSelectAnimalId,
+  onSelectAnimalName,
+  alreadySelectedAnimalId,
+}) => {
   const [selectedAnimalId, setSelectedAnimalId] = useState(null)
   const [visible, setVisible] = useState(false)
   const [myAnimals, setMyAnimals] = useState([])
-  const [selectedAnimal, setSelectedAnimal] = useState(null)
+  const [selectedAnimal, setSelectedAnimal] = useState(alreadySelectedAnimalId)
 
+  // 내 동물 불러오기
   useEffect(() => {
+    const initAnimals = async () => {
+      try {
+        const res = await getMyAnimals({page: 0, size: 12})
+        console.log("내 동물", res.data)
+        if (res.data) {
+          setMyAnimals(res.data)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
     initAnimals()
   }, [])
 
-  const initAnimals = async () => {
-    try {
-      const res = await getMyAnimals({page: 0, size: 12})
-
-      console.log("res", res.data)
-
-      if (res.data) {
-        setMyAnimals(res.data)
+  //내 동물을 불러온 후 이미 선택된 동물이 있을때 업데이트
+  useEffect(() => {
+    if (alreadySelectedAnimalId && myAnimals.length > 0) {
+      const newAnimal = myAnimals.find(
+        (animal) => animal.id === alreadySelectedAnimalId
+      )
+      if (newAnimal) {
+        setSelectedAnimal(newAnimal)
+        setSelectedAnimalId(alreadySelectedAnimalId) // ID도 함께 업데이트
       }
-    } catch (error) {
-      console.log(error)
     }
-  }
+  }, [alreadySelectedAnimalId, myAnimals])
 
   useEffect(() => {
     const newAnimal = myAnimals.find((animal) => animal.id === selectedAnimalId)
@@ -33,7 +49,11 @@ const AnimalTag = ({onSelectAnimalId, onSelectAnimalName}) => {
       setSelectedAnimal(newAnimal)
     }
     console.log("id", selectedAnimalId)
-  }, [selectedAnimalId])
+  }, [selectedAnimalId, myAnimals])
+
+  useEffect(() => {
+    console.log("myAnimals", myAnimals)
+  }, [myAnimals])
 
   const handleAnimalSelect = (id) => {
     setSelectedAnimalId(id)

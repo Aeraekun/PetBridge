@@ -183,14 +183,42 @@ import {editArticle, getArticleDetail, removeArticle} from "api/boards-api"
 const ArticleDetailModify = () => {
   const {id} = useParams()
   const navigate = useNavigate()
-  const [article, setArticle] = useState(null)
   const [title, setTitle] = useState("")
   const [editorContent, setEditorContent] = useState("")
   const [selectedAnimalId, setSelectedAnimalId] = useState(null)
   const [imageSrc, setImageSrc] = useState("")
   const [imageFile, setImageFile] = useState(null)
-  const [thumbnail, setThumbnail] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const [articleData, setArticleData] = useState(null)
+  const [updateArticle, setUpdateArticle] = useState({
+    animalId: null,
+    thumbnail: null,
+    title: "",
+    content: "",
+  })
+
+  //초기 게시글 데이터 로드
+  useEffect(() => {
+    const fetchArticle = async () => {
+      const fetchedArticle = await getArticleDetail(Number(id)) // 게시글 상세 조회 API
+      console.log(fetchedArticle, "dd")
+      if (fetchedArticle) {
+        setUpdateArticle({
+          animalId: fetchedArticle.animalId || null,
+          thumbnail: fetchedArticle.thumbnail || null,
+          title: fetchedArticle.title || "",
+          content: fetchedArticle.content || "",
+        })
+        setTitle(fetchedArticle.title || "")
+        setEditorContent(fetchedArticle.content || "")
+        setSelectedAnimalId(fetchedArticle.animalId)
+        setArticleData(fetchedArticle)
+      }
+    }
+
+    fetchArticle()
+  }, [])
 
   // 파일 선택 시 호출되는 함수
   const handleFileChange = (event) => {
@@ -202,26 +230,12 @@ const ArticleDetailModify = () => {
     }
   }
 
-  const fetchArticle = async () => {
-    const fetchedArticle = await getArticleDetail(Number(id)) // 게시글 상세 조회 API
-    if (fetchedArticle) {
-      setArticle(fetchedArticle)
-      setTitle(fetchedArticle.title || "")
-      setEditorContent(fetchedArticle.content || "")
-      setImageSrc(fetchedArticle.thumbnail || "")
-      setSelectedAnimalId(fetchedArticle.animalId)
-      setThumbnail(fetchedArticle.thumbnail || "")
-    }
-  }
-
-  useEffect(() => {
-    fetchArticle()
-  }, [])
-
+  //파일 선택 취소시 호출되는 함수
   const resetImage = () => {
     setImageSrc(null)
   }
 
+  //동물 선택시 호출되는 함수
   const handleAnimalSelect = (id) => {
     setSelectedAnimalId(id)
   }
@@ -230,6 +244,7 @@ const ArticleDetailModify = () => {
     navigate(-1)
   }
 
+  // 게시글 삭제
   const handleConfirmDelete = async () => {
     try {
       await removeArticle(id)
@@ -244,26 +259,29 @@ const ArticleDetailModify = () => {
     setIsModalOpen(false)
   }
 
+  //게시글 수정
   const modifyArticle = async () => {
-    if (title === "" || !imageSrc) {
+    if (!editorContent.trim() || !title.trim()) {
       alert("제목과 대표사진을 모두 입력하세요.")
       return
     }
-    if (article) {
-      const updatedArticle = {
-        ...article,
+    if (updateArticle) {
+      const articleForm = {
+        ...updateArticle,
         animalId: selectedAnimalId,
-        thumbnail: thumbnail,
         title: title,
         content: editorContent,
       }
+      console.log(articleForm)
       const formData = new FormData()
       formData.append(
         "boardEditRequestDto",
-        new Blob([JSON.stringify(updatedArticle)], {type: "application/json"})
+        new Blob([JSON.stringify(articleForm)], {type: "application/json"})
       )
       if (imageFile) {
-        formData.append("file", imageFile)
+        formData.append("thumbnail", imageFile)
+      } else {
+        formData.append("thumbnail", null)
       }
 
       try {
@@ -273,6 +291,9 @@ const ArticleDetailModify = () => {
         console.error(e)
       }
     }
+  }
+  if (!articleData) {
+    return <div>Loading...</div> // 데이터 로드 전 로딩 상태를 보여줌
   }
 
   return (
@@ -287,20 +308,31 @@ const ArticleDetailModify = () => {
         value={title}
       />
       <hr />
-      {article && (
+      {articleData && (
         <Profile
-          nickname={article.userNickname}
-          image={article.userImage}
-          userId={article.userId}
+          nickname={articleData.userNickname}
+          image={articleData.userImage}
+          userId={articleData.userId}
         />
       )}
       <div className="my-2 flex flex-row">
         <img src="/icons/icon-tag.svg" alt="Tag Icon" />
       </div>
       <hr />
-      <AnimalTag onSelectAnimalId={handleAnimalSelect} />
+      <AnimalTag
+        onSelectAnimalId={handleAnimalSelect}
+        alreadySelectedAnimalId={articleData.animalId}
+      />
       <div>대표사진</div>
-      {imageSrc ? (
+      {articleData.thumbnail ? (
+        <div className="mt-4">
+          <img
+            src={articleData.thumbnail}
+            alt="Uploaded Preview"
+            className="max-h-96 max-w-96 rounded border"
+          />
+        </div>
+      ) : imageSrc ? (
         <div className="mt-4">
           <img
             src={imageSrc}
