@@ -115,6 +115,7 @@ const SocialUpdateContainer = () => {
           className=" my-1 w-full rounded-md border p-2.5"
           placeholder="닉네임"
           id="nickname"
+          minLength={2}
           maxLength={20}
           onBlur={onBlurHandler}
         />
