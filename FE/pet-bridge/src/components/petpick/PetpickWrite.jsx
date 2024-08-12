@@ -13,13 +13,15 @@ const PetpickWrite = () => {
   const [title, setTitle] = useState(null)
   const [content, setContent] = useState(null)
   const [videoUrl, setVideoUrl] = useState(null) // 동영상 URL 상태
-  const [imageSrc, setImageSrc] = useState(null)
-  const [imageFile, setImageFile] = useState(null)
-  const [videoFile, setVideoFile] = useState(null)
+  const [imageSrc, setImageSrc] = useState(null) // 썸네일 미리보기용
+  const [imageFile, setImageFile] = useState(null) // 썸네일 선택시 파일
+  const [videoFile, setVideoFile] = useState(null) // 동영상 선택시 파일
   const [selectedAnimalId, setSelectedAnimalId] = useState(null)
   const [selectedArticleId, setSelectedArticleId] = useState(null)
+  const [errors, setErrors] = useState({}) // 유효성 검사 결과 저장
   const navigate = useNavigate()
 
+  //동영상 선택 시
   const handleVideoFileChange = (event) => {
     const file = event.target.files[0]
     if (file) {
@@ -65,8 +67,23 @@ const PetpickWrite = () => {
     setVideoFile(null)
   }
 
+  // 유효성 검사 함수
+  const validate = () => {
+    let tempErrors = {}
+    if (!title) tempErrors.title = "제목을 입력하세요."
+    if (!content) tempErrors.content = "내용을 입력하세요."
+    if (!selectedAnimalId) tempErrors.selectedAnimalId = "동물을 선택하세요."
+    if (!selectedArticleId)
+      tempErrors.selectedArticleId = "게시글을 선택하세요."
+    if (!videoFile) tempErrors.videoFile = "동영상을 올려주세요."
+    if (!imageFile) tempErrors.imageFile = "썸네일을 올려주세요."
+    setErrors(tempErrors)
+    return Object.keys(tempErrors).length === 0
+  }
+
   //펫픽작성
   const goWritepetPick = async () => {
+    if (!validate()) return
     const newPetpick = {
       boardId: selectedArticleId,
       animalId: selectedAnimalId,
@@ -133,6 +150,9 @@ const PetpickWrite = () => {
               className="w-[250px] cursor-pointer border border-gray-300 px-4 py-2"
             />
             {videoUrl && <button onClick={resetVideo}> ✖ </button>}
+            {errors.videoFile && (
+              <p className="text-sm text-red-500">{errors.videoFile}</p>
+            )}
           </div>
         </div>
         <div className="flex flex-col">
@@ -145,6 +165,10 @@ const PetpickWrite = () => {
               value={title}
             />
           </div>
+          {errors.title && (
+            <p className="text-sm text-red-500">{errors.title}</p>
+          )}
+
           <div className="flex flex-col ">
             <div className="w-12 text-xl font-bold">내용 </div>
             <textarea
@@ -153,6 +177,9 @@ const PetpickWrite = () => {
               onChange={(e) => setContent(e.target.value)}
               value={content}
             />
+            {errors.content && (
+              <p className="text-sm text-red-500">{errors.content}</p>
+            )}
           </div>
         </div>
       </div>
@@ -185,9 +212,19 @@ const PetpickWrite = () => {
           {imageSrc && <button onClick={resetImage}> ✖ </button>}
         </div>
       </div>
+      {errors.imageFile && (
+        <p className="text-sm text-red-500">{errors.imageFile}</p>
+      )}
 
       <AnimalTag onSelectAnimalId={handleAnimalSelect} />
+      {errors.selectedAnimalId && (
+        <p className="text-sm text-red-500">{errors.selectedAnimalId}</p>
+      )}
+
       <ArticleTag onSelectArticleId={handleArticleSelect} />
+      {errors.selectedArticleId && (
+        <p className="text-sm text-red-500">{errors.selectedArticleId}</p>
+      )}
       <div className="flex justify-end">
         태그된 동물 번호 {selectedAnimalId} <br></br>
         태그된 게시글 번호 {selectedArticleId}

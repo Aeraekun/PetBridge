@@ -203,6 +203,7 @@ import {goDeletePetpick} from "utils/petpick-utils"
 import DeleteConfirmationModal from "components/common/DeleteConfirmationModal"
 import {selectId, selectImage, selectNickname} from "features/user/users-slice"
 import {useSelector} from "react-redux"
+import ArticleTag from "components/common/ArticleTag"
 
 const PetpickModify = () => {
   const [title, setTitle] = useState(null)
@@ -214,13 +215,15 @@ const PetpickModify = () => {
   const [selectedArticleId, setSelectedArticleId] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false) // 모달 상태 관리
   const navigate = useNavigate()
+  const [errors, setErrors] = useState({}) // 유효성 검사 결과 저장
 
   const location = useLocation()
-  const {item} = location.state || {}
+  const item = location.state.item || {}
 
   const [petpick, setPetpick] = useState()
 
   useEffect(() => {
+    console.log(item)
     setPetpick(item)
   }, [])
 
@@ -261,7 +264,22 @@ const PetpickModify = () => {
     setImageFile(null)
   }
 
+  // 유효성 검사 함수
+  const validate = () => {
+    let tempErrors = {}
+    if (!title) tempErrors.title = "제목을 입력하세요."
+    if (!content) tempErrors.content = "내용을 입력하세요."
+    if (!selectedAnimalId) tempErrors.selectedAnimalId = "동물을 선택하세요."
+    if (!selectedArticleId)
+      tempErrors.selectedArticleId = "게시글을 선택하세요."
+    if (!imageSrc) tempErrors.imageFile = "썸네일을 올려주세요."
+    setErrors(tempErrors)
+    return Object.keys(tempErrors).length === 0
+  }
+
   const modifypetPick = async () => {
+    if (!validate()) return
+
     const newPetpick = {
       boardId: selectedArticleId,
       animalId: selectedAnimalId,
@@ -303,7 +321,9 @@ const PetpickModify = () => {
   const currentUserImage = useSelector(selectImage)
   const currentUserNickname = useSelector(selectNickname)
   const currentUserId = useSelector(selectId)
-
+  if (!petpick) {
+    return <div>Loading...</div> // 데이터 로드 전 로딩 상태를 보여줌
+  }
   return (
     <div className="mx-auto mt-[80px] flex  w-[600px] max-w-[1000px] flex-col md:w-11/12 ">
       <Profile
@@ -345,6 +365,9 @@ const PetpickModify = () => {
                 value={title}
               />
             </div>
+            {errors.title && (
+              <p className="text-sm text-red-500">{errors.title}</p>
+            )}
             <div className="flex flex-col ">
               <div className="w-12 text-xl font-bold">내용 </div>
               <textarea
@@ -353,6 +376,9 @@ const PetpickModify = () => {
                 onChange={(e) => setContent(e.target.value)}
                 value={content}
               />
+              {errors.content && (
+                <p className="text-sm text-red-500">{errors.content}</p>
+              )}
             </div>
           </div>
         </div>
@@ -384,9 +410,21 @@ const PetpickModify = () => {
             {imageSrc && <button onClick={resetImage}> ✖ </button>}
           </div>
         </div>
+        {errors.imageFile && (
+          <p className="text-sm text-red-500">{errors.imageFile}</p>
+        )}
 
-        <AnimalTag onSelectAnimalId={handleAnimalSelect} />
-        <AnimalTag onSelectAnimalId={handleArticleSelect} />
+        <AnimalTag
+          alreadySelectedAnimalId={petpick.animalId}
+          onSelectAnimalId={handleAnimalSelect}
+        />
+        {errors.selectedAnimalId && (
+          <p className="text-sm text-red-500">{errors.selectedAnimalId}</p>
+        )}
+        <ArticleTag onSelectArticleId={handleArticleSelect} />
+        {errors.selectedArticleId && (
+          <p className="text-sm text-red-500">{errors.selectedArticleId}</p>
+        )}
         <div className="flex justify-end">
           태그된 동물 번호 {selectedAnimalId} <br></br>
           태그된 게시글 번호 {selectedArticleId}
