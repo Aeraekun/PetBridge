@@ -61,7 +61,7 @@ public class CustomBoardRepositoryImpl implements CustomBoardRepository {
     }
 
     @Override
-    public Page<BoardResponseDto> findAllByUserNickNameAndTitleContains(String userNickname, String title, BoardType type, Pageable pageable) {
+    public Page<BoardResponseDto> findAllByUserNickNameAndTypeAndTitleContains(String userNickname, String title, BoardType type, Pageable pageable) {
 
         QBoard board = QBoard.board;
         QUser user = QUser.user;
@@ -112,7 +112,8 @@ public class CustomBoardRepositoryImpl implements CustomBoardRepository {
                 .where(
                         board.disabled.isFalse(),
                         userNicknameEq(userNickname, user),
-                        titleContains(title,board)
+                        titleContains(title,board),
+                        boardTypeEq(type, board)
                 )
                 .fetchOne();
 

@@ -46,7 +46,7 @@ public class BoardController {
                                                                @RequestParam(name = "size", required = false, defaultValue = "12") int size,
                                                                @RequestParam(name = "usernickname", required = false) String userNickname,
                                                                @RequestParam(name = "title", required = false) String title,
-                                                               @RequestParam(name = "type", required = false) BoardType type) throws Exception {
+                                                               @RequestParam(value = "type", required = false) BoardType type) throws Exception {
         Page<BoardResponseDto> boardResponseDtos = boardService.getListBoard(page, size, userNickname, title, type);
 
         if (boardResponseDtos.hasContent()) {
