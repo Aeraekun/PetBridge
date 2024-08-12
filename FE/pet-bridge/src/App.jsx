@@ -190,7 +190,16 @@ function App() {
           ></Route>
           <Route path="lost-and-found" element={<LostAndFoundPage />}>
             <Route path="" element={<LostAnimalMap />}></Route>
-            <Route path="report" element={<LostAnimalReport />}></Route>
+            <Route
+              path="report"
+              element={
+                <PrivateRoute
+                  component={<LostAnimalReport />}
+                  isLoading={isLoading}
+                  isAuthenticated={isAuthenticated}
+                />
+              }
+            ></Route>
             <Route path="details/:id" element={<ArticleDetail />}></Route>
           </Route>
         </Route>
