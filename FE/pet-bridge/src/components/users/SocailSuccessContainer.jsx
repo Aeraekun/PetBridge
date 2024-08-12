@@ -17,16 +17,14 @@ const SocialSuccessContainer = () => {
   // 로그인 완료 여부를 판단해서 로그인시 메인페이지로, 비로그인시 로그인 페이지로 이동
   useEffect(() => {
     const getUserInfoAndNavigate = async () => {
-      if (isAuthenticated) {
-        await dispatch(getUserInfoThunk())
-        navigate("/")
-      } else {
-        alert("로그인 실패. 다시 시도해주세요.")
-        navigate("/users/login")
-      }
+      dispatch(getUserInfoThunk())
+      navigate("/")
     }
-
-    getUserInfoAndNavigate()
+    // isAuthenticated가 true일 때만 유저 정보를 받아오고, 메인페이지로 redirect 시켜줌
+    // 컴포넌트가 로드됐을 때, isAuthenticated가 변경되기 전 동작을 방지
+    if (isAuthenticated) {
+      getUserInfoAndNavigate()
+    }
   }, [isAuthenticated])
 
   return (
