@@ -140,4 +140,17 @@ public class BoardServiceImpl implements BoardService {
         entity.disable();
         boardRepository.save(entity);
     }
+
+    /**
+     * 글,그림 함께 작성을 위한 S3 파일 업로드 후, 경로 정보 return
+     */
+    @Override
+    public String registImage(MultipartFile thumbnailFile) throws Exception {
+        if (thumbnailFile == null || thumbnailFile.isEmpty()) {
+            throw new PetBridgeException(ErrorCode.BAD_REQUEST);
+        }
+        String savedImageFileName = fileUtil.saveFile(thumbnailFile, "images");
+
+        return savedImageFileName;
+    }
 }
