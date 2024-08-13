@@ -54,7 +54,7 @@ const Search = ({searchform}) => {
         type="text"
         placeholder="검색어를 입력하세요."
         value={inputKeyword}
-        className="h-12 w-72 rounded-xl border-2 border-stroke p-2"
+        className="border-stroke h-12 w-72 rounded-xl border-2 p-2"
         onKeyDown={handleKeyDown}
         onChange={(e) => setInputKeyword(e.target.value)}
       />
@@ -141,8 +141,13 @@ const ArticleBoardList = () => {
     <>
       <Search searchform={handleSearchForm} />
       {matchingCategory ? <h2>{matchingCategory.title}</h2> : <p>홈</p>}
-      <Button text={"글쓰기"} onClick={goWrite} />
-      <ul className="flex w-full flex-wrap justify-start gap-4">
+      <div
+        className="fixed top-20 z-10 flex justify-end"
+        style={{left: "calc(50% + 35%)", top: "90%"}}
+      >
+        <Button text={"글쓰기"} onClick={goWrite} />
+      </div>
+      <ul className="relative flex w-full flex-wrap justify-start gap-x-10">
         {articles ? (
           articles.map((article) => (
             <li key={article.id}>
@@ -152,6 +157,9 @@ const ArticleBoardList = () => {
         ) : (
           <div>등록된 게시글이 없습니다.</div>
         )}
+        <li className="w-[300px] grow"></li>
+        <li className="w-[300px] grow"></li>
+        <li className="w-[300px] grow"></li>
       </ul>
       <Pagination
         currentPage={currentPage}

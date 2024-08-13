@@ -233,7 +233,7 @@ const Chatbot = () => {
             <div className="w-full max-w-6xl rounded-lg bg-white p-8 text-center shadow-lg">
               <button
                 onClick={() => setShowMore(!showMore)}
-                className="mt-4 rounded-md bg-mild px-6 py-2 text-black hover:bg-point"
+                className="bg-mild hover:bg-point mt-4 rounded-md px-6 py-2 text-black"
               >
                 ▼ 등록 공고 확인
               </button>
@@ -245,7 +245,7 @@ const Chatbot = () => {
                       <button
                         key={index}
                         onClick={() => handleBreedSelection(breed)}
-                        className={`rounded-md px-4 py-2 text-lg text-gray-800 hover:bg-point ${
+                        className={`hover:bg-point rounded-md px-4 py-2 text-lg text-gray-800 ${
                           breed === lastClickedBreed
                             ? "bg-point text-white"
                             : "bg-mild"
@@ -284,7 +284,7 @@ const Chatbot = () => {
                       <li key={index} className="mb-4">
                         <button
                           onClick={() => handleAnswerSelection(option)}
-                          className="w-full rounded-md bg-mild px-6 py-4 text-2xl text-white hover:bg-point"
+                          className="bg-mild hover:bg-point w-full rounded-md px-6 py-4 text-2xl text-white"
                         >
                           {option}
                         </button>
