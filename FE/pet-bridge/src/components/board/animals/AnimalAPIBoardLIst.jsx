@@ -61,7 +61,7 @@ const AnimalAPIBoardLIst = () => {
       setMaxPage(Math.min(10, Math.ceil(total / numOfRows)))
       return newData
     } else {
-      alert("추가 데이터 로드에 실패했습니다.")
+      console.log("추가 데이터 로드에 실패했습니다.")
     }
   }
 
