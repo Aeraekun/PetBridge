@@ -3,6 +3,7 @@ import Siren from "assets/image/Siren-white.png"
 import {logOut} from "features/user/users-slice"
 import {useDispatch} from "react-redux"
 import {useNavigate, useParams} from "react-router-dom"
+import Swal from "sweetalert2"
 import {logOutUser} from "utils/user-utils"
 
 const MyPageDisableContainer = () => {
@@ -15,7 +16,15 @@ const MyPageDisableContainer = () => {
   }
   const navigate = useNavigate()
   const clickDisableHandler = async () => {
-    if (confirm("정말 탈퇴하시겠습니까?")) {
+    const result = await Swal.fire({
+      title: "정말 탈퇴하시겠습니까?",
+      showCancelButton: true,
+      confirmButtonText: "네, 탈퇴합니다.",
+      confirmButtonColor: "#d33",
+      cancelButtonText: "아니요, 취소합니다",
+    })
+
+    if (result.isConfirmed) {
       try {
         // 내 회원 탈퇴
         const res = await deleteSelfUser()
@@ -30,7 +39,7 @@ const MyPageDisableContainer = () => {
     navigate("/")
   }
   return (
-    <div className="flex size-full  flex-col items-center justify-center">
+    <div className="flex size-full  flex-col items-center justify-center p-8">
       <div className="overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
         <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
           <div className="sm:flex-col sm:items-start ">

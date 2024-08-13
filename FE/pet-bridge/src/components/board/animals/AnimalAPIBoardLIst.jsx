@@ -84,7 +84,7 @@ const AnimalAPIBoardLIst = () => {
       <AnimalSearchForm searchParams={handleSearchForm} isShelter={true} />
       {isLoading ? (
         <div className="flex items-center">
-          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
           <span>로딩중입니다</span>
         </div>
       ) : (
@@ -106,11 +106,11 @@ const AnimalAPIBoardLIst = () => {
               다음▶{" "}
             </button>
           </div>
-          <ul className="flex w-full flex-wrap-reverse justify-start gap-4">
+          <ul className="flex w-full flex-wrap-reverse justify-start gap-10">
             {items
               // category와 bcode가 일치하는것만 필터링
               .map((item, index) => (
-                <li key={index}>
+                <li key={index} className="grow">
                   <AnimalItem
                     data={item}
                     onSelectAnimal={() => goAnimalDetail(item)}
@@ -118,6 +118,9 @@ const AnimalAPIBoardLIst = () => {
                   />
                 </li>
               ))}
+            <li className="w-[300px] grow"></li>
+            <li className="w-[300px] grow"></li>
+            <li className="w-[300px] grow"></li>
           </ul>
         </>
       )}

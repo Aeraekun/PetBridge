@@ -73,3 +73,8 @@ body {
 .scrollable-container::-webkit-scrollbar-corner {
   background: #f1f1f1; /* Background color of the scrollbar corner */
 }
+
+.hidden-scrollbar {
+  scrollbar-width: none;
+  scrollbar-color: transparent transparent;
+}
