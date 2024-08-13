@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react"
+import Profile from "components/common/Profile"
 import AnimalItem from "../board/animals/AnimalItem"
 import {useNavigate} from "react-router-dom"
 import {getAnimalList} from "api/animals-api"
@@ -63,6 +64,11 @@ const AnimalBoardList = ({breed}) => {
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="absolute inset-0 bg-black opacity-50"></div>
           <div className="relative w-full max-w-3xl rounded-lg bg-white p-8 shadow-lg">
+            <Profile
+              image={selectedAnimal.userImage}
+              nickname={selectedAnimal.userNickname}
+              isMe={false}
+            />
             <AnimalDetailProfile
               animal={selectedAnimal}
               isEditing={false}
