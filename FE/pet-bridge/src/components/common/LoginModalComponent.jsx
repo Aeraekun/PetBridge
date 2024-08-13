@@ -1,5 +1,5 @@
 import {useNavigate} from "react-router-dom"
-import Login from "../../assets/icons/icon-login.svg"
+import Login from "assets/icons/icon-login.svg"
 
 const LoginModalComponent = ({onClose}) => {
   const navigate = useNavigate()
