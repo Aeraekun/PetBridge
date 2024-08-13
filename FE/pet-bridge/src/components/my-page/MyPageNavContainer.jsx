@@ -103,10 +103,10 @@ const MyPageNavContainer = () => {
       <img
         src={userImage ? userImage : DefaulUser150}
         alt="유저 이미지"
-        className="size-[150px] rounded-full"
+        className="size-[125px] rounded-full"
       />
       {/* 2. 유저 이름 */}
-      <button className="bg-white text-2xl" onClick={onClickUsernameHandler}>
+      <button className="bg-white text-lg" onClick={onClickUsernameHandler}>
         {userName}
       </button>
       {/* 3. 수정하기, 로그아웃 */}
@@ -114,12 +114,12 @@ const MyPageNavContainer = () => {
         {/* 햄버거 버튼 */}
         <Link
           to="/users/update"
-          className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild"
+          className="flex h-[30px] w-[80px] items-center justify-center rounded-lg bg-mild text-sm"
         >
           수정하기
         </Link>
         <button
-          className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild"
+          className="flex h-[30px] w-[80px] items-center justify-center rounded-lg bg-mild text-sm"
           onClick={handleLogOut}
         >
           로그아웃
@@ -164,10 +164,10 @@ const MyPageNavContainer = () => {
           to="disable"
           className={({isActive}) => [
             isActive ? "text-red-400" : "text-stroke",
-            "m-0",
+            "m-0 text-xs",
           ]}
         >
-          [회원 탈퇴하기]
+          [ 회원 탈퇴하기 ]
         </NavLink>
       )}
     </div>
