@@ -238,13 +238,13 @@ const AnimalDetailProfile = ({
               <img
                 src={animal.popfile}
                 alt="animal popfile"
-                className="size-full rounded-xl object-cover"
+                className="m-2 size-full rounded-xl object-cover"
               />
             ) : animal.filename ? (
               <img
                 src={animal.filename}
                 alt="animal profile"
-                className="size-full rounded-xl object-cover"
+                className="m-2 size-full rounded-xl object-cover"
               />
             ) : (
               <div className="flex size-full  flex-col items-center justify-center">
@@ -262,7 +262,7 @@ const AnimalDetailProfile = ({
         >
           <label
             htmlFor={name}
-            className="inline-flex w-32 shrink-0 items-center justify-center"
+            className="inline-flex w-40 shrink-0 items-center justify-start ps-5"
           >
             {label}
           </label>
@@ -276,12 +276,12 @@ const AnimalDetailProfile = ({
                     name={name}
                     value={value}
                     onChange={handleInputChange}
-                    className="bg-mild rounded"
+                    className="rounded bg-mild"
                   >
                     <option
                       key={"none"}
                       value={""}
-                      className="bg-mild w-full rounded border px-2 py-1"
+                      className="w-full rounded border bg-mild px-2 py-1"
                     >
                       선택
                     </option>
@@ -289,7 +289,7 @@ const AnimalDetailProfile = ({
                       <option
                         key={option.value}
                         value={option.label}
-                        className="bg-mild w-full rounded border px-2 py-1"
+                        className="w-full rounded border bg-mild px-2 py-1"
                       >
                         {option.value ? option.label : option}
                       </option>
@@ -304,7 +304,7 @@ const AnimalDetailProfile = ({
                     name={name}
                     value={value}
                     onChange={handleInputChange}
-                    className="bg-mild rounded border px-2 py-1"
+                    className="rounded border bg-mild px-2 py-1"
                   />
                 </div>
               )}
@@ -317,9 +317,9 @@ const AnimalDetailProfile = ({
             <div
               id={name}
               name={name}
-              className="inline-flex grow items-center "
+              className="inline-flex grow items-center px-5"
             >
-              <span className="bg-mild rounded px-2 py-1">{value}</span>
+              <span className="rounded bg-mild px-2 py-1">{value}</span>
             </div>
           )}
         </div>

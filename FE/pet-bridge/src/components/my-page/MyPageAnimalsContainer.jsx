@@ -93,14 +93,14 @@ const MyPageAnimalsContainer = () => {
       {isLoading ? (
         <div className="flex size-full  flex-col items-center justify-center">
           <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
-          <span className="px-5 text-6xl font-bold">Loading</span>
+          <span className="px-5 text-2xl font-bold">Loading</span>
         </div>
       ) : (
-        <div className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth hidden-scrollbar">
+        <div className="hidden-scrollbar flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
           {items.map((item, index) => (
             <button
               key={index}
-              className="m-2.5 "
+              className="m-5"
               // 화면에 들어오는지 확인할 객체를 선택하기 위한 ref 설정 : 배열의 마지막 값
               ref={index === items.length - 1 ? ref : null}
               onClick={() => {

@@ -41,19 +41,21 @@ const AnimalBoardList = ({breed}) => {
 
   return (
     <>
-      <ul className="flex w-full flex-wrap justify-start gap-12">
+      <ul className="flex w-full flex-wrap justify-start gap-x-16">
         {animals ? (
           animals.map((item, index) => (
-            <li key={index}>
-              <AnimalItem
-                data={item}
-                onSelectAnimal={() => goAnimalDetail(item)}
-                isShelter={false}
-              />
-            </li>
+            <>
+              <li key={index}>
+                <AnimalItem
+                  data={item}
+                  onSelectAnimal={() => goAnimalDetail(item)}
+                  isShelter={false}
+                />
+              </li>
+            </>
           ))
         ) : (
-          <h3 className="mb-4 text-center text-3xl font-semibold">
+          <h3 className="mb-4 w-full text-center text-3xl font-semibold">
             현재 등록된 동물이 없습니다.
           </h3>
         )}
@@ -62,8 +64,8 @@ const AnimalBoardList = ({breed}) => {
       {/* AnimalDetailProfile 모달 */}
       {isModalOpen && selectedAnimal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black opacity-50"></div>
-          <div className="relative w-full max-w-3xl rounded-lg bg-white p-8 shadow-lg">
+          <div className="fixed inset-0 bg-black opacity-50"></div>
+          <div className="relative h-[720px] w-full max-w-3xl rounded-lg bg-white p-8 shadow-lg">
             <Profile
               image={selectedAnimal.userImage}
               nickname={selectedAnimal.userNickname}
