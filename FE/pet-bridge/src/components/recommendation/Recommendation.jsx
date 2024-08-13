@@ -177,7 +177,7 @@ const Chatbot = () => {
       id="Chatbot"
       className="flex min-h-screen w-full flex-col items-center justify-center bg-gray-100"
     >
-      <h1 className="mb-8 text-center text-6xl font-bold">집사 유형 검사</h1>
+      <h1 className="m-8 text-center text-6xl font-bold">집사 유형 검사</h1>
       {result ? (
         <>
           <div>
@@ -188,7 +188,7 @@ const Chatbot = () => {
                   <img
                     src={images[result.personality]}
                     alt={result.personality}
-                    className="w-112 h-112 object-cover"
+                    className="h-full object-cover"
                   />
                 )}
               </div>
