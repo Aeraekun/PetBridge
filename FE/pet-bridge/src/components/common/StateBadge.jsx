@@ -1,11 +1,29 @@
-const StateBadge = ({state}) => {
+const StateBadge = ({state, category}) => {
   const stateColors = {
-    입양중: "bg-cyan-100",
-    입양대기: "bg-yellow-100",
-    입양완료: "bg-green-100",
-    임시보호: "bg-gray-100",
+    입양중: "outline-cyan-100",
+    입양대기: "outline-orange-100",
+    입양완료: "outline-green-300",
+    임시보호: "outline-purple-300",
     // 보호소
-    보호중: "bg-green-200",
+    보호중: "outline-purple-300",
+    "종료(반환)": "outline-blue-100",
+    "종료(입양)": "outline-purple-100",
+    "종료(안락사)": "outline-black text-white",
+    "종료(자연사)": "outline-yellow",
+    "종료(기타)": "outline-gray-100",
+
+    REVIEW: "outline-purple-100",
+    NOTICE: "outline-blue-100",
+    PROMOTION: "outline-pink-100",
+    FREE: "outline-orange-100",
+  }
+  const stateBgColors = {
+    입양중: "bg-cyan-100",
+    입양대기: "bg-orange-100",
+    입양완료: "bg-green-300",
+    임시보호: "bg-purple-300",
+    // 보호소
+    보호중: "bg-purple-300",
     "종료(반환)": "bg-blue-100",
     "종료(입양)": "bg-purple-100",
     "종료(안락사)": "bg-black text-white",
@@ -28,14 +46,40 @@ const StateBadge = ({state}) => {
     PROMOTION: "입양홍보",
     FREE: "자유게시판",
   }
-  const color = stateColors[state] || "bg-mild"
+  const color = stateColors[state] || "outline-mild"
+  const bgcolor = stateBgColors[state] || "bg-mild"
   const displayName = stateNames[state] || state
   return (
-    <div
-      className={`absolute right-2 top-2 flex h-8 items-center justify-center rounded px-2 ${color}`}
-    >
-      {displayName}
-    </div>
+    <>
+      {category === "article" ? (
+        // <div
+        //   className={`absolute right-2 top-2  bg-white p-2  rounded-2xl outline outline-4 ${color}`}
+        // >
+        //   {displayName}
+        // </div>
+        <div
+          className={`absolute right-0 top-0  w-full outline outline-2 ${color}`}
+        >
+          <div className="absolute right-0 h-[10px] w-full"></div>
+          <div
+            className={`absolute  bottom-0 z-50 flex h-8 items-center justify-center rounded-tr p-3 font-bold ${bgcolor} border-r`}
+          >
+            {displayName}
+          </div>
+        </div>
+      ) : (
+        <div
+          className={`absolute right-1 top-0  w-full bg-white outline outline-4 ${color}`}
+        >
+          <div className="absolute right-0 h-[10px] w-full"></div>
+          <div
+            className={`absolute right-2 top-[-15px] z-50 flex h-8 items-center justify-center rounded-2xl bg-white p-2 font-bold outline outline-4 ${color}`}
+          >
+            {displayName}
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 

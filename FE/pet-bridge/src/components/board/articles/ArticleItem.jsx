@@ -12,15 +12,14 @@ const ArticleItem = ({data, onSelectArticle}) => {
         onSelectArticle(data)
       }}
     >
-      <StateBadge state={data.boardType} />
-
       <img
         src={data.thumbnail}
         alt="imag"
         className="size-[300px] object-cover"
       />
-      <div className="p-4">
-        <div className=" mb-4 flex h-8 items-center justify-between">
+      <div className="  relative p-4">
+        <div className="  mb-4 flex h-8 items-center justify-between">
+          <StateBadge state={data.boardType} category={"article"} />
           <Profile
             nickname={data.userNickname}
             image={data.userImage}

@@ -122,7 +122,6 @@ function App() {
             }
           ></Route>
           <Route path="/shelter" element={<AnimalPage />}>
-            <Route index element={<AnimalBoardList />} />
             <Route path="0" element={<AnimalAPIBoardLIst />} />
             <Route path="1" element={<AnimalBoardList />} />
             <Route path="details/:animalId" element={<AnimalDetail />} />

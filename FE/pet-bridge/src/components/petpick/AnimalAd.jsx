@@ -1,11 +1,10 @@
 import React, {forwardRef, useEffect} from "react"
-
 import {useInView} from "react-intersection-observer"
 import {useNavigate} from "react-router-dom"
 
 const AnimalAd = forwardRef(({animal, nowindex, onInView}, ref) => {
   const {ref: observerRef, inView} = useInView({
-    threshold: 0.51, // Trigger when 20% of the item is visible
+    threshold: 0.51, // Trigger when 51% of the item is visible
   })
 
   useEffect(() => {
@@ -13,30 +12,45 @@ const AnimalAd = forwardRef(({animal, nowindex, onInView}, ref) => {
       onInView(nowindex)
     }
   }, [inView, onInView, nowindex])
-  // const [petpick, setPetpick] = useState([])
-  // const petpick = []
+
   const navigate = useNavigate()
 
-  //댓글리스트 불러올때 필요
-
-  // const status = useSelector(selectPetpickStatus)
-  // const error = useSelector(selectPetpickError)
-
-  // const [petpickId, setPetpickId] = useState(0)
-
-  const goAnimalDetail = (animal) => {
-    return (e) => {
-      e.stopPropagation() // Prevents the event from bubbling up, if needed
-      console.log(animal)
-      const id = animal.desertionNo
-      let path = `/shelter/details/${id}`
-      navigate(path, {state: {animal}})
-    }
+  const goAnimalDetail = (animal) => (e) => {
+    e.stopPropagation() // Prevents the event from bubbling up, if needed
+    console.log(animal)
+    const id = animal.desertionNo
+    let path = `/shelter/details/${id}`
+    navigate(path, {state: {animal}})
   }
 
   const isShelter = true
 
   const getFilteredFields = () => {
+    // 성별과 중성화 여부의 변환 함수
+    const translateSex = (sex) => {
+      switch (sex) {
+        case "M":
+          return "수컷"
+        case "F":
+          return "암컷"
+        case "Q":
+          return "미상"
+        default:
+          return "미상"
+      }
+    }
+
+    const translateNeuter = (neuter) => {
+      switch (neuter) {
+        case "Y":
+          return "예"
+        case "N":
+          return "아니오"
+        default:
+          return "미상"
+      }
+    }
+
     const fields = [
       {
         label: "공고번호",
@@ -45,7 +59,6 @@ const AnimalAd = forwardRef(({animal, nowindex, onInView}, ref) => {
         showIf: isShelter,
       },
       {label: "품종", name: "kindCd", value: animal.kindCd, showIf: true},
-
       {
         label: "이름",
         name: "name",
@@ -55,8 +68,7 @@ const AnimalAd = forwardRef(({animal, nowindex, onInView}, ref) => {
       {
         label: "성별",
         name: "sexCd",
-        value: animal.sexCd,
-        options: ["M", "F", "Q"],
+        value: translateSex(animal.sexCd), // 변환된 성별 값
         showIf: true,
       },
       {
@@ -69,8 +81,7 @@ const AnimalAd = forwardRef(({animal, nowindex, onInView}, ref) => {
       {
         label: "중성화 여부",
         name: "neuterYn",
-        value: animal.neuterYn,
-        options: ["N", "Y"],
+        value: translateNeuter(animal.neuterYn), // 변환된 중성화 여부 값
         showIf: true,
       },
       // 보호소 전용 필드
@@ -81,7 +92,6 @@ const AnimalAd = forwardRef(({animal, nowindex, onInView}, ref) => {
         options: ["보호중", "종료(반환)"],
         showIf: isShelter,
       },
-
       {
         label: "발견 장소",
         name: "happenPlace",
@@ -100,9 +110,7 @@ const AnimalAd = forwardRef(({animal, nowindex, onInView}, ref) => {
         value: animal.specialMark,
         showIf: isShelter,
       },
-
       // 임시 보호 전용 필드
-
       {
         label: "종류",
         name: "species",
@@ -110,7 +118,6 @@ const AnimalAd = forwardRef(({animal, nowindex, onInView}, ref) => {
         showIf: !isShelter,
         options: ["개", "고양이", "기타"],
       },
-
       {
         label: "설명",
         name: "specialMark",
@@ -119,9 +126,23 @@ const AnimalAd = forwardRef(({animal, nowindex, onInView}, ref) => {
       },
     ]
 
-    return fields.filter(({showIf}) => showIf)
+    // 빈값이 아닌 필드만 반환
+    return fields
+      .filter(({showIf, value}) => showIf && value && value.trim() !== "")
+      .map((field) => {
+        // 특수 변환이 필요한 경우
+        if (field.name === "sexCd") {
+          return {...field, value: translateSex(field.value)}
+        }
+        if (field.name === "neuterYn") {
+          return {...field, value: translateNeuter(field.value)}
+        }
+        return field
+      })
   }
+
   const field = getFilteredFields()
+
   const shelterInfo = [
     {
       label: "보호소이름",
@@ -160,9 +181,10 @@ const AnimalAd = forwardRef(({animal, nowindex, onInView}, ref) => {
       showIf: isShelter,
     },
   ]
+
   return (
     <div
-      className=" z-50 mx-auto flex h-screen w-[1000px] snap-center flex-row justify-center py-[50px] sm:w-11/12"
+      className="z-50 mx-auto flex  h-screen w-[1000px] snap-center  flex-row justify-center  pb-[100px] pt-[10px] sm:w-11/12"
       ref={(node) => {
         if (node) {
           if (ref && typeof ref === "object" && "current" in ref) {
@@ -173,47 +195,56 @@ const AnimalAd = forwardRef(({animal, nowindex, onInView}, ref) => {
       }}
     >
       <button
-        className="flex h-screen w-[800px] justify-between overflow-hidden bg-gray-50 "
+        className="flex w-[800px] max-w-full  overflow-hidden rounded-lg bg-white shadow-lg transition-transform hover:scale-105 lg:flex-row"
         onClick={goAnimalDetail(animal)}
       >
-        <div className="max-w-[400px] items-center justify-center border border-gray-300">
+        <div className="flex w-full flex-col space-y-4 p-4 md:w-1/2">
           {animal.filename ? (
             <img
               src={animal.popfile}
               alt="animal profile"
-              className="size-full object-cover"
+              className="h-64 w-full rounded-lg object-contain"
             />
           ) : (
-            <div className="flex size-full items-center justify-center">
+            <div className="flex h-64 items-center justify-center text-gray-500">
               이미지 없음
             </div>
           )}
-
-          {shelterInfo.map(({label, name, value}) => (
-            <div key={name} className="flex items-center">
-              <label htmlFor={name} className="w-32">
-                {label}
-              </label>
-              <div
-                id={name}
-                name={name}
-                className="w-full rounded border bg-mild p-2"
-              >
-                {value}
-              </div>
-            </div>
-          ))}
+          <div className="rounded-lg bg-blue-100 p-4 shadow-md">
+            <h2 className="text-lg font-semibold text-gray-800">보호소 정보</h2>
+            {shelterInfo
+              .filter(({showIf}) => showIf)
+              .map(({label, name, value}) => (
+                <div key={name} className="mt-2 grid  grid-cols-6 gap-2">
+                  <div className="col-span-2 font-medium  text-gray-700">
+                    {label}
+                  </div>
+                  <div className="col-span-4 text-left text-gray-800">
+                    {value}
+                  </div>
+                </div>
+              ))}
+          </div>
         </div>
-        <div className="mt-4 flex w-full flex-col space-y-4 lg:mt-0 lg:w-1/2 lg:pl-4">
+
+        <div className="size-full shrink-0 border-b border-gray-300 bg-gray-50 p-4 sm:w-1/2 sm:border-b-0 sm:border-r">
+          <div className="m-4 w-full text-left text-lg">
+            현재위치{" "}
+            <span className="text-xl font-bold text-point">{"대전광역시"}</span>{" "}
+            의 보호동물 입니다
+          </div>
           {field.map(({label, name, value}) => (
-            <div key={name} className="flex items-center">
-              <label htmlFor={name} className="w-32">
+            <div key={name} className="mt-2 flex items-center">
+              <label
+                htmlFor={name}
+                className="w-1/3 font-semibold text-gray-700"
+              >
                 {label}
               </label>
               <div
                 id={name}
                 name={name}
-                className="w-full rounded border bg-mild p-2"
+                className="w-2/3 rounded-lg border border-gray-300 bg-mild p-2 text-gray-800"
               >
                 {value}
               </div>
@@ -224,6 +255,7 @@ const AnimalAd = forwardRef(({animal, nowindex, onInView}, ref) => {
     </div>
   )
 })
+
 AnimalAd.displayName = "AnimalAd"
 
 export default AnimalAd

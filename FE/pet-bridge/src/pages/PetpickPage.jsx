@@ -265,16 +265,6 @@ const PetpickPage = () => {
     navigate(-1)
   }
 
-  const handleScrollUp = useCallback(() => {
-    setIndex((prev) => Math.max(prev - 1, 0))
-    containerRef.current.scrollBy(0, -400)
-  }, [])
-
-  const handleScrollDown = useCallback(() => {
-    setIndex((prev) => Math.min(prev + 1, list.length - 1))
-    containerRef.current.scrollBy(0, 400)
-  }, [list.length])
-
   return (
     <div>
       <Navbar />
@@ -300,7 +290,8 @@ const PetpickPage = () => {
           <div className="fixed right-8 top-1/2 flex flex-col space-y-8">
             <button
               onClick={() => {
-                handleScrollUp
+                setIndex((prev) => Math.max(prev - 1, 0))
+                containerRef.current.scrollBy(0, -400)
               }}
               disabled={index === 0}
             >
@@ -308,7 +299,8 @@ const PetpickPage = () => {
             </button>
             <button
               onClick={() => {
-                handleScrollDown
+                setIndex((prev) => Math.min(prev + 1, list.length - 1))
+                containerRef.current.scrollBy(0, 400)
               }}
               disabled={index === list.length - 1}
             >

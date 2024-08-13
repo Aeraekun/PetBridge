@@ -7,7 +7,7 @@ const NavItemList = () => {
     {
       id: itemId++,
       category: "보호동물",
-      to: "/shelter",
+      to: "/shelter/0",
     },
     {
       id: itemId++,
