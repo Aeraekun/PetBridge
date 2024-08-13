@@ -64,8 +64,8 @@ const AnimalBoardList = ({breed}) => {
       {/* AnimalDetailProfile 모달 */}
       {isModalOpen && selectedAnimal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black opacity-50"></div>
-          <div className="relative w-full max-w-3xl rounded-lg bg-white p-8 shadow-lg">
+          <div className="fixed inset-0 bg-black opacity-50"></div>
+          <div className="relative h-[720px] w-full max-w-3xl rounded-lg bg-white p-8 shadow-lg">
             <Profile
               image={selectedAnimal.userImage}
               nickname={selectedAnimal.userNickname}
