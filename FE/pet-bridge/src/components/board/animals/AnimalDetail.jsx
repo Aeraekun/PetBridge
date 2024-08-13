@@ -84,6 +84,10 @@ const AnimalDetail = () => {
   const currentUserId = useSelector(selectId)
   const location = useLocation()
   const animal = location.state.animal || {}
+
+  useEffect(() => {
+    console.log("Animal data received:", location.state.animal)
+  }, [location.state.animal])
   const [isShelter, setIsShelter] = useState(false)
   useEffect(() => {
     console.log(animal)

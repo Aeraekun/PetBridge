@@ -96,7 +96,7 @@ const MyPageAnimalsContainer = () => {
           <span className="px-5 text-6xl font-bold">Loading</span>
         </div>
       ) : (
-        <div className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
+        <div className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth hidden-scrollbar">
           {items.map((item, index) => (
             <button
               key={index}

@@ -101,7 +101,7 @@ const MyPageArtilcesContainer = () => {
 
   const handleClick = (item) => {
     console.log(item)
-    navigate(`/communities/modify/${item.id}`, {state: {item}})
+    navigate(`/communities/details/${item.id}`, {state: {item}})
   }
 
   return (
@@ -109,7 +109,7 @@ const MyPageArtilcesContainer = () => {
       <div className="relative flex w-full justify-center p-2.5 ">
         <button className="text-2xl font-bold">내가 쓴 글</button>
         <Link
-          className="absolute right-1.5 top-1.5 rounded-xl bg-mild p-2.5"
+          className="bg-mild absolute right-1.5 top-1.5 rounded-xl p-2.5"
           to="/communities/write"
         >
           글 작성하기
@@ -117,11 +117,11 @@ const MyPageArtilcesContainer = () => {
       </div>
       {isLoading ? (
         <div className="flex size-full  flex-col items-center justify-center">
-          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
           <span className="px-5 text-6xl font-bold">Loading...</span>
         </div>
       ) : (
-        <div className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
+        <div className="hidden-scrollbar flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
           {items.map((item, index) => (
             <div
               key={index}
@@ -146,7 +146,7 @@ const MyPageArtilcesContainer = () => {
       )}
       {isLoadingMore ? (
         <div className="flex items-center">
-          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
           <span>추가 데이터를 로딩중입니다</span>
         </div>
       ) : null}
