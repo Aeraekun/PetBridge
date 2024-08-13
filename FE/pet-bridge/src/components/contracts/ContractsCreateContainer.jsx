@@ -15,6 +15,8 @@ import AnimalTag from "components/common/AnimalTag"
 import {selectOpponentInfo} from "features/chat/chat-slice"
 import {postPhoneCheck, postPhoneVerificationCode} from "api/users-api"
 import ContractBackground from "assets/image/contract-bg.webp"
+import Swal from "sweetalert2"
+import {Toast} from "utils/common-utils"
 
 const ContractsCreateContainer = () => {
   const navigate = useNavigate()
@@ -92,19 +94,28 @@ const ContractsCreateContainer = () => {
   // 계약서 작성하기 클릭시 동작
   const onSubmitHandler = async () => {
     console.log(contractFormData)
+    const result = await Swal.fire({
+      title: "계약서를 작성하시겠습니까?",
+      showCancelButton: true,
+      confirmButtonText: "네",
+      confirmButtonColor: "#28a745",
+      cancelButtonText: "아니요",
+    })
     // 폼의 유효성 검사
-    if (confirm("계약서를 작성하시겠습니까?")) {
+    if (result.isConfirmed) {
       try {
         // 비동기 요청 (계약서 작성)
         const res = await postContract(contractFormData)
         console.log(res)
-        alert("계약서가 작성되었습니다.")
+        Toast.fire({icon: "success", title: "계약서가 작성되었습니다."})
         navigate(`/users/${contractFormData.contractorId}`)
       } catch (error) {
         console.log(error)
-        alert(
-          "계약서 작성에 실패했습니다. 계약서 내용 확인 후 다시 시도해주세요."
-        )
+        Toast.fire({
+          icon: "fail",
+          title:
+            "계약서 작성에 실패했습니다. 계약서 내용 확인 후 다시 시도해주세요.",
+        })
       }
     }
   }
@@ -154,12 +165,12 @@ const ContractsCreateContainer = () => {
     try {
       const res = await postPhoneCheck(phoneConfirmData)
       if (res?.status === 200) {
-        alert("SMS 인증 성공")
+        Toast.fire({icon: "success", title: "SMS 인증 성공"})
         setIsPhoneCodeChecked(true)
       }
     } catch (error) {
       console.log(error)
-      alert("인증 실패")
+      Toast.fire({icon: "fail", title: "인증 실패"})
     }
   }
 

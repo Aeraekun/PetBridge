@@ -14,7 +14,9 @@ import {patchThisMonthStamp} from "utils/contract-utils"
 import {useSelector} from "react-redux"
 import {selectId, selectPhone} from "features/user/users-slice"
 import {postPhoneCheck, postPhoneVerificationCode} from "api/users-api"
-import ContractBackground from "assets/image/contract-bg.webp"
+// import ContractBackground from "assets/image/contract-bg.webp"
+import Swal from "sweetalert2"
+import {Toast} from "utils/common-utils"
 
 const ContractsContainer = () => {
   const navigate = useNavigate()
@@ -54,10 +56,9 @@ const ContractsContainer = () => {
 
       let stampFilled = 0
       for (let i = 1; i < 13; i++) {
-        if (!contractInfo[`month${i}`]) {
-          return
+        if (contractInfo[`month${i}`]) {
+          stampFilled++
         }
-        stampFilled++
       }
 
       if (Number(contractInfo.month) === stampFilled) {
@@ -77,59 +78,68 @@ const ContractsContainer = () => {
       const res = await patchThisMonthStamp(stampInfo)
 
       if (res.response.status === 200) {
-        alert("스탬프 찍기를 성공했어요.")
+        Toast.fire({icon: "success", title: "스탬프 찍기를 성공했어요."})
       } else if (res.response.status == 409) {
-        alert(
-          "이번 달에 이미 스탬프를 찍었어요. 다음 달에 입양 후기를 확인하고 또 찍어주세요."
-        )
+        Toast.fire({
+          icon: "warning",
+          title:
+            "이번 달에 이미 스탬프를 찍었어요. 다음 달에 입양 후기를 확인하고 또 찍어주세요.",
+        })
       }
     }
   }
 
   // 계약서 삭제 버튼을 누르면
-  const clickDeleteButtonHandler = () => {
+  const clickDeleteButtonHandler = async () => {
+    const result = await Swal.fire({
+      title: "계약서를 삭제하시겠습니까?",
+      showCancelButton: true,
+      confirmButtonText: "네",
+      confirmButtonColor: "#d33",
+      cancelButtonText: "아니요",
+    })
     // 계약서 아이디로 삭제 요청을 보냄
-    if (confirm("계약서를 삭제하시겠습니까?")) {
+    if (result.isConfirmed) {
       try {
         disalbeContract(id)
-        alert("계약서가 삭제되었습니다.")
+        Toast.fire({icon: "success", title: "계약서가 삭제되었습니다."})
         navigate(`/users/${userId}`)
       } catch (error) {
         console.log("계약서 삭제 에러: ", error)
       }
     }
   }
-  // !!!!!계약 체결 버튼을 누르면 결제 하고, 결제가 완료되면 자동으로 계약이 체결되는것으로 변경!!!!!
-  // // 계약 체결 버튼을 누르면
-  // const clickPatchButtonHandler = async () => {
-  //   // 계약서 아이디로 삭제 요청을 보냄
-  //   if (confirm("계약을 체결하시겠습니까?")) {
-  //     console.log(contractInfo)
-  //     const contractEditRequestDto = {
-  //       id: Number(contractInfo.id),
-  //       userId: Number(contractInfo.contracteeId),
-  //       status: "계약완료",
-  //     }
-  //     try {
-  //       const res = await patchContract(contractEditRequestDto)
-
-  //       alert("계약이 완료되었습니다.")
-  //       if (res.status == 204) {
-  //         const fetchedContractInfo = await getContractDetail(id)
-  //         if (fetchedContractInfo.data) {
-  //           setContractInfo(fetchedContractInfo.data)
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-  // }
 
   // 계약 종료 (환급) 버튼 클릭
-  const clickFinishHandler = () => {
-    if (confirm("환급을 신청하시겠습니까?")) {
-      patchContract(id)
+  const clickFinishHandler = async () => {
+    const result = await Swal.fire({
+      title: "환급 요청을 하시겠습니까?",
+      showCancelButton: true,
+      confirmButtonText: "네",
+      confirmButtonColor: "#28a745",
+      cancelButtonText: "아니요",
+    })
+    if (result.isConfirmed) {
+      try {
+        const contractEditRequestDto = {
+          id: id,
+          status: "환급대기",
+        }
+        console.log(contractEditRequestDto)
+        const res = await patchContract(contractEditRequestDto)
+        Toast.fire({
+          icon: "success",
+          title:
+            "환급 신청을 완료했어요. 관리자가 환급 요청을 처리할 때까지 기다려주세요.",
+        })
+        console.log(res)
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: "warning",
+          title: "환급 신청을 실패했어요. 다시 시도해주세요.",
+        })
+      }
     }
   }
 
@@ -140,7 +150,14 @@ const ContractsContainer = () => {
   // 4. 인증코드 확인 완료시 제출 버튼 활성화
   const clickSignHandler = async () => {
     // 서명 버튼 클릭으로 SMS를 보낼지 확인
-    if (confirm("SMS 서명하시겠습니까? ")) {
+    const result = await Swal.fire({
+      title: "SMS 서명하시겠습니까?",
+      showCancelButton: true,
+      confirmButtonText: "네",
+      confirmButtonColor: "#28a745",
+      cancelButtonText: "아니요",
+    })
+    if (result.isConfirmed) {
       const isSent = await postPhoneVerificationCode({phone: phone})
       console.log(isSent)
       if (isSent) {
@@ -164,19 +181,24 @@ const ContractsContainer = () => {
       const res = await postPhoneCheck(phoneConfirmData)
       if (res?.status === 200) {
         setIsPhoneCodeChecked(true)
+        Toast.fire({icon: "success", title: "SMS 인증을 성공했어요."})
       }
     } catch (error) {
       console.log(error)
-      alert("인증 실패")
+      Toast.fire({icon: "warning", title: "SMS 인증을 실패했어요."})
     }
   }
 
   const clickPaymentHandler = async () => {
-    if (
-      confirm(
-        "결제가 완료되면 계약이 자동으로 체결됩니다. 결제 화면으로 이동하시겠습니까?"
-      )
-    ) {
+    const result = await Swal.fire({
+      title:
+        "결제가 완료되면 계약이 자동으로 체결됩니다. 결제 화면으로 이동하시겠습니까?",
+      showCancelButton: true,
+      confirmButtonText: "네",
+      confirmButtonColor: "#28a745",
+      cancelButtonText: "아니요",
+    })
+    if (result.isConfirmed) {
       try {
         const res = await postPayment(
           Number(contractInfo.id),
@@ -222,15 +244,16 @@ const ContractsContainer = () => {
               nickname={contractInfo.contracteeNickname}
             />
           </div>
+          <div className="h-6"></div>
           <div
-            className="flex h-[600px] w-full flex-col items-center bg-stroke p-5"
+            className="flex h-[600px] w-full flex-col items-center bg-gray-100 p-5"
             style={{
-              backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(${ContractBackground})`,
+              // backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(${ContractBackground})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
           >
-            <p className="my-16 text-4xl font-bold">계약서</p>
+            <p className="my-16 font-serif text-4xl font-extrabold">계 약 서</p>
             <ContractDetail
               contractorNickname={contractInfo.contractorNickname}
               contracteeNickname={contractInfo.contracteeNickname}
@@ -263,13 +286,39 @@ const ContractsContainer = () => {
                       이번 달 스탬프 찍기
                     </button>
                   ) : isStampFilled ? (
-                    <button onClick={clickFinishHandler}>환급 신청하기</button>
+                    <button
+                      onClick={clickFinishHandler}
+                      className="rounded-xl bg-mild p-2.5 font-bold"
+                    >
+                      환급 신청하기
+                    </button>
                   ) : (
                     <div>스탬프를 받기 위해 계약 내용을 잘 이행해주세요.</div>
                   )}
                 </div>
               </div>
             </>
+          ) : contractInfo.status === "환급대기" ? (
+            <div className="flex w-full flex-col items-center justify-center rounded-2xl border-2 border-mild p-5">
+              <div className="flex h-full flex-wrap justify-center">
+                {Array.from({length: contractInfo.month}).map((_, index) => (
+                  <ContractStamp
+                    key={index}
+                    idx={index + 1}
+                    text={contractInfo[`month${index + 1}`]}
+                  />
+                ))}
+              </div>
+              <div className="flex h-20 items-center justify-center">
+                <button
+                  disabled={true}
+                  className="rounded-xl bg-green-100 p-2.5 font-bold"
+                >
+                  <p>환급 신청 완료!</p>
+                  <p>환급 대기 중입니다.</p>
+                </button>
+              </div>
+            </div>
           ) : Number(userId) !== contractInfo.contractorId ? (
             <>
               {/* 서명란 */}
@@ -352,57 +401,59 @@ const ContractsContainer = () => {
               </button>
             </>
           ) : contractInfo.status === "계약전" ? (
-            <section className="h-80">
-              <p className="my-4 text-center text-xl font-bold">서명</p>
-              <div className="flex h-40 w-full gap-10">
-                {/* 보호자 서명 */}
-                <div className="w-80">
-                  <ContractPerson
-                    imageSrc={contractInfo.contractorImage}
-                    title="보호자"
-                    nickname={contractInfo.contractorNickname}
-                  />
-                  <div className="flex gap-4 py-2.5">
-                    <span className="my-3 font-bold">서명</span>
+            <>
+              <section className="h-80">
+                <p className="my-4 text-center text-xl font-bold">서명</p>
+                <div className="flex h-40 w-full gap-10">
+                  {/* 보호자 서명 */}
+                  <div className="w-80">
+                    <ContractPerson
+                      imageSrc={contractInfo.contractorImage}
+                      title="보호자"
+                      nickname={contractInfo.contractorNickname}
+                    />
+                    <div className="flex gap-4 py-2.5">
+                      <span className="my-3 font-bold">서명</span>
 
-                    <button
-                      disabled={true}
-                      className={`rounded-2xl border bg-stroke p-2.5`}
-                    >
-                      서명 완료
-                    </button>
+                      <button
+                        disabled={true}
+                        className={`rounded-2xl border bg-stroke p-2.5`}
+                      >
+                        서명 완료
+                      </button>
+                    </div>
+                  </div>
+                  {/* 계약자 서명 */}
+                  <div className="w-80">
+                    <ContractPerson
+                      imageSrc={contractInfo.contracteeImage}
+                      title="계약자"
+                      nickname={contractInfo.contracteeNickname}
+                    />
+                    <div className="flex gap-4 p-2.5">
+                      <p className="my-3 font-bold">서명</p>
+                      <button
+                        disabled={true}
+                        className={`rounded-2xl border p-2.5`}
+                      >
+                        서명 대기중
+                      </button>
+                    </div>
                   </div>
                 </div>
-                {/* 계약자 서명 */}
-                <div className="w-80">
-                  <ContractPerson
-                    imageSrc={contractInfo.contracteeImage}
-                    title="계약자"
-                    nickname={contractInfo.contracteeNickname}
-                  />
-                  <div className="flex gap-4 p-2.5">
-                    <p className="my-3 font-bold">서명</p>
-                    <button
-                      disabled={true}
-                      className={`rounded-2xl border p-2.5`}
-                    >
-                      서명 대기중
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </section>
+              </section>
+              <button
+                className="rounded-xl bg-alert p-2.5 text-white"
+                onClick={clickDeleteButtonHandler}
+              >
+                계약서 삭제하기
+              </button>
+            </>
           ) : (
             <div>계약전아님</div>
           )}
         </>
       )}
-      <button
-        className="rounded-xl bg-alert p-2.5 text-white"
-        onClick={clickDeleteButtonHandler}
-      >
-        계약서 삭제하기
-      </button>
     </div>
   )
 }
