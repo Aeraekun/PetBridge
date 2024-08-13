@@ -94,7 +94,7 @@ export const getMyLikes = async (searchParams) => {
 // 내 계약서 조회
 export const getMyContracts = async (userId, page) => {
   const params = {
-    page: page - 1,
+    page: page,
   }
   try {
     const res = await axiosInstance.get(`/contracts/user/${userId}`, {

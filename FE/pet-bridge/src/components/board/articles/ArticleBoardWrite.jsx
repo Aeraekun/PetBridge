@@ -4,7 +4,12 @@ import Button from "components/common/Button"
 import Editor from "components/common/Editor"
 import {useNavigate} from "react-router-dom"
 import AnimalTag from "components/common/AnimalTag"
-import {selectId, selectImage, selectNickname} from "features/user/users-slice"
+import {
+  selectId,
+  selectImage,
+  selectNickname,
+  selectRole,
+} from "features/user/users-slice"
 import {useSelector} from "react-redux"
 import {registArticle} from "api/boards-api"
 import Profile from "components/common/Profile"
@@ -21,9 +26,17 @@ const ArticleBoardWrite = () => {
   const currentUserNickname = useSelector(selectNickname)
   const currentUserId = useSelector(selectId)
 
+  const isAdmin = useSelector(selectRole) === "ADMIN"
+  const [error, setError] = useState(null)
+
   // 파일 선택 시 호출되는 함수
   const handleFileChange = (event) => {
     const file = event.target.files[0]
+    const maxSizeInBytes = 30 * 1024 * 1024 // 50MB 크기 제한
+    if (file.size > maxSizeInBytes) {
+      setError("파일 크기는 30MB를 초과할 수 없습니다.")
+      return
+    }
     if (file) {
       // 파일의 URL을 생성하여 상태에 저장
       const url = URL.createObjectURL(file)
@@ -121,7 +134,7 @@ const ArticleBoardWrite = () => {
         <option value="PROMOTION">입양홍보</option>
         <option value="REVIEW">입양후기</option>
         <option value="FREE">자유게시판</option>
-        <option value="NOTICE">공지사항</option>
+        {isAdmin && <option value="NOTICE">공지사항</option>}
       </select>
       <AnimalTag onSelectAnimalId={handleAnimalSelect} />
 
@@ -151,6 +164,7 @@ const ArticleBoardWrite = () => {
           onChange={handleFileChange}
           className="cursor-pointer items-center"
         />
+        {error && <p className="text-sm text-red-500">{error}</p>}
         {imageSrc && (
           <button
             onClick={resetImage}

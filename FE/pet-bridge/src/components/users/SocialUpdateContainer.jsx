@@ -20,28 +20,19 @@ const SocialUpdateContainer = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const userNickname = useSelector(selectNickname)
-  const userPhone = useSelector(selectPhone)
-  const userBirth = useSelector(selectBirth)
+  const userNickname = useSelector(selectNickname) || ""
+  const userPhone = useSelector(selectPhone) || ""
+  const userBirth = useSelector(selectBirth) || ""
 
   // 닉네임, 전화번호, 생일 상태에서 불러와서 저장
   useEffect(() => {
-    if (userNickname) {
-      updateFormData.nickname = userNickname
-    }
-  }, [userNickname])
+    setUpdateFormData({
+      nickname: userNickname,
+      birth: userBirth,
+      phone: userPhone,
+    })
+  }, [userNickname, userPhone, userBirth])
 
-  useEffect(() => {
-    if (userPhone) {
-      updateFormData.phone = userPhone
-    }
-  }, [userPhone])
-
-  useEffect(() => {
-    if (userBirth) {
-      updateFormData.birth = userBirth
-    }
-  }, [userBirth])
   // 입력시 state와 연동 처리
   // 회원가입 폼 제출을 위한 인자 저장 state
   const [updateFormData, setUpdateFormData] = useState({
@@ -69,13 +60,6 @@ const SocialUpdateContainer = () => {
     const code = event.target.value
     setPhoneCode(code)
   }
-
-  // const setError = (new_error, new_error_message) => {
-  //   console.log(new_error, new_error_message)
-  //   if (new_error) {
-  //     setErrors({...errors, [new_error]: new_error_message})
-  //   }
-  // }
 
   // 에러 메시지 저장 함수
   const [errors, setErrors] = useState({})
@@ -257,7 +241,7 @@ const SocialUpdateContainer = () => {
         />
       </div>
       {errors.nickname && (
-        <span className="text-alert col-span-12">{errors.nickname}</span>
+        <span className="col-span-12 text-alert">{errors.nickname}</span>
       )}
       {/* 전화번호 입력 창 */}
       <div className="grid w-full grid-cols-12 items-center gap-x-2.5">
@@ -267,7 +251,7 @@ const SocialUpdateContainer = () => {
               disabled={true}
               value={updateFormData.phone}
               type="phone"
-              className="bg-stroke col-span-9 my-1 rounded-md border p-2.5"
+              className="col-span-9 my-1 rounded-md border bg-stroke p-2.5"
               placeholder="휴대전화번호"
               id="phone"
               maxLength={255}
@@ -276,7 +260,7 @@ const SocialUpdateContainer = () => {
             <button
               disabled={true}
               type="button"
-              className="bg-stroke col-span-3 h-12 rounded-md border px-3.5 py-2.5"
+              className="col-span-3 h-12 rounded-md border bg-stroke px-3.5 py-2.5"
             >
               {isPhoneVerified ? (
                 "인증 완료"
@@ -341,7 +325,7 @@ const SocialUpdateContainer = () => {
           <button
             disabled={isPhoneVerified}
             type="button"
-            className="bg-mild col-span-3 h-12 rounded-md px-3.5 py-2.5"
+            className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
             onClick={onClickPhoneCheckHandler}
           >
             인증하기
@@ -351,7 +335,7 @@ const SocialUpdateContainer = () => {
         <></>
       )}
       {errors.phone && (
-        <span className="text-alert col-span-12">{errors.phone}</span>
+        <span className="col-span-12 text-alert">{errors.phone}</span>
       )}
       {isPhoneVerified && (
         <span className="col-span-12 px-2.5 text-green-500">
@@ -372,19 +356,19 @@ const SocialUpdateContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.birth && (
-          <span className="text-alert col-span-12">{errors.birth}</span>
+          <span className="col-span-12 text-alert">{errors.birth}</span>
         )}
       </div>
       <div className="my-5 grid w-full grid-cols-2 gap-10">
         {/* 회원가입 버튼 */}
         {isPhoneVerified ? (
-          <button className="bg-stroke h-12 rounded-md px-3.5 py-2.5">
+          <button className="h-12 rounded-md bg-stroke px-3.5 py-2.5">
             정보 입력
           </button>
         ) : (
           <button
             onClick={onSubmitHandler}
-            className="bg-mild h-12 rounded-md px-3.5 py-2.5"
+            className="h-12 rounded-md bg-mild px-3.5 py-2.5"
           >
             정보 입력
           </button>
@@ -394,7 +378,7 @@ const SocialUpdateContainer = () => {
         <Link
           to="/"
           type="button"
-          className="bg-mild rounded-md px-3.5 py-2.5 text-center"
+          className="rounded-md bg-mild px-3.5 py-2.5 text-center"
         >
           입력 취소
         </Link>

@@ -102,7 +102,9 @@ const ContractsCreateContainer = () => {
         navigate(`/users/${contractFormData.contractorId}`)
       } catch (error) {
         console.log(error)
-        alert("계약서 작성에 실패했습니다. 다시 시도해주세요.")
+        alert(
+          "계약서 작성에 실패했습니다. 계약서 내용 확인 후 다시 시도해주세요."
+        )
       }
     }
   }
@@ -260,7 +262,7 @@ const ContractsCreateContainer = () => {
         />
       </div>
       {/* 서명란 */}
-      <section className="">
+      <section className="h-60">
         <div className="flex h-40 w-full gap-10">
           {/* 보호자 서명 */}
           <div className="w-80">
@@ -271,7 +273,14 @@ const ContractsCreateContainer = () => {
             />
             <div className="flex gap-4 py-2.5">
               <span className="my-3 font-bold">서명</span>
-              {isPhoneCodeSent ? (
+              {isPhoneCodeChecked ? (
+                <button
+                  disabled={true}
+                  className={`rounded-2xl border bg-stroke p-2.5`}
+                >
+                  서명 완료
+                </button>
+              ) : isPhoneCodeSent ? (
                 <>
                   <input
                     type="number"
@@ -305,12 +314,6 @@ const ContractsCreateContainer = () => {
               title="계약자"
               nickname={contracteeInfo.nickname}
             />
-            {/* <div className="flex gap-4 p-2.5">
-              <p className="my-3 font-bold">서명</p>
-              <button className={`rounded-2xl border p-2.5 ${isPhoneCodeSent}`}>
-                서명 하기
-              </button>
-            </div> */}
           </div>
         </div>
       </section>
@@ -318,13 +321,6 @@ const ContractsCreateContainer = () => {
       {/* 클릭시 form 제출 */}
       <button
         disabled={!isPhoneCodeChecked}
-        type="button"
-        onClick={onSubmitHandler}
-        className="h-10 w-40 rounded-xl border-2 bg-mild"
-      >
-        계약서 작성하기
-      </button>
-      <button
         type="button"
         onClick={onSubmitHandler}
         className="h-10 w-40 rounded-xl border-2 bg-mild"

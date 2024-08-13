@@ -22,7 +22,7 @@ import AnimalDetailModify from "components/board/animals/AnimalDetailModify"
 import PetpickPage from "pages/PetpickPage"
 import PetpickWrite from "components/petpick/PetpickWrite"
 import PetpickComments from "components/petpick/PetpickComments"
-import PetpickDetail from "components/petpick/AnimalAd"
+import PetpickDetail from "components/petpick/PetpickDetail"
 import PetpickModify from "components/petpick/PetpickModify"
 
 import {useDispatch, useSelector} from "react-redux"
@@ -69,9 +69,6 @@ import PaymentFail from "components/payment/PaymentFail"
 
 // 메인페이지
 import MainPage from "pages/MainPage"
-import AiPage from "pages/AiPage"
-import AiEyes from "components/ai/AiEyes"
-import AiSkin from "components/ai/AiSkin"
 import ChatModal from "pages/ChatModal"
 
 import CallPage from "components/chat/CallPage"
@@ -180,17 +177,22 @@ function App() {
             <Route path="cancel" element={<PaymentCancel />} />
             <Route path="fail" element={<PaymentFail />} />
           </Route>
-          <Route path="/ai" element={<AiPage />}>
-            <Route path="eyes" element={<AiEyes />} />
-            <Route path="skin" element={<AiSkin />} />
-          </Route>
           <Route
             path="/recommendation"
             element={<RecommendationPage />}
           ></Route>
           <Route path="lost-and-found" element={<LostAndFoundPage />}>
             <Route path="" element={<LostAnimalMap />}></Route>
-            <Route path="report" element={<LostAnimalReport />}></Route>
+            <Route
+              path="report"
+              element={
+                <PrivateRoute
+                  component={<LostAnimalReport />}
+                  isLoading={isLoading}
+                  isAuthenticated={isAuthenticated}
+                />
+              }
+            ></Route>
             <Route path="details/:id" element={<ArticleDetail />}></Route>
           </Route>
         </Route>
