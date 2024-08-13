@@ -121,6 +121,7 @@ import CommentIcon from "components/common/CommentIcon"
 import Button from "components/common/Button"
 import SirenButton from "components/common/SirenButton"
 import DeleteConfirmationModal from "components/common/DeleteConfirmationModal"
+import ProfileForAnimal from "components/common/ProfileForAnimal"
 
 const ArticleDetail = () => {
   const [article, setArticle] = useState([])
@@ -184,7 +185,15 @@ const ArticleDetail = () => {
       />
       <div className="flex flex-row space-x-2 pl-6">
         <img src="/icons/icon-tag.svg" alt="Tag Icon" />
-        <Profile nickname={article.animalName} image={article.animalFilename} />
+        {article.animalId ? (
+          <ProfileForAnimal
+            animalname={article.animalName}
+            image={article.animalFilename}
+            animalId={article.animalId}
+          />
+        ) : (
+          <div>태그된 동물이 없습니다.</div>
+        )}
       </div>
       <hr />
       대표사진

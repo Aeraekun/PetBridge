@@ -45,7 +45,7 @@ const Profile = ({isMe, userId, nickname, image}) => {
   }, [])
 
   return (
-    <div className="relative flex w-fit h-12 items-center justify-start space-x-2.5">
+    <div className="relative flex h-12 w-fit items-center justify-start space-x-2.5">
       <button
         ref={profileRef}
         className="cursor-pointer border-none bg-transparent p-0"
@@ -59,9 +59,7 @@ const Profile = ({isMe, userId, nickname, image}) => {
         aria-expanded={isPopoverVisible}
       >
         <img
-          src={
-            image === "null" || image === null ? "/images/profile.jpg" : image
-          }
+          src={image || "/images/profilezz.jpg"}
           alt="프로필사진"
           className="size-12 rounded-full border"
         />

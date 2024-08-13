@@ -3,7 +3,7 @@ import FollowIcon from "./FollowIcon"
 const FollowButton = ({isFollowing, onClick}) => {
   return (
     <button onClick={onClick}>
-      {!isFollowing ? (
+      {isFollowing ? (
         <div className="m-0 flex h-8 flex-row items-center rounded border border-white bg-point  font-semibold  text-white hover:bg-mild">
           <FollowIcon isFollowing={true} size={"medium"} />
           <div className="text-white">팔로잉</div>
