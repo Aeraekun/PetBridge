@@ -39,6 +39,7 @@ const PetpickIconContainer = ({
 
     const newLikeState = !isLike
     setIsLike(newLikeState)
+    console.log(petpickId)
     try {
       if (newLikeState) {
         const res = await registPetPickLike(petpickId)
@@ -59,6 +60,7 @@ const PetpickIconContainer = ({
       return
     }
 
+    console.log(animalId)
     const newFollowState = !isFollow
     setIsFollow(newFollowState)
     try {
@@ -76,7 +78,8 @@ const PetpickIconContainer = ({
   }
 
   const handleCopyUrl = () => {
-    const url = `${window.location.href}/details/${petpickId}`
+    console.log(isLogin)
+    const url = `${window.location.href}/${petpickId}`
 
     navigator.clipboard
       .writeText(url)
