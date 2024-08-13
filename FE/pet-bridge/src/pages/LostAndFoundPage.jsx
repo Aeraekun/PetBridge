@@ -1,4 +1,4 @@
-import {useNavigate, Outlet} from "react-router-dom"
+import {useLocation, Outlet, NavLink} from "react-router-dom"
 
 const categories = [
   {id: 0, title: "실종동물지도", path: "/lost-and-found"},
@@ -6,24 +6,33 @@ const categories = [
 ]
 
 const CategoryNavbar = () => {
-  const navigate = useNavigate()
-  const handleNavigation = (path) => {
-    navigate(path)
-  }
-
+  const location = useLocation()
   return (
-    <ul className="flex h-12 items-center justify-start space-x-6 text-xl">
+    <nav className="my-2 flex h-12 items-center">
       {categories.map((category) => (
-        <li key={category.id} className="flex h-12 items-center">
-          <button
-            onClick={() => handleNavigation(category.path)}
-            className="flex h-12 items-center px-2.5 text-xl hover:text-blue-500"
-          >
-            {category.title}
-          </button>
-        </li>
+        <NavLink
+          key={category.id}
+          className={({isActive}) =>
+            `flex h-12 items-center px-2.5 text-xl ${
+              (isActive &&
+                category.id === 0 &&
+                location.pathname === "/lost-and-found") ||
+              (isActive &&
+                category.id !== 0 &&
+                location.pathname === `/lost-and-found/report`)
+                ? "border-b-4 border-mild font-bold"
+                : "border-b-2"
+            }`
+          }
+          to={category.path}
+          isActive={() => {
+            return location.pathname === category.path
+          }}
+        >
+          {category.title}
+        </NavLink>
       ))}
-    </ul>
+    </nav>
   )
 }
 
@@ -31,13 +40,9 @@ const LostAndFoundPage = () => {
   return (
     <div className="flex w-full justify-center">
       <div className="w-[1000px]">
-        {" "}
         {/* 1000px 고정 너비 설정 */}
-        <div className="mt-10 flex flex-col">
-          <CategoryNavbar /> {/* 카테고리 네비게이션 추가 */}
-        </div>
+        <CategoryNavbar /> {/* 카테고리 네비게이션 추가 */}
         <div className="flex flex-col items-center space-y-3">
-          <hr className="w-full border-gray-300" />
           <section className="flex w-full justify-center">
             <Outlet />
           </section>

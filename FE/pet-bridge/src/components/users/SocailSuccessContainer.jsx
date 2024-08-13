@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import {
   getUserInfoThunk,
   selectIsAuthenticated,
@@ -21,8 +22,8 @@ const SocialSuccessContainer = () => {
       dispatch(getUserInfoThunk())
 
       Toast.fire({
-        icon: "error",
-        title: "toast 알림이 정상적으로 실행되었습니다.",
+        icon: "success",
+        title: "소셜 로그인 성공",
       })
 
       navigate("/")

@@ -219,7 +219,10 @@ const ChatMainContainer = ({onStartCall}) => {
           <span className="font-bold">{opponentInfo.nickname}</span>
           <span>님과의 채팅</span>
         </div>
-        <div className="grow overflow-auto p-3" id="chat-container">
+        <div
+          className="hidden-scrollbar grow overflow-auto p-3 "
+          id="chat-container"
+        >
           <div ref={ref} />
           {messages.map((message, index) => (
             <MessageItem
@@ -240,7 +243,7 @@ const ChatMainContainer = ({onStartCall}) => {
             onCompositionStart={compositionStartHandler} // IME 입력 시작 감지
             onCompositionEnd={compositionEndHandler} // IME 입력 종료 감지
             type="text"
-            className="grow rounded-xl bg-stroke p-2 text-white"
+            className="bg-stroke grow rounded-xl p-2 text-white"
             placeholder="입력하세요"
             id="message-input"
           />
