@@ -1,5 +1,4 @@
 import StateBadge from "components/common/StateBadge"
-import DogImage from "../../assets/image/dog.png"
 import PetpickIconContainer from "./PetpickIconContainer"
 // import React, {useState} from "react"
 
@@ -30,7 +29,7 @@ const TaggedAnimalItem = ({animal, isFollowing, isLogin, onClick}) => {
     >
       <div className="flex space-x-3">
         <img
-          src={DogImage}
+          src={animal.filename}
           className="h-60 w-40 object-contain"
           alt="animalImage"
         />

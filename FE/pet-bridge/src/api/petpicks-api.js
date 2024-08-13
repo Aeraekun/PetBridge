@@ -242,9 +242,9 @@ export const getDetailPetPickLike = async (petPickId) => {
     if (res.status === 404) {
       // console.log("종아요 안누름")
     }
-    return res
+    return true
   } catch (error) {
-    return []
+    return false
   }
 }
 
@@ -256,13 +256,13 @@ export const getDetailFollow = async (animalId) => {
     if (res.status === 404) {
       // console.log("팔로우 안누름")
     }
-    return res
+    return true
   } catch (error) {
     if (error.response && error.response.status === 404) {
       // console.log("팔로우 안누름")
       return false // 404 상태에서는 false 반환
     }
     console.error("Request failed:", error)
-    return [] // 그 외의 오류에서는 빈 배열 반환
+    return false // 그 외의 오류에서는 빈 배열 반환
   }
 }
