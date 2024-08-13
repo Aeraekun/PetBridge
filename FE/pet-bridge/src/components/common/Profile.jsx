@@ -52,7 +52,7 @@ const Profile = ({isMe, userId, nickname, image}) => {
         aria-expanded={isPopoverVisible}
       >
         <img
-          src={image || "/images/profilezz.jpg"}
+          src={image || "/images/profile.jpg"}
           alt="프로필사진"
           className="size-12 rounded-full border"
         />
