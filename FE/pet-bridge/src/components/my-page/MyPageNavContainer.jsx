@@ -30,19 +30,19 @@ const MyPageNavList = () => {
     {id: itemId++, text: "내 펫픽", imgSrc: iconMyShorts, url: "petpics"},
     {
       id: itemId++,
-      text: "내 입양기록(계약서)",
+      text: "내 입양 계약",
       imgSrc: iconMyContracts,
       url: "contracts",
     },
     {
       id: itemId++,
-      text: "내 관심등록 동물",
+      text: "팔로우중인 동물",
       imgSrc: iconMyFavorites,
       url: "favorites",
     },
     {
       id: itemId++,
-      text: "내가 좋아요한 펫픽",
+      text: "내 좋아요",
       imgSrc: iconMyLikes,
       url: "likes",
     },

@@ -41,19 +41,21 @@ const AnimalBoardList = ({breed}) => {
 
   return (
     <>
-      <ul className="flex w-full flex-wrap justify-start gap-12">
+      <ul className="flex w-full flex-wrap justify-start gap-x-16">
         {animals ? (
           animals.map((item, index) => (
-            <li key={index}>
-              <AnimalItem
-                data={item}
-                onSelectAnimal={() => goAnimalDetail(item)}
-                isShelter={false}
-              />
-            </li>
+            <>
+              <li key={index}>
+                <AnimalItem
+                  data={item}
+                  onSelectAnimal={() => goAnimalDetail(item)}
+                  isShelter={false}
+                />
+              </li>
+            </>
           ))
         ) : (
-          <h3 className="mb-4 text-center text-3xl font-semibold">
+          <h3 className="mb-4 w-full text-center text-3xl font-semibold">
             현재 등록된 동물이 없습니다.
           </h3>
         )}
