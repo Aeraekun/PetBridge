@@ -24,8 +24,8 @@ const MyPageContractsContainer = () => {
       // 데이터 로드 성공시 (응답 배열에 데이터가 있다면)
       if (newItems && newItems.length > 0) {
         // 로딩상태 해제, 새로 받아온 값을 배열에 추가
-        setItems((prevItems) => [...prevItems, ...newItems])
         setIsLoading(false)
+        setItems((prevItems) => [...prevItems, ...newItems])
       }
     }
 
@@ -83,7 +83,7 @@ const MyPageContractsContainer = () => {
         <div />
         <button className="text-2xl font-bold">내 입양기록</button>
         <Link
-          className="absolute right-1.5 top-1.5 rounded-xl bg-mild p-2.5"
+          className="bg-mild absolute right-1.5 top-1.5 rounded-xl p-2.5"
           to="/contracts/create"
         >
           입양 보내기
@@ -92,11 +92,11 @@ const MyPageContractsContainer = () => {
       </div>
       {isLoading ? (
         <div className="flex size-full  flex-col items-center justify-center">
-          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
           <span className="px-5 text-6xl font-bold">Loading...</span>
         </div>
       ) : (
-        <div className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
+        <div className="hidden-scrollbar flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
           {items.map((item, index) => (
             <Link
               key={index}
@@ -119,7 +119,7 @@ const MyPageContractsContainer = () => {
       )}
       {isLoadingMore ? (
         <div className="flex items-center">
-          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
+          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
           <span>추가 데이터를 로딩중입니다</span>
         </div>
       ) : null}

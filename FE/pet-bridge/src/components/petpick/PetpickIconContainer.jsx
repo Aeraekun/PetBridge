@@ -5,7 +5,7 @@ import CommentIcon from "../common/CommentIcon"
 import FollowIcon from "../common/FollowIcon"
 import TagIcon from "../common/TagIcon"
 // import {useLocation, useNavigate} from "react-router-dom"
-import {useState} from "react"
+import {useEffect, useState} from "react"
 import {
   deleteFollow,
   deletePetPickLike,
@@ -28,8 +28,22 @@ const PetpickIconContainer = ({
   const isVertical = direct === "col"
   // const location = useLocation()
   // const navigate = useNavigate()
+  // console.log(
+  //   "petpickId : ",
+  //   petpickId,
+  //   "isFollowing : ",
+  //   isFollowing,
+  //   "  isLiking : ",
+  //   isLiking
+  // )
   const [isFollow, setIsFollow] = useState(isFollowing)
   const [isLike, setIsLike] = useState(isLiking)
+
+  useEffect(() => {
+    // console.error("팔로우 좋아요 바뀜")
+    setIsFollow(isFollowing)
+    setIsLike(isLiking)
+  }, [isFollowing, isLiking])
 
   const handleLike = async () => {
     if (!isLogin) {
@@ -97,6 +111,9 @@ const PetpickIconContainer = ({
   const [showMessage, setShowMessage] = useState(false)
   return (
     <>
+      {isFollow ? <>팔로우</> : <>언팔</>}
+      <br />
+      {isLike ? <>좋아요</> : <>안좋아요</>}
       {isFollowButton ? (
         <FollowButton isFollowing={isFollow} onClick={handleFollow} />
       ) : (

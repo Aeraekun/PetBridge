@@ -78,7 +78,7 @@ export const getMyLikes = async (searchParams) => {
   const params = {
     page: searchParams.page,
     size: searchParams.size,
-    initcommentsize: 0,
+    initcommentsize: 1,
   }
   try {
     const res = await axiosInstance.get("/petpicks/like", {
