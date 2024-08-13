@@ -402,14 +402,14 @@ const LostAnimalMap = () => {
         ></div>
       </div>
 
-      <div className="absolute  right-[10px] top-[70px] z-50  flex h-[500px] w-[110px] flex-col items-center  justify-between rounded-xl border bg-white p-2">
+      <div className="absolute  right-[10px] top-[70px] z-50  flex h-[520px] w-[110px] flex-col items-center justify-between space-y-2  rounded-xl border bg-white p-2">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
           disabled={currentPage === 0}
         >
-          🔺
+          <img src="/icons/icon_arrow_drop_up.svg" alt="up" />
         </button>
-        <ul className="flex h-[450px] flex-col space-y-2  overflow-auto  ">
+        <ul className="flex h-[480px] flex-col space-y-2  overflow-auto  ">
           {lostArticles ? (
             lostArticles.map((article) => (
               <li key={article.id}>
@@ -432,7 +432,7 @@ const LostAnimalMap = () => {
           }}
           disabled={currentPage === totalPages}
         >
-          🔻
+          <img src="/icons/icon_arrow_drop_down.svg" alt="up" />
         </button>
       </div>
     </div>
