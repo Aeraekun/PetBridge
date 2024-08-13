@@ -14,7 +14,7 @@ import SearchDropDown from "components/common/SearchDropDown"
 import AnimalTag from "components/common/AnimalTag"
 import {selectOpponentInfo} from "features/chat/chat-slice"
 import {postPhoneCheck, postPhoneVerificationCode} from "api/users-api"
-import ContractBackground from "assets/image/contract-bg.webp"
+// import ContractBackground from "assets/image/contract-bg.webp"
 import Swal from "sweetalert2"
 import {Toast} from "utils/common-utils"
 
@@ -98,8 +98,9 @@ const ContractsCreateContainer = () => {
       title: "계약서를 작성하시겠습니까?",
       showCancelButton: true,
       confirmButtonText: "네",
-      confirmButtonColor: "#28a745",
+      confirmButtonColor: "#fe85ac",
       cancelButtonText: "아니요",
+      cancelButtonColor: "#a4a2a1",
     })
     // 폼의 유효성 검사
     if (result.isConfirmed) {
@@ -143,8 +144,16 @@ const ContractsCreateContainer = () => {
   // 3. 인증코드 입력 및 작성
   // 4. 인증코드 확인 완료시 제출 버튼 활성화
   const clickSignHandler = async () => {
+    const result = await Swal.fire({
+      title: "SMS 서명을 진행하시겠어요?",
+      showCancelButton: true,
+      confirmButtonText: "네",
+      confirmButtonColor: "#fe85ac",
+      cancelButtonText: "아니요",
+      cancelButtonColor: "#a4a2a1",
+    })
     // 서명 버튼 클릭으로 SMS를 보낼지 확인
-    if (confirm("SMS 서명하시겠습니까? ")) {
+    if (result.isConfirmed) {
       const isSent = await postPhoneVerificationCode({phone: phone})
       console.log(isSent)
       if (isSent) {
@@ -219,7 +228,7 @@ const ContractsCreateContainer = () => {
             <select
               name="month"
               id="month"
-              className="h-12 w-40 rounded-lg border-2 text-center font-bold"
+              className="relative h-12 w-40 appearance-none rounded-lg border-2 text-center font-bold"
               onChange={changeHandler}
             >
               <option value="" defaultValue="">
@@ -254,9 +263,9 @@ const ContractsCreateContainer = () => {
       </section>
       {/* 계약서 미리보기란 */}
       <div
-        className="flex h-[600px] w-full flex-col items-center p-5"
+        className="flex h-[600px] w-full flex-col items-center bg-gray-100 p-5"
         style={{
-          backgroundImage: `url(${ContractBackground})`,
+          // backgroundImage: `url(${ContractBackground})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           opacity: 0.9,
@@ -334,10 +343,11 @@ const ContractsCreateContainer = () => {
         disabled={!isPhoneCodeChecked}
         type="button"
         onClick={onSubmitHandler}
-        className="h-10 w-40 rounded-xl border-2 bg-mild"
+        className="h-16 w-56 rounded-xl bg-mild text-xl"
       >
         계약서 작성하기
       </button>
+      <div className="h-20"></div>
     </div>
   )
 }

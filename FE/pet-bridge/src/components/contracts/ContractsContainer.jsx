@@ -116,8 +116,9 @@ const ContractsContainer = () => {
       title: "환급 요청을 하시겠습니까?",
       showCancelButton: true,
       confirmButtonText: "네",
-      confirmButtonColor: "#28a745",
+      confirmButtonColor: "#fe85ac",
       cancelButtonText: "아니요",
+      cancelButtonColor: "#a4a2a1",
     })
     if (result.isConfirmed) {
       try {
@@ -154,8 +155,9 @@ const ContractsContainer = () => {
       title: "SMS 서명하시겠습니까?",
       showCancelButton: true,
       confirmButtonText: "네",
-      confirmButtonColor: "#28a745",
+      confirmButtonColor: "#fe85ac",
       cancelButtonText: "아니요",
+      cancelButtonColor: "#a4a2a1",
     })
     if (result.isConfirmed) {
       const isSent = await postPhoneVerificationCode({phone: phone})
@@ -195,8 +197,9 @@ const ContractsContainer = () => {
         "결제가 완료되면 계약이 자동으로 체결됩니다. 결제 화면으로 이동하시겠습니까?",
       showCancelButton: true,
       confirmButtonText: "네",
-      confirmButtonColor: "#28a745",
+      confirmButtonColor: "#fe85ac",
       cancelButtonText: "아니요",
+      cancelButtonColor: "#a4a2a1",
     })
     if (result.isConfirmed) {
       try {
@@ -309,10 +312,10 @@ const ContractsContainer = () => {
                   />
                 ))}
               </div>
-              <div className="flex h-20 items-center justify-center">
+              <div className="my-5 flex h-20 items-center justify-center">
                 <button
                   disabled={true}
-                  className="rounded-xl bg-green-100 p-2.5 font-bold"
+                  className="rounded-xl bg-green-100 p-2.5 text-xl font-bold"
                 >
                   <p>환급 신청 완료!</p>
                   <p>환급 대기 중입니다.</p>
@@ -394,7 +397,7 @@ const ContractsContainer = () => {
               {/* 클릭시 결제 후 계약 체결하기 */}
               <button
                 disabled={!isPhoneCodeChecked}
-                className="rounded-xl bg-mild p-2.5 text-white"
+                className="h-16 w-56 rounded-xl bg-mild p-2.5 text-xl text-white"
                 onClick={clickPaymentHandler}
               >
                 계약 체결하기
@@ -454,6 +457,7 @@ const ContractsContainer = () => {
           )}
         </>
       )}
+      <div className="h-20"></div>
     </div>
   )
 }
