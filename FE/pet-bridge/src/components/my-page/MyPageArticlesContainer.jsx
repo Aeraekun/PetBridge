@@ -67,7 +67,7 @@ const MyPageArtilcesContainer = () => {
         setIsMoreRemaind(false)
       }
     } catch (error) {
-      alert("추가 데이터 로드에 실패했습니다.")
+      console.log("추가 데이터 로드에 실패했습니다.")
       console.log(error)
     }
   }
