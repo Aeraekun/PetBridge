@@ -396,7 +396,7 @@ const LostAnimalMap = () => {
         <div
           id="map"
           style={{
-            width: "800px",
+            width: "1000px",
             height: "700px",
           }}
         ></div>
