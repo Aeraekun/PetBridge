@@ -69,7 +69,7 @@ const PetpickPage = () => {
       ) {
         return res.data.response.body.items.item
       } else {
-        alert("추가 데이터 로드에 실패했습니다.")
+        console.log("추가 데이터 로드에 실패했습니다.")
         return [] // 빈 배열 반환
       }
     }

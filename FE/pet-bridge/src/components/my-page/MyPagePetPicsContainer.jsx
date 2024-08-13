@@ -50,7 +50,7 @@ const MyPagePetPicsContainer = () => {
         setIsMoreRemaind(false)
       }
     } catch (error) {
-      alert("추가 데이터 로드에 실패했습니다.")
+      console.log("추가 데이터 로드에 실패했습니다.")
       console.log(error)
     }
   }
@@ -87,7 +87,7 @@ const MyPagePetPicsContainer = () => {
 
   return (
     <div className="flex h-full  min-w-80 flex-col items-center">
-      <div className="flex w-full justify-center p-2.5 ">
+      <div className="relative flex w-full justify-center p-2.5 ">
         <button className="text-2xl font-bold">내 펫픽</button>
         <Link
           className=" absolute right-1.5 top-1.5  rounded-xl bg-mild p-2.5"

@@ -5,7 +5,7 @@ import CommentIcon from "../common/CommentIcon"
 import FollowIcon from "../common/FollowIcon"
 import TagIcon from "../common/TagIcon"
 // import {useLocation, useNavigate} from "react-router-dom"
-import {useEffect, useState} from "react"
+import {useState} from "react"
 import {
   deleteFollow,
   deletePetPickLike,
@@ -17,12 +17,12 @@ import FollowButton from "components/common/FollowButton"
 const PetpickIconContainer = ({
   direct,
   toggleComment,
+  toggleDetail,
   petpickId,
   animalId,
   isFollowing,
   isLiking,
   isLogin,
-  toggleDetail,
   isFollowButton,
 }) => {
   const isVertical = direct === "col"
@@ -30,21 +30,6 @@ const PetpickIconContainer = ({
   // const navigate = useNavigate()
   const [isFollow, setIsFollow] = useState(isFollowing)
   const [isLike, setIsLike] = useState(isLiking)
-
-  useEffect(() => {
-    // console.log("Id: ", petpickId, "  follow", isFollowing, " like", isLiking)
-  }, [isFollow, isLike])
-  // const goPetpickTagDetail = () => {
-  //   const currentPath = location.pathname
-  //   const tagPath = `/petpick/${petpickId}/tag`
-  //   const basePath = `/petpick`
-  //   console.log(currentPath)
-  //   if (currentPath === tagPath) {
-  //     navigate(basePath)
-  //   } else {
-  //     navigate(tagPath)
-  //   }
-  // }
 
   const handleLike = async () => {
     if (!isLogin) {
@@ -91,7 +76,7 @@ const PetpickIconContainer = ({
   }
 
   const handleCopyUrl = () => {
-    const url = window.location.href
+    const url = `${window.location.href}/details/${petpickId}`
 
     navigator.clipboard
       .writeText(url)

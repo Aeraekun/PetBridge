@@ -6,6 +6,7 @@ import {useEffect} from "react"
 import {useDispatch, useSelector} from "react-redux"
 import {Link, useNavigate} from "react-router-dom"
 import logoImage from "assets/image/logo.png"
+import {Toast} from "utils/common-utils"
 
 const SocialSuccessContainer = () => {
   // 로그인 완료 상태에서 확인
@@ -18,6 +19,12 @@ const SocialSuccessContainer = () => {
   useEffect(() => {
     const getUserInfoAndNavigate = async () => {
       dispatch(getUserInfoThunk())
+
+      Toast.fire({
+        icon: "error",
+        title: "toast 알림이 정상적으로 실행되었습니다.",
+      })
+
       navigate("/")
     }
     // isAuthenticated가 true일 때만 유저 정보를 받아오고, 메인페이지로 redirect 시켜줌
