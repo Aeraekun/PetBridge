@@ -6,6 +6,7 @@ import {useNavigate} from "react-router-dom"
 // import AnimalSearchForm from "components/board/animals/AnimalSearchForm"
 import {getAnimalList} from "api/animals-api"
 import Pagination from "components/common/Pagination"
+import searchIcon from "../../../assets/icons/icon-search.png"
 
 //임시보호동물게시판
 const Search = ({searchParams}) => {
@@ -36,12 +37,12 @@ const Search = ({searchParams}) => {
   }
 
   return (
-    <div className="flex w-full items-center justify-between">
+    <div className="flex w-full items-center justify-between rounded-md border border-[#D9D9D9] bg-pink-100 p-4">
       <select
         id="kind"
         value={processstate}
         onChange={(e) => setProcessstate(e.target.value)}
-        className="border-stroke h-12 w-48 rounded-xl border-2 p-2"
+        className="h-12 w-48 rounded-xl border-2 border-stroke p-2"
       >
         <option value="전체">전체</option>
         <option value="임시보호">임시보호</option>
@@ -54,7 +55,7 @@ const Search = ({searchParams}) => {
       <input
         type="text"
         placeholder="보호 장소를 입력하세요."
-        className="border-stroke mr-12 h-12 w-full rounded-xl border-2 p-2"
+        className="mr-12 h-12 w-full rounded-xl border-2 border-stroke p-2"
         onKeyDown={handleKeyDown}
         value={careaddr}
         onChange={(e) => setCareaddr(e.target.value)}
@@ -63,8 +64,9 @@ const Search = ({searchParams}) => {
         onClick={() => {
           handleButtonClick()
         }}
-        className="flex h-10 w-36 items-center justify-center rounded-xl bg-green-600 text-white "
+        className="flex h-10 w-36 items-center justify-center rounded-xl bg-mild text-black "
       >
+        <img src={searchIcon} alt="Search Icon" className="mr-2 size-[20px]" />
         검색
       </button>
     </div>

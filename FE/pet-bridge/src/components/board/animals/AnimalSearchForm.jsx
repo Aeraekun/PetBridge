@@ -6,6 +6,7 @@ import React, {useEffect, useState} from "react"
 import {getBreedAPI, getSidoAPI, getSigunguAPI} from "api/animals-api"
 import DatePicker from "react-datepicker"
 import {format} from "date-fns"
+import searchIcon from "../../../assets/icons/icon-search.png"
 
 const AnimalSearchForm = ({searchParams, isShelter}) => {
   const [sido, setSido] = useState([])
@@ -154,7 +155,7 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
   }
 
   return (
-    <div className="p-4">
+    <div className="rounded-md border border-[#D9D9D9] bg-pink-100 p-4">
       {isShelter ? (
         <div>
           <h1 className="mb-4 text-2xl font-bold">보호소 동물 검색</h1>
@@ -181,17 +182,17 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
         <div className="mb-4 text-xl font-semibold">임시보호동물 검색</div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 ">
         <div className="flex space-x-4">
           <div className="flex-1">
-            <label htmlFor="sido" className="mb-1 block">
+            <label htmlFor="sido" className="mb-1 block w-[425px]">
               시도:
             </label>
             <select
               id="sido"
               value={selectedSido}
               onChange={(e) => setSelectedSido(e.target.value)}
-              className="w-full rounded-md border border-[#D9D9D9] p-2"
+              className="w-[425px] rounded-md border border-[#D9D9D9] p-2"
             >
               <option value="">선택</option>
               {sido &&
@@ -237,7 +238,7 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
               onChange={(e) =>
                 setSelectedUpKindCd(parseInt(e.target.value, 10))
               }
-              className="w-full rounded-md border border-[#D9D9D9] p-2"
+              className="w-[425px] rounded-md border border-[#D9D9D9] p-2"
             >
               <option value="">선택</option>
               <option value="417000">개</option>
@@ -272,8 +273,13 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
         <div className="mt-4 flex justify-center">
           <button
             type="submit"
-            className="rounded-md bg-green-200 px-4 py-2 text-black"
+            className="flex items-center rounded-md border border-[#D9D9D9] bg-mild px-4 py-2 text-black"
           >
+            <img
+              src={searchIcon}
+              alt="Search Icon"
+              className="mr-2 size-[20px]"
+            />
             검색
           </button>
         </div>
