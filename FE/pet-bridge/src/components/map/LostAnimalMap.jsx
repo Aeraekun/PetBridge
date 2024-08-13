@@ -207,7 +207,7 @@
 
 import React, {useEffect, useState} from "react"
 import markerImg from "../../assets/image/marker.png"
-import {getArticle} from "../../api/boards-api"
+import {getLostArticle} from "../../api/boards-api"
 import {useNavigate} from "react-router-dom"
 
 const {kakao} = window
@@ -242,133 +242,146 @@ const LostAnimalMap = () => {
   const [searchParams, setSearchParams] = useState({})
   const [currentPage, setCurrentPage] = useState(0)
   const [lostArticles, setLostArticles] = useState([])
+  const [centerlat, setCenterlat] = useState(36.355383)
+  const [centerlon, setCenterlon] = useState(127.298445)
+  const [map, setMap] = useState(null)
+
   const navigate = useNavigate()
 
   useEffect(() => {
+    console.log(centerlat, centerlon)
     setSearchParams((prevParams) => ({
       ...prevParams,
       page: currentPage,
       size: pageSize,
       type: "LOST",
+      lat: centerlat,
+      lon: centerlon,
     }))
-  }, [currentPage])
+  }, [currentPage, centerlon])
 
   useEffect(() => {
-    getArticle(searchParams)
-      .then((response) => {
-        setTotalPages(response.totalPages)
-        setLostArticles(response.content || [])
-        console.log(response)
-        const markers = lostArticles.map((item) => ({
-          id: item.id,
-          position: new kakao.maps.LatLng(
-            parseFloat(item.lat),
-            parseFloat(item.lon)
-          ),
-          content: `
-            <div style="position: relative; width: max-content; padding: 10px; border: 2px solid #fcd5ce; border-radius: 10px; background-color: white; text-align: center; display: flex; flex-direction: column; align-items: center;">
-              <img src="${item.thumbnail}" alt="${item.title}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 5px;">
-              <p style="margin: 10px 0 5px 0; font-weight: bold;">${item.title}</p>
-              <div style="display: flex; align-items: center; justify-content: center;">
-                <a href="/communities/details/${item.id}" style="
-                  display: inline-block;
-                  margin-top: 5px;
-                  color: #fcd5ce;
-                  text-decoration: none;
-                  border: 1px solid #fcd5ce;
-                  border-radius: 3px;
-                  padding: 3px 8px;
-                  background-color: white;
-                ">자세히 보기</a>
-              </div>
-            </div>
-          `,
-          image: markerImg,
-        }))
-
-        setFilteredMarkers(markers)
-      })
-      .catch((error) => {
-        console.error("Failed to fetch data:", error)
-      })
+    if (searchParams) {
+      getLostArticle(searchParams)
+        .then((response) => {
+          setTotalPages(response.totalPages)
+          setLostArticles(response.content || [])
+          console.log(response.content)
+        })
+        .catch((error) => {
+          console.error("Failed to fetch data:", error)
+        })
+    }
   }, [searchParams])
+
+  useEffect(() => {
+    const markers = lostArticles.map((item) => ({
+      id: item.id,
+      position: new kakao.maps.LatLng(
+        parseFloat(item.lat),
+        parseFloat(item.lon)
+      ),
+      content: `
+        <div style="position: relative; width: max-content; padding: 10px; border: 2px solid #fcd5ce; border-radius: 10px; background-color: white; text-align: center; display: flex; flex-direction: column; align-items: center;">
+          <img src="${item.thumbnail}" alt="${item.title}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 5px;">
+          <p style="margin: 10px 0 5px 0; font-weight: bold;">${item.title}</p>
+          <div style="display: flex; align-items: center; justify-content: center;">
+            <a href="/communities/details/${item.id}" style="
+              display: inline-block;
+              margin-top: 5px;
+              color: #fcd5ce;
+              text-decoration: none;
+              border: 1px solid #fcd5ce;
+              border-radius: 3px;
+              padding: 3px 8px;
+              background-color: white;
+            ">자세히 보기</a>
+          </div>
+        </div>
+      `,
+      image: markerImg,
+    }))
+    // console.log(markers)
+    setFilteredMarkers(markers)
+  }, [lostArticles])
 
   useEffect(() => {
     const container = document.getElementById("map")
     const defaultOptions = {
-      center: new kakao.maps.LatLng(36.355383, 127.298445),
+      center: new kakao.maps.LatLng(centerlat, centerlon),
       level: 3,
     }
 
-    const map = new kakao.maps.Map(container, defaultOptions)
-
+    const mapInstance = new kakao.maps.Map(container, defaultOptions)
     const mapTypeControl = new kakao.maps.MapTypeControl()
-    map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT)
+    mapInstance.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT)
 
     const zoomControl = new kakao.maps.ZoomControl()
-    map.addControl(zoomControl, kakao.maps.ControlPosition.TOPLEFT)
+    mapInstance.addControl(zoomControl, kakao.maps.ControlPosition.TOPLEFT)
 
-    map.setKeyboardShortcuts(true)
+    mapInstance.setKeyboardShortcuts(true)
+    setMap(mapInstance)
+  }, [])
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const lat = position.coords.latitude
-        const lon = position.coords.longitude
-        const currentPosition = new kakao.maps.LatLng(lat, lon)
-        map.setCenter(currentPosition)
+  useEffect(() => {
+    const markers = []
+    if (map && filteredMarkers.length > 0) {
+      let currentOverlay = null
+
+      filteredMarkers.forEach((markerData) => {
+        const {position, content, image} = markerData
+
+        const imageSize = new kakao.maps.Size(50, 50)
+        const imageOption = {offset: new kakao.maps.Point(25, 50)}
+
+        const markerImage = new kakao.maps.MarkerImage(
+          image,
+          imageSize,
+          imageOption
+        )
+
+        const marker = new kakao.maps.Marker({
+          position,
+          image: markerImage,
+          clickable: true,
+        })
+
+        marker.setMap(map)
+        markers.push(marker)
+
+        const customOverlay = new kakao.maps.CustomOverlay({
+          position,
+          content,
+          xAnchor: 0.5,
+          yAnchor: 0,
+          removable: false,
+        })
+
+        kakao.maps.event.addListener(marker, "click", function () {
+          if (currentOverlay) {
+            currentOverlay.setMap(null)
+          }
+
+          if (currentOverlay !== customOverlay) {
+            customOverlay.setMap(map)
+            currentOverlay = customOverlay
+          } else {
+            currentOverlay = null
+          }
+        })
       })
     }
-
-    const markers = []
-    let currentOverlay = null
-
-    filteredMarkers.forEach((markerData) => {
-      const {position, content, image} = markerData
-
-      const imageSize = new kakao.maps.Size(50, 50)
-      const imageOption = {offset: new kakao.maps.Point(25, 50)}
-
-      const markerImage = new kakao.maps.MarkerImage(
-        image,
-        imageSize,
-        imageOption
-      )
-
-      const marker = new kakao.maps.Marker({
-        position,
-        image: markerImage,
-        clickable: true,
+    if (map) {
+      kakao.maps.event.addListener(map, "dragend", function () {
+        // 지도의 중심좌표를 얻어옵니다
+        setCenterlat(map.getCenter().getLat())
+        setCenterlon(map.getCenter().getLng())
       })
-
-      marker.setMap(map)
-      markers.push(marker)
-
-      const customOverlay = new kakao.maps.CustomOverlay({
-        position,
-        content,
-        xAnchor: 0.5,
-        yAnchor: 0,
-        removable: false,
-      })
-
-      kakao.maps.event.addListener(marker, "click", function () {
-        if (currentOverlay) {
-          currentOverlay.setMap(null)
-        }
-
-        if (currentOverlay !== customOverlay) {
-          customOverlay.setMap(map)
-          currentOverlay = customOverlay
-        } else {
-          currentOverlay = null
-        }
-      })
-    })
-
+    }
     return () => {
       markers.forEach((marker) => marker.setMap(null))
     }
-  }, [filteredMarkers])
+  }, [lostArticles, map, filteredMarkers])
 
   const goDetail = (articleId) => {
     console.log(articleId)
@@ -389,14 +402,14 @@ const LostAnimalMap = () => {
         ></div>
       </div>
 
-      <div className="absolute  right-[10px] top-[70px] z-50  flex h-[500px] w-[110px] flex-col items-center  justify-between rounded-xl border bg-white p-2">
+      <div className="absolute  right-[10px] top-[70px] z-50  flex h-[520px] w-[110px] flex-col items-center justify-between space-y-2  rounded-xl border bg-white p-2">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
           disabled={currentPage === 0}
         >
-          🔺
+          <img src="/icons/icon_arrow_drop_up.svg" alt="up" />
         </button>
-        <ul className="flex h-[450px] flex-col space-y-2  overflow-auto  ">
+        <ul className="flex h-[480px] flex-col space-y-2  overflow-auto  ">
           {lostArticles ? (
             lostArticles.map((article) => (
               <li key={article.id}>
@@ -419,7 +432,7 @@ const LostAnimalMap = () => {
           }}
           disabled={currentPage === totalPages}
         >
-          🔻
+          <img src="/icons/icon_arrow_drop_down.svg" alt="up" />
         </button>
       </div>
     </div>

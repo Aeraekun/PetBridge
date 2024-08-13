@@ -14,6 +14,17 @@ export const getArticle = async (searchParams) => {
   }
 }
 
+//게시글 가져오기
+export const getLostArticle = async (searchParams) => {
+  try {
+    const res = await axios.get(`${BOARD_API_URL}/lost`, {params: searchParams})
+    return res.data
+  } catch (e) {
+    console.error(e)
+    return []
+  }
+}
+
 //게시글 상세 조회 (id)
 export const getArticleDetail = async (id) => {
   try {
