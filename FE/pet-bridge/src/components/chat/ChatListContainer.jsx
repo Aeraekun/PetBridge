@@ -147,7 +147,7 @@ const ChatListContainer = () => {
           </div>
         </div>
       </div>
-      <div className="w-full grow divide-y overflow-x-hidden overflow-y-scroll">
+      <div className="hidden-scrollbar w-full grow divide-y overflow-x-hidden overflow-y-scroll">
         {chatList.map((chat) => (
           <ChatListItem
             key={chat.id}

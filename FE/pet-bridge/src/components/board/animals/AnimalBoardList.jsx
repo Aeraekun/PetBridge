@@ -36,12 +36,12 @@ const Search = ({searchParams}) => {
   }
 
   return (
-    <div className="flex w-full items-center justify-between px-10">
+    <div className="flex w-full items-center justify-between">
       <select
         id="kind"
         value={processstate}
         onChange={(e) => setProcessstate(e.target.value)}
-        className="h-12 w-48 rounded-xl border-2 border-stroke p-2"
+        className="border-stroke h-12 w-48 rounded-xl border-2 p-2"
       >
         <option value="전체">전체</option>
         <option value="임시보호">임시보호</option>
@@ -54,7 +54,7 @@ const Search = ({searchParams}) => {
       <input
         type="text"
         placeholder="보호 장소를 입력하세요."
-        className="mr-12 h-12 w-full rounded-xl border-2 border-stroke p-2"
+        className="border-stroke mr-12 h-12 w-full rounded-xl border-2 p-2"
         onKeyDown={handleKeyDown}
         value={careaddr}
         onChange={(e) => setCareaddr(e.target.value)}
@@ -127,30 +127,16 @@ const AnimalBoardList = () => {
     <>
       <Search searchParams={handleSearchForm} />
       {/* <AnimalSearchForm searchParams={handleSearchForm2} isShelter={false} /> */}
-
-      <Button text={"등록하기"} onClick={goRegist} />
-
-      <div className="flex space-x-5">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
-          disabled={currentPage === 0}
-        >
-          ◀이전
-        </button>
-
-        <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages - 1}
-        >
-          다음▶{" "}
-        </button>
+      <div
+        className="fixed top-20 z-10 flex justify-end"
+        style={{left: "calc(50% + 35%)", top: "90%"}}
+      >
+        <Button text={"등록하기"} onClick={goRegist} />
       </div>
-      <ul className="flex w-full flex-wrap justify-start gap-4">
+      <ul className="relative flex w-full flex-wrap justify-start gap-10">
         {animals ? (
           animals.map((item, index) => (
-            <li key={index}>
+            <li key={index} className="grow">
               <AnimalItem
                 data={item}
                 onSelectAnimal={() => goAnimalDetail(item)}
@@ -161,6 +147,9 @@ const AnimalBoardList = () => {
         ) : (
           <div>등록된 동물이 없습니다.</div>
         )}
+        <li className="w-[300px] grow"></li>
+        <li className="w-[300px] grow"></li>
+        <li className="w-[300px] grow"></li>
       </ul>
       <Pagination
         currentPage={currentPage}

@@ -41,7 +41,7 @@ const AnimalBoardList = ({breed}) => {
 
   return (
     <>
-      <ul className="flex w-full flex-wrap justify-start gap-4">
+      <ul className="flex w-full flex-wrap justify-start gap-12">
         {animals ? (
           animals.map((item, index) => (
             <li key={index}>

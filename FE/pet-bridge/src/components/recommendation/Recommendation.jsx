@@ -276,9 +276,9 @@ const Chatbot = () => {
             <>
               {questions[currentQuestion] && (
                 <>
-                  <h2 className="mb-8 text-4xl font-semibold">
+                  <p className="mb-8 text-center text-4xl font-semibold">
                     {questions[currentQuestion].question}
-                  </h2>
+                  </p>
                   <ul className="w-full">
                     {questions[currentQuestion].options.map((option, index) => (
                       <li key={index} className="mb-4">

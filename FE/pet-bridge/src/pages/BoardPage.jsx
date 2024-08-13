@@ -1,4 +1,5 @@
-import {useNavigate, Outlet} from "react-router-dom"
+// import {useNavigate, Outlet, NavLink} from "react-router-dom"
+import {Outlet, NavLink, useLocation} from "react-router-dom"
 
 // import ArticleBoardList from "../components/board/ArticleBoardList"
 
@@ -11,25 +12,39 @@ const categories = [
 ]
 
 const BoardNavbar = () => {
-  const navigate = useNavigate()
-  const handleNavigation = (bcode) => {
-    let path = bcode === 0 ? `/communities` : `/communities/${bcode}`
-    navigate(path)
-  }
+  const location = useLocation()
+
   return (
-    <ul className="flex h-12 items-center ">
+    <nav className="my-2 flex h-12 items-center">
       {categories.map((category) => (
-        <li key={category.id} className="flex h-12 items-center px-2.5 text-xl">
-          <button
-            onClick={() => handleNavigation(category.id)}
-            className="flex h-12 items-center px-2.5 text-xl"
-          >
-            <div className="cursor-pointer"> </div>
-            {category.title}
-          </button>
-        </li>
+        <NavLink
+          key={category.id}
+          to={
+            category.id === 0 ? "/communities" : `/communities/${category.id}`
+          }
+          isActive={() => {
+            if (category.id === 0) {
+              return location.pathname === "/communities"
+            }
+            return location.pathname === `/communities/${category.id}`
+          }}
+          className={({isActive}) =>
+            `flex h-12 items-center px-2.5 text-xl ${
+              (isActive &&
+                category.id === 0 &&
+                location.pathname === "/communities") ||
+              (isActive &&
+                category.id !== 0 &&
+                location.pathname === `/communities/${category.id}`)
+                ? "border-b-4 border-mild font-bold"
+                : "border-b-2"
+            }`
+          }
+        >
+          {category.title}
+        </NavLink>
       ))}
-    </ul>
+    </nav>
   )
 }
 
@@ -37,9 +52,8 @@ const BoardPage = () => {
   // const [selectedCategory, setSelectedCategory] = useState(categories[0].id)
 
   return (
-    <div className="my-10 sm:min-w-[900px] flex min-h-screen w-[400px] max-w-[1000px] flex-col space-y-3 sm:w-11/12">
+    <div className="mb-10 flex min-h-screen w-[400px] max-w-[1000px] flex-col space-y-3 sm:w-11/12 sm:min-w-[900px]">
       <BoardNavbar />
-      <hr className="" />
 
       <Outlet />
     </div>
