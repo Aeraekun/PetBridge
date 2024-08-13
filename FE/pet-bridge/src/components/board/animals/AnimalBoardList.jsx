@@ -133,7 +133,7 @@ const AnimalBoardList = () => {
       >
         <Button text={"등록하기"} onClick={goRegist} />
       </div>
-      <ul className="relative flex w-full flex-wrap justify-start gap-10">
+      <ul className="relative flex w-full flex-wrap justify-start gap-x-10">
         {animals ? (
           animals.map((item, index) => (
             <li key={index} className="grow">
