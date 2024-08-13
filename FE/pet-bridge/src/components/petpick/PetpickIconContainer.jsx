@@ -40,7 +40,7 @@ const PetpickIconContainer = ({
   const [isLike, setIsLike] = useState(isLiking)
 
   useEffect(() => {
-    console.error("팔로우 좋아요 바뀜")
+    // console.error("팔로우 좋아요 바뀜")
     setIsFollow(isFollowing)
     setIsLike(isLiking)
   }, [isFollowing, isLiking])

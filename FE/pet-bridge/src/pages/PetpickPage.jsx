@@ -20,9 +20,9 @@ const PetpickPage = () => {
   const containerRef = useRef(null) // 스크롤 컨테이너
   const itemRefs = useRef(list.map(() => React.createRef()))
   const [isLoading, setIsLoading] = useState(true)
+  // const [loading, setLoading] = useState(false) // 추가된 로딩 상태
 
   const handleInView = useCallback((visibleIndex) => {
-    console.log("visibleIndex", list[visibleIndex])
     setIndex(visibleIndex)
   }, [])
 
@@ -68,7 +68,6 @@ const PetpickPage = () => {
   }
 
   const fetchData = async () => {
-    console.log("fetchData@!!!!!!!!!!!!!!!!!!!!!!")
     let result = []
     const newPetpick = await fetchPetpickData()
     const newAnimals = await fetchAnimalData()
@@ -116,34 +115,81 @@ const PetpickPage = () => {
 
   useEffect(() => {
     updateItemRefs() //list가 바뀔때마다 데이터 리스트의 길이와 맞추는 함수
-    // console.log(list, "list")
-    console.log("!!!!updateItemRefs!!!!!!")
+    console.log(list, "list")
   }, [list, updateItemRefs])
 
   const loadMoreData = async () => {
-    console.log("!-------------loadMoreData!!!!!!")
     fetchData()
   }
 
   // Index가 리스트의 마지막에서 두 번째인 경우 데이터를 추가
   useEffect(() => {
+    // const fetchLikeFollow = async () => {
+    //   // console.log(list[index])
+    //   // console.log(list)
+    //   try {
+    //     const nowLike = await getDetailPetPickLike(list[index].id)
+    //     const nowFollow = await getDetailFollow(list[index].animalId)
+    //     console.log(list[index].id, " ", nowLike)
+    //     console.log(list[index].id, " ", nowFollow)
+    //     if (nowLike) {
+    //       list[index].isLiking = true
+    //     } else {
+    //       list[index].isLiking = false
+    //     }
+    //     if (nowFollow) {
+    //       list[index].isFollowing = true
+    //     } else {
+    //       list[index].isFollowing = false
+    //     }
+    //     list[index + 1].isLiking = await getDetailPetPickLike(
+    //       list[index + 1].id
+    //     )
+    //     list[index - 1].isLiking = await getDetailPetPickLike(
+    //       list[index - 1].id
+    //     )
+    //     list[index + 1].isFollowing = await getDetailFollow(
+    //       list[index + 1].animalId
+    //     )
+    //     list[index - 1].isFollowing = await getDetailFollow(
+    //       list[index - 1].animalId
+    //     )
+    //     setList(list)
+    //     // console.log(list)
+    //   } catch {
+    //     console.log("catch")
+    //   }
+    // }
+
     const fetchLikeFollow = async () => {
-      // console.log(list[index])
-      // console.log(list)
+      // setLoading(true) // 로딩 시작
       try {
         const nowLike = await getDetailPetPickLike(list[index].id)
         const nowFollow = await getDetailFollow(list[index].animalId)
-        console.log(list[index].id, " ", nowLike)
-        console.log(list[index].id, " ", nowFollow)
+
+        const newList = [...list]
+
+        // if (nowLike) {
+        //   list[index].isLiking = true
+        // } else {
+        //   list[index].isLiking = false
+        // }
+        // if (nowFollow) {
+        //   list[index].isFollowing = true
+        // } else {
+        //   list[index].isFollowing = false
+        // }
+        // setList(list)
+
         if (nowLike) {
-          list[index].isLiking = true
+          newList[index].isLiking = true
         } else {
-          list[index].isLiking = false
+          newList[index].isLiking = false
         }
         if (nowFollow) {
-          list[index].isFollowing = true
+          newList[index].isFollowing = true
         } else {
-          list[index].isFollowing = false
+          newList[index].isFollowing = false
         }
         // console.log(list)
         setList(list)
