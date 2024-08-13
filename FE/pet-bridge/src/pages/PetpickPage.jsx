@@ -23,7 +23,6 @@ const PetpickPage = () => {
   // const [loading, setLoading] = useState(false) // 추가된 로딩 상태
 
   const handleInView = useCallback((visibleIndex) => {
-    console.log("visibleIndex", list[visibleIndex])
     setIndex(visibleIndex)
   }, [])
 
@@ -69,7 +68,6 @@ const PetpickPage = () => {
   }
 
   const fetchData = async () => {
-    console.log("fetchData@!!!!!!!!!!!!!!!!!!!!!!")
     let result = []
     const newPetpick = await fetchPetpickData()
     const newAnimals = await fetchAnimalData()
@@ -118,11 +116,9 @@ const PetpickPage = () => {
   useEffect(() => {
     updateItemRefs() //list가 바뀔때마다 데이터 리스트의 길이와 맞추는 함수
     console.log(list, "list")
-    console.log("!!!!updateItemRefs!!!!!!")
   }, [list, updateItemRefs])
 
   const loadMoreData = async () => {
-    console.log("!-------------loadMoreData!!!!!!")
     fetchData()
   }
 

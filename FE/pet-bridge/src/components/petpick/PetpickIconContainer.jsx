@@ -111,9 +111,9 @@ const PetpickIconContainer = ({
   const [showMessage, setShowMessage] = useState(false)
   return (
     <>
-      {isFollow ? <>팔로우</> : <>언팔</>}
+      {/* {isFollow ? <>팔로우</> : <>언팔</>}
       <br />
-      {isLike ? <>좋아요</> : <>안좋아요</>}
+      {isLike ? <>좋아요</> : <>안좋아요</>} */}
       {isFollowButton ? (
         <FollowButton isFollowing={isFollow} onClick={handleFollow} />
       ) : (
@@ -126,7 +126,11 @@ const PetpickIconContainer = ({
             size={""}
             className="w-12"
           />
-          <SirenIcon className="w-12" />
+          <SirenIcon
+            className="w-12"
+            reportType={"PETPICK"}
+            reportId={petpickId}
+          />
           <CommentIcon className="w-12" onClick={toggleComment} />
           <FollowIcon
             isFollowing={isFollow}
