@@ -132,13 +132,15 @@ const AnimalDetail = () => {
       </button>
       <hr />
       {!isShelter && (
-        <Profile
-          image={animal.userImage}
-          nickname={animal.userNickname}
-          isMe={Number(currentUserId) === Number(animal.userId)}
-        />
+        <>
+          <Profile
+            image={animal.userImage}
+            nickname={animal.userNickname}
+            isMe={Number(currentUserId) === Number(animal.userId)}
+          />
+          <hr />
+        </>
       )}
-      <hr />
 
       <AnimalDetailProfile
         animal={animal}
