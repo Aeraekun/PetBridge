@@ -45,7 +45,7 @@ const Profile = ({isMe, userId, nickname, image}) => {
   }, [])
 
   return (
-    <div className="relative flex h-12 items-center justify-around space-x-2.5">
+    <div className="relative flex w-fit h-12 items-center justify-start space-x-2.5">
       <button
         ref={profileRef}
         className="cursor-pointer border-none bg-transparent p-0"

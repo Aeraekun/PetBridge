@@ -109,6 +109,7 @@ const Chatbot = () => {
   const [result, setResult] = useState(null)
   const [showMore, setShowMore] = useState(false) // 더보기 상태
   const [selectedBreed, setSelectedBreed] = useState("") // 선택된 품종 상태
+  const [lastClickedBreed, setLastClickedBreed] = useState("") // 최근 클릭된 품종 상태
 
   const apiEndpoint = "https://api.openai.com/v1/chat/completions"
 
@@ -170,6 +171,7 @@ const Chatbot = () => {
 
   const handleBreedSelection = (breed) => {
     setSelectedBreed(breed) // 선택된 품종명 설정
+    setLastClickedBreed(breed) // 최근 클릭된 품종명 설정
   }
 
   return (
@@ -177,7 +179,17 @@ const Chatbot = () => {
       id="Chatbot"
       className="flex min-h-screen w-full flex-col items-center justify-center bg-gray-100"
     >
-      <h1 className="m-8 text-center text-6xl font-bold">집사 유형 검사</h1>
+      <h1 className="m-8 text-center text-6xl font-extrabold tracking-tight">
+        <span className="relative inline-block">
+          <span className="absolute inset-0 -skew-y-3 bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 opacity-50 blur-sm"></span>
+          <span className="relative block animate-pulse bg-gradient-to-r from-white via-white to-white bg-clip-text text-transparent">
+            집사 유형 검사
+          </span>
+        </span>
+        <span className="animate-fade-in mt-4 block text-2xl text-gray-500">
+          당신에게 맞는 반려동물을 찾아보세요
+        </span>
+      </h1>
       {result ? (
         <>
           <div>
@@ -221,7 +233,7 @@ const Chatbot = () => {
             <div className="w-full max-w-6xl rounded-lg bg-white p-8 text-center shadow-lg">
               <button
                 onClick={() => setShowMore(!showMore)}
-                className="mt-4 rounded-md bg-blue-600 px-6 py-2 text-white hover:bg-blue-700"
+                className="mt-4 rounded-md bg-mild px-6 py-2 text-black hover:bg-point"
               >
                 ▼ 등록 공고 확인
               </button>
@@ -233,7 +245,11 @@ const Chatbot = () => {
                       <button
                         key={index}
                         onClick={() => handleBreedSelection(breed)}
-                        className="rounded-md bg-gray-200 px-4 py-2 text-lg text-gray-800 hover:bg-gray-300"
+                        className={`rounded-md px-4 py-2 text-lg text-gray-800 hover:bg-point ${
+                          breed === lastClickedBreed
+                            ? "bg-point text-white"
+                            : "bg-mild"
+                        }`}
                       >
                         {breed}
                       </button>
@@ -268,7 +284,7 @@ const Chatbot = () => {
                       <li key={index} className="mb-4">
                         <button
                           onClick={() => handleAnswerSelection(option)}
-                          className="w-full rounded-md bg-blue-600 px-6 py-4 text-2xl text-white hover:bg-blue-700"
+                          className="w-full rounded-md bg-mild px-6 py-4 text-2xl text-white hover:bg-point"
                         >
                           {option}
                         </button>

@@ -16,10 +16,6 @@ const Comment = ({data, currentUserId, onDelete}) => {
   const contentRef = useRef(null)
 
   useEffect(() => {
-    console.log("currentId", currentUserId)
-    console.log("commentid", data.userId)
-    console.log(Number(data.userId) === Number(currentUserId))
-
     // 댓글이 지정된 높이를 초과할 때 "더보기" 버튼을 표시
     if (contentRef.current) {
       setShowReadMore(contentRef.current.scrollHeight > 64)
