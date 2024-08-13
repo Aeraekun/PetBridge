@@ -20,90 +20,85 @@ const PetpickPage = () => {
   const containerRef = useRef(null) // 스크롤 컨테이너
   const itemRefs = useRef(list.map(() => React.createRef()))
   const [isLoading, setIsLoading] = useState(true)
-  const handleInView = (visibleIndex) => {
+
+  const handleInView = useCallback((visibleIndex) => {
+    console.log("visibleIndex", list[visibleIndex])
     setIndex(visibleIndex)
+  }, [])
+
+  // 펫핏 데이터 받아오기
+  const fetchPetpickData = async () => {
+    try {
+      const petpicks = await getRandomDetailPetPick()
+      if (petpicks) {
+        return petpicks
+      } else {
+        console.error("펫픽비어있음")
+      }
+    } catch (error) {
+      console.error("에러 발생:", error)
+      alert("펫픽 데이터 로드 실패")
+      return []
+    }
+  }
+
+  //동물 받아오기
+  const fetchAnimalData = async () => {
+    //5마리씩 sidoCode 넣어서 보호중(입양가능)인 동물만.
+    const sidoCode = (await getMyLocation()) || 6300000 //위치 시도코드받아오기
+    const searchParams = {
+      numOfRows: 5,
+      pageNo: nowPage,
+      upr_cd: sidoCode,
+      state: "protect",
+    }
+    const res = await getShelterAnimalsAPI(searchParams)
+    setNowPage(nowPage + 1)
+    if (
+      res.data &&
+      res.data.response &&
+      res.data.response.body &&
+      res.data.response.body.items
+    ) {
+      return res.data.response.body.items.item
+    } else {
+      console.log("보호소 동물 가져오기 실패")
+      return [] // 빈 배열 반환
+    }
   }
 
   const fetchData = async () => {
-    //위치 받아오기
-    const fetchLocation = async () => {
-      try {
-        const regionCode = await getMyLocation()
-        return regionCode
-        // 추가로 필요한 작업을 여기에서 처리합니다.
-      } catch (error) {
-        console.error("Failed to fetch location:", error)
-      }
-    }
-
-    // 펫핏 데이터 받아오기
-    const fetchPetpickData = async () => {
-      try {
-        const res = await getRandomDetailPetPick()
-        if (res) {
-          return res
-        } else {
-          console.error("비어있음")
-        }
-      } catch (error) {
-        console.error("에러 발생:", error)
-        alert("펫픽 데이터 로드 중 에러가 발생했습니다.")
-      }
-    }
-
-    //동물 받아오기
-    const fetchAnimalData = async (sidoCode) => {
-      //5마리씩 sidoCode 넣어서 보호중(입양가능)인 동물만.
-      const searchParams = {
-        numOfRows: 5,
-        pageNo: nowPage,
-        upr_cd: sidoCode,
-        state: "protect",
-      }
-      const res = await getShelterAnimalsAPI(searchParams)
-
-      if (
-        res.data &&
-        res.data.response &&
-        res.data.response.body &&
-        res.data.response.body.items
-      ) {
-        return res.data.response.body.items.item
-      } else {
-        console.log("추가 데이터 로드에 실패했습니다.")
-        return [] // 빈 배열 반환
-      }
-    }
-
+    console.log("fetchData@!!!!!!!!!!!!!!!!!!!!!!")
     let result = []
-    const regionCode = (await fetchLocation()) || 6300000 // await 추가
     const newPetpick = await fetchPetpickData()
-    if (regionCode) {
-      const newAnimals = await fetchAnimalData(regionCode)
+    const newAnimals = await fetchAnimalData()
+    console.log(newPetpick, "newPetpick")
+    console.log(newAnimals, "animals")
 
-      const animalsLength = 4
-      let animalIndex = 0
+    if (!newPetpick) {
+      return <>펫픽 로드 실패 </>
+    }
+    if (!newAnimals) {
+      return <>보호소 로드 실패 </>
+    }
+    const animalsLength = 5
+    let animalIndex = 0
 
-      for (let i = 0; i < newPetpick?.length; i++) {
-        result.push(newPetpick[i])
+    for (let i = 0; i < newPetpick?.length; i++) {
+      result.push(newPetpick[i])
 
-        // 각 3개 아이템마다 동물 아이템을 삽입
-        if ((i + 1) % 3 === 0 && animalIndex < animalsLength) {
-          result.push(newAnimals[animalIndex])
-          animalIndex++
-        }
+      // 각 3개 아이템마다 동물 아이템을 삽입
+      if ((i + 1) % 3 === 0 && animalIndex < animalsLength) {
+        result.push(newAnimals[animalIndex])
+        animalIndex++
       }
     }
-
-    // console.log(newAnimals, "animals")
-    // console.log(result, "result")
 
     if (result && result.length > 0) {
-      // 데이터 로드 성공시 (응답 배열에 데이터가 있다면)
-      // 로딩상태 해제, 새로 받아온 값을 배열에 추가
+      // 응답 배열에 데이터가 있다면 새로 받아온 값을 배열에 추가
+      console.log(result, "result")
       setList((prevItems) => [...prevItems, ...result])
     }
-    return result
   }
 
   // 초기값 로딩
@@ -121,24 +116,25 @@ const PetpickPage = () => {
 
   useEffect(() => {
     updateItemRefs() //list가 바뀔때마다 데이터 리스트의 길이와 맞추는 함수
-    console.log(list, "list")
+    // console.log(list, "list")
+    console.log("!!!!updateItemRefs!!!!!!")
   }, [list, updateItemRefs])
 
   const loadMoreData = async () => {
-    const newData = await fetchData()
-    setNowPage(nowPage + 1)
-    console.log("moredata")
-    setList((prevList) => [...prevList, ...newData])
+    console.log("!-------------loadMoreData!!!!!!")
+    fetchData()
   }
 
   // Index가 리스트의 마지막에서 두 번째인 경우 데이터를 추가
   useEffect(() => {
     const fetchLikeFollow = async () => {
+      // console.log(list[index])
+      // console.log(list)
       try {
         const nowLike = await getDetailPetPickLike(list[index].id)
         const nowFollow = await getDetailFollow(list[index].animalId)
-        console.log(nowLike)
-        console.log(nowFollow)
+        console.log(list[index].id, " ", nowLike)
+        console.log(list[index].id, " ", nowFollow)
         if (nowLike) {
           list[index].isLiking = true
         } else {
@@ -149,8 +145,8 @@ const PetpickPage = () => {
         } else {
           list[index].isFollowing = false
         }
+        // console.log(list)
         setList(list)
-        console.log(list[index].isLiking, "  >", list[index].isFollowing)
       } catch {
         console.log("catch")
       }
@@ -159,10 +155,15 @@ const PetpickPage = () => {
       loadMoreData()
     }
     if (list.length > 0) {
+      console.log(
+        list[index].isLiking,
+        "like<  >follow",
+        list[index].isFollowing
+      )
+      console.log(index, "  list길이:", list.length)
       fetchLikeFollow()
     }
-    console.log(list, "list")
-  }, [list, index])
+  }, [index])
 
   // // Index가 리스트의 마지막에서 두 번째인 경우 데이터를 추가
   // useEffect(() => {
@@ -209,6 +210,7 @@ const PetpickPage = () => {
   // useEffect(() => {
   //   console.log(index)
   // }, [index])
+
   const navigate = useNavigate()
   const goPetpickWrite = () => {
     navigate(`/petpick/write`)

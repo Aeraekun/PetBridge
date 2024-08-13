@@ -92,11 +92,6 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
   const currentUserId = useSelector(selectId)
 
   const isAuthenticated = useSelector(selectIsAuthenticated)
-  useEffect(() => {
-    if (inView) {
-      onInView(nowindex)
-    }
-  }, [inView, onInView, nowindex])
   // const [petpick, setPetpick] = useState([])
   // const petpick = []
   const [commentList, setCommentList] = useState([])
@@ -104,9 +99,17 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
   const [isVisible, setIsVisible] = useState(false)
   const [isDetail, setIsDetail] = useState(false)
   const [petpickAnimalData, setPetpickAnimalData] = useState([])
-  const petpick = pet // prop에서 petpick 데이터 가져오기
+  const [petpick, setPetpick] = useState(pet) // prop에서 petpick 데이터 가져오기
   const navigate = useNavigate()
 
+  useEffect(() => {
+    console.log(
+      "comment isFollowing : ",
+      pet.isFollowing,
+      "  isLiking : ",
+      pet.isLiking
+    )
+  }, [petpick])
   //댓글리스트 불러올때 필요
 
   // const status = useSelector(selectPetpickStatus)
@@ -117,12 +120,17 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
 
   useEffect(() => {
     if (inView) {
+      console.log("petpick", petpick) // 여기까진 바뀐걸 가져옴
       setIsPlaying(true) // 이 컴포넌트가 보이면 비디오 재생
       onInView(nowindex)
+      setPetpick(pet)
     } else {
       setIsPlaying(false) // 이 컴포넌트가 보이지 않으면 비디오 일시 정지
     }
-  }, [inView, onInView, nowindex])
+  }, [inView, nowindex])
+
+  // useEffect(() => {
+  // }, [inView])
 
   useEffect(() => {
     const fetchAnimalDetail = async (animalId) => {
