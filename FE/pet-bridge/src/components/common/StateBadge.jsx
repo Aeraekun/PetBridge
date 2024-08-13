@@ -32,7 +32,7 @@ const StateBadge = ({state}) => {
   const displayName = stateNames[state] || state
   return (
     <div
-      className={`absolute right-2 top-2 flex h-8 items-center justify-center rounded  ${color}`}
+      className={`absolute right-2 top-2 flex h-8 items-center justify-center rounded px-2 ${color}`}
     >
       {displayName}
     </div>
