@@ -72,7 +72,11 @@ export const getMyLocation = () => {
                   "Region Code:",
                   getRegionCode(address.split(" ")[0])
                 )
-                return getRegionCode(address.split(" ")[0])
+                const location = {
+                  code: getRegionCode(address.split(" ")[0]),
+                  name: address.split(" ")[0],
+                }
+                return location
               } else {
                 console.error("No address information available.")
               }
