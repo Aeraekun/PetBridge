@@ -144,55 +144,58 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
     if (filteredData) {
       searchParams(filteredData)
     }
-    setBreed(null)
-    setSelectedSido(null)
-    setSelectedSigungu(null)
-    setEndde(null)
-    setBgnde(null)
-    setParams(null)
-    setSelectedUpKindCd(null)
-    setSelectedKind(null)
+    // setBreed(null)
+    // setSelectedSido(null)
+    // setSelectedSigungu(null)
+    // setEndde(null)
+    // setBgnde(null)
+    // setParams(null)
+    // setSelectedUpKindCd(null)
+    // setSelectedKind(null)
   }
-
   return (
-    <div className="rounded-md border border-[#D9D9D9] bg-pink-100 p-4">
+    <div className="rounded-md border border-gray-300 bg-white p-4 shadow-sm">
       {isShelter ? (
         <div>
-          <h1 className="mb-4 text-2xl font-bold">보호소 동물 검색</h1>
-          <div className="mb-4 flex space-x-4">
+          <h1 className="mb-4 text-xl font-bold text-gray-700">
+            보호소 동물 검색
+          </h1>
+          <div className="mb-4 flex space-x-2">
             <DatePicker
               id="bgnde"
               selected={bgnde}
               onChange={(date) => setBgnde(date)}
               dateFormat="yyyy/MM/dd"
-              className="rounded-md border border-[#D9D9D9] p-2"
-              placeholderText="검색시작일"
+              className="w-32 rounded-md border border-gray-300 p-2 text-gray-700 focus:ring-2 focus:ring-blue-200"
+              placeholderText="시작일"
             />
             <DatePicker
               id="endde"
               selected={endde}
               onChange={(date) => setEndde(date)}
               dateFormat="yyyy/MM/dd"
-              className="rounded-md border border-[#D9D9D9] p-2"
-              placeholderText="검색종료일"
+              className="w-32 rounded-md border border-gray-300 p-2 text-gray-700 focus:ring-2 focus:ring-blue-200"
+              placeholderText="종료일"
             />
           </div>
         </div>
       ) : (
-        <div className="mb-4 text-xl font-semibold">임시보호동물 검색</div>
+        <div className="mb-4 text-lg font-semibold text-gray-700">
+          임시보호동물 검색
+        </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4 ">
-        <div className="flex space-x-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="flex space-x-2">
           <div className="flex-1">
-            <label htmlFor="sido" className="mb-1 block w-[425px]">
+            <label htmlFor="sido" className="mb-1 block text-gray-700">
               시도:
             </label>
             <select
               id="sido"
               value={selectedSido}
               onChange={(e) => setSelectedSido(e.target.value)}
-              className="w-[425px] rounded-md border border-[#D9D9D9] p-2"
+              className="w-36 rounded-md border border-gray-300 p-2 text-gray-700 focus:ring-2 focus:ring-blue-200"
             >
               <option value="">선택</option>
               {sido &&
@@ -206,14 +209,14 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
 
           {selectedSido && (
             <div className="flex-1">
-              <label htmlFor="sigungu" className="mb-1 block">
+              <label htmlFor="sigungu" className="mb-1 block text-gray-700">
                 시군구:
               </label>
               <select
                 id="sigungu"
                 value={selectedSigungu}
                 onChange={(e) => setSelectedSigungu(e.target.value)}
-                className="w-full rounded-md border border-[#D9D9D9] p-2"
+                className="w-36 rounded-md border border-gray-300 p-2 text-gray-700 focus:ring-2 focus:ring-blue-200"
               >
                 <option value="">선택</option>
                 {sigungu &&
@@ -227,9 +230,9 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
           )}
         </div>
 
-        <div className="flex space-x-4">
+        <div className="flex space-x-2">
           <div className="flex-1">
-            <label htmlFor="kind" className="mb-1 block">
+            <label htmlFor="kind" className="mb-1 block text-gray-700">
               종류:
             </label>
             <select
@@ -238,7 +241,7 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
               onChange={(e) =>
                 setSelectedUpKindCd(parseInt(e.target.value, 10))
               }
-              className="w-[425px] rounded-md border border-[#D9D9D9] p-2"
+              className="w-36 rounded-md border border-gray-300 p-2 text-gray-700 focus:ring-2 focus:ring-blue-200"
             >
               <option value="">선택</option>
               <option value="417000">개</option>
@@ -249,14 +252,14 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
 
           {selectedUpKindCd > 0 && isShelter && (
             <div className="flex-1">
-              <label htmlFor="breed" className="mb-1 block">
+              <label htmlFor="breed" className="mb-1 block text-gray-700">
                 품종:
               </label>
               <select
                 id="breed"
                 value={selectedKind}
                 onChange={(e) => setSelectedKind(e.target.value)}
-                className="w-full rounded-md border border-[#D9D9D9] p-2"
+                className="w-36 rounded-md border border-gray-300 p-2 text-gray-700 focus:ring-2 focus:ring-blue-200"
               >
                 <option value="">선택</option>
                 {breed &&
@@ -273,13 +276,9 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
         <div className="mt-4 flex justify-center">
           <button
             type="submit"
-            className="flex items-center rounded-md border border-[#D9D9D9] bg-mild px-4 py-2 text-black"
+            className="flex items-center rounded-md border border-gray-300 bg-blue-100 px-4 py-2 text-gray-700 hover:bg-blue-200"
           >
-            <img
-              src={searchIcon}
-              alt="Search Icon"
-              className="mr-2 size-[20px]"
-            />
+            <img src={searchIcon} alt="Search Icon" className="mr-2 size-4" />
             검색
           </button>
         </div>

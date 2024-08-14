@@ -290,9 +290,9 @@ const PetpickPage = () => {
       {isLoading ? (
         <div>Loading..</div>
       ) : (
-        <div className=" h-screen w-[1000px] mx-auto">
+        <div className=" mx-auto h-screen w-[1000px]">
           {/* <div className=" fixed mb-4 text-lg">현재 인덱스: {index}</div> */}
-          <button className="fixed left-20 top-32" onClick={goBack}>
+          <button className="fixed left-20 top-32 z-50" onClick={goBack}>
             <img src={IconBack} alt="goBack" />
           </button>
           <div className="fixed right-8 top-1/2 flex flex-col space-y-8">
@@ -333,7 +333,7 @@ const PetpickPage = () => {
                 )
               } else {
                 return (
-                  <div key={i} className="flex items-end ml-[150px]">
+                  <div key={i} className="ml-[150px] flex items-end">
                     <PetpickComments
                       ref={itemRefs.current[i]}
                       onInView={handleInView}

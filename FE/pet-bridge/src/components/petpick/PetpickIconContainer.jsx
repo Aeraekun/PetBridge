@@ -68,7 +68,9 @@ const PetpickIconContainer = ({
     }
   }
 
-  const handleFollow = async () => {
+  const handleFollow = async (event) => {
+    event.stopPropagation()
+
     if (!isLogin) {
       alert("로그인 한 후 이용가능")
       return

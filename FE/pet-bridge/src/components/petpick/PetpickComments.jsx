@@ -16,9 +16,9 @@ import {
 } from "api/petpicks-api"
 import {getDetailAnimal} from "api/animals-api"
 import {useNavigate} from "react-router-dom"
-import TagIcon from "components/common/TagIcon"
 import TaggedAnimalItem from "./TaggedAnimalItem"
 import TaggedArticleItem from "./TaggedArticleItem"
+import IconBack from "assets/icons/icon-goBack.svg"
 
 const CommentInput = ({petpickId, onCommentAdded}) => {
   const isAuthenticated = useSelector(selectIsAuthenticated)
@@ -65,7 +65,7 @@ const CommentInput = ({petpickId, onCommentAdded}) => {
         </div>
       ) : (
         <div className="flex items-center space-x-2.5">
-          <div className="mx-2 h-10 w-full content-center rounded-md  text-sm text-stroke outline outline-1 outline-stroke">
+          <div className="opacity-1 mx-2 h-10 w-full content-center rounded-md bg-gray-50 pl-2 text-sm  text-point outline outline-1 outline-stroke">
             좋아요와 댓글을 남기려면 로그인하세요{" "}
           </div>
         </div>
@@ -168,8 +168,8 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
       const animaldata = await getDetailAnimal(animalId)
       if (animaldata) {
         setPetpickAnimalData(animaldata)
-        setArticleList(animaldata.boards)
-        console.log(articleList)
+        setArticleList(animaldata.boards.content)
+        console.log(animaldata.boards, "animaldata.boards")
         console.log(animaldata.id)
       }
     }
@@ -255,7 +255,9 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
     let path = `/communities/details/${id}`
     navigate(path)
   }
-
+  const goBack = () => {
+    setIsDetail(false)
+  }
   return (
     <div
       className=" z-50 mx-auto flex h-screen w-[1000px] snap-center flex-row justify-center pb-[100px] pt-[10px]"
@@ -270,7 +272,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
     >
       {/* <div className=`flex w-fit overflow-hidden rounded-3xl  {!isVisible && !isDetail && border}`> */}
       <div
-        className={`flex w-full overflow-hidden rounded-2xl ${isVisible || isDetail ? "border" : ""}`}
+        className={` flex w-full justify-center overflow-hidden rounded-2xl ${isVisible || isDetail ? "border" : ""}`}
       >
         <PetpickVideo
           title={petpick.title}
@@ -283,7 +285,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
           isDetail && (
             <>
               <div
-                className={`duration-800 flex size-full h-full min-w-[300px]  max-w-[400px] flex-col justify-between transition-transform ease-in-out${
+                className={`duration-800 flex size-full h-full min-w-[300px]  max-w-[400px] flex-col justify-between transition-transform ease-in-out ${
                   isDetail
                     ? "translate-x-0 opacity-100"
                     : "-translate-x-full opacity-0"
@@ -301,25 +303,33 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
                     animal={petpickAnimalData}
                     isFollowing={petpick.isFollowing}
                     isLogin={isAuthenticated}
-                    onClick={goAnimalDetail}
+                    onClick={() => {
+                      goAnimalDetail(petpickAnimalData)
+                    }}
                   />
-                  관련 글
-                  <div className="overflow-auto">
-                    {articleList?.length > 0 ? (
-                      articleList.map((article, index) => (
-                        <li key={index}>
-                          <TaggedArticleItem
-                            data={article}
-                            onClick={goDetail}
-                          />
-                        </li>
-                      ))
-                    ) : (
-                      <li>게시글이 없습니다</li>
-                    )}
+                  <div className="m-2 font-semibold">
+                    관련 글
+                    <div className="m-2 overflow-auto">
+                      {articleList?.length > 0 ? (
+                        articleList.map((article, index) => (
+                          <div key={index}>
+                            <TaggedArticleItem
+                              data={article}
+                              onClick={() => {
+                                goDetail(article)
+                              }}
+                            />
+                          </div>
+                        ))
+                      ) : (
+                        <div>게시글이 없습니다</div>
+                      )}
+                    </div>
                   </div>
+                  <button onClick={goBack} className="absolute bottom-2 left-2">
+                    <img src={IconBack} alt="goBack" className="size-8" />
+                  </button>
                 </div>
-                <TagIcon data={petpick} onClick={handleDetail} />
               </div>
             </>
           )
@@ -358,7 +368,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
                       </li>
                     ))
                   ) : (
-                    <li>댓글이 없습니다</li>
+                    <li className="m-2">댓글이 없습니다</li>
                   )
                 }
               </ul>

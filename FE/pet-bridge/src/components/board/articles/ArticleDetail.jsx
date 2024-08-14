@@ -122,6 +122,8 @@ import Button from "components/common/Button"
 import SirenButton from "components/common/SirenButton"
 import DeleteConfirmationModal from "components/common/DeleteConfirmationModal"
 import ProfileForAnimal from "components/common/ProfileForAnimal"
+import {stateColors} from "components/common/StateColorList"
+import StateBadge from "components/common/StateBadge"
 
 const ArticleDetail = () => {
   const [article, setArticle] = useState([])
@@ -130,12 +132,13 @@ const ArticleDetail = () => {
   const navigate = useNavigate()
   const sanitizedContent = DOMPurify.sanitize(article.content) // Quill 안정성 높이기
   const currentUserId = useSelector(selectId)
-
+  const [color, setColor] = useState("")
   useEffect(() => {
     const fetchArticle = async () => {
       const data = await getArticleDetail(Number(id)) // 게시글 상세 조회
       setArticle(data)
       console.log(data)
+      setColor(stateColors[data.boardType] || "outline-mild")
     }
     fetchArticle()
   }, [id]) // `id`가 변경될 때마다 다시 호출
@@ -171,47 +174,56 @@ const ArticleDetail = () => {
   }
 
   return (
-    <div className="rounded-xl border p-4">
-      <button onClick={goBack} className="flex justify-start">
+    <div
+      className={`relative top-6 rounded-b-xl outline outline-4 ${color} mt-12 p-4 sm:w-11/12`}
+    >
+      <StateBadge state={article.boardType} category={"article"}></StateBadge>
+      <button
+        onClick={goBack}
+        className="flex justify-start text-gray-500 underline underline-offset-2"
+      >
         돌아가기
       </button>
-      <div className="text-center text-4xl font-bold">{article.title}</div>
-      <hr />
-      <Profile
-        userId={article.userId}
-        nickname={article.userNickname}
-        image={article.userImage}
-        isMe={Number(currentUserId) === Number(article.userId)}
-      />
-      <div className="flex flex-row space-x-2 pl-6">
-        <img src="/icons/icon-tag.svg" alt="Tag Icon" />
-        {article.animalId ? (
-          <ProfileForAnimal
-            animalname={article.animalName}
-            image={article.animalFilename}
-            animalId={article.animalId}
-          />
-        ) : (
-          <div>태그된 동물이 없습니다.</div>
-        )}
+      <div className="mb-2 text-center text-4xl font-bold">{article.title}</div>
+      <div className="relative flex flex-col gap-2 border-t p-2">
+        <Profile
+          userId={article.userId}
+          nickname={article.userNickname}
+          image={article.userImage}
+          isMe={Number(currentUserId) === Number(article.userId)}
+        />
+        <div className="flex flex-row space-x-2 pl-6">
+          <img src="/icons/icon-tag.svg" alt="Tag Icon" />
+          {article.animalId ? (
+            <ProfileForAnimal
+              animalname={article.animalName}
+              image={article.animalFilename}
+              animalId={article.animalId}
+            />
+          ) : (
+            <div>태그된 동물이 없습니다.</div>
+          )}
+        </div>
       </div>
       <hr />
-      대표사진
-      {article.thumbnail ? (
-        <div className="mt-4">
-          <img
-            src={article.thumbnail}
-            alt="Uploaded Preview"
-            className="ml-[100px] size-96 rounded border object-contain"
-          />
-        </div>
-      ) : (
-        <div className="flex h-64 w-96 flex-col items-center justify-center border border-gray-300 px-4 py-2">
-          <>대표사진이 없습니다</>
-        </div>
-      )}
+      {/* <div className="m-2 text-lg">대표사진</div> */}
+      <div className="flex w-full justify-center bg-gray-50 p-2">
+        {article.thumbnail ? (
+          <div className="">
+            <img
+              src={article.thumbnail}
+              alt="Uploaded Preview"
+              className="h-[300px] rounded border object-contain"
+            />
+          </div>
+        ) : (
+          <div className="flex h-64 w-96 flex-col items-center justify-center border border-gray-300 px-4 py-2">
+            <></>
+          </div>
+        )}
+      </div>
       <div
-        className="mx-auto min-h-72 w-[800px]"
+        className="mx-auto mt-3 min-h-72 w-[800px]"
         dangerouslySetInnerHTML={{__html: sanitizedContent}}
       ></div>
       <div className="flex justify-end">
@@ -221,7 +233,7 @@ const ArticleDetail = () => {
             <Button text={"삭제하기"} onClick={handleDeleteClick} />
           </div>
         ) : (
-          <div className="flex">
+          <div className="flex p-2">
             <SirenButton reportId={id} reportType={"BOARD"} />
           </div>
         )}

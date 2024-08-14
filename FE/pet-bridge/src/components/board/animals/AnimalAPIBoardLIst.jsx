@@ -4,6 +4,7 @@ import AnimalItem from "./AnimalItem"
 import {useNavigate, useParams} from "react-router-dom"
 import AnimalSearchForm from "components/board/animals/AnimalSearchForm"
 import {getShelterAnimalsAPI} from "api/animals-api"
+import Pagination from "components/common/Pagination"
 
 const AnimalAPIBoardLIst = () => {
   const {bcode} = useParams()
@@ -84,44 +85,38 @@ const AnimalAPIBoardLIst = () => {
       <AnimalSearchForm searchParams={handleSearchForm} isShelter={true} />
       {isLoading ? (
         <div className="flex items-center">
-          <div className="bg-mild mx-2.5 size-10 animate-ping rounded-full"></div>
+          <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
           <span>로딩중입니다</span>
         </div>
       ) : (
         <>
-          <div className="flex space-x-2">
-            <button
-              onClick={() => setPageNo((prev) => Math.max(prev - 1, 1))}
-              disabled={pageNo === 1}
-            >
-              ◀이전
-            </button>
-            <div>
-              현재페이지{pageNo}/{maxPage}
-            </div>
-            <button
-              onClick={() => setPageNo((prev) => Math.min(prev + 1, maxPage))}
-              disabled={pageNo === maxPage}
-            >
-              다음▶{" "}
-            </button>
-          </div>
-          <ul className="flex w-full flex-wrap justify-start gap-x-10">
-            {items
-              // category와 bcode가 일치하는것만 필터링
-              .map((item, index) => (
-                <li key={index} className="grow">
-                  <AnimalItem
-                    data={item}
-                    onSelectAnimal={() => goAnimalDetail(item)}
-                    isShelter={true}
-                  />
-                </li>
-              ))}
-            <li className="w-[300px] grow"></li>
-            <li className="w-[300px] grow"></li>
-            <li className="w-[300px] grow"></li>
-          </ul>
+          {maxPage ? (
+            <ul className="flex w-full flex-wrap justify-start gap-x-10">
+              {items
+                // category와 bcode가 일치하는것만 필터링
+                .map((item, index) => (
+                  <li key={index} className="grow">
+                    <AnimalItem
+                      data={item}
+                      onSelectAnimal={() => goAnimalDetail(item)}
+                      isShelter={true}
+                    />
+                  </li>
+                ))}
+              <li className="w-[300px] grow"></li>
+              <li className="w-[300px] grow"></li>
+              <li className="w-[300px] grow"></li>
+            </ul>
+          ) : (
+            <div className="m-2 text-lg">검색 결과가 없습니다</div>
+          )}
+          <Pagination
+            currentPage={pageNo}
+            totalPages={maxPage}
+            onPageChange={(page) => {
+              setPageNo(page)
+            }}
+          />
         </>
       )}
     </>
