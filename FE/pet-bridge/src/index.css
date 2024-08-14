@@ -78,3 +78,26 @@ body {
   scrollbar-width: none;
   scrollbar-color: transparent transparent;
 }
+
+.custom-scrollbar {
+  @apply overflow-auto; /* Tailwind의 overflow-auto 유틸리티 클래스 적용 */
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  @apply w-2; /* Tailwind의 너비 유틸리티 클래스 적용 */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(241, 241, 241, 0.5); /* 커스텀 스타일 */
+  border-radius: 10px; /* 커스텀 스타일 */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(136, 136, 136, 0.5); /* 커스텀 스타일 */
+  border-radius: 10px; /* 커스텀 스타일 */
+  border: 2px solid transparent; /* 커스텀 스타일 */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(136, 136, 136, 0.7); /* 커스텀 스타일 */
+}

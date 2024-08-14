@@ -5,6 +5,8 @@ import {Link, useParams} from "react-router-dom"
 
 const PetpickDetail = () => {
   const [petpick, setPetpick] = useState(null) // 초기 데이터 상태
+  const [isLoading, setIsLoading] = useState(true)
+
   const handleInView = (visibleIndex) => {
     visibleIndex
     // console.log(list.length)
@@ -12,14 +14,23 @@ const PetpickDetail = () => {
   const {petpickId} = useParams()
   useEffect(() => {
     const fetchAnimalDetail = async (petpickId) => {
-      const getpetpick = await getDetailPetPick(petpickId)
-      if (getpetpick) {
-        setPetpick(getpetpick)
+      try {
+        const getpetpick = await getDetailPetPick(petpickId)
+        if (getpetpick) {
+          setIsLoading(false)
+          setPetpick(getpetpick)
+        }
+        console.log(getpetpick)
+      } catch (e) {
+        return e
       }
-      console.log(getpetpick)
     }
     fetchAnimalDetail(petpickId)
-  }, [])
+  }, [petpickId])
+
+  if (isLoading) {
+    return <div>Loading</div>
+  }
 
   return (
     <div className="relative flex flex-col sm:w-11/12">
