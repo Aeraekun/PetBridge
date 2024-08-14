@@ -1,22 +1,15 @@
 import React, {useState, useRef, useEffect} from "react"
 import SirenModal from "./SirenModal"
-import {useSelector} from "react-redux"
-import {selectIsAuthenticated} from "features/user/users-slice"
 
 const Profile = ({isMe, userId, nickname, image}) => {
   const [isPopoverVisible, setIsPopoverVisible] = useState(false)
   const popoverRef = useRef(null)
   const profileRef = useRef(null)
   const [modalOpen, setModalOpen] = useState(false)
-  const isAuthenticated = useSelector(selectIsAuthenticated)
 
   const openModal = () => {
     console.log(isMe)
-    if (isAuthenticated) {
-      setModalOpen(true)
-    } else {
-      alert("로그인이 필요합니다.")
-    }
+    setModalOpen(true)
   }
 
   const closeModal = () => {
@@ -45,7 +38,7 @@ const Profile = ({isMe, userId, nickname, image}) => {
   }, [])
 
   return (
-    <div className="relative flex h-12 items-center justify-around space-x-2.5">
+    <div className="relative flex h-12 w-fit items-center justify-start space-x-2.5">
       <button
         ref={profileRef}
         className="cursor-pointer border-none bg-transparent p-0"
@@ -59,9 +52,7 @@ const Profile = ({isMe, userId, nickname, image}) => {
         aria-expanded={isPopoverVisible}
       >
         <img
-          src={
-            image === "null" || image === null ? "/images/profile.jpg" : image
-          }
+          src={image || "/images/profile.jpg"}
           alt="프로필사진"
           className="size-12 rounded-full border"
         />

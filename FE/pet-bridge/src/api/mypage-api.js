@@ -78,7 +78,7 @@ export const getMyLikes = async (searchParams) => {
   const params = {
     page: searchParams.page,
     size: searchParams.size,
-    initcommentsize: 0,
+    initcommentsize: 1,
   }
   try {
     const res = await axiosInstance.get("/petpicks/like", {
@@ -94,7 +94,7 @@ export const getMyLikes = async (searchParams) => {
 // 내 계약서 조회
 export const getMyContracts = async (userId, page) => {
   const params = {
-    page: page - 1,
+    page: page,
   }
   try {
     const res = await axiosInstance.get(`/contracts/user/${userId}`, {

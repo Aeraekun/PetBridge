@@ -86,17 +86,18 @@ const AnimalTag = ({
           onSelectAnimal={handleAnimalSelect}
           onVisible={handleVisibilityChange}
         >
-          <div className=" flex flex-row">
-            {visible ? (
-              <img src="/icons/icon-tag-select.svg" alt="tagIcon" />
-            ) : (
-              <img src="/icons/icon-tag-select-open.svg" alt="tagIcon" />
-            )}{" "}
-            {!selectedAnimal && (
-              <span className="text-red">태그할 동물을 골라주세요</span>
-            )}
-          </div>
+          <img
+            src={
+              visible
+                ? "/icons/icon-tag-select.svg"
+                : "/icons/icon-tag-select-open.svg"
+            }
+            alt="tagIcon"
+          />
         </Popover>
+        {!selectedAnimal && (
+          <span className="text-red">태그할 동물을 골라주세요</span>
+        )}
       </div>
       <div className="h-32 w-96">
         {selectedAnimal ? (

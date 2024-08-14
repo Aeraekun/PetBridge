@@ -10,10 +10,10 @@ const MyPageLikesContainer = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [isMoreRemained, setIsMoreRemaind] = useState(true)
   const [items, setItems] = useState([])
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
 
   // API 요청을 보내기 위한 파라미터
-  const [searchParams, setSearchParams] = useState({size: 12, page: 1})
+  const [searchParams, setSearchParams] = useState({size: 12, page: 0})
 
   // 초기값 로딩
   useEffect(() => {
@@ -36,9 +36,9 @@ const MyPageLikesContainer = () => {
       const res = await getMyLikes(searchParams)
       let newItems = []
 
-      if (res.data) {
+      if (res.data.length > 0) {
         console.log("fetch 성공!!!", res)
-        newItems = res.data.response.body.items.item
+        newItems = res.data
         setPage((prevPageNo) => prevPageNo + 1)
         return newItems
       } else {
@@ -46,7 +46,7 @@ const MyPageLikesContainer = () => {
         setIsMoreRemaind(false)
       }
     } catch (error) {
-      alert("추가 데이터 로드에 실패했습니다.")
+      console.log("추가 데이터 로드에 실패했습니다.")
       console.log(error)
     }
   }
@@ -66,7 +66,7 @@ const MyPageLikesContainer = () => {
     }
 
     // inView 값이 true가 됐을 때,
-    if (inView) {
+    if (inView && !isMoreRemained) {
       setIsLoadingMore(true)
       fetchMoreData()
     }
@@ -77,22 +77,20 @@ const MyPageLikesContainer = () => {
   }, [page])
 
   return (
-    <div className="flex min-w-80  h-full flex-col items-center">
-      <div className="flex w-full justify-center p-2.5 ">
-        <button className="text-2xl font-bold">내가 좋아한 펫픽</button>
-      </div>
+    <div className="flex h-full  min-w-80 flex-col items-center">
+      <div className="flex w-full justify-center py-5 "></div>
       {isLoading ? (
         <div className="flex size-full  flex-col items-center justify-center">
           <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
-          <span className="px-5 text-6xl font-bold">Loading...</span>
+          <span className="px-5 text-2xl font-bold">Loading...</span>
         </div>
       ) : (
-        <div className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
+        <div className="hidden-scrollbar flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
           {items.map((item, index) => (
             <Link
               key={index}
               to={`/shelter/details/${item.desertionNo}`}
-              className="m-2.5 "
+              className="m-5"
               // 화면에 들어오는지 확인할 객체를 선택하기 위한 ref 설정 : 배열의 마지막 값
               ref={index === items.length - 1 ? ref : null}
             >

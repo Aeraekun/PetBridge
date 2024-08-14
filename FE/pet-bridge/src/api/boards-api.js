@@ -1,5 +1,6 @@
 import axios from "axios"
 import axiosInstance from "./axios-instance"
+import {Toast} from "utils/common-utils"
 const BOARD_API_URL = process.env.REACT_APP_API_URL + "/boards"
 const BOARD_COMMENTS_API_URL = process.env.REACT_APP_API_URL + "/board-comments"
 
@@ -7,6 +8,17 @@ const BOARD_COMMENTS_API_URL = process.env.REACT_APP_API_URL + "/board-comments"
 export const getArticle = async (searchParams) => {
   try {
     const res = await axios.get(`${BOARD_API_URL}`, {params: searchParams})
+    return res.data
+  } catch (e) {
+    console.error(e)
+    return []
+  }
+}
+
+//게시글 가져오기
+export const getLostArticle = async (searchParams) => {
+  try {
+    const res = await axios.get(`${BOARD_API_URL}/lost`, {params: searchParams})
     return res.data
   } catch (e) {
     console.error(e)
@@ -29,7 +41,7 @@ export const getArticleDetail = async (id) => {
 //게시글 등록
 export const registArticle = async (formData) => {
   console.log(formData)
-  alert("등록완료")
+  Toast.fire({icon: "success", title: "게시글 등록이 완료됐어요."})
   try {
     const res = await axiosInstance.post(`${BOARD_API_URL}`, formData, {
       headers: {
@@ -54,7 +66,7 @@ export const editArticle = async (id, formData) => {
       },
     })
     console.log("editArticle" + res)
-    alert("수정완료")
+    Toast.fire({icon: "success", title: "게시글 수정이 완료됐어요."})
     return res.data
   } catch (e) {
     console.error(e)
@@ -67,7 +79,7 @@ export const removeArticle = async (articleId) => {
   try {
     const res = await axiosInstance.delete(`${BOARD_API_URL}/${articleId}`)
     console.log("removeBoard" + res)
-    alert("삭제 되었습니다.")
+    Toast.fire({icon: "success", title: "게시글 삭제를 성공했어요."})
     return res.data
   } catch (e) {
     console.error(e)
@@ -117,9 +129,9 @@ export const editBoardComment = async (boardId, boardComment) => {
 //댓글 삭제
 export const removeBoardComment = async (id) => {
   try {
-    alert("댓글 삭제")
     const res = await axiosInstance.delete(`${BOARD_COMMENTS_API_URL}/${id}`)
     console.log("removeBoardComment" + res)
+    Toast.fire({icon: "success", title: "댓글 삭제를 성공했어요."})
     return res.data
   } catch (e) {
     console.error(e)

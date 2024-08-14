@@ -27,7 +27,7 @@ const ChatModal = () => {
   const [isDragging, setIsDragging] = useState(false)
 
   // 새 채팅 감지 -> 구현시 redux state로
-  const [newChats] = useState([{id: "user2", message: "hi"}])
+  // const [newChats] = useState([{id: "user2", message: "hi"}])
 
   // 처음 컴포넌트 로드시, 유저의 방번호로 채팅 소켓을 연결함
 
@@ -97,17 +97,17 @@ const ChatModal = () => {
             >
               <button
                 onClick={handleClick}
-                className="rounded-full border bg-white p-2 shadow-xl transition-all hover:outline"
+                className="rounded-full border bg-white p-2 shadow-xl hover:outline"
               >
                 <img
                   src={ChatIcon}
                   alt=""
                   className="pointer-events-none size-8"
                 />
-                <span className="fixed bottom-0 right-0 flex size-5 items-center justify-center rounded-full bg-alert text-xs">
+                {/* <span className="fixed bottom-0 right-0 flex size-5 items-center justify-center rounded-full bg-alert text-xs">
                   <span className="text-white">{newChats.length}</span>
                   <span className="fixed size-4 animate-ping rounded-full bg-alert"></span>
-                </span>
+                </span> */}
               </button>
             </Draggable>
           ) : (
@@ -118,7 +118,7 @@ const ChatModal = () => {
               >
                 {/* 채팅 헤더 */}
                 <header
-                  className="flex h-8 shrink-0 flex-row-reverse bg-white px-2.5"
+                  className="flex h-8 shrink-0 flex-row-reverse rounded-t-lg bg-white px-2.5"
                   id="chatHeader"
                 >
                   <button

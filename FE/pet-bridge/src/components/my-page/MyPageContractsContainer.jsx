@@ -12,10 +12,10 @@ const MyPageContractsContainer = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [isMoreRemained, setIsMoreRemaind] = useState(true)
   const [items, setItems] = useState([])
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
 
   // API 요청을 보내기 위한 파라미터
-  const [searchParams, setSearchParams] = useState({numOfRows: 12, pageNo: 1})
+  const [searchParams, setSearchParams] = useState({numOfRows: 12, pageNo: 0})
 
   // 초기값 로딩
   useEffect(() => {
@@ -48,7 +48,7 @@ const MyPageContractsContainer = () => {
         setIsMoreRemaind(false)
       }
     } catch (error) {
-      alert("추가 데이터 로드에 실패했습니다.")
+      console.log("추가 데이터 로드에 실패했습니다.")
       console.log(error)
     }
   }
@@ -67,7 +67,7 @@ const MyPageContractsContainer = () => {
     }
 
     // inView 값이 true가 됐을 때,
-    if (inView) {
+    if (inView && !isMoreRemained) {
       setIsLoadingMore(true)
       fetchMoreData()
     }
@@ -79,11 +79,10 @@ const MyPageContractsContainer = () => {
 
   return (
     <div className="flex h-full  min-w-80 flex-col items-center">
-      <div className="flex w-full justify-between p-2.5 ">
+      <div className="relative flex w-full justify-start px-10 py-4">
         <div />
-        <button className="text-2xl font-bold">내 입양기록</button>
         <Link
-          className="absolute right-1.5 top-1.5   rounded-xl bg-mild p-2.5"
+          className="absolute right-2 top-2 rounded-xl bg-mild px-4 py-2 text-sm"
           to="/contracts/create"
         >
           입양 보내기
@@ -93,15 +92,15 @@ const MyPageContractsContainer = () => {
       {isLoading ? (
         <div className="flex size-full  flex-col items-center justify-center">
           <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
-          <span className="px-5 text-6xl font-bold">Loading...</span>
+          <span className="px-5 text-2xl font-bold">Loading...</span>
         </div>
       ) : (
-        <div className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
+        <div className="hidden-scrollbar flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
           {items.map((item, index) => (
             <Link
               key={index}
               to={`/contracts/${item.id}`}
-              className="m-2.5 "
+              className="m-5"
               // 화면에 들어오는지 확인할 객체를 선택하기 위한 ref 설정 : 배열의 마지막 값
               ref={index === items.length - 1 ? ref : null}
             >
@@ -111,7 +110,7 @@ const MyPageContractsContainer = () => {
                 imageAlt={item.title}
                 content1={`입양 동물 : ${item.animalName}`}
                 content2={`입양자 : ${item.contracteeNickname}`}
-                content3={item.content}
+                content3={`특약 내용 : ${item.content}`}
               />
             </Link>
           ))}

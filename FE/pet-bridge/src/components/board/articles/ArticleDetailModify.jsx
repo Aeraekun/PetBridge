@@ -179,6 +179,7 @@ import Button from "components/common/Button"
 import SirenIcon from "components/common/SirenIcon"
 import DeleteConfirmationModal from "components/common/DeleteConfirmationModal"
 import {editArticle, getArticleDetail, removeArticle} from "api/boards-api"
+import {Toast} from "utils/common-utils"
 
 const ArticleDetailModify = () => {
   const {id} = useParams()
@@ -220,9 +221,16 @@ const ArticleDetailModify = () => {
     fetchArticle()
   }, [])
 
+  const [error, setError] = useState(null)
+
   // 파일 선택 시 호출되는 함수
   const handleFileChange = (event) => {
     const file = event.target.files[0]
+    const maxSizeInBytes = 30 * 1024 * 1024 // 50MB 크기 제한
+    if (file.size > maxSizeInBytes) {
+      setError("파일 크기는 30MB를 초과할 수 없습니다.")
+      return
+    }
     if (file) {
       const url = URL.createObjectURL(file)
       setImageSrc(url)
@@ -262,7 +270,10 @@ const ArticleDetailModify = () => {
   //게시글 수정
   const modifyArticle = async () => {
     if (!editorContent.trim() || !title.trim()) {
-      alert("제목과 대표사진을 모두 입력하세요.")
+      Toast.fire({
+        icon: "warning",
+        title: "제목과 대표 사진을 모두 입력해주세요.",
+      })
       return
     }
     if (updateArticle) {
@@ -302,7 +313,7 @@ const ArticleDetailModify = () => {
         돌아가기
       </button>
       <input
-        className="h-16 rounded-xl border border-stroke text-center text-4xl font-bold"
+        className="border-stroke h-16 rounded-xl border text-center text-4xl font-bold"
         placeholder="제목을 입력하세요"
         onChange={(e) => setTitle(e.target.value)}
         value={title}
@@ -352,7 +363,9 @@ const ArticleDetailModify = () => {
           onChange={handleFileChange}
           className="cursor-pointer items-center"
         />
+
         {imageSrc && <button onClick={resetImage}> ✖ </button>}
+        {error && <p className="text-sm text-red-500">{error}</p>}
       </div>
       <div className="h-[550px] w-full justify-center">
         <Editor value={editorContent} onChange={setEditorContent} />

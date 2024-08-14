@@ -10,6 +10,7 @@ import {
 import {useEffect, useState} from "react"
 import {useDispatch, useSelector} from "react-redux"
 import {Link, useNavigate} from "react-router-dom"
+import {Toast} from "utils/common-utils"
 import {
   validateBirth,
   validateNickname,
@@ -20,28 +21,19 @@ const SocialUpdateContainer = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const userNickname = useSelector(selectNickname)
-  const userPhone = useSelector(selectPhone)
-  const userBirth = useSelector(selectBirth)
+  const userNickname = useSelector(selectNickname) || ""
+  const userPhone = useSelector(selectPhone) || ""
+  const userBirth = useSelector(selectBirth) || ""
 
   // 닉네임, 전화번호, 생일 상태에서 불러와서 저장
   useEffect(() => {
-    if (userNickname) {
-      updateFormData.nickname = userNickname
-    }
-  }, [userNickname])
+    setUpdateFormData({
+      nickname: userNickname,
+      birth: userBirth,
+      phone: userPhone,
+    })
+  }, [userNickname, userPhone, userBirth])
 
-  useEffect(() => {
-    if (userPhone) {
-      updateFormData.phone = userPhone
-    }
-  }, [userPhone])
-
-  useEffect(() => {
-    if (userBirth) {
-      updateFormData.birth = userBirth
-    }
-  }, [userBirth])
   // 입력시 state와 연동 처리
   // 회원가입 폼 제출을 위한 인자 저장 state
   const [updateFormData, setUpdateFormData] = useState({
@@ -69,13 +61,6 @@ const SocialUpdateContainer = () => {
     const code = event.target.value
     setPhoneCode(code)
   }
-
-  // const setError = (new_error, new_error_message) => {
-  //   console.log(new_error, new_error_message)
-  //   if (new_error) {
-  //     setErrors({...errors, [new_error]: new_error_message})
-  //   }
-  // }
 
   // 에러 메시지 저장 함수
   const [errors, setErrors] = useState({})
@@ -132,10 +117,16 @@ const SocialUpdateContainer = () => {
       try {
         const res = await patchUserInfo(formData)
         if (res?.status === 200) {
-          alert("개인정보 수정 완료.")
+          Toast.fire({
+            icon: "success",
+            title: "개인 정보 수정 완료",
+          })
           navigate("/users/social/success")
         } else {
-          alert("개인정보 수정 오류. 다시 시도해주세요.")
+          Toast.fire({
+            icon: "warning",
+            title: "개인정보 수정 오류. 다시 시도해주세요.",
+          })
         }
         console.log(res)
         return
@@ -209,7 +200,10 @@ const SocialUpdateContainer = () => {
       setIsSendPhoneCodeDisalbed(true)
     } else if (postPhoneVerificationCodeThunk.rejected.match(res)) {
       console.log(res)
-      alert("이미 가입된 번호입니다. 다른 번호를 시도해주세요.")
+      Toast.fire({
+        icon: "warning",
+        title: "이미 가입된 번호입니다. 다른 번호로 시도해주세요.",
+      })
     } else {
       console.log(res)
     }
@@ -229,7 +223,10 @@ const SocialUpdateContainer = () => {
         errors.phoneConfirm = ""
       } else {
         console.log(res)
-        alert("잘못된 인증번호입니다. 다시 입력해주세요.")
+        Toast.fire({
+          icon: "warning",
+          title: "잘못된 인증번호입니다. 다시 입력해주세요.",
+        })
       }
     } catch (error) {
       console.log(error)

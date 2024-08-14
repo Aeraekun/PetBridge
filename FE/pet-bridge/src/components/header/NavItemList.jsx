@@ -16,7 +16,7 @@ const NavItemList = () => {
     },
     {
       id: itemId++,
-      category: "쇼츠",
+      category: "펫픽",
       to: "/petpick",
     },
     {

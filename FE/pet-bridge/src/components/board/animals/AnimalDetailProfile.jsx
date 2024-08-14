@@ -14,9 +14,16 @@ const AnimalDetailProfile = ({
     onFileChange({target: {files: []}})
     setImageSrc(null)
   }
+  const [error, setError] = useState(null)
 
+  // 파일 선택 시 호출되는 함수
   const handleFileChange = (event) => {
     const file = event.target.files[0]
+    const maxSizeInBytes = 30 * 1024 * 1024 // 50MB 크기 제한
+    if (file.size > maxSizeInBytes) {
+      setError("파일 크기는 30MB를 초과할 수 없습니다.")
+      return
+    }
     if (file) {
       const url = URL.createObjectURL(file)
       setImageSrc(url)
@@ -184,16 +191,17 @@ const AnimalDetailProfile = ({
   const filteredFields = getFilteredFields()
 
   return (
-    <div className="flex w-full justify-center p-4">
+    <div className="grid w-full grid-cols-12 grid-rows-12 p-4 text-lg">
       {/* Animal Image */}
-      <div className="flex max-w-[400px] flex-col lg:w-1/2">
+      <div className="col-span-6 row-span-6 flex flex-col">
         {isEditing ? (
+          // 수정중 상태
           <div className="flex w-full flex-col items-center">
             {imageSrc ? (
               <img
                 src={imageSrc}
                 alt="Uploaded Preview"
-                className="max-h-96 max-w-96 rounded border"
+                className="max-h-96 max-w-96 rounded"
               />
             ) : animal.filename ? (
               <img
@@ -202,7 +210,7 @@ const AnimalDetailProfile = ({
                 className="h-96 w-full object-contain"
               />
             ) : (
-              <div className="flex h-96 w-full items-center justify-center border border-gray-300">
+              <div className="flex h-96 w-full items-center justify-center rounded-xl border border-gray-300">
                 이미지 없음
               </div>
             )}
@@ -219,20 +227,24 @@ const AnimalDetailProfile = ({
                 ✖
               </button>
             )}
+
+            {error && <p className="text-sm text-red-500">{error}</p>}
           </div>
         ) : (
-          <div className="flex h-96 w-full items-center justify-center border border-gray-300">
+          // 수정중 아닐때
+          <div className="flex h-96 items-center justify-center border-gray-300">
             {isShelter ? (
+              // 보호소 동물
               <img
                 src={animal.popfile}
                 alt="animal popfile"
-                className="size-full object-cover"
+                className="m-2 size-full rounded-xl object-cover"
               />
             ) : animal.filename ? (
               <img
                 src={animal.filename}
                 alt="animal profile"
-                className="size-full object-cover"
+                className="m-2 size-full rounded-xl object-cover"
               />
             ) : (
               <div className="flex size-full  flex-col items-center justify-center">
@@ -243,59 +255,75 @@ const AnimalDetailProfile = ({
         )}
       </div>
       {/* Animal Details */}
-      <div className="mt-4 flex w-full flex-col space-y-4 lg:mt-0 lg:w-1/2 lg:pl-4">
-        {filteredFields.map(({label, name, value, options, inttype}) => (
-          <div key={name} className="flex items-center">
-            <label htmlFor={name} className="w-32">
-              {label}
-            </label>
-            {isEditing ? (
-              <>
-                {options ? (
+      {filteredFields.map(({label, name, value, options, inttype}) => (
+        <div
+          key={name}
+          className="col-span-6 flex rounded-xl border border-gray-100"
+        >
+          <label
+            htmlFor={name}
+            className="inline-flex w-40 shrink-0 items-center justify-start ps-5"
+          >
+            {label}
+          </label>
+          {/* 수정중일때 */}
+          {isEditing ? (
+            <>
+              {options ? (
+                <div className="relative inline-flex items-center">
                   <select
                     id={name}
                     name={name}
                     value={value}
                     onChange={handleInputChange}
-                    className="w-full rounded border bg-mild p-2"
+                    className="rounded bg-mild"
                   >
-                    <option key={"none"} value={""}>
+                    <option
+                      key={"none"}
+                      value={""}
+                      className="w-full rounded border bg-mild px-2 py-1"
+                    >
                       선택
                     </option>
                     {options.map((option) => (
-                      <option key={option.value} value={option.label}>
+                      <option
+                        key={option.value}
+                        value={option.label}
+                        className="w-full rounded border bg-mild px-2 py-1"
+                      >
                         {option.value ? option.label : option}
                       </option>
                     ))}
                   </select>
-                ) : (
+                </div>
+              ) : (
+                <div className="relative inline-flex items-center">
                   <input
                     type={inttype ? "number" : "text"}
                     id={name}
                     name={name}
                     value={value}
                     onChange={handleInputChange}
-                    className="w-full rounded border bg-mild p-2"
+                    className="rounded border bg-mild px-2 py-1"
                   />
-                )}
-                {errors[name] && (
-                  <div className="mt-1 text-sm text-red-500">
-                    {errors[name]}
-                  </div>
-                )}
-              </>
-            ) : (
-              <div
-                id={name}
-                name={name}
-                className="w-full rounded border bg-mild p-2"
-              >
-                {value}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+                </div>
+              )}
+              {errors[name] && (
+                <div className="mt-1 text-sm text-red-500">{errors[name]}</div>
+              )}
+            </>
+          ) : (
+            // 수정중 아닐 때
+            <div
+              id={name}
+              name={name}
+              className="inline-flex grow items-center px-5"
+            >
+              <span className="rounded bg-mild px-2 py-1">{value}</span>
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   )
 }

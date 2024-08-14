@@ -4,8 +4,9 @@ import AnimalDetailProfile from "./AnimalDetailProfile"
 import React, {useState, useEffect} from "react"
 import {editAnimal, removeAnimal} from "api/animals-api"
 import DeleteConfirmationModal from "components/common/DeleteConfirmationModal" // 모달 컴포넌트 임포트
+import {Toast} from "utils/common-utils"
 
-const ArticleDetailModify = () => {
+const AnimalDetailModify = () => {
   const navigate = useNavigate()
   const [animal, setAnimal] = useState(null)
   const location = useLocation()
@@ -33,9 +34,16 @@ const ArticleDetailModify = () => {
     console.log("animal", animal)
   }
 
-  //파일이 수정된 경우
+  const [error, setError] = useState(null)
+
+  // 파일 선택 시 호출되는 함수
   const handleFileChange = (event) => {
     const file = event.target.files[0]
+    const maxSizeInBytes = 30 * 1024 * 1024 // 50MB 크기 제한
+    if (file.size > maxSizeInBytes) {
+      setError("파일 크기는 30MB를 초과할 수 없습니다.")
+      return
+    }
     if (file) {
       setImageFile(file)
     }
@@ -82,7 +90,10 @@ const ArticleDetailModify = () => {
     }
     try {
       await editAnimal(animal.id, formData)
-      alert("동물 정보가 성공적으로 수정되었습니다.")
+      Toast.fire({
+        icon: "succes",
+        title: "동물 정보가 성공적으로 수정됐어요.",
+      })
       navigate(`/shelter/details/${animal.id}`, {
         state: {animal: updateAnimalData},
       })
@@ -154,6 +165,8 @@ const ArticleDetailModify = () => {
         errors={errors}
       />
 
+      {error && <p className="text-sm text-red-500">{error}</p>}
+
       <div className="flex justify-end">
         <Button text={"수정하기"} onClick={goAnimalModify} />
         <Button text={"삭제하기"} onClick={openDeleteModal} />
@@ -169,4 +182,4 @@ const ArticleDetailModify = () => {
   )
 }
 
-export default ArticleDetailModify
+export default AnimalDetailModify

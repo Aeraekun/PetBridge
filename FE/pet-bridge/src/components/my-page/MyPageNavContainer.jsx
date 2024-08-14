@@ -30,19 +30,19 @@ const MyPageNavList = () => {
     {id: itemId++, text: "내 펫픽", imgSrc: iconMyShorts, url: "petpics"},
     {
       id: itemId++,
-      text: "내 입양기록(계약서)",
+      text: "내 입양 계약",
       imgSrc: iconMyContracts,
       url: "contracts",
     },
     {
       id: itemId++,
-      text: "내 관심등록 동물",
+      text: "팔로우중인 동물",
       imgSrc: iconMyFavorites,
       url: "favorites",
     },
     {
       id: itemId++,
-      text: "내가 좋아요한 펫픽",
+      text: "내 좋아요",
       imgSrc: iconMyLikes,
       url: "likes",
     },
@@ -98,39 +98,39 @@ const MyPageNavContainer = () => {
 
   return (
     // 마이페이지 전체 틀
-    <div className="col-span-3 flex flex-col items-center  justify-center space-y-3 py-2.5 text-center md:h-full md:w-80">
+    <div className="col-span-3 flex min-w-56 flex-col  items-center justify-center space-y-3 py-2.5 text-center md:h-full md:w-80">
       {/* 1. 유저 프로필 이미지 */}
       <img
         src={userImage ? userImage : DefaulUser150}
         alt="유저 이미지"
-        className="size-[150px] rounded-full"
+        className="size-[125px] rounded-full"
       />
       {/* 2. 유저 이름 */}
-      <button className="bg-white text-2xl" onClick={onClickUsernameHandler}>
+      <button className="bg-white text-lg" onClick={onClickUsernameHandler}>
         {userName}
       </button>
       {/* 3. 수정하기, 로그아웃 */}
       <div className="flex items-center justify-between space-x-2">
         {/* 햄버거 버튼 */}
-        <div className="md:hidden">
-          <button
-            onClick={() => setIsNavOpen(!isNavOpen)}
-            className="text-3xl focus:outline-none"
-          >
-            &#9776; {/* 햄버거 메뉴 아이콘 */}
-          </button>
-        </div>
         <Link
           to="/users/update"
-          className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild"
+          className="flex h-[30px] w-[80px] items-center justify-center rounded-lg bg-mild text-sm"
         >
           수정하기
         </Link>
         <button
-          className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild"
+          className="flex h-[30px] w-[80px] items-center justify-center rounded-lg bg-mild text-sm"
           onClick={handleLogOut}
         >
           로그아웃
+        </button>
+      </div>
+      <div className="md:hidden">
+        <button
+          onClick={() => setIsNavOpen(!isNavOpen)}
+          className="text-4xl focus:outline-none"
+        >
+          &#9776; {/* 햄버거 메뉴 아이콘 */}
         </button>
       </div>
 
@@ -164,10 +164,10 @@ const MyPageNavContainer = () => {
           to="disable"
           className={({isActive}) => [
             isActive ? "text-red-400" : "text-stroke",
-            "m-0",
+            "m-0 text-xs",
           ]}
         >
-          [회원 탈퇴하기]
+          [ 회원 탈퇴하기 ]
         </NavLink>
       )}
     </div>

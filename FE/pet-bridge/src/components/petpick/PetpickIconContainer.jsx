@@ -17,34 +17,33 @@ import FollowButton from "components/common/FollowButton"
 const PetpickIconContainer = ({
   direct,
   toggleComment,
+  toggleDetail,
   petpickId,
   animalId,
   isFollowing,
   isLiking,
   isLogin,
-  toggleDetail,
   isFollowButton,
 }) => {
   const isVertical = direct === "col"
   // const location = useLocation()
   // const navigate = useNavigate()
+  // console.log(
+  //   "petpickId : ",
+  //   petpickId,
+  //   "isFollowing : ",
+  //   isFollowing,
+  //   "  isLiking : ",
+  //   isLiking
+  // )
   const [isFollow, setIsFollow] = useState(isFollowing)
   const [isLike, setIsLike] = useState(isLiking)
 
   useEffect(() => {
-    // console.log("Id: ", petpickId, "  follow", isFollowing, " like", isLiking)
-  }, [isFollow, isLike])
-  // const goPetpickTagDetail = () => {
-  //   const currentPath = location.pathname
-  //   const tagPath = `/petpick/${petpickId}/tag`
-  //   const basePath = `/petpick`
-  //   console.log(currentPath)
-  //   if (currentPath === tagPath) {
-  //     navigate(basePath)
-  //   } else {
-  //     navigate(tagPath)
-  //   }
-  // }
+    // console.error("팔로우 좋아요 바뀜")
+    setIsFollow(isFollowing)
+    setIsLike(isLiking)
+  }, [isFollowing, isLiking])
 
   const handleLike = async () => {
     if (!isLogin) {
@@ -54,6 +53,7 @@ const PetpickIconContainer = ({
 
     const newLikeState = !isLike
     setIsLike(newLikeState)
+    console.log(petpickId)
     try {
       if (newLikeState) {
         const res = await registPetPickLike(petpickId)
@@ -74,6 +74,7 @@ const PetpickIconContainer = ({
       return
     }
 
+    console.log(animalId)
     const newFollowState = !isFollow
     setIsFollow(newFollowState)
     try {
@@ -91,7 +92,8 @@ const PetpickIconContainer = ({
   }
 
   const handleCopyUrl = () => {
-    const url = window.location.href
+    console.log(isLogin)
+    const url = `${window.location.href}/${petpickId}`
 
     navigator.clipboard
       .writeText(url)
@@ -109,6 +111,9 @@ const PetpickIconContainer = ({
   const [showMessage, setShowMessage] = useState(false)
   return (
     <>
+      {/* {isFollow ? <>팔로우</> : <>언팔</>}
+      <br />
+      {isLike ? <>좋아요</> : <>안좋아요</>} */}
       {isFollowButton ? (
         <FollowButton isFollowing={isFollow} onClick={handleFollow} />
       ) : (
@@ -121,7 +126,11 @@ const PetpickIconContainer = ({
             size={""}
             className="w-12"
           />
-          <SirenIcon className="w-12" />
+          <SirenIcon
+            className="w-12"
+            reportType={"PETPICK"}
+            reportId={petpickId}
+          />
           <CommentIcon className="w-12" onClick={toggleComment} />
           <FollowIcon
             isFollowing={isFollow}

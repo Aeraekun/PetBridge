@@ -6,6 +6,7 @@ import {useNavigate} from "react-router-dom"
 // import AnimalSearchForm from "components/board/animals/AnimalSearchForm"
 import {getAnimalList} from "api/animals-api"
 import Pagination from "components/common/Pagination"
+import searchIcon from "../../../assets/icons/icon-search.png"
 
 //임시보호동물게시판
 const Search = ({searchParams}) => {
@@ -36,7 +37,7 @@ const Search = ({searchParams}) => {
   }
 
   return (
-    <div className="flex w-full items-center justify-between px-10">
+    <div className="flex w-full items-center justify-between rounded-md border border-[#D9D9D9] bg-pink-100 p-4">
       <select
         id="kind"
         value={processstate}
@@ -63,8 +64,9 @@ const Search = ({searchParams}) => {
         onClick={() => {
           handleButtonClick()
         }}
-        className="flex h-10 w-36 items-center justify-center rounded-xl bg-green-600 text-white "
+        className="flex h-10 w-36 items-center justify-center rounded-xl bg-mild text-black "
       >
+        <img src={searchIcon} alt="Search Icon" className="mr-2 size-[20px]" />
         검색
       </button>
     </div>
@@ -93,7 +95,6 @@ const AnimalBoardList = () => {
   }
 
   ///임시보호
-
   const [searchParams, setSearchParams] = useState({}) // API 요청을 보내기 위한 파라미터
 
   // 초기값 로딩
@@ -128,30 +129,16 @@ const AnimalBoardList = () => {
     <>
       <Search searchParams={handleSearchForm} />
       {/* <AnimalSearchForm searchParams={handleSearchForm2} isShelter={false} /> */}
-
-      <Button text={"등록하기"} onClick={goRegist} />
-
-      <div className="flex space-x-5">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
-          disabled={currentPage === 0}
-        >
-          ◀이전
-        </button>
-
-        <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages - 1}
-        >
-          다음▶{" "}
-        </button>
+      <div
+        className="fixed top-20 z-10 flex justify-end"
+        style={{left: "calc(50% + 35%)", top: "90%"}}
+      >
+        <Button text={"등록하기"} onClick={goRegist} />
       </div>
-      <ul className="flex w-full flex-wrap justify-between">
+      <ul className="relative flex w-full flex-wrap justify-start gap-x-10">
         {animals ? (
           animals.map((item, index) => (
-            <li key={index}>
+            <li key={index} className="grow">
               <AnimalItem
                 data={item}
                 onSelectAnimal={() => goAnimalDetail(item)}
@@ -162,6 +149,9 @@ const AnimalBoardList = () => {
         ) : (
           <div>등록된 동물이 없습니다.</div>
         )}
+        <li className="w-[300px] grow"></li>
+        <li className="w-[300px] grow"></li>
+        <li className="w-[300px] grow"></li>
       </ul>
       <Pagination
         currentPage={currentPage}

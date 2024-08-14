@@ -3,6 +3,7 @@ import Siren from "assets/image/Siren-white.png"
 import {logOut} from "features/user/users-slice"
 import {useDispatch} from "react-redux"
 import {useNavigate, useParams} from "react-router-dom"
+import Swal from "sweetalert2"
 import {logOutUser} from "utils/user-utils"
 
 const MyPageDisableContainer = () => {
@@ -15,7 +16,15 @@ const MyPageDisableContainer = () => {
   }
   const navigate = useNavigate()
   const clickDisableHandler = async () => {
-    if (confirm("정말 탈퇴하시겠습니까?")) {
+    const result = await Swal.fire({
+      title: "정말 탈퇴하시겠습니까?",
+      showCancelButton: true,
+      confirmButtonText: "네, 탈퇴합니다.",
+      confirmButtonColor: "#d33",
+      cancelButtonText: "아니요, 취소합니다",
+    })
+
+    if (result.isConfirmed) {
       try {
         // 내 회원 탈퇴
         const res = await deleteSelfUser()
@@ -30,12 +39,12 @@ const MyPageDisableContainer = () => {
     navigate("/")
   }
   return (
-    <div className="flex size-full  flex-col items-center justify-center">
+    <div className="flex size-full  flex-col items-center justify-center p-8">
       <div className="overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
         <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
           <div className="sm:flex-col sm:items-start ">
             <div className="my-5 flex justify-center sm:w-full">
-              <div className="bg-alert mx-auto flex size-16 shrink-0 items-center justify-center rounded-full sm:mx-0 sm:size-16">
+              <div className="mx-auto flex size-16 shrink-0 items-center justify-center rounded-full bg-alert sm:mx-0 sm:size-16">
                 <img src={Siren} alt="Siren Icon" />
               </div>
             </div>
@@ -65,7 +74,7 @@ const MyPageDisableContainer = () => {
         <div className="justify-center bg-gray-50 px-4 py-3 sm:flex sm:flex-row  sm:px-6">
           <button
             type="button"
-            className="bg-alert mr-3 inline-flex w-36 justify-center rounded-md p-3 text-sm text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-36"
+            className="mr-3 inline-flex w-36 justify-center rounded-md bg-alert p-3 text-sm text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-36"
             onClick={clickDisableHandler}
           >
             탈퇴하기

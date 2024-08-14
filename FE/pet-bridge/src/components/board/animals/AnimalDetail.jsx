@@ -74,7 +74,6 @@ import {selectId} from "features/user/users-slice"
 import {removeAnimal} from "api/animals-api"
 import AnimalDetailProfile from "./AnimalDetailProfile"
 import Button from "components/common/Button"
-import SirenIcon from "components/common/SirenIcon"
 import DeleteConfirmationModal from "components/common/DeleteConfirmationModal"
 import Profile from "components/common/Profile"
 
@@ -85,6 +84,10 @@ const AnimalDetail = () => {
   const currentUserId = useSelector(selectId)
   const location = useLocation()
   const animal = location.state.animal || {}
+
+  useEffect(() => {
+    console.log("Animal data received:", location.state.animal)
+  }, [location.state.animal])
   const [isShelter, setIsShelter] = useState(false)
   useEffect(() => {
     console.log(animal)
@@ -128,12 +131,16 @@ const AnimalDetail = () => {
         돌아가기
       </button>
       <hr />
-      <Profile
-        image={animal.userImage}
-        nickname={animal.userNickname}
-        isMe={Number(currentUserId) === Number(animal.userId)}
-      />
-      <hr />
+      {!isShelter && (
+        <>
+          <Profile
+            image={animal.userImage}
+            nickname={animal.userNickname}
+            isMe={Number(currentUserId) === Number(animal.userId)}
+          />
+          <hr />
+        </>
+      )}
 
       <AnimalDetailProfile
         animal={animal}
@@ -147,9 +154,7 @@ const AnimalDetail = () => {
           <Button text={"삭제하기"} onClick={openDeleteModal} />
         </div>
       ) : (
-        <div className="flex justify-end">
-          <SirenIcon />
-        </div>
+        <div className="flex justify-end"></div>
       )}
 
       <DeleteConfirmationModal
