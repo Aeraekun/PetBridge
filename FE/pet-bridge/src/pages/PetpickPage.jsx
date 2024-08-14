@@ -21,7 +21,7 @@ const PetpickPage = () => {
   const containerRef = useRef(null) // 스크롤 컨테이너
   const itemRefs = useRef(list.map(() => React.createRef()))
   const [isLoading, setIsLoading] = useState(true)
-  // const [loading, setLoading] = useState(false) // 추가된 로딩 상태
+  const [locationName, setLocationName] = useState()
 
   const handleInView = useCallback((visibleIndex) => {
     setIndex(visibleIndex)
@@ -45,29 +45,43 @@ const PetpickPage = () => {
       return []
     }
   }
-
   //동물 받아오기
   const fetchAnimalData = async () => {
     //5마리씩 sidoCode 넣어서 보호중(입양가능)인 동물만.
-    const sidoCode = (await getMyLocation()) || 6300000 //위치 시도코드받아오기
-    const searchParams = {
-      numOfRows: 5,
-      pageNo: nowPage,
-      upr_cd: sidoCode,
-      state: "protect",
-    }
-    const res = await getShelterAnimalsAPI(searchParams)
-    setNowPage(nowPage + 1)
-    if (
-      res.data &&
-      res.data.response &&
-      res.data.response.body &&
-      res.data.response.body.items
-    ) {
-      return res.data.response.body.items.item
-    } else {
-      console.log("보호소 동물 가져오기 실패")
-      return [] // 빈 배열 반환
+    try {
+      const data = await getMyLocation()
+      const location = {
+        code: data?.code || 6300000,
+        name: data?.name || "대전광역시",
+      }
+      const code = location?.code
+      const name = location?.name
+      // if (location) {
+      //   console.log("location", location)
+      // }
+      setLocationName(name)
+      const sidoCode = code || 6300000 //위치 시도코드받아오기
+      const searchParams = {
+        numOfRows: 5,
+        pageNo: nowPage,
+        upr_cd: sidoCode,
+        state: "protect",
+      }
+      const res = await getShelterAnimalsAPI(searchParams)
+      setNowPage(nowPage + 1)
+      if (
+        res.data &&
+        res.data.response &&
+        res.data.response.body &&
+        res.data.response.body.items
+      ) {
+        return res.data.response.body.items.item
+      } else {
+        console.log("보호소 동물 가져오기 실패")
+        return [] // 빈 배열 반환
+      }
+    } catch (e) {
+      return e
     }
   }
 
@@ -324,6 +338,7 @@ const PetpickPage = () => {
                     onInView={handleInView}
                     nowindex={i}
                     animal={item}
+                    location={locationName}
                   />
                 )
               } else {
