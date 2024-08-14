@@ -2,7 +2,7 @@ import UpdateProfileContainer from "components/users/UpdateProfileContainer"
 
 const UpdateProfilePage = () => {
   return (
-    <div className="flex h-[800px] w-[600px] flex-col items-center rounded-lg border bg-rose-50 px-10 py-16">
+    <div className="mt-2 flex w-[600px] flex-col items-center rounded-lg border-none bg-rose-50 p-10 shadow-xl">
       <UpdateProfileContainer />
     </div>
   )

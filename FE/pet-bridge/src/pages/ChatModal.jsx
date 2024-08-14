@@ -140,7 +140,7 @@ const ChatModal = () => {
                   {/* 우측 채팅 화면 */}
                   {currentChatId ? (
                     isCall ? (
-                      <div className="size-full overflow-auto">
+                      <div className="hidden-scrollbar size-full overflow-auto">
                         <CallPage onEndCall={handleCall} />
                       </div>
                     ) : (

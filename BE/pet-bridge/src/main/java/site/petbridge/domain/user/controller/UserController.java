@@ -106,7 +106,7 @@ public class UserController {
     /**
      * 회원 삭제(관리자)
      */
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeUserAdmin(@PathVariable("id") int id) throws Exception {
         userService.removeUserAdmin(id);
 
