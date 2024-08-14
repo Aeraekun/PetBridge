@@ -1,6 +1,7 @@
 import {useEffect} from "react"
 import {useNavigate, useSearchParams} from "react-router-dom"
 import {getPaymentCompleted} from "api/contracts-api.js"
+import {Toast} from "utils/common-utils"
 
 const PaymentComplete = () => {
   let [infoQuery] = useSearchParams()
@@ -12,14 +13,21 @@ const PaymentComplete = () => {
     if (contract_id && pg_token) {
       try {
         await getPaymentCompleted(contract_id, pg_token)
-        alert("계약 체결이 완료되었습니다.")
+        Toast.fire({icon: "success", title: "계약 체결이 완료됐어요."})
       } catch (error) {
         console.log(error)
-        alert("결제를 실패했습니다. 계약을 다시 체결해주세요.")
+        Toast.fire({
+          icon: "warning",
+          title: "결제를 실패했습니다. 계약을 다시 체결해주세요.",
+        })
       }
       navigate(`/contracts/${contract_id}`)
     } else {
-      alert("결제 정보를 받아오는 데 실패했습니다. 계약을 다시 체결해주세요.")
+      Toast.fire({
+        icon: "warning",
+        title:
+          "결제 정보를 받아오는 데 실패했습니다. 계약을 다시 체결해주세요.",
+      })
       navigate("")
     }
   }

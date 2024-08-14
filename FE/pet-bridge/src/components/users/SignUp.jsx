@@ -13,6 +13,7 @@ import {
 import Timer from "components/common/Timer"
 import {validateConfirmPassword} from "utils/user-validations"
 import logoImage from "assets/image/logo.png"
+import {Toast} from "utils/common-utils"
 
 const SignUp = () => {
   const dispatch = useDispatch()
@@ -159,7 +160,10 @@ const SignUp = () => {
       setIsSendPhoneCodeDisalbed(true)
     } else if (postPhoneVerificationCodeThunk.rejected.match(res)) {
       console.log(res)
-      alert("이미 가입된 번호입니다. 다른 번호를 시도해주세요.")
+      Toast.fire({
+        icon: "warning",
+        title: "이미 가입된 번호입니다. 다른 번호를 시도해주세요.",
+      })
     } else {
       console.log(res)
     }
@@ -289,7 +293,10 @@ const SignUp = () => {
       setIsValidEmailButton(true)
       setIsSendCodeButtonDisalbed(true)
     } else if (postEmailVerificationCodeThunk.rejected.match(res)) {
-      alert("이미 가입된 이메일입니다. 다른 이메일을 시도해주세요.")
+      Toast.fire({
+        icon: "warning",
+        title: "이미 가입된 이메일입니다. 다른 이메일을 시도해주세요.",
+      })
     } else {
       console.log(res)
     }
@@ -308,7 +315,10 @@ const SignUp = () => {
         setIsEmailVerified(true)
       } else {
         console.log(res)
-        alert("잘못된 인증번호입니다. 다시 확인해주세요.")
+        Toast.fire({
+          icon: "warning",
+          title: "잘못된 인증번호입니다. 인증 번호를 확인해주세요.",
+        })
       }
     } catch (error) {
       console.log(error)
@@ -329,7 +339,10 @@ const SignUp = () => {
         errors.phoneConfirm = ""
       } else {
         console.log(res)
-        alert("잘못된 인증번호입니다. 다시 입력해주세요.")
+        Toast.fire({
+          icon: "warning",
+          title: "잘못된 인증번호입니다. 인증 번호를 확인해주세요.",
+        })
       }
     } catch (error) {
       console.log(error)

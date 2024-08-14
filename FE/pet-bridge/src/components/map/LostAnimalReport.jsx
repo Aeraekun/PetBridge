@@ -6,6 +6,7 @@ import {useSelector} from "react-redux"
 import {selectId, selectImage, selectNickname} from "features/user/users-slice"
 import {registArticle} from "api/boards-api"
 import markerImg from "../../assets/image/marker.png"
+import {Toast} from "utils/common-utils"
 
 const {kakao} = window
 
@@ -85,19 +86,19 @@ const LostAnimalReport = () => {
 
   const writeArticle = async () => {
     if (editorContent.trim() === "") {
-      alert("내용을 입력해주세요.")
+      Toast.fire({icon: "warning", title: "내용을 입력해주세요."})
       return
     }
     if (title.trim() === "") {
-      alert("제목을 입력해주세요.")
+      Toast.fire({icon: "warning", title: "제목을 입력해주세요."})
       return
     }
     if (!imageSrc) {
-      alert("대표사진을 입력하세요.")
+      Toast.fire({icon: "warning", title: "대표 사진을 입력해주세요."})
       return
     }
     if (!position) {
-      alert("지도를 클릭하여 위치를 선택하세요.")
+      Toast.fire({icon: "warning", title: "지도를 클릭해서 위치를 선택하세요."})
       return
     }
 
@@ -120,11 +121,11 @@ const LostAnimalReport = () => {
 
     try {
       await registArticle(formData)
-      alert("글이 작성되었습니다.")
+      Toast.fire({icon: "success", title: "글이 작성됐어요."})
       navigate(`/lost-and-found`)
     } catch (e) {
       console.error(e)
-      alert("글 작성에 실패했습니다.")
+      Toast.fire({icon: "warning", title: "글 작성에 실패했어요"})
     }
   }
 

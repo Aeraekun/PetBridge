@@ -13,6 +13,7 @@ import {
 import {useSelector} from "react-redux"
 import {registArticle} from "api/boards-api"
 import Profile from "components/common/Profile"
+import {Toast} from "utils/common-utils"
 
 const ArticleBoardWrite = () => {
   const [title, setTitle] = useState(null)
@@ -61,7 +62,7 @@ const ArticleBoardWrite = () => {
   // 작성하기
   const writeArticle = async () => {
     if (editorContent.trim() === "" || !title) {
-      alert("제목과 내용을 모두 입력하세요.")
+      Toast.fire({icon: "warning", title: "제목과 내용을 모두 입력해주세요."})
       return
     }
     const newArticle = {
@@ -102,7 +103,7 @@ const ArticleBoardWrite = () => {
         돌아가기
       </button>
       <input
-        className=" h-16 rounded-xl border border-stroke text-center text-4xl font-bold"
+        className=" border-stroke h-16 rounded-xl border text-center text-4xl font-bold"
         placeholder="제목을 입력하세요"
         onChange={(e) => setTitle(e.target.value)}
         value={title}
