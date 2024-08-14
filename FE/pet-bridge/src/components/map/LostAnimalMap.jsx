@@ -215,7 +215,7 @@ const {kakao} = window
 const LostAnimalItem = ({data, onSelectArticle}) => {
   return (
     <div
-      className="relative size-[100px] overflow-hidden  rounded-xl border border-stroke"
+      className="border-stroke relative size-[100px]  overflow-hidden rounded-xl border"
       onClick={onSelectArticle}
       role="button"
       tabIndex={0}
@@ -402,7 +402,7 @@ const LostAnimalMap = () => {
         ></div>
       </div>
 
-      <div className="absolute  right-[10px] top-[70px] z-50  flex h-[520px] w-[110px] flex-col items-center justify-between space-y-2  rounded-xl border bg-white p-2">
+      <div className="absolute  right-[10px] top-[70px] z-40  flex h-[520px] w-[110px] flex-col items-center justify-between space-y-2  rounded-xl border bg-white p-2">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
           disabled={currentPage === 0}

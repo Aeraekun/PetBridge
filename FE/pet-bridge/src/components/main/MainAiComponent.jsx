@@ -18,7 +18,7 @@ const MainAiComponent = () => {
         </p>
         <Link
           to="/recommendation"
-          className="inline-flex items-center rounded-lg border border-gray-300 bg-mild px-2 py-2.5 text-black no-underline"
+          className="bg-mild inline-flex items-center rounded-lg border border-gray-300 px-2 py-2.5 text-black no-underline"
         >
           <img
             src={iconPawprint}
@@ -52,7 +52,7 @@ const MainAiComponent = () => {
                 입양 하기 전부터 머리가 복잡하시죠? <br />
                 이제는 고민 No! 견우와 직묘만의 특별한 AI가 추천해드려요! <br />
                 간단한 질문 몇 가지에 대답해주시면 당신에게 맞는 종을
-                추천해드립니다~ <br />
+                추천해드립니다 <br />
               </div>
             </div>
           )}

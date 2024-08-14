@@ -11,6 +11,7 @@ import {selectNickname} from "features/user/users-slice"
 import axiosInstance from "api/axios-instance"
 import {selectCurrentChatId, selectOpponentInfo} from "features/chat/chat-slice"
 import DefaultUserImage from "assets/image/default_user_150.png"
+import Swal from "sweetalert2"
 
 // 애플리케이션 서버 URL 설정
 const BASE_API_URL = process.env.REACT_APP_API_URL
@@ -185,8 +186,20 @@ const CallPage = ({onEndCall}) => {
     setPublisher(undefined)
   }
 
-  const handleEndCall = () => {
-    if (confirm("화상채팅을 종료하시겠습니까?")) {
+  const handleEndCall = async () => {
+    const result = await Swal.fire({
+      title: "화상채팅을 종료하시겠습니까?",
+      showCancelButton: true,
+      confirmButtonText: "네",
+      confirmButtonColor: "#fe85ac",
+      cancelButtonText: "아니요",
+      cancelButtonColor: "#a4a2a1",
+      customClass: {
+        confirmButton: "w-20 py-2 text-white font-semibold rounded-md",
+        cancelButton: "w-20 py-2 text-white font-semibold rounded-md",
+      },
+    })
+    if (result.isConfirmed) {
       leaveSession()
       onEndCall(false)
     }
