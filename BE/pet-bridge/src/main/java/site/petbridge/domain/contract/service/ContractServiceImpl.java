@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import site.petbridge.domain.animal.repository.AnimalRepository;
+import site.petbridge.domain.chatmessage.controller.ChatMessageController;
+import site.petbridge.domain.chatmessage.dto.request.ChatMessageRequestDto;
+import site.petbridge.domain.chatroom.dto.request.ChatRoomRequestDto;
+import site.petbridge.domain.chatroom.service.ChatRoomServiceImpl;
 import site.petbridge.domain.contract.domain.Contract;
 import site.petbridge.domain.contract.domain.enums.Status;
 import site.petbridge.domain.contract.dto.request.ContractEditRequestDto;
@@ -36,6 +40,8 @@ public class ContractServiceImpl implements ContractService {
 	private final UserRepository userRepository;
 	private final AnimalRepository animalRepository;
 	private final AuthUtil authUtil;
+	private final ChatRoomServiceImpl chatRoomServiceImpl;
+	private final ChatMessageController chatMessageController;
 
 	@Override
 	public Optional<List<ContractListResponseDto>> getListContractByUserId(int userId) throws Exception {
@@ -108,6 +114,10 @@ public class ContractServiceImpl implements ContractService {
 			.contractId(savedContract.getId())
 			.build();
 		contractCheckRepository.save(contractCheck);
+
+		int roomId = chatRoomServiceImpl.RegistOrEnterChatRoom(
+			new ChatRoomRequestDto(user.getId(), contractRequestDto.getContracteeId()));
+		chatMessageController.registChatMessage(new ChatMessageRequestDto(roomId, user.getId(), "[알림] 새 계약서가 작성되었습니다"));
 	}
 
 	@Override
