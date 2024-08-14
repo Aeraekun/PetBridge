@@ -10,6 +10,7 @@ import {
 import {useEffect, useState} from "react"
 import {useDispatch, useSelector} from "react-redux"
 import {Link, useNavigate} from "react-router-dom"
+import {Toast} from "utils/common-utils"
 import {
   validateBirth,
   validateNickname,
@@ -116,10 +117,16 @@ const SocialUpdateContainer = () => {
       try {
         const res = await patchUserInfo(formData)
         if (res?.status === 200) {
-          alert("개인정보 수정 완료.")
+          Toast.fire({
+            icon: "success",
+            title: "개인 정보 수정 완료",
+          })
           navigate("/users/social/success")
         } else {
-          alert("개인정보 수정 오류. 다시 시도해주세요.")
+          Toast.fire({
+            icon: "warning",
+            title: "개인정보 수정 오류. 다시 시도해주세요.",
+          })
         }
         console.log(res)
         return
@@ -193,7 +200,10 @@ const SocialUpdateContainer = () => {
       setIsSendPhoneCodeDisalbed(true)
     } else if (postPhoneVerificationCodeThunk.rejected.match(res)) {
       console.log(res)
-      alert("이미 가입된 번호입니다. 다른 번호를 시도해주세요.")
+      Toast.fire({
+        icon: "warning",
+        title: "이미 가입된 번호입니다. 다른 번호로 시도해주세요.",
+      })
     } else {
       console.log(res)
     }
@@ -213,7 +223,10 @@ const SocialUpdateContainer = () => {
         errors.phoneConfirm = ""
       } else {
         console.log(res)
-        alert("잘못된 인증번호입니다. 다시 입력해주세요.")
+        Toast.fire({
+          icon: "warning",
+          title: "잘못된 인증번호입니다. 다시 입력해주세요.",
+        })
       }
     } catch (error) {
       console.log(error)
@@ -241,7 +254,7 @@ const SocialUpdateContainer = () => {
         />
       </div>
       {errors.nickname && (
-        <span className="col-span-12 text-alert">{errors.nickname}</span>
+        <span className="text-alert col-span-12">{errors.nickname}</span>
       )}
       {/* 전화번호 입력 창 */}
       <div className="grid w-full grid-cols-12 items-center gap-x-2.5">
@@ -251,7 +264,7 @@ const SocialUpdateContainer = () => {
               disabled={true}
               value={updateFormData.phone}
               type="phone"
-              className="col-span-9 my-1 rounded-md border bg-stroke p-2.5"
+              className="bg-stroke col-span-9 my-1 rounded-md border p-2.5"
               placeholder="휴대전화번호"
               id="phone"
               maxLength={255}
@@ -260,7 +273,7 @@ const SocialUpdateContainer = () => {
             <button
               disabled={true}
               type="button"
-              className="col-span-3 h-12 rounded-md border bg-stroke px-3.5 py-2.5"
+              className="bg-stroke col-span-3 h-12 rounded-md border px-3.5 py-2.5"
             >
               {isPhoneVerified ? (
                 "인증 완료"
@@ -325,7 +338,7 @@ const SocialUpdateContainer = () => {
           <button
             disabled={isPhoneVerified}
             type="button"
-            className="col-span-3 h-12 rounded-md bg-mild px-3.5 py-2.5"
+            className="bg-mild col-span-3 h-12 rounded-md px-3.5 py-2.5"
             onClick={onClickPhoneCheckHandler}
           >
             인증하기
@@ -335,7 +348,7 @@ const SocialUpdateContainer = () => {
         <></>
       )}
       {errors.phone && (
-        <span className="col-span-12 text-alert">{errors.phone}</span>
+        <span className="text-alert col-span-12">{errors.phone}</span>
       )}
       {isPhoneVerified && (
         <span className="col-span-12 px-2.5 text-green-500">
@@ -356,19 +369,19 @@ const SocialUpdateContainer = () => {
           onBlur={onBlurHandler}
         />
         {errors.birth && (
-          <span className="col-span-12 text-alert">{errors.birth}</span>
+          <span className="text-alert col-span-12">{errors.birth}</span>
         )}
       </div>
       <div className="my-5 grid w-full grid-cols-2 gap-10">
         {/* 회원가입 버튼 */}
         {isPhoneVerified ? (
-          <button className="h-12 rounded-md bg-stroke px-3.5 py-2.5">
+          <button className="bg-stroke h-12 rounded-md px-3.5 py-2.5">
             정보 입력
           </button>
         ) : (
           <button
             onClick={onSubmitHandler}
-            className="h-12 rounded-md bg-mild px-3.5 py-2.5"
+            className="bg-mild h-12 rounded-md px-3.5 py-2.5"
           >
             정보 입력
           </button>
@@ -378,7 +391,7 @@ const SocialUpdateContainer = () => {
         <Link
           to="/"
           type="button"
-          className="rounded-md bg-mild px-3.5 py-2.5 text-center"
+          className="bg-mild rounded-md px-3.5 py-2.5 text-center"
         >
           입력 취소
         </Link>

@@ -1,5 +1,6 @@
 import axios from "axios"
 import axiosInstance from "./axios-instance"
+import {Toast} from "utils/common-utils"
 
 const PETPICK_API_URL = process.env.REACT_APP_API_URL + "/petpicks"
 const PETPICK_COMMENTS_API_URL =
@@ -113,7 +114,7 @@ export const removePetPick = async (id) => {
   try {
     const res = await axiosInstance.delete(`${PETPICK_API_URL}/${id}`)
     console.log("removePetPick" + res)
-    alert("삭제완료")
+    Toast.fire({icon: "success", title: "펫픽 삭제가 완료됐어요."})
     return res.data
   } catch (e) {
     console.error(e)
@@ -155,7 +156,7 @@ export const registPetPickComment = async (comment) => {
   try {
     const res = await axiosInstance.post(`${PETPICK_COMMENTS_API_URL}`, comment)
     console.log("registPetPickComment" + res)
-    alert("댓글 작성")
+    Toast.fire({icon: "success", title: "댓글 작성이 완료됐어요."})
     return res.data
   } catch (e) {
     console.error(e)

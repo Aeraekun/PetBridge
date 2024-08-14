@@ -5,6 +5,7 @@ import {postReport} from "api/users-api"
 import LoginModalComponent from "components/common/LoginModalComponent"
 import {useSelector} from "react-redux"
 import {selectIsAuthenticated} from "features/user/users-slice"
+import {Toast} from "utils/common-utils"
 
 const SirenModal = ({isOpen, onClose, reportType, reportId}) => {
   const [reportReason, setReportReason] = useState("")
@@ -12,7 +13,8 @@ const SirenModal = ({isOpen, onClose, reportType, reportId}) => {
 
   const submitHandler = async () => {
     if (!reportReason) {
-      return alert("신고 사유를 작성해주세요.")
+      Toast.fire({icon: "warning", title: "신고 사유를 작성해주세요."})
+      return
     }
 
     const reportRegistRequestDto = {
@@ -24,7 +26,7 @@ const SirenModal = ({isOpen, onClose, reportType, reportId}) => {
     try {
       const res = await postReport(reportRegistRequestDto)
       console.log(res)
-      alert("신고가 접수되었습니다.")
+      Toast.fire({icon: "success", title: "신고가 접수됐어요."})
       setReportReason("")
       onClose()
     } catch (error) {
@@ -42,7 +44,7 @@ const SirenModal = ({isOpen, onClose, reportType, reportId}) => {
       settextCount(0) // 입력이 비어 있을 경우 글자 수를 0으로 설정
     }
     if (textCount >= 100) {
-      alert("100자 이상은 입력할 수 없습니다.")
+      Toast.fire({icon: "warning", title: "100자 이상은 입력할 수 없어요."})
       settextCount(100)
       setReportReason(targetValue.slice(0, 100)) // 100자 이상일 경우 100자로 자른다.
     }
@@ -69,7 +71,7 @@ const SirenModal = ({isOpen, onClose, reportType, reportId}) => {
               <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                 <div className="sm:flex-col sm:items-start ">
                   <div className="my-5 flex justify-center sm:w-full">
-                    <div className="mx-auto flex size-16 shrink-0 items-center justify-center rounded-full bg-alert sm:mx-0 sm:size-16">
+                    <div className="bg-alert mx-auto flex size-16 shrink-0 items-center justify-center rounded-full sm:mx-0 sm:size-16">
                       <img src={Siren} alt="Siren Icon" />
                     </div>
                   </div>
@@ -97,7 +99,7 @@ const SirenModal = ({isOpen, onClose, reportType, reportId}) => {
               <div className="justify-center bg-gray-50 px-4 py-3 sm:flex sm:flex-row  sm:px-6">
                 <button
                   type="button"
-                  className="mr-3 inline-flex w-36 justify-center rounded-md bg-alert p-3 text-sm text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-36"
+                  className="bg-alert mr-3 inline-flex w-36 justify-center rounded-md p-3 text-sm text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-36"
                   onClick={submitHandler}
                 >
                   신고

@@ -1,3 +1,4 @@
+import {Toast} from "utils/common-utils"
 import axiosInstance from "./axios-instance"
 
 // 회원가입
@@ -44,9 +45,15 @@ export const patchUserInfo = async (userInfo) => {
     return res
   } catch (error) {
     if (error.response.status === 409) {
-      alert("중복된 닉네임입니다. 닉네임을 다시 확인해주세요.")
+      Toast.fire({
+        icon: "warning",
+        title: "중복된 닉네임이에요. 다시 시도해주세요.",
+      })
     } else {
-      alert("요청에 실패했습니다.")
+      Toast.fire({
+        icon: "warning",
+        title: "회원 정보 수정을 실패했어요. 다시 시도해주세요.",
+      })
     }
     return error
   }
@@ -107,13 +114,16 @@ export const deleteUser = async (userId) => {
     console.log(error)
     // 404번 응답시 - 닉네임을 찾을 수 없음
     if (error.response.status === 404) {
-      alert(
-        "없는 유저 아이디입니다. 요청을 확인해주세요. 삭제 요청 Id: ",
-        userId
-      )
+      Toast.fire({
+        icon: "warning",
+        title: `없는 유저 아이디입니다. 요청을 확인해주세요. 삭제 요청 Id: ${userId}`,
+      })
       // 이외 예외에 대한 응답
     } else {
-      alert("요청에 실패했습니다.")
+      Toast.fire({
+        icon: "warning",
+        title: "회원 삭제를 실패했어요.",
+      })
     }
   }
 }
@@ -155,9 +165,15 @@ export const postPhoneVerificationCode = (phone) => {
     return true
   } catch (error) {
     if (error.response.status === 409) {
-      alert("이미 가입된 전화번호입니다. 전화번호를 확인해주세요.")
+      Toast.fire({
+        icon: "warning",
+        title: "이미 가입된 전화번호입니다. 전화번호를 확인해주세요.",
+      })
     } else {
-      alert("요청에 실패했습니다.")
+      Toast.fire({
+        icon: "warning",
+        title: "인증 코드 발송을 실패했어요. 다시 시도해주세요.",
+      })
     }
     return false
   }
@@ -175,9 +191,15 @@ export const postPhoneCheck = (phoneConfirmData) => {
     return res
   } catch (error) {
     if (error.response.status === 401) {
-      alert("틀린 인증 번호입니다. 번호를 확인해서 다시 요청해주세요.")
+      Toast.fire({
+        icon: "warning",
+        title: "틀린 인증 번호에요. 번호를 확인해주세요.",
+      })
     } else {
-      alert("요청에 실패했습니다.")
+      Toast.fire({
+        icon: "warning",
+        title: "인증을 실패했어요. 다시 시도해주세요.",
+      })
     }
     return false
   }

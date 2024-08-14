@@ -3,6 +3,7 @@ import petVideo1 from "../../assets/petpick/main1.mp4"
 import petVideo2 from "../../assets/petpick/main2.mp4"
 import petVideo3 from "../../assets/petpick/main3.mp4"
 import {getRandomDetailPetPick} from "api/petpicks-api"
+import {Toast} from "utils/common-utils"
 
 const MainPetpickBanner = () => {
   const [currentVideo, setCurrentVideo] = useState(0)
@@ -20,7 +21,10 @@ const MainPetpickBanner = () => {
       }
     } catch (error) {
       console.error("에러 발생:", error)
-      alert("펫픽 데이터 로드 실패")
+      Toast.fire({
+        icon: "warning",
+        title: "펫픽 데이터 로드 실패.",
+      })
       return []
     }
   }
