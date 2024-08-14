@@ -53,7 +53,7 @@ const CommentInput = ({articleId, onCommentAdded}) => {
         </div>
       ) : (
         <div className="flex items-center space-x-2.5">
-          <div className="mx-2 h-10 w-full content-center rounded-md  text-sm text-stroke outline outline-1 outline-stroke">
+          <div className="mx-2 h-10 w-full content-center rounded-md px-2  text-sm text-stroke outline outline-1 outline-stroke">
             좋아요와 댓글을 남기려면 로그인하세요{" "}
           </div>
         </div>
@@ -130,7 +130,7 @@ const ArticleComments = ({articleId, currentUserId}) => {
       <ul className="flex w-full flex-col justify-between">
         {commentList ? (
           commentList.map((comment, index) => (
-            <li key={index}>
+            <li key={index} className="">
               <Comment
                 data={comment}
                 currentUserId={currentUserId}
