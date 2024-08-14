@@ -186,9 +186,9 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex space-x-2">
-          <div className="flex-1">
-            <label htmlFor="sido" className="mb-1 block text-gray-700">
+        <div className="flex flex-wrap gap-16">
+          <div className="flex items-center space-x-2">
+            <label htmlFor="sido" className="block text-gray-700">
               시도:
             </label>
             <select
@@ -208,8 +208,8 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
           </div>
 
           {selectedSido && (
-            <div className="flex-1">
-              <label htmlFor="sigungu" className="mb-1 block text-gray-700">
+            <div className="flex items-center space-x-2">
+              <label htmlFor="sigungu" className="block text-gray-700">
                 시군구:
               </label>
               <select
@@ -228,11 +228,9 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
               </select>
             </div>
           )}
-        </div>
 
-        <div className="flex space-x-2">
-          <div className="flex-1">
-            <label htmlFor="kind" className="mb-1 block text-gray-700">
+          <div className="flex items-center space-x-2">
+            <label htmlFor="kind" className="block text-gray-700">
               종류:
             </label>
             <select
@@ -251,8 +249,8 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
           </div>
 
           {selectedUpKindCd > 0 && isShelter && (
-            <div className="flex-1">
-              <label htmlFor="breed" className="mb-1 block text-gray-700">
+            <div className="flex items-center space-x-2">
+              <label htmlFor="breed" className="block text-gray-700">
                 품종:
               </label>
               <select
