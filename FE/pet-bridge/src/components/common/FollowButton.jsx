@@ -4,13 +4,14 @@ const FollowButton = ({isFollowing, onClick}) => {
   return (
     <button onClick={onClick}>
       {isFollowing ? (
-        <div className="m-0 flex h-8 flex-row items-center rounded border border-white bg-point  font-semibold  text-white hover:bg-mild">
+        <div className="flex h-8 w-[78px]  flex-row items-center space-x-1 rounded border border-white bg-point p-0.5  font-semibold  text-white hover:bg-mild">
           <FollowIcon isFollowing={true} size={"medium"} />
           <div className="text-white">팔로잉</div>
         </div>
       ) : (
-        <div className="m-0 flex h-8 flex-row items-center rounded border border-black bg-mild font-bold hover:bg-point">
-          <FollowIcon isFollowing={false} size={"medium"} /> 팔로우
+        <div className="flex h-8  w-[78px] flex-row items-center space-x-1 rounded border border-black bg-mild  p-0.5 font-bold hover:bg-point">
+          <FollowIcon isFollowing={false} size={"medium"} />
+          <div className="">팔로우</div>
         </div>
       )}
     </button>
