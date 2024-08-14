@@ -82,9 +82,11 @@ const ChatListItem = ({
         className="size-12 rounded-full"
       />
       <div className="flex grow flex-col truncate px-2 text-left">
-        <p className="text-left font-bold">{opponentNickname}</p>
-        <p className="text-right text-gray-500">{timeAgo}</p>
-        <p>{recentMessage}</p>
+        <div className="flex justify-between">
+          <span className="mt-2.5 text-left font-bold">{opponentNickname}</span>
+          <span className="text-right text-gray-500">{timeAgo}</span>
+        </div>
+        <p className="mt-3">{recentMessage}</p>
       </div>
     </button>
   )

@@ -30,19 +30,19 @@ const MyPageNavList = () => {
     {id: itemId++, text: "내 펫픽", imgSrc: iconMyShorts, url: "petpics"},
     {
       id: itemId++,
-      text: "내 입양기록(계약서)",
+      text: "내 입양 계약",
       imgSrc: iconMyContracts,
       url: "contracts",
     },
     {
       id: itemId++,
-      text: "내 관심등록 동물",
+      text: "팔로우중인 동물",
       imgSrc: iconMyFavorites,
       url: "favorites",
     },
     {
       id: itemId++,
-      text: "내가 좋아요한 펫픽",
+      text: "내 좋아요",
       imgSrc: iconMyLikes,
       url: "likes",
     },
@@ -103,10 +103,10 @@ const MyPageNavContainer = () => {
       <img
         src={userImage ? userImage : DefaulUser150}
         alt="유저 이미지"
-        className="size-[150px] rounded-full"
+        className="size-[125px] rounded-full"
       />
       {/* 2. 유저 이름 */}
-      <button className="bg-white text-2xl" onClick={onClickUsernameHandler}>
+      <button className="bg-white text-lg" onClick={onClickUsernameHandler}>
         {userName}
       </button>
       {/* 3. 수정하기, 로그아웃 */}
@@ -114,12 +114,12 @@ const MyPageNavContainer = () => {
         {/* 햄버거 버튼 */}
         <Link
           to="/users/update"
-          className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild"
+          className="flex h-[30px] w-[80px] items-center justify-center rounded-lg bg-mild text-sm"
         >
           수정하기
         </Link>
         <button
-          className="flex h-[35px] w-[100px] items-center justify-center rounded-xl bg-mild"
+          className="flex h-[30px] w-[80px] items-center justify-center rounded-lg bg-mild text-sm"
           onClick={handleLogOut}
         >
           로그아웃
@@ -164,10 +164,10 @@ const MyPageNavContainer = () => {
           to="disable"
           className={({isActive}) => [
             isActive ? "text-red-400" : "text-stroke",
-            "m-0",
+            "m-0 text-xs",
           ]}
         >
-          [회원 탈퇴하기]
+          [ 회원 탈퇴하기 ]
         </NavLink>
       )}
     </div>

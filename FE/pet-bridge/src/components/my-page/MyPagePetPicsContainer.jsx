@@ -87,10 +87,9 @@ const MyPagePetPicsContainer = () => {
 
   return (
     <div className="flex h-full  min-w-80 flex-col items-center">
-      <div className="relative flex w-full justify-center p-2.5 ">
-        <button className="text-2xl font-bold">내 펫픽</button>
+      <div className="relative flex w-full justify-center px-10 py-4">
         <Link
-          className=" absolute right-1.5 top-1.5  rounded-xl bg-mild p-2.5"
+          className="absolute right-2 top-2 rounded-xl bg-mild px-4 py-2 text-sm"
           to="/petpick/write"
         >
           펫픽 만들기
@@ -99,10 +98,10 @@ const MyPagePetPicsContainer = () => {
       {isLoading ? (
         <div className="flex size-full  flex-col items-center justify-center">
           <div className="mx-2.5 size-10 animate-ping rounded-full bg-mild"></div>
-          <span className="px-5 text-6xl font-bold">Loading...</span>
+          <span className="px-5 text-2xl font-bold">Loading...</span>
         </div>
       ) : (
-        <div className="flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth hidden-scrollbar">
+        <div className="hidden-scrollbar flex size-full snap-y snap-mandatory flex-wrap items-center justify-center overflow-auto scroll-smooth">
           {items.map((item, index) => (
             <div
               key={index}

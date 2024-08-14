@@ -44,7 +44,7 @@ const MyPageDisableContainer = () => {
         <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
           <div className="sm:flex-col sm:items-start ">
             <div className="my-5 flex justify-center sm:w-full">
-              <div className="bg-alert mx-auto flex size-16 shrink-0 items-center justify-center rounded-full sm:mx-0 sm:size-16">
+              <div className="mx-auto flex size-16 shrink-0 items-center justify-center rounded-full bg-alert sm:mx-0 sm:size-16">
                 <img src={Siren} alt="Siren Icon" />
               </div>
             </div>
@@ -74,7 +74,7 @@ const MyPageDisableContainer = () => {
         <div className="justify-center bg-gray-50 px-4 py-3 sm:flex sm:flex-row  sm:px-6">
           <button
             type="button"
-            className="bg-alert mr-3 inline-flex w-36 justify-center rounded-md p-3 text-sm text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-36"
+            className="mr-3 inline-flex w-36 justify-center rounded-md bg-alert p-3 text-sm text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-36"
             onClick={clickDisableHandler}
           >
             탈퇴하기

@@ -1,22 +1,14 @@
 import React, {useEffect, useRef, useState} from "react"
 import SirenModal from "./SirenModal"
-import {useSelector} from "react-redux"
-import {selectIsAuthenticated} from "features/user/users-slice"
 
 const SelectIcon = ({currentUserId, userId, onDelete}) => {
   const [isPopoverVisible, setIsPopoverVisible] = useState(false)
   const popoverRef = useRef(null)
   const profileRef = useRef(null)
   const [modalOpen, setModalOpen] = useState(false)
-  const isAuthenticated = useSelector(selectIsAuthenticated)
 
   const openModal = () => {
-    console.log(Number(currentUserId) === Number(userId))
-    if (isAuthenticated) {
-      setModalOpen(true)
-    } else {
-      alert("로그인이 필요합니다.")
-    }
+    setModalOpen(true)
   }
 
   const closeModal = () => {

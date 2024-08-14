@@ -4,6 +4,7 @@ import AnimalDetailProfile from "./AnimalDetailProfile"
 import React, {useState, useEffect} from "react"
 import {editAnimal, removeAnimal} from "api/animals-api"
 import DeleteConfirmationModal from "components/common/DeleteConfirmationModal" // 모달 컴포넌트 임포트
+import {Toast} from "utils/common-utils"
 
 const AnimalDetailModify = () => {
   const navigate = useNavigate()
@@ -89,7 +90,10 @@ const AnimalDetailModify = () => {
     }
     try {
       await editAnimal(animal.id, formData)
-      alert("동물 정보가 성공적으로 수정되었습니다.")
+      Toast.fire({
+        icon: "succes",
+        title: "동물 정보가 성공적으로 수정됐어요.",
+      })
       navigate(`/shelter/details/${animal.id}`, {
         state: {animal: updateAnimalData},
       })

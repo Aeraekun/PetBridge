@@ -12,6 +12,7 @@ import PetpickComments from "components/petpick/PetpickComments"
 import AnimalAd from "components/petpick/AnimalAd"
 import {getMyLocation} from "utils/petpick-utils"
 import Navbar from "components/header/Navbar"
+import {Toast} from "utils/common-utils"
 
 const PetpickPage = () => {
   const [index, setIndex] = useState(0) // 현재 인덱스 상태
@@ -37,7 +38,10 @@ const PetpickPage = () => {
       }
     } catch (error) {
       console.error("에러 발생:", error)
-      alert("펫픽 데이터 로드 실패")
+      Toast.fire({
+        icon: "warning",
+        title: "펫픽 데이터 로드 실패.",
+      })
       return []
     }
   }
@@ -265,16 +269,6 @@ const PetpickPage = () => {
     navigate(-1)
   }
 
-  const handleScrollUp = useCallback(() => {
-    setIndex((prev) => Math.max(prev - 1, 0))
-    containerRef.current.scrollBy(0, -400)
-  }, [])
-
-  const handleScrollDown = useCallback(() => {
-    setIndex((prev) => Math.min(prev + 1, list.length - 1))
-    containerRef.current.scrollBy(0, 400)
-  }, [list.length])
-
   return (
     <div>
       <Navbar />
@@ -300,7 +294,8 @@ const PetpickPage = () => {
           <div className="fixed right-8 top-1/2 flex flex-col space-y-8">
             <button
               onClick={() => {
-                handleScrollUp
+                setIndex((prev) => Math.max(prev - 1, 0))
+                containerRef.current.scrollBy(0, -400)
               }}
               disabled={index === 0}
             >
@@ -308,7 +303,8 @@ const PetpickPage = () => {
             </button>
             <button
               onClick={() => {
-                handleScrollDown
+                setIndex((prev) => Math.min(prev + 1, list.length - 1))
+                containerRef.current.scrollBy(0, 400)
               }}
               disabled={index === list.length - 1}
             >
@@ -317,7 +313,7 @@ const PetpickPage = () => {
           </div>
           <div
             ref={containerRef}
-            className="h-full snap-y snap-mandatory overflow-y-scroll scrollbar-hide"
+            className="scrollbar-hide h-full snap-y snap-mandatory overflow-y-scroll"
           >
             {list.map((item, i) => {
               if (item.desertionNo) {
