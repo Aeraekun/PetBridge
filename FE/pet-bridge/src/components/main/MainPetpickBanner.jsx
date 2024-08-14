@@ -56,16 +56,18 @@ const MainPetpickBanner = () => {
   return (
     <div className="mx-auto flex w-[1000px] items-center justify-center gap-12 overflow-hidden">
       {videoSources.map((source, index) => (
-        <video
-          key={index}
-          ref={videoRefs[index]}
-          src={source}
-          autoPlay={index === 0}
-          muted
-          controls
-          onEnded={handleEnded}
-          className="h-auto w-[300px] rounded-lg object-contain"
-        />
+        <div key={index} className="h-[500px] overflow-hidden rounded-b-lg">
+          <video
+            key={index}
+            ref={videoRefs[index]}
+            src={source}
+            autoPlay={index === 0}
+            muted
+            controls
+            onEnded={handleEnded}
+            className="h-auto w-[300px] rounded-lg object-contain"
+          />
+        </div>
       ))}
     </div>
   )
