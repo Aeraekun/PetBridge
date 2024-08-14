@@ -12,6 +12,7 @@ import PetpickComments from "components/petpick/PetpickComments"
 import AnimalAd from "components/petpick/AnimalAd"
 import {getMyLocation} from "utils/petpick-utils"
 import Navbar from "components/header/Navbar"
+import {Toast} from "utils/common-utils"
 
 const PetpickPage = () => {
   const [index, setIndex] = useState(0) // 현재 인덱스 상태
@@ -37,7 +38,10 @@ const PetpickPage = () => {
       }
     } catch (error) {
       console.error("에러 발생:", error)
-      alert("펫픽 데이터 로드 실패")
+      Toast.fire({
+        icon: "warning",
+        title: "펫픽 데이터 로드 실패.",
+      })
       return []
     }
   }
@@ -323,7 +327,7 @@ const PetpickPage = () => {
           </div>
           <div
             ref={containerRef}
-            className="h-full snap-y snap-mandatory overflow-y-scroll scrollbar-hide"
+            className="scrollbar-hide h-full snap-y snap-mandatory overflow-y-scroll"
           >
             {list.map((item, i) => {
               if (item.desertionNo) {

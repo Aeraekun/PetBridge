@@ -2,6 +2,7 @@ import {selectPhone, selectSocialType} from "features/user/users-slice"
 import {useEffect} from "react"
 import {useSelector} from "react-redux"
 import {Outlet, useNavigate} from "react-router-dom"
+import {Toast} from "utils/common-utils"
 
 const ContractsPage = () => {
   const phone = useSelector(selectPhone)
@@ -10,7 +11,10 @@ const ContractsPage = () => {
 
   useEffect(() => {
     if (socialType && !phone) {
-      alert("계약 진행을 위해 전화번호 인증이 필요합니다.")
+      Toast.fire({
+        icon: "warning",
+        title: "계약 진행을 위해 전화번호 인증이 필요합니다.",
+      })
       navigate("/users/social/update")
     }
   }, [phone])

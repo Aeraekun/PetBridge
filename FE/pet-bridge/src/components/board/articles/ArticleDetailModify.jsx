@@ -179,6 +179,7 @@ import Button from "components/common/Button"
 import SirenIcon from "components/common/SirenIcon"
 import DeleteConfirmationModal from "components/common/DeleteConfirmationModal"
 import {editArticle, getArticleDetail, removeArticle} from "api/boards-api"
+import {Toast} from "utils/common-utils"
 
 const ArticleDetailModify = () => {
   const {id} = useParams()
@@ -269,7 +270,10 @@ const ArticleDetailModify = () => {
   //게시글 수정
   const modifyArticle = async () => {
     if (!editorContent.trim() || !title.trim()) {
-      alert("제목과 대표사진을 모두 입력하세요.")
+      Toast.fire({
+        icon: "warning",
+        title: "제목과 대표 사진을 모두 입력해주세요.",
+      })
       return
     }
     if (updateArticle) {
@@ -309,7 +313,7 @@ const ArticleDetailModify = () => {
         돌아가기
       </button>
       <input
-        className="h-16 rounded-xl border border-stroke text-center text-4xl font-bold"
+        className="border-stroke h-16 rounded-xl border text-center text-4xl font-bold"
         placeholder="제목을 입력하세요"
         onChange={(e) => setTitle(e.target.value)}
         value={title}

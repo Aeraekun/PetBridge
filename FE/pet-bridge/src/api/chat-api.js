@@ -1,4 +1,5 @@
 import axiosInstance from "api/axios-instance"
+import {Toast} from "utils/common-utils"
 
 // 채팅방 목록 조회
 export const getChatRoomList = (userId) => {
@@ -31,7 +32,7 @@ export const postChatMessage = async (ChatMessageRequestDto) => {
     )
     return res
   } catch (error) {
-    alert("메세지 전송에 실패했습니다.")
+    Toast.fire({icon: "warning", title: "메세지 전송을 실패했어요."})
   }
 }
 

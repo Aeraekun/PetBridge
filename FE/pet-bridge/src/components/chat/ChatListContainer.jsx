@@ -10,6 +10,7 @@ import SockJS from "sockjs-client"
 // eslint-disable-next-line import/no-unresolved
 import {Stomp} from "@stomp/stompjs"
 import {setCurrentChatId} from "features/chat/chat-slice"
+import {Toast} from "utils/common-utils"
 
 const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL
 
@@ -61,7 +62,10 @@ const ChatListContainer = () => {
         }
       } catch (error) {
         console.log("----- FetchRooms 실패 -----", error)
-        alert("채팅 목록을 불러오는 데에 실패했습니다.")
+        Toast.fire({
+          icon: "warning",
+          title: "채팅 목록을 불러오는 데 실패했어요.",
+        })
       }
     }
     initializeConnection()
