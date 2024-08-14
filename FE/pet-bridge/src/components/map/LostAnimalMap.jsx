@@ -261,7 +261,11 @@ const LostAnimalMap = () => {
   }, [currentPage, centerlon])
 
   useEffect(() => {
-    if (searchParams) {
+    if (
+      Object.keys(searchParams).length > 0 &&
+      searchParams.lat &&
+      searchParams.lon
+    ) {
       getLostArticle(searchParams)
         .then((response) => {
           setTotalPages(response.totalPages)
