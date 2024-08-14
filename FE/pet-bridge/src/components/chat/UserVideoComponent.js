@@ -11,7 +11,7 @@ const UserVideoComponent = ({streamManager}) => {
   }
 
   return (
-    <div>
+    <di className="h-full">
       {streamManager ? (
         <div className="streamcomponent">
           {/* OpenViduVideoComponent를 사용하여 비디오 스트림 표시 */}
@@ -22,7 +22,7 @@ const UserVideoComponent = ({streamManager}) => {
           </div>
         </div>
       ) : null}
-    </div>
+    </di>
   )
 }
 

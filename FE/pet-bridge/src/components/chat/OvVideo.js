@@ -19,7 +19,7 @@ const OpenViduVideoComponent = ({streamManager}) => {
     }
   }, [streamManager])
 
-  return <video autoPlay ref={videoRef} />
+  return <video autoPlay ref={videoRef} className="max-h-[510px]" />
 }
 
 export default OpenViduVideoComponent
