@@ -48,10 +48,10 @@ const MainBoardComponent = () => {
     >
       <div className="mb-4 flex w-[1000px] items-center justify-between">
         <p className="mr-4 text-center text-4xl font-bold">
-          입양, 어렵지 않아요. 같이 얘기 나눠요
+          임보동물, 당신의 따뜻한 관심이 필요해요
         </p>
         <Link
-          to="/communities"
+          to="/shelter/1"
           className="inline-flex h-12 items-center rounded-lg border border-gray-300 bg-mild px-4 text-black no-underline"
         >
           <img
@@ -59,11 +59,11 @@ const MainBoardComponent = () => {
             alt="Community Icon"
             className="mr-2 size-6"
           />
-          커뮤니티 바로가기
+          임보동물 바로가기
         </Link>
       </div>
       <div className="flex w-full flex-col items-center">
-        <ul className="flex max-h-[450px] w-[1000px] flex-col flex-wrap gap-2.5 overflow-y-auto bg-white">
+        <ul className="scrollable-container flex max-h-[450px] w-[1000px] flex-col flex-wrap gap-2.5 overflow-y-auto bg-white">
           {sectionOneItems.map((item, index) => (
             <AnimalItem
               data={item}
