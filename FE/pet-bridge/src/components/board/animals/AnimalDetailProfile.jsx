@@ -258,7 +258,7 @@ const AnimalDetailProfile = ({
       {filteredFields.map(({label, name, value, options, inttype}) => (
         <div
           key={name}
-          className="col-span-6 flex rounded-xl border border-gray-100"
+          className="col-span-6 m-1 flex rounded-xl border-none border-gray-100 shadow"
         >
           <label
             htmlFor={name}
@@ -276,12 +276,12 @@ const AnimalDetailProfile = ({
                     name={name}
                     value={value}
                     onChange={handleInputChange}
-                    className="rounded bg-mild"
+                    className="bg-mild rounded"
                   >
                     <option
                       key={"none"}
                       value={""}
-                      className="w-full rounded border bg-mild px-2 py-1"
+                      className="bg-mild w-full rounded border px-2 py-1"
                     >
                       선택
                     </option>
@@ -289,7 +289,7 @@ const AnimalDetailProfile = ({
                       <option
                         key={option.value}
                         value={option.label}
-                        className="w-full rounded border bg-mild px-2 py-1"
+                        className="bg-mild w-full rounded border px-2 py-1"
                       >
                         {option.value ? option.label : option}
                       </option>
@@ -304,7 +304,7 @@ const AnimalDetailProfile = ({
                     name={name}
                     value={value}
                     onChange={handleInputChange}
-                    className="rounded border bg-mild px-2 py-1"
+                    className="bg-mild rounded border px-2 py-1"
                   />
                 </div>
               )}
@@ -319,7 +319,7 @@ const AnimalDetailProfile = ({
               name={name}
               className="inline-flex grow items-center px-5"
             >
-              <span className="rounded bg-mild px-2 py-1">{value}</span>
+              <span className="bg-mild rounded px-2 py-1">{value}</span>
             </div>
           )}
         </div>
