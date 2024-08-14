@@ -3,7 +3,7 @@ import {useEffect, useState} from "react"
 import {
   selectIsChatModalOpen,
   selectIsChatMinimized,
-  setIsChatModalOpen,
+  // setIsChatModalOpen,
   setIsChatMinimized,
   selectCurrentChatId,
   setCurrentChatId,
@@ -25,6 +25,7 @@ const ChatModal = () => {
   const isOpen = useSelector(selectIsChatModalOpen)
   const isMinimized = useSelector(selectIsChatMinimized)
   const [isDragging, setIsDragging] = useState(false)
+  const [position, setPosition] = useState({x: 0, y: 0})
 
   // 새 채팅 감지 -> 구현시 redux state로
   // const [newChats] = useState([{id: "user2", message: "hi"}])
@@ -33,7 +34,7 @@ const ChatModal = () => {
 
   // 채팅 종료 X 버튼 클릭시 동작
   const onClickXHandler = () => {
-    dispatch(setIsChatModalOpen())
+    dispatch(setIsChatMinimized())
   }
   // 채팅 종료 클릭시 동작
   const onClickIcon = () => {
@@ -47,7 +48,7 @@ const ChatModal = () => {
       dispatch(setCurrentChatId(null))
       return
     }
-    dispatch(setIsChatMinimized())
+    // dispatch(setIsChatMinimized())
   }
 
   // 채팅 플로팅 아이콘
@@ -55,8 +56,14 @@ const ChatModal = () => {
     setIsDragging(false)
   }
 
-  const handleDrag = () => {
+  const handleDrag = (e, data) => {
     setIsDragging(true)
+
+    // 뷰포트의 경계를 계산합니다.
+    const newX = Math.max(0, data.x)
+    const newY = Math.max(0, data.y)
+
+    setPosition({x: newX, y: newY})
   }
 
   const handleStop = () => {
@@ -87,17 +94,18 @@ const ChatModal = () => {
   return (
     <div>
       {isOpen ? (
-        <div className="fixed left-20 top-40 z-10 size-1 h-screen w-screen">
+        <div className="pointer-events-none fixed left-5 top-24 z-50">
           {isMinimized ? (
             // 채팅 모달 버튼 정의
             <Draggable
               onStart={handleStart}
               onDrag={handleDrag}
               onStop={handleStop}
+              position={position}
             >
               <button
                 onClick={handleClick}
-                className="rounded-full border bg-white p-2 shadow-xl hover:outline"
+                className="pointer-events-auto rounded-full border bg-white p-2 shadow-xl hover:outline"
               >
                 <img
                   src={ChatIcon}
@@ -111,10 +119,16 @@ const ChatModal = () => {
               </button>
             </Draggable>
           ) : (
-            <Draggable handle="#chatHeader">
+            <Draggable
+              handle="#chatHeader"
+              onStart={handleStart}
+              onDrag={handleDrag}
+              onStop={handleStop}
+              position={position}
+            >
               {/* 전체 틀 */}
               <div
-                className={`flex h-[600px] flex-col divide-y rounded-lg border bg-white shadow-2xl transition-[width] ${!currentChatId ? "w-60" : "w-[800px]"}`}
+                className={`pointer-events-auto flex h-[600px] flex-col divide-y rounded-lg border bg-white shadow-2xl transition-[width] ${!currentChatId ? "w-60" : "w-[800px]"}`}
               >
                 {/* 채팅 헤더 */}
                 <header
@@ -127,12 +141,20 @@ const ChatModal = () => {
                   >
                     <img src={CloseIcon} alt="close" className="size-4" />
                   </button>
-                  <button
-                    onClick={onClickMinimizeHandler}
-                    className="rounded-xl px-2 hover:bg-slate-400"
-                  >
-                    <img src={MinimizeIcon} alt="minimize" className="size-4" />
-                  </button>
+                  {currentChatId ? (
+                    <button
+                      onClick={onClickMinimizeHandler}
+                      className="rounded-xl px-2 hover:bg-slate-400"
+                    >
+                      <img
+                        src={MinimizeIcon}
+                        alt="minimize"
+                        className="size-4"
+                      />
+                    </button>
+                  ) : (
+                    <></>
+                  )}
                 </header>
                 {/* 채팅 헤더 아래 (목록 / 채팅) */}
                 <main className="flex h-[calc(100%-2rem)] grow divide-x">

@@ -101,6 +101,10 @@ const ContractsCreateContainer = () => {
       confirmButtonColor: "#fe85ac",
       cancelButtonText: "아니요",
       cancelButtonColor: "#a4a2a1",
+      customClass: {
+        confirmButton: "w-20 py-2 text-white font-semibold rounded-md",
+        cancelButton: "w-20 py-2 text-white font-semibold rounded-md",
+      },
     })
     // 폼의 유효성 검사
     if (result.isConfirmed) {
@@ -151,6 +155,10 @@ const ContractsCreateContainer = () => {
       confirmButtonColor: "#fe85ac",
       cancelButtonText: "아니요",
       cancelButtonColor: "#a4a2a1",
+      customClass: {
+        confirmButton: "w-20 py-2 text-white font-semibold rounded-md",
+        cancelButton: "w-20 py-2 text-white font-semibold rounded-md",
+      },
     })
     // 서명 버튼 클릭으로 SMS를 보낼지 확인
     if (result.isConfirmed) {
@@ -296,7 +304,7 @@ const ContractsCreateContainer = () => {
               {isPhoneCodeChecked ? (
                 <button
                   disabled={true}
-                  className={`rounded-2xl border bg-stroke p-2.5`}
+                  className={`bg-stroke rounded-2xl border p-2.5`}
                 >
                   서명 완료
                 </button>
@@ -311,7 +319,7 @@ const ContractsCreateContainer = () => {
                   />
                   <button
                     onClick={clickPhoneCodeCheckHandler}
-                    className="grow rounded-2xl border px-2 hover:bg-mild"
+                    className="hover:bg-mild grow rounded-2xl border px-2"
                   >
                     확인
                   </button>
@@ -343,7 +351,7 @@ const ContractsCreateContainer = () => {
         disabled={!isPhoneCodeChecked}
         type="button"
         onClick={onSubmitHandler}
-        className="h-16 w-56 rounded-xl bg-mild text-xl"
+        className="bg-mild h-16 w-56 rounded-xl text-xl"
       >
         계약서 작성하기
       </button>

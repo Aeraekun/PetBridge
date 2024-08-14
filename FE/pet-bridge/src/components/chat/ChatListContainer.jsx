@@ -11,6 +11,7 @@ import SockJS from "sockjs-client"
 import {Stomp} from "@stomp/stompjs"
 import {setCurrentChatId} from "features/chat/chat-slice"
 import {Toast} from "utils/common-utils"
+import Swal from "sweetalert2"
 
 const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL
 
@@ -32,7 +33,19 @@ const ChatListContainer = () => {
   // 선택 드롭다운 값 변경시
   const onDataChangeHandler = async (newData) => {
     console.log(newData)
-    if (confirm(`${newData.nickname} 님과의 채팅을 시작하시겠습니까?`)) {
+    const result = await Swal.fire({
+      title: `${newData.nickname} 님과의 채팅을 시작하시겠습니까?`,
+      showCancelButton: true,
+      confirmButtonText: "네",
+      confirmButtonColor: "#fe85ac",
+      cancelButtonText: "아니요",
+      cancelButtonColor: "#a4a2a1",
+      customClass: {
+        confirmButton: "w-20 py-2 text-white font-semibold rounded-md",
+        cancelButton: "w-20 py-2 text-white font-semibold rounded-md",
+      },
+    })
+    if (result.isConfirmed) {
       try {
         const res = await createChatRoom(userId, newData.id)
 
