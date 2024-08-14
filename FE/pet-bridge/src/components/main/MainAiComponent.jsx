@@ -46,7 +46,7 @@ const MainAiComponent = () => {
             <div className="absolute left-0 top-0 flex size-full flex-col items-center justify-center rounded-lg bg-black bg-opacity-70 text-center text-xl font-bold text-white">
               <div>[스마트 AI 집사 유형 테스트]</div> <br />
               <div className="text-left text-sm">
-                나만 바라봐주는 강아지 <br />
+                나만 바라봐주는 사랑스런 강아지 <br />
                 도도하지만 매력넘치는 고양이 <br />
                 거기다 강아지도 고양이도 종 별로 천차만별.. <br />
                 입양 하기 전부터 머리가 복잡하시죠? <br />
