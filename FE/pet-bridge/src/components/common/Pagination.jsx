@@ -1,23 +1,70 @@
-// 페이지 네이션 컴포넌트
-// 현재페이지, 총 페이지, 페이지 바뀌었을때 이벤트처리 (페이지는 0부터 시작)
+import {useState} from "react"
+
 const Pagination = ({currentPage, totalPages, onPageChange}) => {
+  const [visiblePageRange, setVisiblePageRange] = useState([0, 10])
+
+  const handlePageChange = (page) => {
+    onPageChange(page)
+  }
+
+  const handlePrev = () => {
+    if (visiblePageRange[0] > 0) {
+      setVisiblePageRange([
+        visiblePageRange[0] - 10,
+        Math.min(visiblePageRange[1] - 10, totalPages),
+      ])
+    }
+  }
+
+  const handleNext = () => {
+    if (visiblePageRange[1] < totalPages) {
+      setVisiblePageRange([
+        visiblePageRange[0] + 10,
+        Math.min(visiblePageRange[1] + 10, totalPages),
+      ])
+    }
+  }
+
   const pages = []
-  for (let i = 0; i < totalPages; i++) {
-    pages.push(i)
+  for (
+    let i = visiblePageRange[0];
+    i < Math.min(visiblePageRange[1], totalPages);
+    i++
+  ) {
+    pages.push(i + 1)
   }
 
   return (
-    <div className="mt-4 flex justify-center">
+    <div className="mt-4 flex items-center justify-center">
+      {visiblePageRange[0] > 0 && (
+        <button
+          className="mx-1 rounded border bg-white px-3 py-1 text-black"
+          onClick={handlePrev}
+        >
+          이전
+        </button>
+      )}
       {pages.map((page) => (
         <button
-          key={page + 1}
-          className={`mx-1 rounded border px-3 py-1 ${currentPage === page ? "bg-green-600 text-white" : "bg-white text-black"}`}
-          onClick={() => onPageChange(page)}
+          key={page}
+          className={`mx-1 rounded border px-3 py-1 ${
+            currentPage === page ? "bg-point text-white" : "bg-white text-black"
+          }`}
+          onClick={() => handlePageChange(page)}
         >
-          {page + 1}
+          {page}
         </button>
       ))}
+      {visiblePageRange[1] < totalPages && (
+        <button
+          className="mx-1 rounded border bg-white px-3 py-1 text-black"
+          onClick={handleNext}
+        >
+          다음
+        </button>
+      )}
     </div>
   )
 }
+
 export default Pagination
