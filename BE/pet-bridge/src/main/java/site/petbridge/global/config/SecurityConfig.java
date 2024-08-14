@@ -63,7 +63,6 @@ public class SecurityConfig {
 				// 기본 파일
 				.requestMatchers(HttpMethod.GET, "/error", "/favicon.ico").permitAll()
 
-
 				// 회원
 				.requestMatchers(HttpMethod.GET, "/users/sign-up", "/users/login").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/users/{nickname}").permitAll()
@@ -71,6 +70,10 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/users/sign-up").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/users/find/email").permitAll()
+
+				// 관리자
+				.requestMatchers(HttpMethod.GET, "/api/users").hasAuthority("ADMIN")
+				.requestMatchers(HttpMethod.DELETE, "/api/users/{id}").hasAuthority("ADMIN")
 
 				// 소셜 로그인
 				.requestMatchers(HttpMethod.GET, "/users/social/**").permitAll()
