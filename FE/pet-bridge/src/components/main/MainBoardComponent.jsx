@@ -63,7 +63,7 @@ const MainBoardComponent = () => {
         </Link>
       </div>
       <div className="flex w-full flex-col items-center">
-        <ul className="flex max-h-[450px] w-[1000px] flex-col flex-wrap gap-2.5 overflow-y-auto bg-white">
+        <ul className="scrollable-container flex max-h-[450px] w-[1000px] flex-col flex-wrap gap-2.5 overflow-y-auto bg-white">
           {sectionOneItems.map((item, index) => (
             <AnimalItem
               data={item}
