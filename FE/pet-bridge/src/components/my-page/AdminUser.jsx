@@ -1,9 +1,21 @@
 import {deleteUser} from "api/users-api"
+import Swal from "sweetalert2"
 
 const AdminUser = ({user}) => {
-  const disableUser = ({id, nickname}) => {
-    if (confirm(`${nickname} 유저의 회원 정보를 삭제하시겠습니까?`))
-      deleteUser(id)
+  const disableUser = async ({id, nickname}) => {
+    const result = await Swal.fire({
+      title: `${nickname} 유저의 회원 정보를 삭제하시겠습니까?`,
+      showCancelButton: true,
+      confirmButtonText: "네",
+      confirmButtonColor: "#fe85ac",
+      cancelButtonText: "아니요",
+      cancelButtonColor: "#a4a2a1",
+      customClass: {
+        confirmButton: "w-20 py-2 text-white font-semibold rounded-md",
+        cancelButton: "w-20 py-2 text-white font-semibold rounded-md",
+      },
+    })
+    if (result.isConfirmed) deleteUser(id)
   }
 
   const onClickDisableHandler = (userId) => {

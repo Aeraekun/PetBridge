@@ -213,13 +213,13 @@ const Chatbot = () => {
                   {contents[result.personality]}
                 </p>
                 {/* detailContents 출력 */}
-                <ul className="mb-6 list-inside list-disc text-xl font-medium text-gray-700">
+                <div className="mb-6 list-inside list-disc text-xl font-medium text-gray-700">
                   {detailContents[result.personality].map((detail, index) => (
-                    <li key={index} className="mb-2">
+                    <p key={index} className="mb-2">
                       {detail}
-                    </li>
+                    </p>
                   ))}
-                </ul>
+                </div>
                 {/* kinds 리스트 출력 */}
                 <h3 className="mb-4 text-center text-3xl font-semibold">
                   추천 반려동물 품종
