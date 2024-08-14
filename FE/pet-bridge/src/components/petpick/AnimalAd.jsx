@@ -2,7 +2,7 @@ import React, {forwardRef, useEffect} from "react"
 import {useInView} from "react-intersection-observer"
 import {useNavigate} from "react-router-dom"
 
-const AnimalAd = forwardRef(({animal, nowindex, onInView}, ref) => {
+const AnimalAd = forwardRef(({animal, location, nowindex, onInView}, ref) => {
   const {ref: observerRef, inView} = useInView({
     threshold: 0.51, // Trigger when 51% of the item is visible
   })
@@ -11,6 +11,7 @@ const AnimalAd = forwardRef(({animal, nowindex, onInView}, ref) => {
     if (inView) {
       onInView(nowindex)
     }
+    console.log(location)
   }, [inView, onInView, nowindex])
 
   const navigate = useNavigate()
@@ -227,24 +228,23 @@ const AnimalAd = forwardRef(({animal, nowindex, onInView}, ref) => {
           </div>
         </div>
 
-        <div className="size-full shrink-0 border-b border-gray-300 bg-gray-50 p-4 sm:w-1/2 sm:border-b-0 sm:border-r">
-          <div className="m-4 w-full text-left text-lg">
-            현재위치{" "}
-            <span className="text-xl font-bold text-point">{"대전광역시"}</span>{" "}
-            의 보호동물 입니다
-          </div>
+        <div className="size-full shrink-0 border-b border-gray-300 bg-mild p-4 sm:w-1/2 sm:border-b-0 sm:border-r">
+          {location && (
+            <div className="text-shadow m-4 w-full text-left text-lg text-white">
+              현재위치{" "}
+              <span className="text-xl font-bold text-point">{location}</span>{" "}
+              의 보호동물 입니다
+            </div>
+          )}
           {field.map(({label, name, value}) => (
             <div key={name} className="mt-2 flex items-center">
-              <label
-                htmlFor={name}
-                className="w-1/3 font-semibold text-gray-700"
-              >
+              <label htmlFor={name} className="w-1/3 font-semibold text-white">
                 {label}
               </label>
               <div
                 id={name}
                 name={name}
-                className="w-2/3 rounded-lg border border-gray-300 bg-mild p-2 text-gray-800"
+                className="w-2/3 rounded-lg border border-gray-300 bg-white p-2 text-gray-800"
               >
                 {value}
               </div>

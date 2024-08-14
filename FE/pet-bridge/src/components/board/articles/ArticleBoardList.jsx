@@ -172,10 +172,10 @@ const ArticleBoardList = () => {
         <li className="w-[300px] grow"></li>
       </ul>
       <Pagination
-        currentPage={currentPage}
+        currentPage={currentPage + 1}
         totalPages={totalPages}
         onPageChange={(page) => {
-          setCurrentPage(page)
+          setCurrentPage(page - 1)
         }}
       />
     </>

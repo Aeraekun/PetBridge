@@ -1,23 +1,21 @@
-import StateBadge from "components/common/StateBadge"
+import React from "react"
 import PetpickIconContainer from "./PetpickIconContainer"
-// import React, {useState} from "react"
+// import StateBadge from "components/common/StateBadge"
 
 const AnimalInfo = ({animal}) => {
   return (
-    <>
-      <div className="flex flex-col space-y-1">
-        <div className="text-base">{animal.name} </div>
-        <div className="text-base">{animal.age} 년생</div>
-        <div className="text-base">{animal.kindCd}</div>
-      </div>
-    </>
+    <div className="flex flex-col space-y-1">
+      <div className="text-lg font-semibold">{animal.name}</div>
+      <div className="text-base text-gray-700">{animal.age} 년생</div>
+      <div className="text-base text-gray-700">{animal.kindCd}</div>
+    </div>
   )
 }
 
 const TaggedAnimalItem = ({animal, isFollowing, isLogin, onClick}) => {
   return (
     <div
-      className="flex justify-between p-3"
+      className="relative m-2 flex cursor-pointer rounded-lg border border-gray-200 bg-white p-4 transition-transform hover:scale-105 hover:shadow-md"
       role="button"
       tabIndex={0}
       onClick={onClick}
@@ -27,18 +25,18 @@ const TaggedAnimalItem = ({animal, isFollowing, isLogin, onClick}) => {
         }
       }}
     >
-      <div className="flex space-x-3">
+      <div className="shrink-0">
         <img
           src={animal.filename}
-          className="h-60 w-40 object-contain"
+          className="size-32 rounded-lg border border-gray-300 object-cover"
           alt="animalImage"
         />
-
-        <AnimalInfo animal={animal}></AnimalInfo>
       </div>
-      <div className="flex h-full flex-col justify-between">
-        <StateBadge state={animal.processState} />
-
+      <div className="ml-4 flex grow flex-col justify-between">
+        <AnimalInfo animal={animal} />
+        {/* <StateBadge state={animal.processState} /> */}
+      </div>
+      <div className="absolute right-2 bottom-2">
         <PetpickIconContainer
           isFollowButton={true}
           isFollowing={isFollowing}

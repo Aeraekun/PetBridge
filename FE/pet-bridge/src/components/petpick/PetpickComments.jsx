@@ -1,6 +1,6 @@
 // import Image from "./Image"
 import Comment from "../common/Comment"
-import React, {forwardRef, useEffect, useState} from "react"
+import React, {forwardRef, useEffect, useRef, useState} from "react"
 // import dummydata from "./dummydata"
 import {useSelector} from "react-redux"
 import {selectId, selectIsAuthenticated} from "features/user/users-slice"
@@ -14,12 +14,11 @@ import {
   registPetPickComment,
   removePetpickComments,
 } from "api/petpicks-api"
-import Button from "components/common/Button"
 import {getDetailAnimal} from "api/animals-api"
 import {useNavigate} from "react-router-dom"
-import TagIcon from "components/common/TagIcon"
 import TaggedAnimalItem from "./TaggedAnimalItem"
 import TaggedArticleItem from "./TaggedArticleItem"
+import IconBack from "assets/icons/icon-goBack.svg"
 
 const CommentInput = ({petpickId, onCommentAdded}) => {
   const isAuthenticated = useSelector(selectIsAuthenticated)
@@ -49,9 +48,9 @@ const CommentInput = ({petpickId, onCommentAdded}) => {
   }
 
   return (
-    <div className="flex h-16 flex-col justify-between space-x-2.5 ">
+    <div className="flex h-16 flex-col justify-between space-x-2  pr-3">
       {isAuthenticated ? (
-        <div className="flex items-center space-x-2.5">
+        <div className="flex items-center space-x-2">
           <input
             type="text"
             className="mx-2 h-10 w-full rounded-md text-sm  outline outline-1 outline-stroke"
@@ -66,7 +65,7 @@ const CommentInput = ({petpickId, onCommentAdded}) => {
         </div>
       ) : (
         <div className="flex items-center space-x-2.5">
-          <div className="mx-2 h-10 w-full content-center rounded-md  text-sm text-stroke outline outline-1 outline-stroke">
+          <div className="opacity-1 mx-2 h-10 w-full content-center rounded-md bg-gray-50 pl-2 text-sm  text-point outline outline-1 outline-stroke">
             좋아요와 댓글을 남기려면 로그인하세요{" "}
           </div>
         </div>
@@ -76,11 +75,43 @@ const CommentInput = ({petpickId, onCommentAdded}) => {
 }
 
 const PetpickInfo = ({title, content, registTime}) => {
+  const [isFixedSize, setIsFixedSize] = useState(true)
+
+  const [showReadMore, setShowReadMore] = useState(false)
+  const contentRef = useRef(null)
+  // console.log(isFixedSize)
+  const handleToggleSize = () => {
+    setIsFixedSize(!isFixedSize)
+  }
+  useEffect(() => {
+    // 댓글이 지정된 높이를 초과할 때 "더보기" 버튼을 표시
+    if (contentRef.current) {
+      setShowReadMore(contentRef.current.scrollHeight > 64)
+    }
+  }, [])
+
   return (
-    <div className=" flex w-full flex-1 flex-col justify-between space-y-1 p-3 text-base    ">
-      <div> {title}</div>
-      <div className="text-sm"> {registTime.split("T")[0]}</div>
-      <div className="text-sm"> {content}</div>
+    <div className=" flex w-full flex-1 flex-col justify-between space-y-1 p-3 text-lg">
+      <div className="flex justify-between pr-2">
+        <div className="font-semibold"> {title}</div>
+        <div className="text-sm"> {registTime.split("T")[0]}</div>
+      </div>
+      <div className="flex flex-col ">
+        <div
+          ref={contentRef}
+          className={`transition-height w-full pr-3 text-base  duration-300 ease-in-out ${isFixedSize ? "h-12 overflow-hidden" : "h-fit"}`}
+        >
+          {content}
+        </div>
+        {showReadMore && (
+          <button
+            className="mr-3 mt-1 flex justify-end rounded text-base text-stroke hover:text-black"
+            onClick={handleToggleSize}
+          >
+            {isFixedSize ? "더보기" : "닫기"}
+          </button>
+        )}
+      </div>
     </div>
   )
 }
@@ -137,8 +168,8 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
       const animaldata = await getDetailAnimal(animalId)
       if (animaldata) {
         setPetpickAnimalData(animaldata)
-        setArticleList(animaldata.boards)
-        console.log(articleList)
+        setArticleList(animaldata.boards.content)
+        console.log(animaldata.boards, "animaldata.boards")
         console.log(animaldata.id)
       }
     }
@@ -218,19 +249,18 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
     console.log("handleDetail", isDetail)
     setIsDetail((prev) => !prev)
   }
-  const goWritePetpick = () => {
-    let path = `/petpick/write`
-    navigate(path)
-  }
+
   const goDetail = (article) => {
     const id = article.id
     let path = `/communities/details/${id}`
     navigate(path)
   }
-
+  const goBack = () => {
+    setIsDetail(false)
+  }
   return (
     <div
-      className=" z-50 mx-auto flex h-screen w-[1000px] snap-center flex-row justify-center pb-[100px] pt-[10px] sm:w-11/12"
+      className=" z-50 mx-auto flex h-screen w-[1000px] snap-center flex-row justify-center pb-[100px] pt-[10px]"
       ref={(node) => {
         if (node) {
           if (ref && typeof ref === "object" && "current" in ref) {
@@ -240,106 +270,145 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
         observerRef(node)
       }}
     >
-      <PetpickVideo videoURL={petpick.video} isPlaying={isPlaying} />
-      {isDetail && (
-        <>
-          <div className="flex h-full min-w-[400px]  flex-col justify-between bg-gray-50 ">
-            <div className=" flex h-full flex-col justify-start bg-gray-50 ">
-              <div className=" ">
+      {/* <div className=`flex w-fit overflow-hidden rounded-3xl  {!isVisible && !isDetail && border}`> */}
+      <div
+        className={` flex w-full justify-center overflow-hidden rounded-2xl ${isVisible || isDetail ? "border" : ""}`}
+      >
+        <PetpickVideo
+          title={petpick.title}
+          content={petpick.content}
+          videoURL={petpick.video}
+          isPlaying={isPlaying}
+        />
+        {
+          //태그 정보 페이지
+          isDetail && (
+            <>
+              <div
+                className={`duration-800 flex size-full h-full min-w-[300px]  max-w-[400px] flex-col justify-between transition-transform ease-in-out ${
+                  isDetail
+                    ? "translate-x-0 opacity-100"
+                    : "-translate-x-full opacity-0"
+                }`}
+              >
+                <div className=" flex h-full flex-col justify-start  ">
+                  <div className="border-b px-2">
+                    <Profile
+                      nickname={petpick.userNickname}
+                      image={petpick.userImage}
+                      size={"small"}
+                    />
+                  </div>
+                  <TaggedAnimalItem
+                    animal={petpickAnimalData}
+                    isFollowing={petpick.isFollowing}
+                    isLogin={isAuthenticated}
+                    onClick={() => {
+                      goAnimalDetail(petpickAnimalData)
+                    }}
+                  />
+                  <div className="m-2 font-semibold">
+                    관련 글
+                    <div className="m-2 overflow-auto">
+                      {articleList?.length > 0 ? (
+                        articleList.map((article, index) => (
+                          <div key={index}>
+                            <TaggedArticleItem
+                              data={article}
+                              onClick={() => {
+                                goDetail(article)
+                              }}
+                            />
+                          </div>
+                        ))
+                      ) : (
+                        <div>게시글이 없습니다</div>
+                      )}
+                    </div>
+                  </div>
+                  <button onClick={goBack} className="absolute bottom-2 left-2">
+                    <img src={IconBack} alt="goBack" className="size-8" />
+                  </button>
+                </div>
+              </div>
+            </>
+          )
+        }
+
+        {
+          //댓글창 켰을때
+          isVisible && (
+            <div className="flex size-full min-w-[300px] max-w-[400px] flex-col justify-between ">
+              <div className="border-b px-2">
                 <Profile
                   nickname={petpick.userNickname}
                   image={petpick.userImage}
+                  size={"small"}
                 />
-                <hr className="my-1 border-gray-300" />
               </div>
-              <Button onClick={goWritePetpick} text={"새팻픽만들기"}>
-                {" "}
-              </Button>
-              <TaggedAnimalItem
-                animal={petpickAnimalData}
-                isFollowing={petpick.isFollowing}
-                isLogin={isAuthenticated}
-                onClick={goAnimalDetail}
-              />
-              관련 글
-              <div className="overflow-auto">
-                {articleList?.length > 0 ? (
-                  articleList.map((article, index) => (
-                    <li key={index}>
-                      <TaggedArticleItem data={article} onClick={goDetail} />
-                    </li>
-                  ))
-                ) : (
-                  <li>게시글이 없습니다</li>
-                )}
+              <div className="border-b p-1">
+                <PetpickInfo
+                  title={petpick.title}
+                  content={petpick.content}
+                  registTime={petpick.registTime}
+                ></PetpickInfo>
+              </div>
+
+              <ul className="custom-scrollbar flex grow flex-col overflow-auto border-b">
+                {
+                  //댓글 리스트
+                  commentList.length > 0 ? (
+                    commentList.map((comment, index) => (
+                      <li key={index}>
+                        <Comment
+                          data={comment}
+                          onDelete={handleDelete}
+                          currentUserId={currentUserId}
+                        />
+                      </li>
+                    ))
+                  ) : (
+                    <li className="m-2">댓글이 없습니다</li>
+                  )
+                }
+              </ul>
+              <div className="flex  flex-col space-y-2.5">
+                <PetpickIconContainer
+                  direct={"row"}
+                  toggleComment={handleVisible}
+                  toggleDetail={handleDetail}
+                  petpickId={petpick.boardId}
+                  isFollowing={petpick.isFollowing}
+                  isLiking={petpick.isLiking}
+                  isLogin={isAuthenticated}
+                  animalId={petpick.animalId}
+                />
+                <CommentInput
+                  petpickId={petpick.id}
+                  onCommentAdded={handleCommentAdded}
+                />
               </div>
             </div>
-            <TagIcon data={petpick} onClick={handleDetail} />
-          </div>
-        </>
-      )}
-      {isVisible && (
-        <div className="flex h-full min-w-[400px]  flex-col justify-between bg-gray-50 ">
-          <div className=" ">
-            <Profile
-              nickname={petpick.userNickname}
-              image={petpick.userImage}
-            />
-            <hr className="my-1 border-gray-300" />
-            <PetpickInfo
-              title={petpick.title}
-              content={petpick.content}
-              registTime={petpick.registTime}
-            ></PetpickInfo>
-          </div>
-
-          <ul className="flex flex-auto flex-col overflow-auto">
-            {commentList.length > 0 ? (
-              commentList.map((comment, index) => (
-                <li key={index}>
-                  <Comment
-                    data={comment}
-                    onDelete={handleDelete}
-                    currentUserId={currentUserId}
-                  />
-                </li>
-              ))
-            ) : (
-              <li>댓글이 없습니다</li>
-            )}
-          </ul>
-          <div className="flex  flex-col space-y-2.5">
+          )
+        }
+        {
+          //아무것도 안켯을때
+          !isVisible && !isDetail ? (
             <PetpickIconContainer
-              direct={"row"}
+              direct={"col"}
               toggleComment={handleVisible}
               toggleDetail={handleDetail}
-              petpickId={petpick.boardId}
+              petpickId={petpick.id}
+              animalId={petpick.animalId}
               isFollowing={petpick.isFollowing}
               isLiking={petpick.isLiking}
               isLogin={isAuthenticated}
-              animalId={petpick.animalId}
             />
-            <CommentInput
-              petpickId={petpick.id}
-              onCommentAdded={handleCommentAdded}
-            />
-          </div>
-        </div>
-      )}
-      {!isVisible && !isDetail ? (
-        <PetpickIconContainer
-          direct={"col"}
-          toggleComment={handleVisible}
-          toggleDetail={handleDetail}
-          petpickId={petpick.id}
-          animalId={petpick.animalId}
-          isFollowing={petpick.isFollowing}
-          isLiking={petpick.isLiking}
-          isLogin={isAuthenticated}
-        />
-      ) : (
-        <></>
-      )}
+          ) : (
+            <></>
+          )
+        }
+      </div>
     </div>
   )
 })

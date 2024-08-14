@@ -24,16 +24,22 @@ const Comment = ({data, currentUserId, onDelete}) => {
 
   return (
     <>
-      <div className="flex space-x-2.5 px-5 py-2.5">
-        <div className="mt-3 h-fit w-12  overflow-hidden rounded-full">
-          <img src={data.userImage} alt="profile" className="" />
+      <div className="flex space-x-2.5 px-5 pt-2">
+        <div className="mt-2 size-11">
+          <img
+            src={data.userImage || "/images/profile.jpg"}
+            alt="profile"
+            className="size-10 overflow-hidden rounded-full object-cover"
+          />
           {/* <Image imageName={Siren.png}></Image> */}
         </div>
         <div className="w-full ">
           <div className="flex  h-7 items-center justify-between">
             <div className="flex items-center space-x-2.5">
-              <div className="  text-base  ">{data.userNickname}</div>
-              <div className="  text-sm  ">{data.registTime.split("T")[0]}</div>
+              <div className="  text-base font-semibold ">
+                {data.userNickname}
+              </div>
+              <div className="  text-xs  ">{data.registTime.split("T")[0]}</div>
             </div>
             <OptionIcon
               userId={data.userId}

@@ -268,7 +268,7 @@ const CallPage = ({onEndCall}) => {
   }
 
   return (
-    <div className="flex size-full h-full flex-col bg-gray-700 ">
+    <div className="hidden-scrollbar flex size-full h-full flex-col bg-gray-700">
       <div className="flex items-center space-x-2 bg-white px-3 py-1">
         <img
           src={opponentInfo.image ? opponentInfo.image : DefaultUserImage}
@@ -278,18 +278,18 @@ const CallPage = ({onEndCall}) => {
         <span className="font-bold">{opponentInfo.nickname}</span>
         <span>님과의 화상채팅</span>
       </div>
-      <ul className="absolute bg-gray-100">
+      {/* <ul className="absolute bg-gray-100">
         {subscribers.map((sub, index) => (
           <li key={index}>
             Subscriber ID: {JSON.parse(sub.stream.connection.data).clientData}
           </li>
         ))}
-      </ul>
+      </ul> */}
 
-      <div id="session" className="flex h-full flex-col bg-white">
+      <div id="session" className="relative flex h-full flex-col bg-white">
         <div className="relative my-auto flex size-full bg-black">
           {subscribers && (
-            <div className="flex-1">
+            <div className="h-full flex-1">
               <UserVideoComponent streamManager={subscribers[0]} />
             </div>
           )}
@@ -299,7 +299,7 @@ const CallPage = ({onEndCall}) => {
             </div>
           )}
         </div>
-        <div className="flex h-8 space-x-4">
+        <div className="absolute bottom-5 flex h-8 w-full space-x-4 ">
           {/* <button
             className=" bg-red-500 px-4 py-2 text-white hover:bg-red-600"
             id="buttonLeaveSession"
@@ -307,25 +307,27 @@ const CallPage = ({onEndCall}) => {
           >
             Leave session
           </button> */}
-          <button
-            className=" bg-green-500 px-4 py-2 text-white hover:bg-green-600"
-            id="buttonSwitchCamera"
-            onClick={switchCamera}
-          >
-            Switch Camera
-          </button>
-          <button
+          <div className="flex w-full items-center justify-center space-x-5">
+            <button
+              className="h-8 rounded-xl bg-green-500 px-4 text-white hover:bg-green-600"
+              id="buttonSwitchCamera"
+              onClick={switchCamera}
+            >
+              화면전환
+            </button>
+            {/* <button
             className=" bg-red-500 px-4 py-2 text-white hover:bg-red-600"
             id="buttonLeaveSession"
             onClick={deleteSubscriber}
           >
             구독자 삭제
-          </button>
-          <button className="size-8" onClick={handleEndCall}>
-            <img src="/icons/icon-endCall.svg" alt="endcall" />
-          </button>
+          </button> */}
+            <button className="size-8" onClick={handleEndCall}>
+              <img src="/icons/icon-endCall.svg" alt="endcall" />
+            </button>
+          </div>
         </div>
-        <ul className="absolute bg-gray-100">
+        {/* <ul className="absolute bg-gray-100">
           {roomId}
           {session === undefined ? (
             <div className="flex flex-col items-center justify-center">
@@ -345,7 +347,7 @@ const CallPage = ({onEndCall}) => {
               참여중 세션 아이디 : {mySessionId}
             </div>
           )}
-        </ul>
+        </ul> */}
       </div>
     </div>
   )

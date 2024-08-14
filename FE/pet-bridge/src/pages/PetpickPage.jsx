@@ -13,6 +13,7 @@ import AnimalAd from "components/petpick/AnimalAd"
 import {getMyLocation} from "utils/petpick-utils"
 import Navbar from "components/header/Navbar"
 import {Toast} from "utils/common-utils"
+import IconBack from "assets/icons/icon-goBack.svg"
 
 const PetpickPage = () => {
   const [index, setIndex] = useState(0) // 현재 인덱스 상태
@@ -21,7 +22,7 @@ const PetpickPage = () => {
   const containerRef = useRef(null) // 스크롤 컨테이너
   const itemRefs = useRef(list.map(() => React.createRef()))
   const [isLoading, setIsLoading] = useState(true)
-  // const [loading, setLoading] = useState(false) // 추가된 로딩 상태
+  const [locationName, setLocationName] = useState()
 
   const handleInView = useCallback((visibleIndex) => {
     setIndex(visibleIndex)
@@ -45,29 +46,43 @@ const PetpickPage = () => {
       return []
     }
   }
-
   //동물 받아오기
   const fetchAnimalData = async () => {
     //5마리씩 sidoCode 넣어서 보호중(입양가능)인 동물만.
-    const sidoCode = (await getMyLocation()) || 6300000 //위치 시도코드받아오기
-    const searchParams = {
-      numOfRows: 5,
-      pageNo: nowPage,
-      upr_cd: sidoCode,
-      state: "protect",
-    }
-    const res = await getShelterAnimalsAPI(searchParams)
-    setNowPage(nowPage + 1)
-    if (
-      res.data &&
-      res.data.response &&
-      res.data.response.body &&
-      res.data.response.body.items
-    ) {
-      return res.data.response.body.items.item
-    } else {
-      console.log("보호소 동물 가져오기 실패")
-      return [] // 빈 배열 반환
+    try {
+      const data = await getMyLocation()
+      const location = {
+        code: data?.code || 6300000,
+        name: data?.name || "대전광역시",
+      }
+      const code = location?.code
+      const name = location?.name
+      // if (location) {
+      //   console.log("location", location)
+      // }
+      setLocationName(name)
+      const sidoCode = code || 6300000 //위치 시도코드받아오기
+      const searchParams = {
+        numOfRows: 5,
+        pageNo: nowPage,
+        upr_cd: sidoCode,
+        state: "protect",
+      }
+      const res = await getShelterAnimalsAPI(searchParams)
+      setNowPage(nowPage + 1)
+      if (
+        res.data &&
+        res.data.response &&
+        res.data.response.body &&
+        res.data.response.body.items
+      ) {
+        return res.data.response.body.items.item
+      } else {
+        console.log("보호소 동물 가져오기 실패")
+        return [] // 빈 배열 반환
+      }
+    } catch (e) {
+      return e
     }
   }
 
@@ -275,21 +290,10 @@ const PetpickPage = () => {
       {isLoading ? (
         <div>Loading..</div>
       ) : (
-        <div className=" relative h-screen">
-          <button
-            onClick={goPetpickWrite}
-            className="absolute right-20 top-20 flex "
-          >
-            <img
-              src={iconPawprint}
-              alt="Community Icon"
-              className="mr-2 size-6" // 이미지 크기와 간격 조정
-            />
-            펫픽 올리기
-          </button>
-          <div className=" fixed mb-4 text-lg">현재 인덱스: {index}</div>
-          <button className="fixed left-20 top-20" onClick={goBack}>
-            뒤로가기
+        <div className=" mx-auto h-screen w-[1000px]">
+          {/* <div className=" fixed mb-4 text-lg">현재 인덱스: {index}</div> */}
+          <button className="fixed left-20 top-32 z-50" onClick={goBack}>
+            <img src={IconBack} alt="goBack" />
           </button>
           <div className="fixed right-8 top-1/2 flex flex-col space-y-8">
             <button
@@ -313,7 +317,7 @@ const PetpickPage = () => {
           </div>
           <div
             ref={containerRef}
-            className="scrollbar-hide h-full snap-y snap-mandatory overflow-y-scroll"
+            className="h-full snap-y snap-mandatory overflow-y-scroll scrollbar-hide"
           >
             {list.map((item, i) => {
               if (item.desertionNo) {
@@ -324,17 +328,30 @@ const PetpickPage = () => {
                     onInView={handleInView}
                     nowindex={i}
                     animal={item}
+                    location={locationName}
                   />
                 )
               } else {
                 return (
-                  <PetpickComments
-                    key={i}
-                    ref={itemRefs.current[i]}
-                    onInView={handleInView}
-                    nowindex={i}
-                    pet={item}
-                  />
+                  <div key={i} className="ml-[150px] flex items-end">
+                    <PetpickComments
+                      ref={itemRefs.current[i]}
+                      onInView={handleInView}
+                      nowindex={i}
+                      pet={item}
+                    />
+                    <button
+                      onClick={goPetpickWrite}
+                      className="mb-24 ml-[10px] flex h-fit w-[100px] rounded-3xl border bg-white p-2"
+                    >
+                      <img
+                        src={iconPawprint}
+                        alt="Community Icon"
+                        className="mr-2 size-6 " // 이미지 크기와 간격 조정
+                      />
+                      <div className="flex w-[80px]">펫픽 +</div>
+                    </button>
+                  </div>
                 )
               }
             })}
