@@ -1,15 +1,37 @@
 import {deleteUser, patchReport} from "api/users-api"
+import Swal from "sweetalert2"
 
 const AdminReport = ({report}) => {
-  const disableUser = (userId) => {
-    if (confirm(`${userId} 유저의 회원 정보를 삭제하시겠습니까?`))
-      deleteUser(userId)
+  const disableUser = async (userId) => {
+    const result = await Swal.fire({
+      title: `${userId} 유저의 회원 정보를 삭제하시겠습니까?`,
+      showCancelButton: true,
+      confirmButtonText: "네",
+      confirmButtonColor: "#fe85ac",
+      cancelButtonText: "아니요",
+      cancelButtonColor: "#a4a2a1",
+      customClass: {
+        confirmButton: "w-20 py-2 text-white font-semibold rounded-md",
+        cancelButton: "w-20 py-2 text-white font-semibold rounded-md",
+      },
+    })
+    if (result.isConfirmed) deleteUser(userId)
   }
 
-  const patchReportStatus = (reportId) => {
-    if (
-      confirm(`신고 번호 ${reportId} 의 신고 처리 상태를 변경하시겠습니까?`)
-    ) {
+  const patchReportStatus = async (reportId) => {
+    const result = await Swal.fire({
+      title: `신고 번호 ${reportId} 의 신고 처리 상태를 변경하시겠습니까?`,
+      showCancelButton: true,
+      confirmButtonText: "네",
+      confirmButtonColor: "#fe85ac",
+      cancelButtonText: "아니요",
+      cancelButtonColor: "#a4a2a1",
+      customClass: {
+        confirmButton: "w-20 py-2 text-white font-semibold rounded-md",
+        cancelButton: "w-20 py-2 text-white font-semibold rounded-md",
+      },
+    })
+    if (result.isConfirmed) {
       patchReport(reportId)
     }
   }

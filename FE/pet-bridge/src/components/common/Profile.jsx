@@ -73,7 +73,7 @@ const Profile = ({isMe, userId, nickname, image, size}) => {
         {!isMe && (
           <div
             ref={popoverRef}
-            className={`bottom-30 absolute left-0 z-50 mt-2 w-48 rounded-md border border-gray-300 bg-white shadow-lg ${isPopoverVisible ? "block" : "hidden"}`}
+            className={`bottom-30 absolute left-0 z-40 mt-2 w-48 rounded-md border border-gray-300 bg-white shadow-lg ${isPopoverVisible ? "block" : "hidden"}`}
             role="dialog"
             aria-labelledby="popover-label"
           >
