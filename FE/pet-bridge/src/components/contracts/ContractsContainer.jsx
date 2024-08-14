@@ -265,7 +265,7 @@ const ContractsContainer = () => {
           </div>
           <div className="h-6"></div>
           <div
-            className="flex h-[600px] w-full flex-col items-center bg-gray-100 p-5"
+            className="flex w-full flex-col items-center bg-gray-100 p-5 pb-10"
             style={{
               // backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(${ContractBackground})`,
               backgroundSize: "cover",

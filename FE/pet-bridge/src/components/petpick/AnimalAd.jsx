@@ -185,7 +185,7 @@ const AnimalAd = forwardRef(({animal, location, nowindex, onInView}, ref) => {
 
   return (
     <div
-      className="z-50 mx-auto flex  h-screen w-[1000px] snap-center  flex-row justify-center  pb-[100px] pt-[10px] sm:w-11/12"
+      className="z-40 mx-auto flex  h-screen w-[1000px] snap-center  flex-row justify-center  pb-[100px] pt-[10px] sm:w-11/12"
       ref={(node) => {
         if (node) {
           if (ref && typeof ref === "object" && "current" in ref) {
@@ -232,7 +232,7 @@ const AnimalAd = forwardRef(({animal, location, nowindex, onInView}, ref) => {
           {location && (
             <div className="m-4 w-full text-left text-lg">
               현재위치{" "}
-              <span className="text-xl font-bold text-point">{location}</span>{" "}
+              <span className="text-point text-xl font-bold">{location}</span>{" "}
               의 보호동물 입니다
             </div>
           )}
@@ -247,7 +247,7 @@ const AnimalAd = forwardRef(({animal, location, nowindex, onInView}, ref) => {
               <div
                 id={name}
                 name={name}
-                className="w-2/3 rounded-lg border border-gray-300 bg-mild p-2 text-gray-800"
+                className="bg-mild w-2/3 rounded-lg border border-gray-300 p-2 text-gray-800"
               >
                 {value}
               </div>

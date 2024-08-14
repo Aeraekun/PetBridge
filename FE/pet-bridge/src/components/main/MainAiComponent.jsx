@@ -18,7 +18,7 @@ const MainAiComponent = () => {
         </p>
         <Link
           to="/recommendation"
-          className="inline-flex items-center rounded-lg border border-gray-300 bg-mild px-2 py-2.5 text-black no-underline"
+          className="bg-mild inline-flex items-center rounded-lg border border-gray-300 px-2 py-2.5 text-black no-underline"
         >
           <img
             src={iconPawprint}

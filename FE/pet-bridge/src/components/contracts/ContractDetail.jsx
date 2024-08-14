@@ -45,6 +45,19 @@ const ContractDetail = ({
         <span className="text-point px-2 font-bold">{payment}</span>
         <span>원을 반환합니다.</span>
       </p>
+      <p className="bg-none px-2">
+        <span>
+          만약 입양자가 계약 기간 내 계약 내용을 성실히 이행하지 않을 경우,
+          관리자는 견우와직묘 사이트에서 임의로 선정한 공공기관에 책임비를
+          기부할 수 있습니다.
+        </span>
+      </p>
+      <p className="bg-none px-2">
+        <span>
+          이로 인해 발생하는 모든 책임은 입양자에게 있으며, 기부된 책임비는 절대
+          보호자나 관리자의 사적인 용도로 사용되지 않습니다.
+        </span>
+      </p>
     </div>
   )
 }

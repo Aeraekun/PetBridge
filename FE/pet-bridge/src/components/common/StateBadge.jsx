@@ -62,7 +62,7 @@ const StateBadge = ({state, category}) => {
         >
           <div className="absolute right-0 h-[10px] w-full"></div>
           <div
-            className={`absolute  bottom-0 z-50 flex h-8 items-center justify-center rounded-tr p-3 font-bold ${bgcolor} border-r`}
+            className={`absolute  bottom-0 z-40 flex h-8 items-center justify-center rounded-tr p-3 font-bold ${bgcolor} border-r`}
           >
             {displayName}
           </div>
@@ -73,7 +73,7 @@ const StateBadge = ({state, category}) => {
         >
           <div className="absolute right-0 h-[10px] w-full"></div>
           <div
-            className={`absolute right-2 top-[-15px] z-50 flex h-8 items-center justify-center rounded-2xl bg-white p-2 font-bold outline outline-4 ${color}`}
+            className={`absolute right-2 top-[-15px] z-40 flex h-8 items-center justify-center rounded-2xl bg-white p-2 font-bold outline outline-4 ${color}`}
           >
             {displayName}
           </div>
