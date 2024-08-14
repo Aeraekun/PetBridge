@@ -1,7 +1,7 @@
 import React, {useState, useRef, useEffect} from "react"
 import SirenModal from "./SirenModal"
 
-const Profile = ({isMe, userId, nickname, image}) => {
+const Profile = ({isMe, userId, nickname, image, size}) => {
   const [isPopoverVisible, setIsPopoverVisible] = useState(false)
   const popoverRef = useRef(null)
   const profileRef = useRef(null)
@@ -54,12 +54,12 @@ const Profile = ({isMe, userId, nickname, image}) => {
         <img
           src={image || "/images/profile.jpg"}
           alt="프로필사진"
-          className="size-12 rounded-full border"
+          className={`${size === "small" ? "size-8" : "size-12"} rounded-full border`}
         />
       </button>
       <div className="relative flex-1">
         <button
-          className="text-lg font-semibold"
+          className={`${size === "small" ? "" : "text-lg font-semibold"} `}
           ref={profileRef}
           onClick={handleProfileClick}
           onKeyDown={(e) => {

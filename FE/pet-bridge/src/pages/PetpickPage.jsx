@@ -13,6 +13,7 @@ import AnimalAd from "components/petpick/AnimalAd"
 import {getMyLocation} from "utils/petpick-utils"
 import Navbar from "components/header/Navbar"
 import {Toast} from "utils/common-utils"
+import IconBack from "assets/icons/icon-goBack.svg"
 
 const PetpickPage = () => {
   const [index, setIndex] = useState(0) // 현재 인덱스 상태
@@ -289,21 +290,10 @@ const PetpickPage = () => {
       {isLoading ? (
         <div>Loading..</div>
       ) : (
-        <div className=" relative h-screen">
-          <button
-            onClick={goPetpickWrite}
-            className="absolute right-20 top-20 flex "
-          >
-            <img
-              src={iconPawprint}
-              alt="Community Icon"
-              className="mr-2 size-6" // 이미지 크기와 간격 조정
-            />
-            펫픽 올리기
-          </button>
-          <div className=" fixed mb-4 text-lg">현재 인덱스: {index}</div>
-          <button className="fixed left-20 top-20" onClick={goBack}>
-            뒤로가기
+        <div className=" h-screen w-[1000px] mx-auto">
+          {/* <div className=" fixed mb-4 text-lg">현재 인덱스: {index}</div> */}
+          <button className="fixed left-20 top-32" onClick={goBack}>
+            <img src={IconBack} alt="goBack" />
           </button>
           <div className="fixed right-8 top-1/2 flex flex-col space-y-8">
             <button
@@ -327,7 +317,7 @@ const PetpickPage = () => {
           </div>
           <div
             ref={containerRef}
-            className="scrollbar-hide h-full snap-y snap-mandatory overflow-y-scroll"
+            className="h-full snap-y snap-mandatory overflow-y-scroll scrollbar-hide"
           >
             {list.map((item, i) => {
               if (item.desertionNo) {
@@ -343,13 +333,25 @@ const PetpickPage = () => {
                 )
               } else {
                 return (
-                  <PetpickComments
-                    key={i}
-                    ref={itemRefs.current[i]}
-                    onInView={handleInView}
-                    nowindex={i}
-                    pet={item}
-                  />
+                  <div key={i} className="flex items-end ml-[150px]">
+                    <PetpickComments
+                      ref={itemRefs.current[i]}
+                      onInView={handleInView}
+                      nowindex={i}
+                      pet={item}
+                    />
+                    <button
+                      onClick={goPetpickWrite}
+                      className="mb-24 ml-[10px] flex h-fit w-[100px] rounded-3xl border bg-white p-2"
+                    >
+                      <img
+                        src={iconPawprint}
+                        alt="Community Icon"
+                        className="mr-2 size-6 " // 이미지 크기와 간격 조정
+                      />
+                      <div className="flex w-[80px]">펫픽 +</div>
+                    </button>
+                  </div>
                 )
               }
             })}

@@ -1,4 +1,4 @@
-import StateBadge from "components/common/StateBadge"
+// import StateBadge from "components/common/StateBadge"
 import PetpickIconContainer from "./PetpickIconContainer"
 // import React, {useState} from "react"
 
@@ -17,7 +17,7 @@ const AnimalInfo = ({animal}) => {
 const TaggedAnimalItem = ({animal, isFollowing, isLogin, onClick}) => {
   return (
     <div
-      className="flex justify-between p-3"
+      className="relative flex justify-between p-3"
       role="button"
       tabIndex={0}
       onClick={onClick}
@@ -35,10 +35,9 @@ const TaggedAnimalItem = ({animal, isFollowing, isLogin, onClick}) => {
         />
 
         <AnimalInfo animal={animal}></AnimalInfo>
+        {/* <StateBadge state={animal.processState} /> */}
       </div>
       <div className="flex h-full flex-col justify-between">
-        <StateBadge state={animal.processState} />
-
         <PetpickIconContainer
           isFollowButton={true}
           isFollowing={isFollowing}
