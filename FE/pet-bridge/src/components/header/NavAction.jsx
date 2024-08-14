@@ -7,8 +7,8 @@ import {
 import {useSelector, useDispatch} from "react-redux"
 import {Link} from "react-router-dom"
 import {logOutUser} from "utils/user-utils"
-import NavChat from "./NavChat"
-import {setIsChatModalOpen} from "features/chat/chat-slice"
+// import NavChat from "./NavChat"
+// import {setIsChatModalOpen} from "features/chat/chat-slice"
 
 const NavAction = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated)
@@ -20,9 +20,9 @@ const NavAction = () => {
     dispatch(logOut())
   }
 
-  const onClickChatHandler = () => {
-    dispatch(setIsChatModalOpen())
-  }
+  // const onClickChatHandler = () => {
+  //   dispatch(setIsChatModalOpen())
+  // }
 
   return (
     <ul className="flex h-8 items-center text-center text-sm sm:h-10 sm:text-lg md:h-12 md:text-xl">
@@ -31,9 +31,9 @@ const NavAction = () => {
           <li className="mx-2.5 flex h-full cursor-pointer truncate">
             <button onClick={handleLogOut}>로그아웃</button>
           </li>
-          <li className="mx-2.5 flex h-full cursor-pointer">
+          {/* <li className="mx-2.5 flex h-full cursor-pointer">
             <NavChat onClick={onClickChatHandler} />
-          </li>
+          </li> */}
           <li className="mx-2.5 flex h-full cursor-pointer">
             <Link to={`/users/${id}`}>
               <Button text="마이 페이지" />

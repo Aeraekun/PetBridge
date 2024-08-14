@@ -74,6 +74,7 @@ import ChatModal from "pages/ChatModal"
 import CallPage from "components/chat/CallPage"
 import LostAnimalMap from "components/map/LostAnimalMap"
 import RecommendationPage from "pages/RecommendationPage"
+import {setIsChatModalOpen} from "features/chat/chat-slice"
 
 function App() {
   const dispatch = useDispatch()
@@ -90,6 +91,12 @@ function App() {
         dispatch(setUserInfos(getUserInfosFromSession()))
       }
       setIsLoading(false)
+    }
+
+    if (isAuthenticated) {
+      dispatch(setIsChatModalOpen(true))
+    } else {
+      dispatch(setIsChatModalOpen(false))
     }
 
     getUserInfo()

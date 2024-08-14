@@ -42,7 +42,7 @@ const Popover = ({list, children, type, onSelectAnimal, onVisible}) => {
         {children}
       </button>
       <div
-        className={`absolute left-0  top-12 z-50 mb-2 h-fit max-h-[400px] w-96 overflow-auto rounded-lg border border-gray-200 bg-white text-sm shadow-lg transition-transform duration-200 ease-in-out${
+        className={`absolute left-0  top-12 z-40 mb-2 h-fit max-h-[400px] w-96 overflow-auto rounded-lg border border-gray-200 bg-white text-sm shadow-lg transition-transform duration-200 ease-in-out${
           visible
             ? "scale-100 opacity-100"
             : "pointer-events-none scale-95 opacity-0"
