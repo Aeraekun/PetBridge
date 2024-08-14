@@ -354,7 +354,7 @@ const SignUp = () => {
     // form 태그
     <>
       <Link to="/" className=" my-2 text-8xl font-bold">
-        <img src={logoImage} alt="로고" className="size-36" />
+        <img src={logoImage} alt="로고" className="size-24" />
       </Link>
       <form
         className="mb-10 flex size-full flex-col justify-between px-10"
