@@ -27,7 +27,7 @@ const Comment = ({data, currentUserId, onDelete}) => {
       <div className="flex space-x-2.5 px-5 pt-2">
         <div className="mt-2 size-11">
           <img
-            src={data.userImage}
+            src={data.userImage || "/images/profile.jpg"}
             alt="profile"
             className="size-10 overflow-hidden rounded-full object-cover"
           />
