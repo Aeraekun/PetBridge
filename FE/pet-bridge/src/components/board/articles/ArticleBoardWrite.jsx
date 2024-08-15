@@ -161,7 +161,6 @@ const ArticleBoardWrite = () => {
       <div className="relative flex">
         <input
           type="file"
-          accept="image/*"
           onChange={handleFileChange}
           className="cursor-pointer items-center"
         />
