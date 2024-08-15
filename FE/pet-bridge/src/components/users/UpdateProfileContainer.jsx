@@ -215,6 +215,7 @@ const UpdateProfileContainer = () => {
       <input
         type="file"
         id="image"
+        accept="image/*"
         onChange={imageChangeHandler}
         style={{display: "none"}}
       />
