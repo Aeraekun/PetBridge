@@ -93,7 +93,10 @@ const ContractsCreateContainer = () => {
 
   // 계약서 작성하기 클릭시 동작
   const onSubmitHandler = async () => {
-    console.log(contractFormData)
+    if (!isPhoneCodeChecked) {
+      return
+    }
+
     const result = await Swal.fire({
       title: "계약서를 작성하시겠습니까?",
       showCancelButton: true,
@@ -107,17 +110,18 @@ const ContractsCreateContainer = () => {
       },
     })
     // 폼의 유효성 검사
+
     if (result.isConfirmed) {
       try {
         // 비동기 요청 (계약서 작성)
         const res = await postContract(contractFormData)
         console.log(res)
         Toast.fire({icon: "success", title: "계약서가 작성되었습니다."})
-        navigate(`/users/${contractFormData.contractorId}`)
+        navigate(`/users/${contractFormData.contractorId}/contracts`)
       } catch (error) {
         console.log(error)
         Toast.fire({
-          icon: "fail",
+          icon: "warning",
           title:
             "계약서 작성에 실패했습니다. 계약서 내용 확인 후 다시 시도해주세요.",
         })
@@ -189,6 +193,21 @@ const ContractsCreateContainer = () => {
       console.log(error)
       Toast.fire({icon: "fail", title: "인증 실패"})
     }
+  }
+
+  // State to manage tooltip visibility
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false)
+
+  // Handler to show tooltip on hover
+  const handleMouseEnter = () => {
+    if (!isPhoneCodeChecked) {
+      setIsTooltipVisible(true)
+    }
+  }
+
+  // Handler to hide tooltip when mouse leaves
+  const handleMouseLeave = () => {
+    setIsTooltipVisible(false)
   }
 
   return (
@@ -304,7 +323,7 @@ const ContractsCreateContainer = () => {
               {isPhoneCodeChecked ? (
                 <button
                   disabled={true}
-                  className={`bg-stroke rounded-2xl border p-2.5`}
+                  className={`rounded-2xl border bg-stroke p-2.5`}
                 >
                   서명 완료
                 </button>
@@ -319,7 +338,7 @@ const ContractsCreateContainer = () => {
                   />
                   <button
                     onClick={clickPhoneCodeCheckHandler}
-                    className="hover:bg-mild grow rounded-2xl border px-2"
+                    className="grow rounded-2xl border px-2 hover:bg-mild"
                   >
                     확인
                   </button>
@@ -347,14 +366,22 @@ const ContractsCreateContainer = () => {
       </section>
 
       {/* 클릭시 form 제출 */}
-      <button
-        disabled={!isPhoneCodeChecked}
-        type="button"
-        onClick={onSubmitHandler}
-        className="bg-mild h-16 w-56 rounded-xl text-xl"
-      >
-        계약서 작성하기
-      </button>
+      <div className="relative">
+        <button
+          type="button"
+          onClick={onSubmitHandler}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className={` ${isPhoneCodeChecked ? "bg-mild" : "bg-stroke"}  h-16 w-56 rounded-xl text-xl`}
+        >
+          계약서 작성하기
+        </button>
+        {isTooltipVisible && (
+          <div className="absolute left-1/2 top-[-40px] -translate-x-1/2 rounded-md bg-black px-2 py-1 text-sm text-white">
+            SMS 서명을 완료해주세요
+          </div>
+        )}
+      </div>
       <div className="h-20"></div>
     </div>
   )

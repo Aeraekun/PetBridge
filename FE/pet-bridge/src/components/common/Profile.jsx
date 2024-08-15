@@ -1,11 +1,55 @@
 import React, {useState, useRef, useEffect} from "react"
 import SirenModal from "./SirenModal"
+import {useDispatch, useSelector} from "react-redux"
+import Swal from "sweetalert2"
+import {createChatRoom} from "api/chat-api"
+import {selectId, selectIsAuthenticated} from "features/user/users-slice"
+import {setCurrentChatId, setIsChatMinimized} from "features/chat/chat-slice"
 
 const Profile = ({isMe, userId, nickname, image, size}) => {
   const [isPopoverVisible, setIsPopoverVisible] = useState(false)
   const popoverRef = useRef(null)
   const profileRef = useRef(null)
   const [modalOpen, setModalOpen] = useState(false)
+
+  const isAuthenticated = useSelector(selectIsAuthenticated)
+
+  const myId = useSelector(selectId)
+
+  const dispatch = useDispatch()
+
+  const ClickChatHandler = async () => {
+    if (!isAuthenticated) {
+      openModal()
+      return
+    }
+
+    const result = await Swal.fire({
+      title: `${nickname} 님과의 채팅을 시작하시겠습니까?`,
+      showCancelButton: true,
+      confirmButtonText: "네",
+      confirmButtonColor: "#fe85ac",
+      cancelButtonText: "아니요",
+      cancelButtonColor: "#a4a2a1",
+      customClass: {
+        confirmButton: "w-20 py-2 text-white font-semibold rounded-md",
+        cancelButton: "w-20 py-2 text-white font-semibold rounded-md",
+      },
+    })
+
+    if (result.isConfirmed) {
+      try {
+        const res = await createChatRoom(Number(myId), Number(userId))
+
+        console.log(res)
+        dispatch(setCurrentChatId(res.data))
+
+        dispatch(setIsChatMinimized(false))
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
 
   const openModal = () => {
     console.log(isMe)
@@ -91,7 +135,7 @@ const Profile = ({isMe, userId, nickname, image, size}) => {
             />
             <button
               className="block w-full px-4 py-2 text-left hover:bg-gray-100"
-              onClick={() => alert("채팅하기 클릭됨")}
+              onClick={ClickChatHandler}
             >
               채팅하기
             </button>

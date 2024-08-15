@@ -69,6 +69,7 @@ const SearchDropDownChat = ({
 
     // const selectedInfo = userDatas[event.target.key]
     dispatch(setOpponentInfo(selectedInfo))
+    setIsOpen(false)
   }
 
   return (
