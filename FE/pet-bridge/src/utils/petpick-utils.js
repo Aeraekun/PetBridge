@@ -41,61 +41,60 @@ const getRegionCode = (regionName) => {
   return "" // Return an empty string if no match is found
 }
 export const getMyLocation = () => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const lat = position.coords.latitude
-        const lng = position.coords.longitude
+  return new Promise((resolve, reject) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude
+          const lng = position.coords.longitude
 
-        console.log("현재 위치:", lat, lng)
+          console.log("현재 위치:", lat, lng)
 
-        // Ensure the Kakao maps object is available
-        if (window.kakao && window.kakao.maps && window.kakao.maps.services) {
-          let geocoder = new window.kakao.maps.services.Geocoder()
-          let coord = new window.kakao.maps.LatLng(lat, lng)
-          let callback = function (result, status) {
-            if (status === window.kakao.maps.services.Status.OK) {
-              let address = null
+          if (window.kakao && window.kakao.maps && window.kakao.maps.services) {
+            let geocoder = new window.kakao.maps.services.Geocoder()
+            let coord = new window.kakao.maps.LatLng(lat, lng)
+            let callback = function (result, status) {
+              if (status === window.kakao.maps.services.Status.OK) {
+                let address = null
 
-              // Check if road_address is available
-              if (result[0].road_address) {
-                address = result[0].road_address.address_name
-              } else if (result[0].address) {
-                // Fallback to general address if road_address is not available
-                address = result[0].address.address_name
-              }
-
-              if (address) {
-                console.log("Address:", address)
-                console.log(address.split(" ")[0])
-                console.log(
-                  "Region Code:",
-                  getRegionCode(address.split(" ")[0])
-                )
-                const location = {
-                  code: getRegionCode(address.split(" ")[0]),
-                  name: address.split(" ")[0],
+                if (result[0].road_address) {
+                  address = result[0].road_address.address_name
+                } else if (result[0].address) {
+                  address = result[0].address.address_name
                 }
-                return location
-              } else {
-                console.error("No address information available.")
-              }
-            } else {
-              console.error("Failed to reverse geocode coordinates.")
-            }
-          }
 
-          geocoder.coord2Address(coord.getLng(), coord.getLat(), callback)
-        } else {
-          console.error("Kakao Maps API is not loaded correctly.")
+                if (address) {
+                  console.log(address.split(" ")[0])
+                  const location = {
+                    code: getRegionCode(address.split(" ")[0]),
+                    name: address.split(" ")[0],
+                  }
+                  console.log("getmyt", location)
+                  resolve(location)
+                } else {
+                  console.error("No address information available.")
+                  resolve(null)
+                }
+              } else {
+                console.error("Failed to reverse geocode coordinates.")
+                resolve(null)
+              }
+            }
+
+            geocoder.coord2Address(coord.getLng(), coord.getLat(), callback)
+          } else {
+            console.error("Kakao Maps API is not loaded correctly.")
+            resolve(null)
+          }
+        },
+        (error) => {
+          console.error("Error occurred while getting location: ", error)
+          reject(error)
         }
-      },
-      (error) => {
-        console.error("Error occurred while getting location: ", error)
-      }
-    )
-  } else {
-    console.error("Geolocation is not supported by this browser.")
-  }
-  return null
+      )
+    } else {
+      console.error("Geolocation is not supported by this browser.")
+      resolve(null)
+    }
+  })
 }

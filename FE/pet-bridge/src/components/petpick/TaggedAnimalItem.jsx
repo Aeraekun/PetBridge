@@ -15,7 +15,7 @@ const AnimalInfo = ({animal}) => {
 const TaggedAnimalItem = ({animal, isFollowing, isLogin, onClick}) => {
   return (
     <div
-      className="relative m-2 flex cursor-pointer rounded-lg border border-gray-200 bg-white p-4 transition-transform hover:scale-105 hover:shadow-md"
+      className="relative m-3 flex cursor-pointer rounded-lg border border-gray-200 bg-white p-4 transition-transform hover:scale-105 hover:shadow-md"
       role="button"
       tabIndex={0}
       onClick={onClick}
