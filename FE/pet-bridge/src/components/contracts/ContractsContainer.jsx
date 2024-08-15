@@ -336,10 +336,13 @@ const ContractsContainer = () => {
                 <div className="flex h-20 items-center justify-center">
                   {Number(userId) == contractInfo.contractorId ? (
                     <button
+                      disabled={isStampFilled}
                       className="rounded-2xl bg-mild p-2.5 text-2xl font-bold text-white"
                       onClick={onClickStampHandler}
                     >
-                      이번 달 스탬프 찍기
+                      {isStampFilled
+                        ? "모든 스탬프를 찍었어요!"
+                        : "이번 달 스탬프 찍기"}
                     </button>
                   ) : isStampFilled ? (
                     <button
