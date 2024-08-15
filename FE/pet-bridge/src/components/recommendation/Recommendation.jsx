@@ -61,7 +61,7 @@ const questions = [
   {
     id: 1,
     question: "어떤 종류의 반려동물을 입양하고 싶으신가요?",
-    options: ["강아지", "고양이"],
+    options: ["강아지", "고양이", "상관없음"],
   },
   {
     id: 2,
@@ -134,7 +134,7 @@ const Chatbot = () => {
       .map((ans, index) => `[${index + 1}] ${ans.question}: ${ans.answer}`)
       .join("\n")
 
-    const fullMessage = `${userMessage}\n\n해당 설문을 바탕으로, "함께하는 베프", "쿨한 독립러", "편안한 소울메이트", "애정 듬뿍러" 중 어울리는 유형을 하나 선택 해 주고, 추가로 나에게 맞는 반려동물 품종들을 추천해줘. 단, 추천 품종은 반드시 5종 이여야 하고, 그 중 포메라니안은 항상 포함되어야 해. 답변 형식은 json 형식으로 받고 싶어. "personality": "함께하는 베프", "kinds": 동물 종들 식으로. 예를 들어, 너가 줘야할 답변은 "{ "personality": "산책 러버", "kinds": [ "비숑프리제", "요크셔테리어", "보스턴테리어", "푸들", "파피용" ] }" 이런 식이야. 단, kinds의 동물 품종에서 띄어쓰기는 제외해줘. "비숑 프리제"면 "비숑프리제" 이런 식으로 들어오도록.`
+    const fullMessage = `${userMessage}\n\n해당 설문을 바탕으로, "함께하는 베프", "쿨한 독립러", "편안한 소울메이트", "애정 듬뿍러" 중 어울리는 유형을 하나 선택 해 주고, 추가로 나에게 맞는 반려동물 품종들을 추천해줘. 단, 추천 품종은 반드시 5종 이여야 하고, 그 중 "포메라니안", "페르시안"은 항상 포함되어야 해. 답변 형식은 json 형식으로 받고 싶어. "personality": "함께하는 베프", "kinds": 동물 종들 식으로. 예를 들어, 너가 줘야할 답변은 "{ "personality": "산책 러버", "kinds": [ "비숑프리제", "요크셔테리어", "보스턴테리어", "푸들", "파피용" ] }" 이런 식이야. 단, kinds의 동물 품종에서 띄어쓰기는 제외해줘. "비숑 프리제"면 "비숑프리제" 이런 식으로 들어오도록.`
 
     try {
       const response = await fetch(apiEndpoint, {
@@ -222,7 +222,7 @@ const Chatbot = () => {
                 {/* detailContents 출력 */}
                 <div className="mb-6 list-inside list-disc text-xl font-medium text-gray-700">
                   {detailContents[result.personality].map((detail, index) => (
-                    <p key={index} className="mb-2">
+                    <p key={index} className="mb-2 text-center">
                       {detail}
                     </p>
                   ))}
@@ -240,7 +240,7 @@ const Chatbot = () => {
             <div className="w-full max-w-6xl rounded-lg bg-white p-8 text-center shadow-lg">
               <button
                 onClick={() => setShowMore(!showMore)}
-                className="bg-mild hover:bg-point mt-4 rounded-md px-6 py-2 text-black"
+                className="mt-4 rounded-md bg-mild px-6 py-2 text-black hover:bg-point"
               >
                 ▼ 등록 공고 확인
               </button>
@@ -252,7 +252,7 @@ const Chatbot = () => {
                       <button
                         key={index}
                         onClick={() => handleBreedSelection(breed)}
-                        className={`hover:bg-point rounded-md px-4 py-2 text-lg text-gray-800 ${
+                        className={`rounded-md px-4 py-2 text-lg text-gray-800 hover:bg-point ${
                           breed === lastClickedBreed
                             ? "bg-point text-white"
                             : "bg-mild"
@@ -291,7 +291,7 @@ const Chatbot = () => {
                       <li key={index} className="mb-4">
                         <button
                           onClick={() => handleAnswerSelection(option)}
-                          className="bg-mild hover:bg-point w-full rounded-md px-6 py-4 text-2xl text-white"
+                          className="w-full rounded-md bg-mild px-6 py-4 text-2xl text-white hover:bg-point"
                         >
                           {option}
                         </button>
