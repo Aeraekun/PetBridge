@@ -6,72 +6,8 @@ import {useNavigate} from "react-router-dom"
 // import AnimalSearchForm from "components/board/animals/AnimalSearchForm"
 import {getAnimalList} from "api/animals-api"
 import Pagination from "components/common/Pagination"
-import searchIcon from "../../../assets/icons/icon-search.png"
+import Search from "components/board/articles/Search"
 
-//임시보호동물게시판
-const Search = ({searchParams}) => {
-  const [careaddr, setCareaddr] = useState()
-  const [processstate, setProcessstate] = useState("")
-
-  //엔터키 이벤트
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault()
-      handleSearch()
-    }
-  }
-  const handleButtonClick = () => {
-    handleSearch()
-  }
-
-  const handleSearch = () => {
-    const params = {
-      careaddr: careaddr ? careaddr : "",
-      processstate: processstate,
-    }
-
-    console.log(params, "params")
-    searchParams(params)
-    setCareaddr("")
-    setProcessstate("")
-  }
-
-  return (
-    <div className="flex w-full items-center justify-between p-4">
-      <select
-        id="kind"
-        value={processstate}
-        onChange={(e) => setProcessstate(e.target.value)}
-        className="h-12 w-48 rounded-xl border-2 border-stroke p-2"
-      >
-        <option value="전체">전체</option>
-        <option value="임시보호">임시보호</option>
-        <option value="입양대기">입양대기</option>
-        <option value="입양완료">입양완료</option>
-      </select>{" "}
-      <div className=" mr-6 flex  h-12 w-36 items-center justify-end text-lg">
-        보호장소
-      </div>
-      <input
-        type="text"
-        placeholder="보호 장소를 입력하세요."
-        className="mr-12 h-12 w-full rounded-xl border-2 border-stroke p-2"
-        onKeyDown={handleKeyDown}
-        value={careaddr}
-        onChange={(e) => setCareaddr(e.target.value)}
-      />
-      <button
-        onClick={() => {
-          handleButtonClick()
-        }}
-        className="flex h-10 w-36 items-center justify-center rounded-xl bg-mild text-black "
-      >
-        <img src={searchIcon} alt="Search Icon" className="mr-2 size-[20px]" />
-        검색
-      </button>
-    </div>
-  )
-}
 const AnimalBoardList = () => {
   const navigate = useNavigate()
 
