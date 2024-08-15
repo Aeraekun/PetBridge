@@ -7,7 +7,7 @@ export const stateColors = {
   보호중: "outline-purple-300",
   "종료(반환)": "outline-blue-100",
   "종료(입양)": "outline-purple-100",
-  "종료(안락사)": "outline-black text-white",
+  "종료(안락사)": "outline-gray-700",
   "종료(자연사)": "outline-yellow",
   "종료(기타)": "outline-gray-100",
 
@@ -25,7 +25,7 @@ export const stateBgColors = {
   보호중: "bg-purple-300",
   "종료(반환)": "bg-blue-100",
   "종료(입양)": "bg-purple-100",
-  "종료(안락사)": "bg-black text-white",
+  "종료(안락사)": "bg-gray-700 text-white",
   "종료(자연사)": "bg-yellow",
   "종료(기타)": "bg-gray-100",
 

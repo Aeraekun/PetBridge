@@ -37,7 +37,7 @@ const Search = ({searchParams}) => {
   }
 
   return (
-    <div className="flex w-full items-center justify-between rounded-md border border-[#D9D9D9] bg-pink-100 p-4">
+    <div className="flex w-full items-center justify-between p-4">
       <select
         id="kind"
         value={processstate}

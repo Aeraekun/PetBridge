@@ -154,13 +154,14 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
     // setSelectedKind(null)
   }
   return (
-    <div className="rounded-md border border-gray-300 bg-white p-4 shadow-sm">
+    <div className="rounded-md bg-red-50 p-4 shadow-sm">
       {isShelter ? (
-        <div>
+        <div className="">
           <h1 className="mb-4 text-xl font-bold text-gray-700">
             보호소 동물 검색
           </h1>
-          <div className="mb-4 flex space-x-2">
+          <div className="mx-8 flex items-center space-x-5">
+            <div className=" text-gray-700">공고일</div>
             <DatePicker
               id="bgnde"
               selected={bgnde}
@@ -169,6 +170,7 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
               className="w-32 rounded-md border border-gray-300 p-2 text-gray-700 focus:ring-2 focus:ring-blue-200"
               placeholderText="시작일"
             />
+            <div> ~ </div>
             <DatePicker
               id="endde"
               selected={endde}
@@ -185,98 +187,106 @@ const AnimalSearchForm = ({searchParams, isShelter}) => {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex flex-wrap gap-16">
-          <div className="flex items-center space-x-2">
-            <label htmlFor="sido" className="block text-gray-700">
-              시도:
-            </label>
-            <select
-              id="sido"
-              value={selectedSido}
-              onChange={(e) => setSelectedSido(e.target.value)}
-              className="w-36 rounded-md border border-gray-300 p-2 text-gray-700 focus:ring-2 focus:ring-blue-200"
-            >
-              <option value="">선택</option>
-              {sido &&
-                sido.map((item, index) => (
-                  <option key={index} value={parseInt(item.orgCd)}>
-                    {item.orgdownNm}
-                  </option>
-                ))}
-            </select>
-          </div>
-
-          {selectedSido && (
-            <div className="flex items-center space-x-2">
-              <label htmlFor="sigungu" className="block text-gray-700">
-                시군구:
+      <form onSubmit={handleSubmit} className="mt-5 flex ">
+        <div className="mx-8 flex basis-4/5">
+          <div className="flex flex-1 flex-row">
+            <div className="flex-1">
+              <label htmlFor="sido" className="mb-1 block text-gray-700">
+                시도
               </label>
               <select
-                id="sigungu"
-                value={selectedSigungu}
-                onChange={(e) => setSelectedSigungu(e.target.value)}
+                id="sido"
+                value={selectedSido}
+                onChange={(e) => setSelectedSido(e.target.value)}
                 className="w-36 rounded-md border border-gray-300 p-2 text-gray-700 focus:ring-2 focus:ring-blue-200"
               >
                 <option value="">선택</option>
-                {sigungu &&
-                  sigungu.map((item) => (
-                    <option key={item.orgCd} value={parseInt(item.orgCd)}>
+                {sido &&
+                  sido.map((item, index) => (
+                    <option key={index} value={parseInt(item.orgCd)}>
                       {item.orgdownNm}
                     </option>
                   ))}
               </select>
             </div>
-          )}
 
-          <div className="flex items-center space-x-2">
-            <label htmlFor="kind" className="block text-gray-700">
-              종류:
-            </label>
-            <select
-              id="kind"
-              value={selectedUpKindCd}
-              onChange={(e) =>
-                setSelectedUpKindCd(parseInt(e.target.value, 10))
-              }
-              className="w-36 rounded-md border border-gray-300 p-2 text-gray-700 focus:ring-2 focus:ring-blue-200"
-            >
-              <option value="">선택</option>
-              <option value="417000">개</option>
-              <option value="422400">고양이</option>
-              <option value="429900">기타</option>
-            </select>
+            {selectedSido && (
+              <div className="flex-1">
+                <label htmlFor="sigungu" className="mb-1 block text-gray-700">
+                  시군구
+                </label>
+                <select
+                  id="sigungu"
+                  value={selectedSigungu}
+                  onChange={(e) => setSelectedSigungu(e.target.value)}
+                  className="w-36 rounded-md border border-gray-300 p-2 text-gray-700 focus:ring-2 focus:ring-blue-200"
+                >
+                  <option value="">선택</option>
+                  {sigungu &&
+                    sigungu.map((item) => (
+                      <option key={item.orgCd} value={parseInt(item.orgCd)}>
+                        {item.orgdownNm}
+                      </option>
+                    ))}
+                </select>
+              </div>
+            )}
           </div>
 
-          {selectedUpKindCd > 0 && isShelter && (
-            <div className="flex items-center space-x-2">
-              <label htmlFor="breed" className="block text-gray-700">
-                품종:
+          <div className="flex flex-1">
+            <div className="flex-1">
+              <label htmlFor="kind" className="mb-1 block text-gray-700">
+                종류
               </label>
               <select
-                id="breed"
-                value={selectedKind}
-                onChange={(e) => setSelectedKind(e.target.value)}
+                id="kind"
+                value={selectedUpKindCd}
+                onChange={(e) =>
+                  setSelectedUpKindCd(parseInt(e.target.value, 10))
+                }
                 className="w-36 rounded-md border border-gray-300 p-2 text-gray-700 focus:ring-2 focus:ring-blue-200"
               >
                 <option value="">선택</option>
-                {breed &&
-                  breed.map((item) => (
-                    <option key={item.kindCd} value={item.kindCd}>
-                      {item.knm}
-                    </option>
-                  ))}
+                <option value="417000">개</option>
+                <option value="422400">고양이</option>
+                <option value="429900">기타</option>
               </select>
             </div>
-          )}
+
+            {selectedUpKindCd > 0 && isShelter && (
+              <div className="flex-1">
+                <label htmlFor="breed" className="mb-1 block text-gray-700">
+                  품종
+                </label>
+                <select
+                  id="breed"
+                  value={selectedKind}
+                  onChange={(e) => setSelectedKind(e.target.value)}
+                  className="w-36 rounded-md border border-gray-300 p-2 text-gray-700 focus:ring-2 focus:ring-blue-200"
+                >
+                  <option value="">선택</option>
+                  {breed &&
+                    breed.map((item) => (
+                      <option key={item.kindCd} value={item.kindCd}>
+                        {item.knm}
+                      </option>
+                    ))}
+                </select>
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="mt-4 flex justify-center">
+        <div className="mt-4 flex w-48 justify-center">
           <button
             type="submit"
-            className="flex items-center rounded-md border border-gray-300 bg-blue-100 px-4 py-2 text-gray-700 hover:bg-blue-200"
+            className="flex h-10 items-center rounded-md bg-mild px-4 py-2 outline outline-white drop-shadow-lg hover:bg-point hover:drop-shadow-none"
           >
-            <img src={searchIcon} alt="Search Icon" className="mr-2 size-4" />
+            <img
+              src={searchIcon}
+              alt="Search Icon"
+              className="mr-2 size-4 text-black"
+            />
             검색
           </button>
         </div>
