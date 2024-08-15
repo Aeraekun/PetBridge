@@ -26,7 +26,6 @@ export const getDetailAnimal = async (id) => {
   }
 }
 export const getAnimalList = async (searchParams) => {
-  console.log(process.env.BASE_PUB_API)
   try {
     const res = await axios.get(`${BASE_API_URL}`, {params: searchParams})
     console.log("getAnimalList" + res.data)
