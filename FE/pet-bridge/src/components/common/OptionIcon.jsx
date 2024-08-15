@@ -55,7 +55,7 @@ const SelectIcon = ({currentUserId, userId, onDelete}) => {
         {Number(currentUserId) === Number(userId) ? (
           <div
             ref={popoverRef}
-            className={`absolute right-0 top-8 z-50 mt-2 w-28 rounded-md border border-gray-300 bg-white shadow-lg ${isPopoverVisible ? "block" : "hidden"}`}
+            className={`absolute right-0 top-8 z-40 mt-2 w-28 rounded-md border border-gray-300 bg-white shadow-lg ${isPopoverVisible ? "block" : "hidden"}`}
             role="dialog"
             aria-labelledby="popover-label"
           >
@@ -69,7 +69,7 @@ const SelectIcon = ({currentUserId, userId, onDelete}) => {
         ) : (
           <div
             ref={popoverRef}
-            className={`absolute right-0 top-8 z-50 mt-2 w-28 rounded-md border border-gray-300 bg-white shadow-lg ${isPopoverVisible ? "block" : "hidden"}`}
+            className={`absolute right-0 top-8 z-40 mt-2 w-28 rounded-md border border-gray-300 bg-white shadow-lg ${isPopoverVisible ? "block" : "hidden"}`}
             role="dialog"
             aria-labelledby="popover-label"
           >

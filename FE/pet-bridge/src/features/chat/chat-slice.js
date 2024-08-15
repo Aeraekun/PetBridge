@@ -5,7 +5,7 @@ import {useSelector} from "react-redux"
 
 const initialState = {
   isChatModalOpen: false,
-  isChatMinimized: false,
+  isChatMinimized: true,
   currentChatId: null,
   chatMessages: {},
   chatRoomInfos: [],
@@ -38,8 +38,8 @@ export const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    setIsChatModalOpen: (state) => {
-      state.isChatModalOpen = !state.isChatModalOpen
+    setIsChatModalOpen: (state, action) => {
+      state.isChatModalOpen = action.payload
     },
     setIsChatMinimized: (state) => {
       state.isChatMinimized = !state.isChatMinimized
