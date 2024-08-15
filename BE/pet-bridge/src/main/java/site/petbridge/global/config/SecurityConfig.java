@@ -72,8 +72,8 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.POST, "/api/users/find/email").permitAll()
 
 				// 관리자
-				.requestMatchers(HttpMethod.GET, "/api/users").hasAuthority("ADMIN")
-				.requestMatchers(HttpMethod.DELETE, "/api/users/{id}").hasAuthority("ADMIN")
+//				.requestMatchers(HttpMethod.GET, "/api/users").hasAuthority("ADMIN")
+//				.requestMatchers(HttpMethod.DELETE, "/api/users/{id}").hasAuthority("ADMIN")
 
 				// 소셜 로그인
 				.requestMatchers(HttpMethod.GET, "/users/social/**").permitAll()
