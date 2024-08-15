@@ -5,7 +5,6 @@ import MainPetpickComponent from "../components/main/MainPetpickComponent"
 import MainBoardComponent from "../components/main/MainBoardComponent"
 import MainAiComponent from "../components/main/MainAiComponent"
 import MainLostAndFoundComponent from "../components/main/MainLostAndFoundComponent"
-import MainUccComponent from "../components/main/MainUccComponent"
 import MainArticleComponent from "../components/main/MainArticleComponent"
 
 const MainPage = () => {
@@ -19,8 +18,7 @@ const MainPage = () => {
     <MainBoardComponent key="component4" />,
     <MainAiComponent key="component5" />,
     <MainLostAndFoundComponent key="component6" />,
-    <MainUccComponent key="component7" />,
-    <MainArticleComponent key="component8" />,
+    <MainArticleComponent key="component7" />,
   ]
 
   const handleScroll = (e) => {
