@@ -78,7 +78,8 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         if (refreshToken != null) {
             checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
             // RefreshToken을 보낸 경우이므로, AccessToken 재발급 후 인증 처리는 하지 않기 위해 return해서 필터 진행 막기
-            return;
+//            return;
+            filterChain.doFilter(request, response);
         }
         
         // RefreshToken이 없거나 유효하지 않다면, AccessToken을 검사하고 인증을 처리하는 로직 수행
@@ -100,12 +101,25 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
      * 그 후 JwtService.sendAccessAndRefreshToken으로 둘다 보내줌.
      */
     public void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) {
+        System.out.println("리프레시토큰11 : " + refreshToken);
         userRepository.findByRefreshToken(refreshToken)
                 .ifPresent(user -> {
+                    System.out.println("유저 찾음 : " + user);
                     String reIssuedRefreshToken = reIssueRefreshToken(user);
                     jwtService.sendAccessAndRefreshToken(response,
                             jwtService.createAccessToken(user.getEmail()),
                             reIssuedRefreshToken);
+
+                    // refreshToken만의 요청일때도 정상 응답 보내주기 위해 Authentication에 회원 객체 저장
+                    CustomUserDetail userDetailsUser = new CustomUserDetail(user);
+
+                    Authentication authentication =
+                            new UsernamePasswordAuthenticationToken(userDetailsUser, null,
+                                    authoritiesMapper.mapAuthorities(userDetailsUser.getAuthorities()));
+
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    System.out.println("현재 계정 : " + SecurityContextHolder.getContext().getAuthentication());
+                    
                 });
     }
 
@@ -183,6 +197,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
         // SecurityContextHolder.getContext() 즉 SecurityContext에 Authentication 객체 저장
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        System.out.println("현재 계정 : " + SecurityContextHolder.getContext().getAuthentication());
     }
 
 }
