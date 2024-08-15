@@ -10,6 +10,7 @@ const StateBadge = ({state, category}) => {
     NOTICE: "공지사항",
     PROMOTION: "입양홍보",
     FREE: "자유게시판",
+    LOST: "실종",
   }
   const color = stateColors[state] || "outline-mild"
   const bgcolor = stateBgColors[state] || "bg-mild"
