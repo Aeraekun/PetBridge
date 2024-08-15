@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react"
 import {useLocation, useNavigate} from "react-router-dom"
 
 import {useSelector} from "react-redux"
-import {selectId} from "features/user/users-slice"
+import {selectId, selectRole} from "features/user/users-slice"
 import {removeAnimal} from "api/animals-api"
 import AnimalDetailProfile from "./AnimalDetailProfile"
 import Button from "components/common/Button"
@@ -68,6 +68,8 @@ const AnimalDetail = () => {
     navigate(path)
   }
 
+  const isAdmin = useSelector(selectRole) === "ADMIN"
+
   return (
     <>
       <button onClick={goBack} className="relative  flex justify-start">
@@ -112,8 +114,9 @@ const AnimalDetail = () => {
         </div>
       )}
 
-      {!isShelter && Number(currentUserId) === Number(animal.userId) ? (
-        <div className="flex justify-end">
+      {(!isShelter && Number(currentUserId) === Number(animal.userId)) ||
+      isAdmin ? (
+        <div className="m-3 flex justify-end">
           <Button text={"수정하기"} onClick={() => goAnimalModify(animal)} />
           <Button text={"삭제하기"} onClick={openDeleteModal} />
         </div>

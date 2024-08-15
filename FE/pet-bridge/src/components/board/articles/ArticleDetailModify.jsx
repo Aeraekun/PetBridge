@@ -313,7 +313,7 @@ const ArticleDetailModify = () => {
         돌아가기
       </button>
       <input
-        className="border-stroke h-16 rounded-xl border text-center text-4xl font-bold"
+        className="h-16 rounded-xl border border-stroke text-center text-4xl font-bold"
         placeholder="제목을 입력하세요"
         onChange={(e) => setTitle(e.target.value)}
         value={title}
@@ -373,7 +373,7 @@ const ArticleDetailModify = () => {
       <div className="flex justify-end">
         <SirenIcon />
       </div>
-      <div className="flex justify-end">
+      <div className="m-3 flex justify-end">
         태그된 동물 번호 {selectedAnimalId}
         <Button text={"수정하기"} onClick={modifyArticle} />
         <Button text={"삭제하기"} onClick={() => setIsModalOpen(true)} />

@@ -425,7 +425,7 @@ const PetpickModify = () => {
         {errors.selectedArticleId && (
           <p className="text-sm text-red-500">{errors.selectedArticleId}</p>
         )}
-        <div className="flex justify-end">
+        <div className="m-3 flex justify-end">
           태그된 동물 번호 {selectedAnimalId} <br></br>
           태그된 게시글 번호 {selectedArticleId}
           <Button text={"수정하기"} onClick={modifypetPick} />

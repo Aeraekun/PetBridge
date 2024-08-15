@@ -167,7 +167,7 @@ const AnimalDetailModify = () => {
 
       {error && <p className="text-sm text-red-500">{error}</p>}
 
-      <div className="flex justify-end">
+      <div className="m-3 flex justify-end">
         <Button text={"수정하기"} onClick={goAnimalModify} />
         <Button text={"삭제하기"} onClick={openDeleteModal} />
         <Button text={"취소하기"} onClick={goBack} />

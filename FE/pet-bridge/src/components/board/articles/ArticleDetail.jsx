@@ -113,7 +113,7 @@ import React, {useState, useEffect} from "react"
 import {useSelector} from "react-redux"
 import {useNavigate, useParams} from "react-router-dom"
 import DOMPurify from "dompurify"
-import {selectId} from "features/user/users-slice"
+import {selectId, selectRole} from "features/user/users-slice"
 import {getArticleDetail, removeArticle} from "api/boards-api"
 import Profile from "components/common/Profile"
 import ArticleComments from "./ArticleComments"
@@ -171,6 +171,8 @@ const ArticleDetail = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false)
   }
+
+  const isAdmin = useSelector(selectRole) === "ADMIN"
 
   return (
     <div
@@ -234,12 +236,12 @@ const ArticleDetail = () => {
         )}
       </div>
       <div
-        className="mx-auto mt-3 min-h-72 w-[800px] p-9"
+        className="mx-auto mt-3 min-h-72 w-[350px] p-9 sm:w-11/12 sm:max-w-[800px]"
         dangerouslySetInnerHTML={{__html: sanitizedContent}}
       ></div>
       <div className="flex justify-end">
-        {Number(currentUserId) === Number(article.userId) ? (
-          <div className="flex space-x-3">
+        {Number(currentUserId) === Number(article.userId) || isAdmin ? (
+          <div className="m-3 flex space-x-3">
             <Button text={"수정하기"} onClick={goModifyArticle} />
             <Button text={"삭제하기"} onClick={handleDeleteClick} />
           </div>
