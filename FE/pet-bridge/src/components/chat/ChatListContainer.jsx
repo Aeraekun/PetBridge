@@ -96,6 +96,19 @@ const ChatListContainer = () => {
         (response) => {
           const updatedRoom = JSON.parse(response.body)
 
+          // 특정 메시지 내용에 따라 알림을 띄움
+          if (
+            updatedRoom.recentMessage === "[알림] 새 계약서가 작성되었습니다"
+          ) {
+            Swal.fire({
+              title: "새 계약서가 작성되었습니다!",
+              text: "계약서가 작성되었으니 마이페이지에서 확인해주세요.",
+              icon: "info",
+              confirmButtonText: "확인",
+              confirmButtonColor: "#fe85ac",
+            })
+          }
+
           setChatList((prevChatList) => {
             // 방이 이미 목록에 있는지 확인
             const index = prevChatList.findIndex(

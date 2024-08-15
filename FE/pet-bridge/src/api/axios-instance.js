@@ -125,7 +125,7 @@ axiosInstance.interceptors.response.use(
     }
 
     // 403 응답 에러에 대해, 재요청이 아닌 경우 (액세스 토큰 만료 응답을 받은 경우)
-    if (error.response.status === 403 && !originalRequest._retry) {
+    if (error.response?.status === 403 && !originalRequest._retry) {
       // 재요청으로 처리하고
       originalRequest._retry = true
 

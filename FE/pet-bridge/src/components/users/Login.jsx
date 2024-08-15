@@ -85,7 +85,7 @@ const LoginForm = () => {
       <div className="flex w-full gap-4">
         {/* 로그인 버튼 */}
         <button
-          className="bg-yellow h-12 grow rounded-md px-3.5 py-2.5"
+          className="h-12 grow rounded-md bg-yellow px-3.5 py-2.5"
           disabled={loading}
         >
           {loading ? "로그인 중..." : "로그인"}
@@ -119,7 +119,7 @@ const Login = () => {
   }
 
   return (
-    <div className="mt-2 flex w-[600px] flex-col place-content-center items-center rounded-lg border border-none py-10 shadow-xl">
+    <div className="my-10 flex w-[600px] flex-col place-content-center items-center rounded-lg border border-none py-10 shadow-xl">
       <div className="flex w-[400px] flex-col space-y-2.5">
         {/* 로그인 폼 */}
         <LoginForm></LoginForm>
