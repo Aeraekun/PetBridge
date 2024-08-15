@@ -14,7 +14,7 @@ const PromotionList = () => {
   const [totalPages, setTotalPages] = useState(0)
   const pageSize = 12 // 페이지당 항목 수
   const type = "PROMOTION"
-  const [searchParams, setSearchParams] = useState({})
+  const [searchParams, setSearchParams] = useState()
 
   //게시글 조회 API 호출
   const fetchArticles = async (params) => {
@@ -30,11 +30,10 @@ const PromotionList = () => {
 
   //searchParmas가 바뀔때마다 새로 받아옴. (검색조건생겼을때, 페이지 넘어갈때)
   useEffect(() => {
-    if (!searchParams) {
-      return
+    if (searchParams) {
+      fetchArticles(searchParams)
     }
-    fetchArticles(searchParams)
-    console.log(articles)
+    // console.log(articles)
   }, [searchParams])
 
   //페이지가 바뀌었을때 searchParmas 업데이트
@@ -78,6 +77,7 @@ const PromotionList = () => {
         <Button text={"글쓰기"} onClick={goWrite} />
       </div>
       <ul className="relative flex w-full flex-wrap justify-start gap-x-10">
+        {/* <ul className="relative flex w-full flex-wrap justify-start gap-x-10"> */}
         {articles ? (
           articles.map((article) => (
             <li key={article.id}>

@@ -104,6 +104,9 @@ const MyPageNavContainer = () => {
         src={userImage ? userImage : DefaulUser150}
         alt="유저 이미지"
         className="size-[125px] rounded-full"
+        onError={(e) => {
+          e.target.src = "/images/profile.jpg" // 이미지 로드 실패 시 기본 이미지로 대체
+        }}
       />
       {/* 2. 유저 이름 */}
       <button className="bg-white text-lg" onClick={onClickUsernameHandler}>

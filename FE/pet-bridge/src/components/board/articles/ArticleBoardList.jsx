@@ -21,7 +21,7 @@ const ArticleBoardList = () => {
   const [currentPage, setCurrentPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const pageSize = 12 // 페이지당 항목 수
-  const [searchParams, setSearchParams] = useState({})
+  const [searchParams, setSearchParams] = useState()
 
   //게시글 조회 API 호출
   const fetchArticles = async (params) => {
@@ -37,8 +37,10 @@ const ArticleBoardList = () => {
 
   //searchParmas가 바뀔때마다 새로 받아옴. (검색조건생겼을때, 페이지 넘어갈때)
   useEffect(() => {
-    fetchArticles(searchParams)
-    console.log(articles)
+    if (searchParams) {
+      fetchArticles(searchParams)
+    }
+    // console.log(articles)
   }, [searchParams])
 
   //페이지가 바뀌었을때 searchParmas 업데이트
