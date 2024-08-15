@@ -209,11 +209,20 @@ const ArticleDetail = () => {
       <div className="flex w-full justify-center bg-gray-50 p-2">
         {article.thumbnail ? (
           <div className="">
-            <img
-              src={article.thumbnail}
-              alt="Uploaded Preview"
-              className="h-[300px] rounded border object-contain"
-            />
+            {article.id === 22 ? (
+              <video
+                src={article.thumbnail}
+                muted
+                controls
+                className="h-[500px] rounded border object-contain"
+              />
+            ) : (
+              <img
+                src={article.thumbnail}
+                alt="Uploaded Preview"
+                className="h-[300px] rounded border object-contain"
+              />
+            )}
           </div>
         ) : (
           <div className="flex h-64 w-96 flex-col items-center justify-center border border-gray-300 px-4 py-2">
