@@ -1,71 +1,3 @@
-// import SirenIcon from "components/common/SirenIcon"
-// import Button from "components/common/Button"
-// import {useLocation, useNavigate, useParams} from "react-router-dom"
-// import AnimalDetailProfile from "./AnimalDetailProfile"
-// import {useEffect} from "react"
-// import {useSelector} from "react-redux"
-// import {selectId} from "features/user/users-slice"
-// import {removeAnimal} from "api/animals-api"
-
-// const AnimalDetail = ({isShelter}) => {
-//   const currentUserId = useSelector(selectId)
-//   const location = useLocation()
-//   const animal = location.state.animal || {}
-
-//   const {animalId} = useParams()
-//   console.log(animalId)
-//   const navigate = useNavigate()
-//   useEffect(() => {
-//     console.log(animal)
-//   }, [])
-//   const goBack = () => {
-//     navigate(-1)
-//   }
-//   const goAnimalModify = (animal) => {
-//     const animalId = animal.desertionNo ? animal.desertionNo : animal.id
-//     navigate(`/shelter/modify/${animalId}`, {state: {animal}})
-//   }
-//   const goDeleteAnimal = async () => {
-//     await removeAnimal(animal.id)
-//     navigate(`/shelter/1`)
-//   }
-//   return (
-//     <>
-//       <button onClick={goBack} className="flex justify-start">
-//         돌아가기{" "}
-//       </button>
-//       <hr />
-//       <hr />
-
-//       <AnimalDetailProfile
-//         animal={animal}
-//         isEditing={false}
-//         isShelter={isShelter}
-//       />
-
-//       {!isShelter && Number(currentUserId) === Number(animal.userId) ? (
-//         <div className="flex justify-end">
-//           <Button text={"수정하기"} onClick={() => goAnimalModify(animal)} />
-//           <Button
-//             text={"삭제하기"}
-//             onClick={() => {
-//               goDeleteAnimal(animal.id)
-//             }}
-//           />
-//         </div>
-//       ) : (
-//         <>
-//           <div className="flex justify-end">
-//             <SirenIcon />
-//           </div>
-//         </>
-//       )}
-//     </>
-//   )
-// }
-
-// export default AnimalDetail
-
 import React, {useState, useEffect} from "react"
 import {useLocation, useNavigate} from "react-router-dom"
 
@@ -76,10 +8,13 @@ import AnimalDetailProfile from "./AnimalDetailProfile"
 import Button from "components/common/Button"
 import DeleteConfirmationModal from "components/common/DeleteConfirmationModal"
 import Profile from "components/common/Profile"
+import ArticleItem from "../articles/ArticleItem"
 
 const AnimalDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false) // 모달 열림 상태
   const [animalToDelete, setAnimalToDelete] = useState(null) // 삭제할 동물 정보
+  const [animalArticle, setAnimalArticle] = useState([])
+  const [isShelter, setIsShelter] = useState(false)
 
   const currentUserId = useSelector(selectId)
   const location = useLocation()
@@ -88,13 +23,14 @@ const AnimalDetail = () => {
   useEffect(() => {
     console.log("Animal data received:", location.state.animal)
   }, [location.state.animal])
-  const [isShelter, setIsShelter] = useState(false)
+
   useEffect(() => {
     console.log(animal)
     const id = animal.desertionNo ? animal.desertionNo : animal.id
     if (id > 40000000) {
       setIsShelter(true)
     }
+    setAnimalArticle(animal.boards.content)
   }, [animal])
 
   const navigate = useNavigate()
@@ -125,9 +61,15 @@ const AnimalDetail = () => {
     closeDeleteModal() // 모달 닫기
   }
 
+  const goDetail = (article) => {
+    const id = article.id
+    let path = `/communities/details/${id}`
+    navigate(path)
+  }
+
   return (
     <>
-      <button onClick={goBack} className="flex justify-start">
+      <button onClick={goBack} className="relative  flex justify-start">
         돌아가기
       </button>
       <hr />
@@ -147,7 +89,25 @@ const AnimalDetail = () => {
         isEditing={false}
         isShelter={isShelter}
       />
-
+      <div className="relative bottom-[250px] flex flex-col text-lg ">
+        <div>
+          <span className="font-semibold">{animal.name}</span>과 관련된 글
+        </div>
+        <ul className="relative  flex w-full flex-wrap justify-start gap-x-10">
+          {animalArticle ? (
+            animalArticle.map((article) => (
+              <li key={article.id} className="w-[300px] grow">
+                <ArticleItem data={article} onSelectArticle={goDetail} />
+              </li>
+            ))
+          ) : (
+            <div>등록된 게시글이 없습니다.</div>
+          )}
+          <li className="w-[300px] grow"></li>
+          <li className="w-[300px] grow"></li>
+          <li className="w-[300px] grow"></li>
+        </ul>
+      </div>
       {!isShelter && Number(currentUserId) === Number(animal.userId) ? (
         <div className="flex justify-end">
           <Button text={"수정하기"} onClick={() => goAnimalModify(animal)} />
