@@ -3,7 +3,7 @@ import {selectId, selectImage, selectNickname} from "features/user/users-slice"
 import {useDispatch, useSelector} from "react-redux"
 import {useEffect, useRef, useState} from "react"
 import ChatAddIcon from "assets/icons/icon-chat-add.svg"
-import DefaultUserImage from "assets/image/default_user_150.png"
+// import DefaultUserImage from "assets/image/default_user_150.png"
 import SearchDropDownChat from "components/common/SearchDropDownChat"
 import ChatListItem from "./ChatListItem"
 import SockJS from "sockjs-client"
@@ -148,10 +148,15 @@ const ChatListContainer = () => {
     <div className="flex h-full w-60 flex-col divide-y">
       <div className="h-1/4 w-full p-3">
         <div className="flex h-3/4 items-center space-x-3">
+          {/* {myImage} */}
           <img
-            src={myImage ? myImage : DefaultUserImage}
+            // src={myImage ? myImage : DefaultUserImage}
+            src={myImage !== "null" ? myImage : "/images/profile.jpg"}
             alt="내 프로필"
             className="size-12 rounded-full"
+            onError={(e) => {
+              e.target.src = "/images/profile.jpg" // 이미지 로드 실패 시 기본 이미지로 대체
+            }}
           />
           <span className="font-bold ">{nickname}</span>
         </div>

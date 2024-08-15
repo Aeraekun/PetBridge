@@ -215,6 +215,9 @@ const ChatMainContainer = ({onStartCall}) => {
             src={opponentInfo.image ? opponentInfo.image : DefaultUserImage}
             alt=""
             className="size-12 rounded-full border-2"
+            onError={(e) => {
+              e.target.src = "/images/profile.jpg" // 이미지 로드 실패 시 기본 이미지로 대체
+            }}
           />
           <span className="font-bold">{opponentInfo.nickname}</span>
           <span>님과의 채팅</span>
@@ -243,7 +246,7 @@ const ChatMainContainer = ({onStartCall}) => {
             onCompositionStart={compositionStartHandler} // IME 입력 시작 감지
             onCompositionEnd={compositionEndHandler} // IME 입력 종료 감지
             type="text"
-            className="bg-stroke grow rounded-xl p-2 text-white"
+            className="grow rounded-xl bg-stroke p-2 text-white"
             placeholder="입력하세요"
             id="message-input"
           />

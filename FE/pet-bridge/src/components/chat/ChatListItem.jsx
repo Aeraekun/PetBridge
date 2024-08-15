@@ -80,6 +80,9 @@ const ChatListItem = ({
         src={opponentImage ? opponentImage : DefaultUserImage}
         alt={opponentId}
         className="size-12 rounded-full"
+        onError={(e) => {
+          e.target.src = "/images/profile.jpg" // 이미지 로드 실패 시 기본 이미지로 대체
+        }}
       />
       <div className="flex grow flex-col truncate px-2 text-left">
         <div className="flex justify-between">

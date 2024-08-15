@@ -55,6 +55,9 @@ const Profile = ({isMe, userId, nickname, image, size}) => {
           src={image || "/images/profile.jpg"}
           alt="프로필사진"
           className={`${size === "small" ? "size-8" : "size-12"} rounded-full border`}
+          onError={(e) => {
+            e.target.src = "/images/profile.jpg" // 이미지 로드 실패 시 기본 이미지로 대체
+          }}
         />
       </button>
       <div className="relative flex-1">

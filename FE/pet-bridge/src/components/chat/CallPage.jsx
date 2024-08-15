@@ -287,6 +287,9 @@ const CallPage = ({onEndCall}) => {
           src={opponentInfo.image ? opponentInfo.image : DefaultUserImage}
           alt=""
           className="size-12 rounded-full border-2"
+          onError={(e) => {
+            e.target.src = "/images/profile.jpg" // 이미지 로드 실패 시 기본 이미지로 대체
+          }}
         />
         <span className="font-bold">{opponentInfo.nickname}</span>
         <span>님과의 화상채팅</span>
