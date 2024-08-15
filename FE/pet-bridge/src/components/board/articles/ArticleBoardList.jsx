@@ -45,7 +45,8 @@ const Search = ({searchform}) => {
   }
 
   return (
-    <div className="flex w-full items-center justify-between rounded-md border border-[#D9D9D9] bg-pink-100 p-4">
+    <div className="flex w-full items-center justify-between p-4">
+      {/* <div className="flex w-full items-center justify-between rounded-md p-4"> */}
       <select
         id="type"
         value={type}
@@ -116,6 +117,7 @@ const ArticleBoardList = () => {
   }, [currentPage])
 
   useEffect(() => {
+    setCurrentPage(0)
     setSearchParams((prevParams) => ({
       ...prevParams,
       type:
@@ -129,10 +131,6 @@ const ArticleBoardList = () => {
     let path = `/communities/details/${id}`
     navigate(path)
   }
-
-  const matchingCategory = categories.find(
-    (category) => category.id === Number(bcode)
-  )
 
   const goWrite = () => {
     setCurrentPage(0) // 페이지 번호를 초기화
@@ -150,7 +148,6 @@ const ArticleBoardList = () => {
   return (
     <>
       <Search searchform={handleSearchForm} />
-      {matchingCategory ? <h2>{matchingCategory.title}</h2> : <p>홈</p>}
       <div
         className="fixed top-20 z-10 flex justify-end"
         style={{left: "calc(50% + 35%)", top: "90%"}}
@@ -160,7 +157,7 @@ const ArticleBoardList = () => {
       <ul className="relative flex w-full flex-wrap justify-start gap-x-10">
         {articles ? (
           articles.map((article) => (
-            <li key={article.id}>
+            <li key={article.id} className="w-[300px] grow">
               <ArticleItem data={article} onSelectArticle={goDetail} />
             </li>
           ))
