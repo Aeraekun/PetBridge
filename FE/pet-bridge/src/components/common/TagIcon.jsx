@@ -37,7 +37,7 @@ const TagIcon = ({onClick}) => {
             showMessage ? "opacity-100" : "opacity-0"
           }`}
         >
-          <span className=" bg-lime-100 text-lime-800 rounded-md px-2 py-1 text-sm">
+          <span className=" z-41 rounded-md bg-lime-100 px-2 py-1 text-sm text-lime-800">
             동물의 정보를 확인해보세요!
           </span>
         </div>

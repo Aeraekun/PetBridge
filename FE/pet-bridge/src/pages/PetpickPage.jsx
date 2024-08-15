@@ -31,7 +31,9 @@ const PetpickPage = () => {
   // 펫핏 데이터 받아오기
   const fetchPetpickData = async () => {
     try {
+      console.log("Sending request to fetch petpick data")
       const petpicks = await getRandomDetailPetPick()
+      console.log("Received petpick data:", petpicks)
       if (petpicks) {
         return petpicks
       } else {
@@ -51,15 +53,16 @@ const PetpickPage = () => {
     //5마리씩 sidoCode 넣어서 보호중(입양가능)인 동물만.
     try {
       const data = await getMyLocation()
+      console.log("data", data)
       const location = {
         code: data?.code || 6300000,
         name: data?.name || "대전광역시",
       }
       const code = location?.code
       const name = location?.name
-      // if (location) {
-      //   console.log("location", location)
-      // }
+      if (location) {
+        console.log("location", location)
+      }
       setLocationName(name)
       const sidoCode = code || 6300000 //위치 시도코드받아오기
       const searchParams = {
@@ -333,7 +336,8 @@ const PetpickPage = () => {
                 )
               } else {
                 return (
-                  <div key={i} className="ml-[150px] flex items-end">
+                  <div key={i} className="flex items-end">
+                    <div className="h-full w-[100px]"> </div>
                     <PetpickComments
                       ref={itemRefs.current[i]}
                       onInView={handleInView}

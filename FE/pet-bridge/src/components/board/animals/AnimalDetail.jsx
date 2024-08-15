@@ -29,8 +29,9 @@ const AnimalDetail = () => {
     const id = animal.desertionNo ? animal.desertionNo : animal.id
     if (id > 40000000) {
       setIsShelter(true)
+    } else {
+      setAnimalArticle(animal.boards.content)
     }
-    setAnimalArticle(animal.boards.content)
   }, [animal])
 
   const navigate = useNavigate()

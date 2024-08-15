@@ -11,7 +11,7 @@ const AnimalAd = forwardRef(({animal, location, nowindex, onInView}, ref) => {
     if (inView) {
       onInView(nowindex)
     }
-    console.log(location)
+    // console.log(animal, "animal")
   }, [inView, onInView, nowindex])
 
   const navigate = useNavigate()
@@ -185,7 +185,7 @@ const AnimalAd = forwardRef(({animal, location, nowindex, onInView}, ref) => {
 
   return (
     <div
-      className="z-40 mx-auto flex  h-screen w-[1000px] snap-center  flex-row justify-center  pb-[100px] pt-[10px] sm:w-11/12"
+      className="z-40 mx-auto flex  h-fit w-[1000px] snap-center  flex-row justify-center  pb-[100px] pt-[10px] sm:w-11/12"
       ref={(node) => {
         if (node) {
           if (ref && typeof ref === "object" && "current" in ref) {
@@ -199,7 +199,7 @@ const AnimalAd = forwardRef(({animal, location, nowindex, onInView}, ref) => {
         className="flex w-[800px] max-w-full  overflow-hidden rounded-lg bg-white shadow-lg transition-transform hover:scale-105 lg:flex-row"
         onClick={goAnimalDetail(animal)}
       >
-        <div className="flex w-full flex-col space-y-4 p-4 md:w-1/2">
+        <div className="flex flex-col  max-w-[400px] space-y-4 p-4 md:w-1/2">
           {animal.filename ? (
             <img
               src={animal.popfile}
@@ -211,13 +211,13 @@ const AnimalAd = forwardRef(({animal, location, nowindex, onInView}, ref) => {
               이미지 없음
             </div>
           )}
-          <div className="rounded-lg bg-blue-100 p-4 shadow-md">
+          <div className="max-h-[200px] min-w-[200px] overflow-auto rounded-lg bg-blue-100 p-4 text-sm shadow-md scrollbar-hide">
             <h2 className="text-lg font-semibold text-gray-800">보호소 정보</h2>
             {shelterInfo
               .filter(({showIf}) => showIf)
               .map(({label, name, value}) => (
                 <div key={name} className="mt-2 grid  grid-cols-6 gap-2">
-                  <div className="col-span-2 font-medium  text-gray-700">
+                  <div className="col-span-2 truncate  text-gray-700">
                     {label}
                   </div>
                   <div className="col-span-4 text-left text-gray-800">
@@ -228,11 +228,11 @@ const AnimalAd = forwardRef(({animal, location, nowindex, onInView}, ref) => {
           </div>
         </div>
 
-        <div className="size-full shrink-0 border-b border-gray-300 bg-mild p-4 sm:w-1/2 sm:border-b-0 sm:border-r">
+        <div className="min-w-[220px] max-w-[400px] shrink-0 border-b border-gray-300 bg-mild p-4 sm:w-1/2 sm:border-b-0 sm:border-r">
           {location && (
             <div className="text-shadow m-4 w-full text-left text-lg text-white">
               현재위치{" "}
-              <span className="text-point text-xl font-bold">{location}</span>{" "}
+              <span className="text-xl font-bold text-point">{location}</span>{" "}
               의 보호동물 입니다
             </div>
           )}
@@ -244,7 +244,7 @@ const AnimalAd = forwardRef(({animal, location, nowindex, onInView}, ref) => {
               <div
                 id={name}
                 name={name}
-                className="bg-mild w-2/3 rounded-lg border border-gray-300 p-2 text-gray-800"
+                className="w-2/3 rounded-lg border border-gray-300 bg-white p-2 text-gray-800"
               >
                 {value}
               </div>

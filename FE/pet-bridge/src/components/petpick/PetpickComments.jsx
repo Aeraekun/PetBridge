@@ -260,7 +260,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
   }
   return (
     <div
-      className=" z-40 mx-auto flex h-screen w-[1000px] snap-center flex-row justify-center pb-[100px] pt-[10px]"
+      className=" z-40 mx-auto flex h-screen max-w-[1000px] snap-center flex-row justify-center pb-[50px] pt-[10px]"
       ref={(node) => {
         if (node) {
           if (ref && typeof ref === "object" && "current" in ref) {
@@ -272,7 +272,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
     >
       {/* <div className=`flex w-fit overflow-hidden rounded-3xl  {!isVisible && !isDetail && border}`> */}
       <div
-        className={` flex w-full justify-center overflow-hidden rounded-2xl ${isVisible || isDetail ? "border" : ""}`}
+        className={` flex size-full justify-center overflow-hidden rounded-2xl ${isVisible || isDetail ? "border" : ""}`}
       >
         <PetpickVideo
           title={petpick.title}
@@ -285,7 +285,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
           isDetail && (
             <>
               <div
-                className={`duration-800 flex size-full h-full min-w-[300px]  max-w-[400px] flex-col justify-between transition-transform ease-in-out ${
+                className={`duration-800 flex size-full h-full w-[400px] flex-col justify-between pl-3 transition-transform ease-in-out ${
                   isDetail
                     ? "translate-x-0 opacity-100"
                     : "-translate-x-full opacity-0"
@@ -312,7 +312,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
                     <div className="m-2 overflow-auto">
                       {articleList?.length > 0 ? (
                         articleList.map((article, index) => (
-                          <div key={index}>
+                          <div key={index} className="rounded-lg border">
                             <TaggedArticleItem
                               data={article}
                               onClick={() => {
@@ -338,7 +338,7 @@ const PetpickComments = forwardRef(({pet, nowindex, onInView}, ref) => {
         {
           //댓글창 켰을때
           isVisible && (
-            <div className="flex size-full min-w-[300px] max-w-[400px] flex-col justify-between ">
+            <div className="flex size-full w-[400px] flex-col justify-between pl-3 ">
               <div className="border-b px-2">
                 <Profile
                   nickname={petpick.userNickname}

@@ -30,18 +30,18 @@ const PetpickVideo = ({title, content, videoURL, isPlaying}) => {
         height="100%"
       />
       <div
-        className={`absolute bottom-0 left-0 z-40 h-[200px] w-full p-4 transition-opacity duration-300 ease-in-out ${
+        className={`absolute bottom-[80px] left-0 z-40 h-[100px] w-full p-4 transition-opacity duration-300 ease-in-out ${
           showOverlay ? "opacity-100" : "opacity-0"
-        } bg-gradient-to-t  from-black to-transparent group-hover:opacity-100`}
+        } bg-gradient-to-t to-transparent group-hover:opacity-100`}
       >
         <div
           className={`transition-max-height text-white duration-300 ease-in-out ${
             showOverlay ? "max-h-[100px]" : "max-h-0"
           } overflow-hidden`}
         >
-          <div className="absolute bottom-[50px]">
-            <h2 className="mb-1 text-lg font-bold">{title}</h2>
-            <p className="text-sm ">{content}</p>
+          <div className="absolute ">
+            <h2 className="mb-1 truncate text-lg font-bold">{title}</h2>
+            <p className="truncate text-sm">{content}</p>
           </div>
         </div>
       </div>
