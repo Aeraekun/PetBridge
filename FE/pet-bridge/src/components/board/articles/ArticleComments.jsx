@@ -5,6 +5,7 @@ import {
   removeBoardComment,
 } from "api/boards-api"
 import Comment from "components/common/Comment"
+import CommentIcon from "components/common/CommentIcon"
 import {selectIsAuthenticated} from "features/user/users-slice"
 import {useEffect, useState} from "react"
 import {useSelector} from "react-redux"
@@ -30,7 +31,7 @@ const CommentInput = ({articleId, onCommentAdded}) => {
   }
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      e.preventDefault() // 기본 동작 방지
+      // e.preventDefault() // 기본 동작 방지
       sendMsg()
     }
   }
@@ -73,7 +74,7 @@ const ArticleComments = ({articleId, currentUserId}) => {
   }
   useEffect(() => {
     fetchComments()
-  }, [articleId]) // 빈 배열을 두 번째 인자로 전달하여 마운트 시 한 번만 실행
+  }, [articleId])
 
   //댓글 등록하고나서 필요
   const handleCommentAdded = () => {
@@ -127,6 +128,10 @@ const ArticleComments = ({articleId, currentUserId}) => {
 
   return (
     <>
+      <div className="m-3 flex items-center space-x-2">
+        <CommentIcon size={"small"} />
+        <div>댓글 {commentList?.length}</div>
+      </div>
       <ul className="flex w-full flex-col justify-between">
         {commentList ? (
           commentList.map((comment, index) => (

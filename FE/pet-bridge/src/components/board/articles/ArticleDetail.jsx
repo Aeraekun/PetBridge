@@ -117,7 +117,6 @@ import {selectId} from "features/user/users-slice"
 import {getArticleDetail, removeArticle} from "api/boards-api"
 import Profile from "components/common/Profile"
 import ArticleComments from "./ArticleComments"
-import CommentIcon from "components/common/CommentIcon"
 import Button from "components/common/Button"
 import SirenButton from "components/common/SirenButton"
 import DeleteConfirmationModal from "components/common/DeleteConfirmationModal"
@@ -239,10 +238,6 @@ const ArticleDetail = () => {
         )}
       </div>
       <hr />
-      <div className="m-3 flex items-center space-x-2">
-        <CommentIcon size={"small"} />
-        <div>댓글 {article.commentCount}</div>
-      </div>
       <div className="px-8">
         <ArticleComments articleId={id} currentUserId={currentUserId} />
       </div>
