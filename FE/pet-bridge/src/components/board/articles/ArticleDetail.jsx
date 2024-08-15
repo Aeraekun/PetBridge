@@ -183,7 +183,9 @@ const ArticleDetail = () => {
       >
         돌아가기
       </button>
-      <div className="mb-2 text-center text-4xl font-bold">{article.title}</div>
+      <div className="mb-4 mt-6 text-center text-4xl font-bold">
+        {article.title}
+      </div>
       <div className="relative flex flex-col gap-2 border-t p-2">
         <Profile
           userId={article.userId}
@@ -210,13 +212,14 @@ const ArticleDetail = () => {
         {article.thumbnail ? (
           <div className="">
             {article.id === 22 ? (
+              /* eslint-disable jsx-a11y/media-has-caption */
               <video
-                src={article.thumbnail}
-                muted
+                src="https://pet-bridge.s3.ap-northeast-2.amazonaws.com/images/e46f9bfc-d.mp4"
                 controls
                 className="h-[500px] rounded border object-contain"
               />
             ) : (
+              /* eslint-enable jsx-a11y/media-has-caption */
               <img
                 src={article.thumbnail}
                 alt="Uploaded Preview"
@@ -231,7 +234,7 @@ const ArticleDetail = () => {
         )}
       </div>
       <div
-        className="mx-auto mt-3 min-h-72 w-[800px]"
+        className="mx-auto mt-3 min-h-72 w-[800px] p-9"
         dangerouslySetInnerHTML={{__html: sanitizedContent}}
       ></div>
       <div className="flex justify-end">
