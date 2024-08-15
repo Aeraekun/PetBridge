@@ -290,7 +290,7 @@ const ContractsCreateContainer = () => {
       </section>
       {/* 계약서 미리보기란 */}
       <div
-        className="flex h-[600px] w-full flex-col items-center bg-gray-100 p-5"
+        className="flex w-full flex-col items-center bg-gray-100 p-5"
         style={{
           // backgroundImage: `url(${ContractBackground})`,
           backgroundSize: "cover",
