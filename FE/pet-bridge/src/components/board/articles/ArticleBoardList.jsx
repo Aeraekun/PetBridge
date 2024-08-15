@@ -4,7 +4,7 @@ import {useNavigate, useParams} from "react-router-dom"
 import {getArticle} from "api/boards-api"
 import React, {useEffect, useState} from "react"
 import Pagination from "components/common/Pagination"
-import searchIcon from "../../../assets/icons/icon-search.png"
+import Search from "components/board/articles/Search"
 
 const categories = [
   {id: 0, name: "HOME", title: "홈"},
