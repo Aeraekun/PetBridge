@@ -67,6 +67,13 @@ const ContractsContainer = () => {
     }
   }, [contractInfo])
 
+  const today = new Date()
+  const year = today.getFullYear()
+  const month = String(today.getMonth() + 1).padStart(2, "0") // 월은 0부터 시작하므로 1을 더해줍니다.
+  const day = String(today.getDate()).padStart(2, "0") // 일도 2자리로 맞추기 위해 패딩을 추가합니다.
+
+  const formattedDate = `${year}-${month}-${day}`
+
   // 스탬프  찍기를 누르면
   const onClickStampHandler = async () => {
     const stampInfo = {
@@ -75,11 +82,28 @@ const ContractsContainer = () => {
     }
 
     if (stampInfo) {
-      const res = await patchThisMonthStamp(stampInfo)
+      try {
+        const result = await Swal.fire({
+          title: `${formattedDate} 일자로 이번 달 스탬프를 찍으시겠습니까?`,
+          showCancelButton: true,
+          confirmButtonText: "네",
+          confirmButtonColor: "#fe85ac",
+          cancelButtonText: "아니요",
+          cancelButtonColor: "#a4a2a1",
+          customClass: {
+            confirmButton: "w-20 py-2 text-white font-semibold rounded-md",
+            cancelButton: "w-20 py-2 text-white font-semibold rounded-md",
+          },
+        })
 
-      if (res.response.status === 200) {
-        Toast.fire({icon: "success", title: "스탬프 찍기를 성공했어요."})
-      } else if (res.response.status == 409) {
+        if (result.isConfirmed) {
+          const res = await patchThisMonthStamp(stampInfo)
+          Toast.fire({icon: "success", title: "스탬프 찍기를 성공했어요."})
+          const newContractInfo = await getContractDetail(id)
+          setContractInfo(newContractInfo.data)
+          console.log(res)
+        }
+      } catch (error) {
         Toast.fire({
           icon: "warning",
           title:
@@ -87,6 +111,17 @@ const ContractsContainer = () => {
         })
         initContractInfo(id)
       }
+
+      // if (res.response.status === 200) {
+      //   Toast.fire({icon: "success", title: "스탬프 찍기를 성공했어요."})
+      // } else if (res.response.status == 409) {
+      //   Toast.fire({
+      //     icon: "warning",
+      //     title:
+      //       "이번 달에 이미 스탬프를 찍었어요. 다음 달에 입양 후기를 확인하고 또 찍어주세요.",
+      //   })
+      //   initContractInfo(id)
+      // }
     }
   }
 
