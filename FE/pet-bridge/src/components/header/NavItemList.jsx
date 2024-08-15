@@ -22,7 +22,7 @@ const NavItemList = () => {
     {
       id: itemId++,
       category: "입양 홍보",
-      to: "/communities/1",
+      to: "/promotions",
     },
     {
       id: itemId++,

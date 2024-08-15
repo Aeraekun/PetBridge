@@ -1,27 +1,19 @@
-import ArticleItem from "./ArticleItem"
-import Button from "components/common/Button"
-import {useNavigate, useParams} from "react-router-dom"
 import {getArticle} from "api/boards-api"
-import React, {useEffect, useState} from "react"
-import Pagination from "components/common/Pagination"
+import ArticleItem from "components/board/articles/ArticleItem"
 import Search from "components/board/articles/Search"
+import Button from "components/common/Button"
+import Pagination from "components/common/Pagination"
+import {useEffect, useState} from "react"
+import {useNavigate} from "react-router-dom"
 
-const categories = [
-  {id: 0, name: "HOME", title: "홈"},
-  {id: 1, name: "PROMOTION", title: "입양홍보"},
-  {id: 2, name: "REVIEW", title: "입양후기"},
-  {id: 3, name: "FREE", title: "자유게시판"},
-  {id: 4, name: "NOTICE", title: "공지사항"},
-]
-
-const ArticleBoardList = () => {
-  const {bcode} = useParams()
+const PromotionList = () => {
   const navigate = useNavigate()
 
   const [articles, setArticles] = useState([])
   const [currentPage, setCurrentPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const pageSize = 12 // 페이지당 항목 수
+  const type = "PROMOTION"
   const [searchParams, setSearchParams] = useState({})
 
   //게시글 조회 API 호출
@@ -38,6 +30,9 @@ const ArticleBoardList = () => {
 
   //searchParmas가 바뀔때마다 새로 받아옴. (검색조건생겼을때, 페이지 넘어갈때)
   useEffect(() => {
+    if (!searchParams) {
+      return
+    }
     fetchArticles(searchParams)
     console.log(articles)
   }, [searchParams])
@@ -48,31 +43,19 @@ const ArticleBoardList = () => {
       ...prevParams,
       page: currentPage,
       size: pageSize,
+      type: type,
     }))
   }, [currentPage])
 
-  useEffect(() => {
-    setSearchParams((prevParams) => ({
-      ...prevParams,
-      type:
-        categories.find((category) => category.id === Number(bcode))?.name ||
-        "",
-    }))
-  }, [bcode])
-
   const goDetail = (article) => {
     const id = article.id
-    let path = `/communities/details/${id}`
+    let path = `/promotions/details/${id}`
     navigate(path)
   }
 
-  const matchingCategory = categories.find(
-    (category) => category.id === Number(bcode)
-  )
-
   const goWrite = () => {
     setCurrentPage(0) // 페이지 번호를 초기화
-    let path = `/communities/write`
+    let path = `/promotions/write`
     navigate(path)
   }
 
@@ -82,11 +65,12 @@ const ArticleBoardList = () => {
       page: 0,
     }))
   }
-
   return (
     <>
+      <div className="my-2 inline-flex h-12 w-full items-center text-xl font-bold">
+        입양 홍보
+      </div>
       <Search searchform={handleSearchForm} />
-      {matchingCategory ? <h2>{matchingCategory.title}</h2> : <p>홈</p>}
       <div
         className="fixed top-20 z-10 flex justify-end"
         style={{left: "calc(50% + 35%)", top: "90%"}}
@@ -118,4 +102,4 @@ const ArticleBoardList = () => {
   )
 }
 
-export default ArticleBoardList
+export default PromotionList

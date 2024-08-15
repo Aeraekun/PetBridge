@@ -9,6 +9,7 @@ import ArticleBoardList from "components/board/articles/ArticleBoardList"
 import ArticleDetail from "components/board/articles/ArticleDetail"
 import ArticleDetailModify from "components/board/articles/ArticleDetailModify"
 import ArticleBoardWrite from "components/board/articles/ArticleBoardWrite"
+import PromotionPage from "pages/PromotionPage"
 
 //동물게시판
 import AnimalPage from "pages/AnimalPage"
@@ -75,6 +76,7 @@ import CallPage from "components/chat/CallPage"
 import LostAnimalMap from "components/map/LostAnimalMap"
 import RecommendationPage from "pages/RecommendationPage"
 import {setIsChatModalOpen} from "features/chat/chat-slice"
+import PromotionList from "components/promotions/PromotionList"
 
 function App() {
   const dispatch = useDispatch()
@@ -150,6 +152,28 @@ function App() {
                 />
               }
             />
+          </Route>
+          <Route path="/promotions" element={<PromotionPage />}>
+            <Route index element={<PromotionList />} />
+            <Route path="details/:id" element={<ArticleDetail />} />
+            <Route
+              path="modify/:id"
+              element={
+                <PrivateRoute
+                  component={<ArticleDetailModify />}
+                  isAuthenticated={isAuthenticated}
+                />
+              }
+            />
+            <Route
+              path="write"
+              element={
+                <PrivateRoute
+                  component={<ArticleBoardWrite />}
+                  isAuthenticated={isAuthenticated}
+                />
+              }
+            ></Route>
           </Route>
           <Route path="/communities" element={<BoardPage />}>
             <Route index element={<ArticleBoardList />} />
