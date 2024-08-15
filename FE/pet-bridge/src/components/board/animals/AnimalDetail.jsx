@@ -90,25 +90,28 @@ const AnimalDetail = () => {
         isEditing={false}
         isShelter={isShelter}
       />
-      <div className="relative bottom-[250px] flex flex-col text-lg ">
-        <div>
-          <span className="font-semibold">{animal.name}</span>과 관련된 글
+      {!isShelter && (
+        <div className="relative bottom-[250px] flex flex-col text-lg ">
+          <div>
+            <span className="font-semibold">{animal.name}</span>과 관련된 글
+          </div>
+          <ul className="relative  flex w-full flex-wrap justify-start gap-x-10">
+            {animalArticle ? (
+              animalArticle.map((article) => (
+                <li key={article.id} className="w-[300px] grow">
+                  <ArticleItem data={article} onSelectArticle={goDetail} />
+                </li>
+              ))
+            ) : (
+              <div>등록된 게시글이 없습니다.</div>
+            )}
+            <li className="w-[300px] grow"></li>
+            <li className="w-[300px] grow"></li>
+            <li className="w-[300px] grow"></li>
+          </ul>
         </div>
-        <ul className="relative  flex w-full flex-wrap justify-start gap-x-10">
-          {animalArticle ? (
-            animalArticle.map((article) => (
-              <li key={article.id} className="w-[300px] grow">
-                <ArticleItem data={article} onSelectArticle={goDetail} />
-              </li>
-            ))
-          ) : (
-            <div>등록된 게시글이 없습니다.</div>
-          )}
-          <li className="w-[300px] grow"></li>
-          <li className="w-[300px] grow"></li>
-          <li className="w-[300px] grow"></li>
-        </ul>
-      </div>
+      )}
+
       {!isShelter && Number(currentUserId) === Number(animal.userId) ? (
         <div className="flex justify-end">
           <Button text={"수정하기"} onClick={() => goAnimalModify(animal)} />
