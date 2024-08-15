@@ -3,6 +3,7 @@ package site.petbridge.global.login.handler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,10 +45,13 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         userRepository.findByEmail(email)
                 .ifPresent(user -> {
+                    System.out.println("로그인한 user: " + user);
                     user.updateRefreshToken(refreshToken);
                     userRepository.saveAndFlush(user);
                 });
 
+        System.out.println("로그인 성공!!");
+        System.out.println("리프레시 토큰 : " + refreshToken);
         log.info("로그인에 성공했습니다. 이메일 : " + email);
         log.info("AccessToken : " + accessToken);
         log.info("RefreshToken: " + refreshToken);

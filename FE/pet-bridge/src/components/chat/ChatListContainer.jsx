@@ -102,7 +102,7 @@ const ChatListContainer = () => {
           ) {
             Swal.fire({
               title: "새 계약서가 작성되었습니다!",
-              text: "계약서가 작성되었으니 마이페이지에서 확인해주세요.",
+              text: "마이페이지에서 계약서 내역을 확인해주세요.",
               icon: "info",
               confirmButtonText: "확인",
               confirmButtonColor: "#fe85ac",

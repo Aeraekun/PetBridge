@@ -4,8 +4,11 @@ import {Link, useNavigate} from "react-router-dom" // Link 컴포넌트 임포�
 import iconPawprint from "../../assets/icons/icon-pawprint.png" // 아이콘 이미지
 import AnimalItem from "components/board/animals/AnimalItem"
 import {getAnimalList} from "api/animals-api"
+// eslint-disable-next-line import/no-unresolved
+import {Swiper, SwiperSlide} from "swiper/react"
+// eslint-disable-next-line import/no-unresolved
+import "swiper/css" // 최신 Swiper CSS 파일
 
-// 메인 컴포넌트
 const MainBoardComponent = () => {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useState({})
@@ -63,16 +66,25 @@ const MainBoardComponent = () => {
         </Link>
       </div>
       <div className="flex w-full flex-col items-center">
-        <ul className="scrollable-container flex max-h-[450px] w-[1000px] flex-col flex-wrap gap-2.5 overflow-y-auto bg-white">
+        <Swiper
+          slidesPerView={3}
+          spaceBetween={30}
+          pagination={{
+            clickable: true,
+          }}
+          className="max-h-[450px] w-[1000px]"
+        >
           {sectionOneItems.map((item, index) => (
-            <AnimalItem
-              data={item}
-              onSelectAnimal={() => goAnimalDetail(item)}
-              isShelter={false}
-              key={index}
-            />
+            <SwiperSlide key={index}>
+              <AnimalItem
+                data={item}
+                onSelectAnimal={() => goAnimalDetail(item)}
+                isShelter={false}
+                key={index}
+              />
+            </SwiperSlide>
           ))}
-        </ul>
+        </Swiper>
       </div>
     </div>
   )
