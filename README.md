@@ -14,7 +14,7 @@
 4. [기술 스택](#item-four)
 5. [개발 환경](#item-five)
 6. [디렉토리 구조](#item-six)
-7. [기획배경 및 목표](#item-seven)
+7. [기획 배경 및 목표](#item-seven)
 8. [서비스 주요 기능](#item-eight)
 9. [설계 문서](#item-nine)
 
@@ -732,7 +732,7 @@ CI/CD `Jenkins`
 
 <a id="item-six"></a>
 
-# 배경 및 목표
+# 기획 배경 및 목표
 
 ### 기획 배경
 - 유기동물 개체 수의 증가
