@@ -4,6 +4,8 @@
 ![견직.png](/readme/견직.png)
 - **배포 URL : https://i11b106.p.ssafy.io**
 
+<br>
+
 # 목차
 
 1. [프로젝트 개요](#item-one)
@@ -16,6 +18,8 @@
 8. [서비스 주요 기능](#item-eight)
 9. [설계 문서](#item-nine)
 
+<br>
+
 <a id="item-one"></a>
 
 # 프로젝트 개요
@@ -24,6 +28,8 @@
 - 개발 기간: 2024.07.01 ~ 2024.08.16
 - 삼성 청년 소프트웨어 아카데미(SSAFY) 공통 프로젝트
 
+
+<br>
 
 <a id="item-two"></a>
 
@@ -47,6 +53,7 @@
 
 **🐮 정규영 : Front-end**
 
+<br>
 
 <a id="item-three"></a>
 
@@ -56,9 +63,11 @@
 
 ![아키텍처2.PNG](/readme/아키텍처2.PNG)
 
+<br>
 
 <a id="item-four"></a>
-# ⚒️ 기술 스택
+
+# 기술 스택
 
 
 ### 💡 Front-end
@@ -84,6 +93,7 @@ CI/CD `Jenkins`
 
 배포 `AWS EC2` `AWS S3` `Docker` `Nginx`
 
+<br>
 
 <a id="item-five"></a>
 
@@ -124,6 +134,7 @@ CI/CD `Jenkins`
 - AWS EC2
 - AWS S3
 
+<br>
 
 <a id="item-six"></a>
 
@@ -717,6 +728,7 @@ CI/CD `Jenkins`
 </div>
 </details>
 
+<br>
 
 <a id="item-six"></a>
 
@@ -733,6 +745,7 @@ CI/CD `Jenkins`
 - 임시보호자, 입양자 간 **신뢰할 수 있는** 입양 절차 보장
 - 책임비 중개를 통해 **건강한 입양 문화** 조성
 
+<br>
 
 <a id="item-seven"></a>
 
@@ -812,6 +825,7 @@ CI/CD `Jenkins`
 
 - 계약 기간 동안 스탬프를 모두 성실히 모은 입양자는 책임비 환급을 신청할 수 있음
 
+<br>
 
 <a id="item-nine"></a>
 
