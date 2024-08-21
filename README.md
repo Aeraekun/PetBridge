@@ -1,13 +1,10 @@
 # 🐶 유기/임보 동물 입양 장려 플랫폼 🐱
 
-<hr>
 
 ![견직.png](/readme/견직.png)
 - **배포 URL : https://i11b106.p.ssafy.io**
 
 # 목차
-
-<hr>
 
 1. [프로젝트 개요](#item-one)
 2. [팀원 소개](#item-two)
@@ -19,12 +16,9 @@
 8. [서비스 주요 기능](#item-eight)
 9. [설계 문서](#item-nine)
 
-
 <a id="item-one"></a>
 
 # 프로젝트 개요
-
-<hr>
 
 - **유기/임시보호 동물 입양 장려 플랫폼**
 - 개발 기간: 2024.07.01 ~ 2024.08.16
@@ -37,54 +31,51 @@
 
 <hr>
 
-| 이경곤 | 곽예빈 | 이승철 | 이다영 | 김재훈 | 정규영 |                                             
-|-----|-----|-----|-----|-----|-----| 
-| <img src="/readme/이경곤.jpg" alt='@leeggon' width="120" height="120"> | <img src="/readme/곽예빈.png" alt="@Yebin-Gwak" width="120" height="120"> | <img src="/readme/이승철.png" alt="@Aeraekun" width="120" height="120" > | <img src="/readme/이다영.png" alt="@2dayoung" width="120" height="120" > | <img src="/readme/김재훈.png" alt="@GarrryKim" width="120" height="120"> | <img src="/readme/정규영.png" alt="@JungGyuYeong" width="120" height="120" > |
-| [@leeggon](https://github.com/leeggon) | [@Yebin-Gwak](https://github.com/Yebin-Gwak) | [@Aeraekun](https://github.com/Aeraekun) | [@2dayoung](https://github.com/2dayoung) | [@GarrryKim](https://github.com/GarrryKim) | [@JungGyuYeong](https://github.com/JungGyuYeong)                              
+| 이경곤 | 곽예빈                                                                    | 이승철                                                                   | 이다영 | 김재훈 | 정규영 |                                             
+|-----|------------------------------------------------------------------------|-----------------------------------------------------------------------|-----|-----|-----| 
+| <img src="/readme/이경곤.jpg" alt='@leeggon' width="120" height="120"> | <img src="/readme/곽예빈.PNG" alt="@Yebin-Gwak" width="120" height="120"> | <img src="/readme/이승철.PNG" alt="@Aeraekun" width="120" height="120" > | <img src="/readme/이다영.PNG" alt="@2dayoung" width="120" height="120" > | <img src="/readme/김재훈.PNG" alt="@GarrryKim" width="120" height="120"> | <img src="/readme/정규영.PNG" alt="@JungGyuYeong" width="120" height="120" > |
+| [@leeggon](https://github.com/leeggon) | [@Yebin-Gwak](https://github.com/Yebin-Gwak)                           | [@Aeraekun](https://github.com/Aeraekun)                              | [@2dayoung](https://github.com/2dayoung) | [@GarrryKim](https://github.com/GarrryKim) | [@JungGyuYeong](https://github.com/JungGyuYeong)                              
 
-**🐿️ 이경곤 : 팀장, Back-end**
+**🐼 이경곤 : 팀장, Back-end**
 
-**🤖 곽예빈 : Back-end**
+**🦁 곽예빈 : Back-end**
 
 **🐯 이승철 : Infra**
 
-**🐶 이다영 : Front-end**
+**🐰 이다영 : Front-end**
 
-**🐰 김재훈 : Front-end**
+**🐱 김재훈 : Front-end**
 
-**🐱 정규영 : Front-end**
+**🐮 정규영 : Front-end**
 
 
 <a id="item-three"></a>
 
 # 서비스 아키텍쳐
 
-<hr>
+![아키텍처1.PNG](/readme/아키텍처1.PNG)
 
-![아키텍처1.png](/readme/아키텍처1.png)
-
-![아키텍처2.png](/readme/아키텍처2.png)
+![아키텍처2.PNG](/readme/아키텍처2.PNG)
 
 
 <a id="item-four"></a>
 # ⚒️ 기술 스택
 
-<hr>
 
-### 🦄 Front-end
+### 💡 Front-end
 코어 `React`
 
 CSS `Tailwind CSS`
 
 상태 관리 `Redux`
 
-### 🦾 Back-end
+### 🔎 Back-end
 
 프레임워크 `SpringBoot`
 
 주요 라이브러리 `Spring Security` `OAuth2` `QueryDSL` `Spring Data JPA`
 
-### 💿 DB
+### 💾 DB
 
 `MySQL` `redis` `mongoDB`
 
@@ -99,8 +90,6 @@ CI/CD `Jenkins`
 
 # 개발 환경
 
-<hr>
-
 ## ⚙ Management Tool
 
 - 형상 관리 : [**GitLab**](https://lab.ssafy.com/s11-webmobile1-sub2/S11P12B106)
@@ -113,7 +102,7 @@ CI/CD `Jenkins`
 - Visual Studio Code
 - IntelliJ IDEA community
 
-## 🦄 Frontend
+## 💡 Frontend
 
 - React `18.3.1`
 - Node.js `20.15.0`
@@ -121,7 +110,7 @@ CI/CD `Jenkins`
 - Redux `9.1.2`
 - Tailwindcss `3.4.6`
 
-## 🦾 Backend
+## 🔎 Backend
 
 - Spring Boot `3.3.2`
 - Java `Open JDK 17 - LTS`
@@ -140,8 +129,6 @@ CI/CD `Jenkins`
 <a id="item-six"></a>
 
 # 디렉토리 구조
-
-<hr>
 
 <details>
 <summary>Front-End</summary>
@@ -736,8 +723,6 @@ CI/CD `Jenkins`
 
 # 배경 및 목표
 
-<hr>
-
 ## 기획 배경
 - 유기동물 개체 수의 증가
 - 유기동물에 대한 부정적 인식 & 입양 절차의 무지
@@ -753,8 +738,6 @@ CI/CD `Jenkins`
 <a id="item-seven"></a>
 
 # 서비스 주요 기능
-
-<hr>
 
 ## 입양 공고 확인
 
@@ -835,27 +818,26 @@ CI/CD `Jenkins`
 
 # 설계 문서
 
-<hr>
 
 ### 요구사항 명세서
 
 [**Google SpreadSheet**](https://docs.google.com/spreadsheets/d/10fPQWGjoIb0FMlQhBWriEXRb9Mn3Emnc065Hca7eTYI/edit?gid=0#gid=0)
 
-![요구사항 명세서.png](/readme/요구사항 명세서.png)
+![요구사항 명세서.PNG](/readme/요구사항 명세서.PNG)
 
 
 ### 와이어프레임
 
 [**Google Slides**](https://docs.google.com/presentation/d/1H4gH4S2IEhLtv3xQTALmcKLCarNHXOriR3UzswWHek0/edit#slide=id.g2785a9263da_7_0)
 
-![와이어프레임.png](/readme/와이어프레임.png)
+![와이어프레임.PNG](/readme/와이어프레임.PNG)
 
 
 ### 피그마
 
 [**Figma**](https://docs.google.com/presentation/d/1H4gH4S2IEhLtv3xQTALmcKLCarNHXOriR3UzswWHek0/edit#slide=id.g2785a9263da_7_0)
 
-![피그마.png](/readme/피그마.png)
+![피그마.PNG](/readme/피그마.PNG)
 
 
 ### ERD
@@ -869,4 +851,4 @@ CI/CD `Jenkins`
 
 [**API 명세서**](https://violet-chocolate-38b.notion.site/API-Docs-145a09e708594958a41701dba986b4ea?pvs=4)
 
-![API명세서.png](/readme/API 명세서.png)
+![API명세서.PNG](/readme/API 명세서.PNG)
