@@ -99,19 +99,19 @@ CI/CD `Jenkins`
 
 # 개발 환경
 
-## ⚙ Management Tool
+### ⚙ Management Tool
 
 - 형상 관리 : [**GitLab**](https://lab.ssafy.com/s11-webmobile1-sub2/S11P12B106)
 - 이슈 관리 : [**Jira**](https://ssafy.atlassian.net/jira/software/c/projects/S11P12B106/boards/6989/timeline)
 - 커뮤니케이션 : Mattermost, [**Notion**](https://violet-chocolate-38b.notion.site/1-B106-05f8ebd301d743f09954b296abbe67b2?pvs=4)
 - 디자인 : [**Figma**](https://www.figma.com/design/owgNGh5aqpVMCSRlrj55u1/B106-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0-1&t=qWFFCXsR9TmzkYUY-0), [**Google Slides**](https://docs.google.com/presentation/d/1H4gH4S2IEhLtv3xQTALmcKLCarNHXOriR3UzswWHek0/edit#slide=id.p)
 
-## 💻 IDE
+### 💻 IDE
 
 - Visual Studio Code
 - IntelliJ IDEA community
 
-## 💡 Frontend
+### 💡 Front-end
 
 - React `18.3.1`
 - Node.js `20.15.0`
@@ -119,12 +119,12 @@ CI/CD `Jenkins`
 - Redux `9.1.2`
 - Tailwindcss `3.4.6`
 
-## 🔎 Backend
+### 🔎 Back-end
 
 - Spring Boot `3.3.2`
 - Java `Open JDK 17 - LTS`
 
-## 🏗 Infra
+### 🏗 Infra
 
 - Ubuntu `20.04.6 LTS`
 - Docker `27.1.1`
@@ -141,7 +141,7 @@ CI/CD `Jenkins`
 # 디렉토리 구조
 
 <details>
-<summary>Front-End</summary>
+<summary>Front-end</summary>
 <div markdown="1">
 
 ```
@@ -415,7 +415,7 @@ CI/CD `Jenkins`
 </details>
 
 <details>
-<summary>Back-End</summary>
+<summary>Back-end</summary>
 <div markdown="1">
 
  ``` 
@@ -734,13 +734,13 @@ CI/CD `Jenkins`
 
 # 배경 및 목표
 
-## 기획 배경
+### 기획 배경
 - 유기동물 개체 수의 증가
 - 유기동물에 대한 부정적 인식 & 입양 절차의 무지
 - 임시보호자, 입양자 간 신뢰성 문제(부적합한 입양 환경, 입양 후 학대 등 문제)
 - 책임비 불법 및 남용 문제
 
-## `견우와 직묘` 목표
+### `견우와 직묘` 목표
 - 유기, 임시보호 동물 입양 **접근성** 향상
 - 임시보호자, 입양자 간 **신뢰할 수 있는** 입양 절차 보장
 - 책임비 중개를 통해 **건강한 입양 문화** 조성
@@ -751,13 +751,13 @@ CI/CD `Jenkins`
 
 # 서비스 주요 기능
 
-## 입양 공고 확인
+### 입양 공고 확인
 
 <img src="readme/입양공고 확인.gif" alt="입양 공고 확인" width="800px">
 
 - 보호소 동물 혹은 임시보호중인 동물들의 공고를 확인
 
-## 펫픽
+### 펫픽
 
 <img src="readme/펫픽.gif" alt="펫픽" width="800px">
 
@@ -765,27 +765,27 @@ CI/CD `Jenkins`
 - 숏폼 컨텐츠를 통해 유기동물에 대한 인식 개선 및 입양 장려
 - 숏폼 3개당 1회는 위치 기반 보호소 동물들을 함께 홍보
 
-## 집사 유형 검사
+### 집사 유형 검사
 
 <img src="readme/집사유형검사.gif" alt="집사유형검사" width="800px">
 
 - 사용자 성향과 환경에 최적화된 맞춤형 반려동물 품종 추천
 - 해당 추천 품종 동물들의 게시글을 연동하여 입양 유도
 
-## 입양 홍보 게시판 / 입양 후기 게시판
+### 입양 홍보 게시판 / 입양 후기 게시판
 
 <img src="readme/입양 게시판.gif" alt="입양 게시판" width="800px">
 
 - 입양 홍보를 통해 사용자의 입양 독려
 - 입양 후기를 통해 유기동물 입양의 긍정적 인식 제고
 
-## 채팅
+### 채팅
 
 <img src="readme/채팅.gif" alt="채팅" width="800px">
 
 - 입양 신청을 위해, 입양자는 임시보호자와 채팅 시도
 
-## 화상채팅
+### 화상채팅
 
 <img src="readme/화상채팅.gif" alt="화상채팅" width="800px">
 
@@ -793,7 +793,7 @@ CI/CD `Jenkins`
 - 임시보호자 : 입양자의 실제 환경을 사전 체크
 - 입양자 : 입양 받을 동물의 상태를 미리 확인
 
-## 실종 동물 제보
+### 실종 동물 제보
 
 <img src="readme/실종동물 제보.gif" alt="실종동물 제보" width="800px">
 
@@ -801,7 +801,7 @@ CI/CD `Jenkins`
 - 경위도를 사용하여 실종 동물의 정확한 위치 제공
 - 실종 동물의 조기 발견을 통해 유기 동물 개체 수 최소화
 
-## 계약서
+### 계약서
 
 <img src="readme/계약서1.gif" alt="계약서1" width="800px">
 
