@@ -29,12 +29,11 @@
 
 # 팀원 소개
 
-<hr>
 
-| 이경곤 | 곽예빈                                                                    | 이승철                                                                   | 이다영 | 김재훈 | 정규영 |                                             
-|-----|------------------------------------------------------------------------|-----------------------------------------------------------------------|-----|-----|-----| 
-| <img src="/readme/이경곤.jpg" alt='@leeggon' width="120" height="120"> | <img src="/readme/곽예빈.PNG" alt="@Yebin-Gwak" width="120" height="120"> | <img src="/readme/이승철.PNG" alt="@Aeraekun" width="120" height="120" > | <img src="/readme/이다영.PNG" alt="@2dayoung" width="120" height="120" > | <img src="/readme/김재훈.PNG" alt="@GarrryKim" width="120" height="120"> | <img src="/readme/정규영.PNG" alt="@JungGyuYeong" width="120" height="120" > |
-| [@leeggon](https://github.com/leeggon) | [@Yebin-Gwak](https://github.com/Yebin-Gwak)                           | [@Aeraekun](https://github.com/Aeraekun)                              | [@2dayoung](https://github.com/2dayoung) | [@GarrryKim](https://github.com/GarrryKim) | [@JungGyuYeong](https://github.com/JungGyuYeong)                              
+| 이경곤                                                                   | 곽예빈                                                                      | 이승철                                                                     | 이다영                                                                     | 김재훈                                                                     | 정규영                                                                        |                                             
+|-----------------------------------------------------------------------|--------------------------------------------------------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------|----------------------------------------------------------------------------| 
+| <img src="/readme/이경곤.jpg" alt='@leeggon' width="120px" height="120"> | <img src="/readme/곽예빈.PNG" alt="@Yebin-Gwak" width="120px" height="120"> | <img src="/readme/이승철.PNG" alt="@Aeraekun" width="120px" height="120" > | <img src="/readme/이다영.PNG" alt="@2dayoung" width="120px" height="120" > | <img src="/readme/김재훈.PNG" alt="@GarrryKim" width="120px" height="120"> | <img src="/readme/정규영.PNG" alt="@JungGyuYeong" width="120px" height="120"> |
+| [@leeggon](https://github.com/leeggon)                                | [@Yebin-Gwak](https://github.com/Yebin-Gwak)                             | [@Aeraekun](https://github.com/Aeraekun)                                | [@2dayoung](https://github.com/2dayoung)                                | [@GarrryKim](https://github.com/GarrryKim)                              | [@JungGyuYeong](https://github.com/JungGyuYeong)                           
 
 **🐼 이경곤 : 팀장, Back-end**
 
