@@ -1,4 +1,4 @@
-// import Follow from "icons/icon-follow.svg"
+import Follow from "assets/icons/icon-isFollowing-white.svg"
 
 const FollowIcon = ({isIcon, isFollowing, size, onClick}) => {
   const sizeClass =
@@ -21,11 +21,7 @@ const FollowIcon = ({isIcon, isFollowing, size, onClick}) => {
           />
         )
       ) : isFollowing ? (
-        <img
-          src="/icons/icon-isfollowing-white.svg"
-          alt="followwhiteIcon"
-          className={sizeClass}
-        />
+        <img src={Follow} alt="followwhiteIcon" className={sizeClass} />
       ) : (
         <img
           src="/icons/icon-follow.svg"

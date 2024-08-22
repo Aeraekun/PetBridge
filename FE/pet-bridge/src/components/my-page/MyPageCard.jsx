@@ -1,11 +1,15 @@
+import DOMPurify from "dompurify"
+
 const MyPageCard = ({
   imageSrc,
   imageAlt,
   content1,
   content2,
   content3,
+  content,
   onClick,
 }) => {
+  const sanitizedContent = DOMPurify.sanitize(content) // Quill 안정성 높이기
   return (
     <div
       role="button"
@@ -27,6 +31,12 @@ const MyPageCard = ({
         <li>{content1}</li>
         <li>{content2}</li>
         <div>{content3}</div>
+        {content && (
+          <div
+            dangerouslySetInnerHTML={{__html: sanitizedContent}}
+            className="text-overflow"
+          />
+        )}
       </ul>
     </div>
   )

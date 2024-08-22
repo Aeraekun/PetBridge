@@ -7,23 +7,9 @@ import {selectId, selectImage, selectNickname} from "features/user/users-slice"
 import {registArticle} from "api/boards-api"
 import markerImg from "../../assets/image/marker.png"
 import {Toast} from "utils/common-utils"
+import Profile from "components/common/Profile"
 
 const {kakao} = window
-
-const Profile = ({nickname}) => {
-  return (
-    <div className="mb-4 flex items-center space-x-4">
-      <img
-        src="https://via.placeholder.com/50"
-        alt="Author Avatar"
-        className="size-12 rounded-full border"
-      />
-      <div>
-        <p className="text-lg font-semibold">{nickname}</p>
-      </div>
-    </div>
-  )
-}
 
 const LostAnimalReport = () => {
   const [title, setTitle] = useState("")
@@ -155,6 +141,7 @@ const LostAnimalReport = () => {
         nickname={currentUserNickname}
         image={currentUserImage}
         userId={currentUserId}
+        isMe={true}
       />
       <hr className="my-4" />
       <div className="mb-4">

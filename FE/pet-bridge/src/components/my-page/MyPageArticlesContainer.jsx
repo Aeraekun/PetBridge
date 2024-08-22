@@ -134,7 +134,7 @@ const MyPageArtilcesContainer = () => {
                 imageAlt={item.title}
                 content1={`제목: ${item.title}`}
                 content2={`작성 시간: ${item.registTime.split("T")[0]}`}
-                content3={item.content}
+                content={item.content}
                 onClick={() => {
                   handleClick(item)
                 }}
