@@ -282,7 +282,6 @@ sudo chmod 666 /var/run/docker.sock
 docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 
 # 젠킨스 컨테이너로 접속해서 도커 명령어 실행 여부 확인 명령어
-docker exec -it <container_name_or_id> /bin/bash
 docker exec -it jenkins /bin/bash
 
 # 젠킨스 컨테이너에 접속해서 Docker 명령어 되는지 확인
@@ -743,7 +742,7 @@ sudo service nginx status
     
     services:
       api:
-        image: aerae/petbridge-back:latest
+        image: [Docker Repo]/[Docker Project-Back]:latest
         container_name: backend-808*
         environment:
           - TZ=Asia/Seoul
@@ -831,7 +830,7 @@ sudo service nginx status
     
     services:
       react:
-        image: aerae/petbridge-front:latest
+        image: [Docker Repo]/[Docker Project-Front]:latest
         container_name: react
         restart: always
         environment:
