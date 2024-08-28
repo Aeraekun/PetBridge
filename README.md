@@ -884,7 +884,7 @@
 
 [**ERD**](https://www.erdcloud.com/d/vEKDwhTZd9fnKtWA8)
 
-![erd.png](/exec/포팅 매뉴얼/erd.png)
+![erd.png](/readme/erd.png)
 
 
 ### 📝 API 명세서
