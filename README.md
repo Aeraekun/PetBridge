@@ -863,7 +863,7 @@
 
 [**Google SpreadSheet**](https://docs.google.com/spreadsheets/d/10fPQWGjoIb0FMlQhBWriEXRb9Mn3Emnc065Hca7eTYI/edit?gid=0#gid=0)
 
-![요구사항 명세서.PNG](/readme/요구사항 명세서.PNG)
+![요구사항명세서.PNG](/readme/요구사항명세서.PNG)
 
 
 ### 와이어프레임
@@ -891,4 +891,4 @@
 
 [**API 명세서**](https://violet-chocolate-38b.notion.site/API-Docs-145a09e708594958a41701dba986b4ea?pvs=4)
 
-![API명세서.PNG](/readme/API 명세서.PNG)
+![API명세서.PNG](/readme/API명세서.PNG)
