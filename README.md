@@ -733,7 +733,7 @@
 
 <br>
 
-<a id="item-six"></a>
+<a id="item-seven"></a>
 
 # 기획 배경 및 목표
 
@@ -750,7 +750,7 @@
 
 <br>
 
-<a id="item-seven"></a>
+<a id="item-eight"></a>
 
 # 서비스 주요 기능
 
